@@ -1,0 +1,78 @@
+<ion-split-pane [contentId]="contentID">
+  <ion-menu [contentId]="contentID" [menuId]="menuID" [side]="positionMenu" [type]="typeMenu">
+
+    <ion-header class="ion-no-border">
+      <app-mh-avatar-user-principal></app-mh-avatar-user-principal>
+    </ion-header>
+
+    <ion-content>
+      <ion-header>
+        <ion-item button (click)="closeMenu()" routerLink="home">
+          <ion-icon slot="start" name="home-outline"></ion-icon>
+          <ion-label> {{ 'menuPrincipal.itemsMenu.home' | translate }} </ion-label>
+        </ion-item>
+      </ion-header>
+
+      <ion-list>
+
+        <ion-item-divider>
+          <ion-label>
+            <h2> {{ 'menuPrincipal.itemsMenu.title' | translate }}</h2>
+          </ion-label>
+        </ion-item-divider>
+
+        <ion-item *ngFor="let item of menuItems" button [routerLink]="item.routerRedirect" (click)="closeMenu()">
+
+          <ion-icon slot="start" [name]="item.icon"></ion-icon>
+          <ion-badge slot="end">
+            {{ item.quantity }}
+          </ion-badge>
+          <ion-label>
+            {{ item.text | translate }}
+          </ion-label>
+
+        </ion-item>
+
+        <ion-list>
+          <ion-item-divider>
+            <ion-label>
+              <h2> {{ 'menuPrincipal.itemsMenu.titleUtilities' | translate }} </h2>
+            </ion-label>
+          </ion-item-divider>
+
+          <ion-item button routerLink="password-check" (click)="closeMenu()">
+            <ion-icon slot="start" name="key-outline"></ion-icon>
+            <ion-label>{{ 'menuPrincipal.itemsMenu.passwordCheck' | translate }}</ion-label>
+          </ion-item>
+
+          <ion-item button routerLink="password-generator" (click)="closeMenu()">
+            <ion-icon slot="start" name="color-wand-outline"></ion-icon>
+            <ion-label>{{ 'menuPrincipal.itemsMenu.passwordGenerator' | translate }}</ion-label>
+          </ion-item>
+        </ion-list>
+
+
+      </ion-list>
+    </ion-content>
+
+    <ion-footer>
+      <div style="display: flex;" class="ion-justify-content-around ion-margin-vertical">
+
+        <ion-button fill="clear" shape="round" (click)="clickBtnLockApp()">
+          <ion-icon slot="icon-only" name="lock-closed-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" shape="round" (click)="clickBtnSettings()">
+          <ion-icon slot="icon-only" name="settings-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button fill="clear" shape="round" (click)="clickBtnHelp()">
+          <ion-icon slot="icon-only" name="help-outline"></ion-icon>
+        </ion-button>
+
+      </div>
+    </ion-footer>
+  </ion-menu>
+  <!--rendered content -->
+  <ng-content></ng-content>
+</ion-split-pane>

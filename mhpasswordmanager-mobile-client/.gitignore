@@ -1,0 +1,65 @@
+# System files
+*~
+*.sw[mnpcod]
+.tmp
+*.tmp
+*.tmp.*
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
+$RECYCLE.BIN/
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.zip
+*.tar.gz
+*.rar
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+# Log file
+*.log
+log.txt
+npm-debug.log*
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+/.angular
+/.ionic
+/.sass-cache
+/.sourcemaps
+/.versions
+/coverage
+/dist
+/node_modules
+/platforms
+/plugins
+/www
