@@ -52,14 +52,5 @@ npm-debug.log*
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-/.angular
-/.ionic
-/.sass-cache
-/.sourcemaps
-/.versions
-/coverage
-/dist
-/node_modules
-/platforms
-/plugins
-/www
+## Any other file
+/git_excludes
