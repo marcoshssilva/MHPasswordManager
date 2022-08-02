@@ -5,8 +5,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { SQLite } from '@awesome-cordova-plugins/sqlite/ngx';
-import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
 
 @NgModule({
   declarations: [],
@@ -32,9 +30,6 @@ import { SQLitePorter } from '@awesome-cordova-plugins/sqlite-porter/ngx';
     HttpClientModule,
     TranslateModule
   ],
-  providers: [
-    SQLite,
-    SQLitePorter
-  ]
+  providers: []
 })
 export class CoreModule {}
