@@ -1,7 +1,0 @@
-{
-  "name": "mhpasswordmanager-mobile-client",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
