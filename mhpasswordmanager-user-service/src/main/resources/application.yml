@@ -1,0 +1,31 @@
+spring:
+    application:
+        name: 'mhpasswordmanager-user-service'
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:5432/db_user_service
+        username: postgres
+        password: postgres
+        jpa:
+            hibernate:
+                ddl-auto: validate
+            show-sql: true
+            properties:
+                dialect: org.hibernate.dialect.PostgreSQLDialect
+        flyway:
+            url: jdbc:postgresql://localhost:5432
+            schemas: db_user_service
+            user: postgres
+            password: postgres
+    jackson:
+        default-property-inclusion: non_null
+        serialization:
+            fail-on-empty-beans: false
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+
+server:
+    port: ${PORT:0}
