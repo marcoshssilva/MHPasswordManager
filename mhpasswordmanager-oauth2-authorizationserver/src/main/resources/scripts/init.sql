@@ -1,0 +1,6 @@
+CREATE TABLE test(
+    id SERIAL NOT NULL PRIMARY KEY,
+    message TEXT NOT NULL
+);
+
+DROP TABLE test;
