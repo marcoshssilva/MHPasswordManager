@@ -1,6 +1,30 @@
 spring:
   application:
     name: mhpasswordmanager-api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - "http://localhost:8100"
+              - "http://localhost:4200"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - HEAD
+              - OPTIONS
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: '*'
 
 server:
   port: 8765
