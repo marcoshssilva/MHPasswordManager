@@ -25,7 +25,7 @@ export class HomePage implements OnInit {
       if (!this.routerOutlet.canGoBack()){
         App.exitApp();
       } else {
-        this.routerOutlet.pop()
+        this.routerOutlet.pop();
       }
 
     });

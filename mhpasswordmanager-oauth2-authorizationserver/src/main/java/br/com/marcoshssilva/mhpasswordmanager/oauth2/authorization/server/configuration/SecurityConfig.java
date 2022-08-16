@@ -23,8 +23,8 @@ public class SecurityConfig {
             }
         });
 
-        http.formLogin(Customizer.withDefaults());
-        return http.build();
+        return http.formLogin(Customizer.withDefaults())
+                .build();
     }
 
 }

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: 'mhpasswordmanager-oauth2-authorizationserver'
+    name: 'oauth2'
   h2:
     console:
       enabled: true
@@ -13,7 +13,3 @@ eureka:
 
 server:
   port: 9000
-
-security:
-  client-id: system-admin
-  client-secret: mysecret

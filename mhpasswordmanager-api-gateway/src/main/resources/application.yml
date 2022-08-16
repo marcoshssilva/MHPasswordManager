@@ -1,6 +1,6 @@
 spring:
   application:
-    name: mhpasswordmanager-api-gateway
+    name: gateway
   cloud:
     gateway:
       discovery:
@@ -27,7 +27,7 @@ spring:
           include: '*'
 
 server:
-  port: 8765
+  port: 8080
 
 eureka:
   client:

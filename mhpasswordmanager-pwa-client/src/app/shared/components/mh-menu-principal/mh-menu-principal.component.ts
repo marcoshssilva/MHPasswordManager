@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MenuController } from '@ionic/angular';
 import { TranslateService } from '@ngx-translate/core';
 import { MhMessageHelperService } from 'src/app/core/services/mh-message-helper.service';
@@ -10,6 +10,8 @@ import { MhTranslateHelperService } from 'src/app/core/services/mh-translate-hel
   styleUrls: ['./mh-menu-principal.component.scss'],
 })
 export class MhMenuPrincipalComponent implements OnInit {
+
+  @Input() setMenuOpen = false;
 
   content: Component;
   contentID = 'main';
