@@ -7,11 +7,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table( name = "Accounts")
+@Table(name = "Accounts")
 @Entity(name = "User")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -27,14 +28,27 @@ public class User implements Serializable {
     @Column(name = "password", nullable = false, length = 72)
     String password;
 
-    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @Column(name = "email", nullable = false, unique = true)
     String email;
 
-    @Column(name = "create_on", nullable = false)
+    @Column(name = "created_on", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     Date createOn;
 
     @Column(name = "last_login", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     Date lastLogin;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(userId, user.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
+    }
 }

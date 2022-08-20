@@ -13,6 +13,6 @@ import java.util.Set;
 @Repository
 public interface UserHasRoleRepository extends JpaRepository<UserRoles, UserRolesPK> {
 
-    @Query("SELECT obj FROM UserRoles obj WHERE obj.id.userId = :user")
+    @Query("SELECT obj FROM UserRoles obj WHERE obj.id.user = :user")
     Set<UserRoles> searchAllByUser(@Param("user") User user);
 }

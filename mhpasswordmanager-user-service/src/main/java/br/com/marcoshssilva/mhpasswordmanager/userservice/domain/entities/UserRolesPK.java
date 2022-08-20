@@ -1,25 +1,40 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import java.io.Serializable;
+import java.util.Objects;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Embeddable
 public class UserRolesPK implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Column(name = "user_id")
-    Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    User user;
 
-    @Column(name = "role_id")
-    Long roleId;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    Role role;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserRolesPK that = (UserRolesPK) o;
+        return Objects.equals(user, that.user) && Objects.equals(role, that.role);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(user, role);
+    }
 }

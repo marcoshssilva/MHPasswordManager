@@ -1,9 +1,8 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.models.user;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.dto.user;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.User;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.UserRoles;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.enums.Profile;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,6 +14,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Data
 @AllArgsConstructor
@@ -44,6 +44,9 @@ public class UserDto implements Serializable {
                         user.getUsername())
                 .email(
                         user.getEmail())
+                .profiles(roles.stream()
+                        .map(role -> Profile.getByRolename(role.getId().getRole().getRoleName()))
+                        .collect(Collectors.toSet()))
                 .build();
     }
 }

@@ -6,11 +6,12 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-@Table( name = "Roles")
+@Table(name = "Roles")
 @Entity(name = "Role")
 public class Role implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -20,6 +21,19 @@ public class Role implements Serializable {
     @Column(name = "role_id", nullable = false)
     Long roleId;
 
-    @Column(name = "role_name", nullable = false, length = 255, unique = true)
+    @Column(name = "role_name", nullable = false, unique = true)
     String roleName;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Role role = (Role) o;
+        return Objects.equals(roleId, role.roleId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(roleId);
+    }
 }

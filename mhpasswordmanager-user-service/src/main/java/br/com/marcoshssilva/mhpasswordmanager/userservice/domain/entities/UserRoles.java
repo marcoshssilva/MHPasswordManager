@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,4 +23,17 @@ public class UserRoles implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "grant_date")
     Date grantDate;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserRoles userRoles = (UserRoles) o;
+        return id.equals(userRoles.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }
