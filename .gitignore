@@ -45,12 +45,8 @@ build/
 .vscode/
 
 # Log file
-*.log
 log.txt
 npm-debug.log*
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
 
 ## Any other file
 /git_excludes
