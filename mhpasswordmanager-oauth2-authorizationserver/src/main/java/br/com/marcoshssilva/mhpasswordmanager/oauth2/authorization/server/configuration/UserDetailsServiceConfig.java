@@ -8,11 +8,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import javax.sql.DataSource;
+
 @Configuration
 public class UserDetailsServiceConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    public UserDetailsService userDetailsService(DataSource dataSource, PasswordEncoder passwordEncoder) {
         UserDetails userDetails = User.builder()
                 .username("user")
                 .password(passwordEncoder.encode("user"))

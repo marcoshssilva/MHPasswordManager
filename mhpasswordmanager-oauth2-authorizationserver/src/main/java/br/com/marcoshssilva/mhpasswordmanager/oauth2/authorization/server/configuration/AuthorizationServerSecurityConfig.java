@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.utils.JwksUtils;
+
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -53,8 +54,7 @@ public class AuthorizationServerSecurityConfig {
 
     @Bean
     public ProviderSettings providerSettings() {
-        return ProviderSettings.builder()
-                .issuer("http://localhost:9000")
+        return ProviderSettings.builder().issuer("http://localhost:9000")
                 .build();
     }
 
