@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-api-gateway/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-api-gateway/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations-tool/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations-tool/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-service-registry/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-service-registry/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-user-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-user-service/src/main/resources" charset="UTF-8" />
+  </component>
+</project>
