@@ -1,1 +1,0 @@
-ALTER TABLE oauth2_authorization ADD CONSTRAINT fk_oauth2_authorization_consent_oauth2_authorization FOREIGN KEY (registered_client_id, principal_name) REFERENCES oauth2_authorization_consent(registered_client_id, principal_name);
