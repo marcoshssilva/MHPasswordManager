@@ -11,7 +11,7 @@
 	<groupId>br.com.marcoshssilva</groupId>
 	<artifactId>mhpasswordmanager.oauth2.authorization.server</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>MHPasswordManager-OAuth2-AuthorizationServer</name>
+	<name>MHPasswordManagerOAuth2AuthorizationServer</name>
 	<description>
 		Authorization Server for auth users with OAUTH 2.0 protocol
 	</description>
