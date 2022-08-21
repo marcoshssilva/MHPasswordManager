@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: 'flyway-database-migrations-tool'
+  flyway:
+    url: jdbc:postgresql://localhost:5432/db_users
+    schemas: db_users
+    user: postgres
+    password: postgres
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/db_users
+    username: postgres
+    password: postgres
+    jpa:
+      hibernate:
+        ddl-auto: none
+      show-sql: true
+      properties:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      fail-on-empty-beans: false
