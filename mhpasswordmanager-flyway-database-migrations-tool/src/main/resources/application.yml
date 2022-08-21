@@ -3,7 +3,6 @@ spring:
     name: 'flyway-database-migrations-tool'
   flyway:
     url: jdbc:postgresql://localhost:5432/db_users
-    schemas: db_users
     user: postgres
     password: postgres
   datasource:
