@@ -1,8 +1,5 @@
 # MHPasswordManager
 
-## Propósito
-
-
 ## Java Standard Configuration
 | Maven Project        |                      |
 |----------------------|----------------------|
