@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway
+    name: 'gateway'
   cloud:
     gateway:
       discovery:
@@ -13,6 +13,8 @@ spring:
             allowedOrigins:
               - "http://localhost:8100"
               - "http://localhost:4200"
+              - "http://localhost:8080"
+              - "http://localhost"
             allowedMethods:
               - GET
               - POST
@@ -27,7 +29,7 @@ spring:
           include: '*'
 
 server:
-  port: 8080
+  port: ${PORT:8888}
 
 eureka:
   client:
