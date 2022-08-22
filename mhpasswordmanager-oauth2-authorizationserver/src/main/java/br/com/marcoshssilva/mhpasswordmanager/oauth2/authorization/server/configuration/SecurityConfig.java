@@ -12,20 +12,9 @@ public class SecurityConfig {
 
     @Order(1)
     @Bean
-    public SecurityFilterChain h2WebSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests().antMatchers("/h2/**").permitAll()
-                .and()
-                .csrf().disable().headers().frameOptions().disable();
-
-        return http.build();
-    }
-
-    @Order(2)
-    @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests((authorize) -> authorize.anyRequest().authenticated());
         return http.formLogin(Customizer.withDefaults())
                 .build();
     }
-
 }

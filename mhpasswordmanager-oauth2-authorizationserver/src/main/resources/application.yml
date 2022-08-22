@@ -1,15 +1,10 @@
 spring:
   application:
-    name: 'authorization'
+    name: 'authorization-server'
   h2:
     console:
       enabled: true
       path: /h2
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
 
 server:
   port: ${PORT:9000}
