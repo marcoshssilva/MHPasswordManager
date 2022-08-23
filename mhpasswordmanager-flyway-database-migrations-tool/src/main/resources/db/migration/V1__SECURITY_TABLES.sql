@@ -1,10 +1,10 @@
-DROP TABLE IF EXISTS public.oauth2_registered_client;
-DROP TABLE IF EXISTS public.oauth2_authorization_consent;
-DROP TABLE IF EXISTS public.oauth2_authorization;
-DROP TABLE IF EXISTS public.users;
-DROP TABLE IF EXISTS public.authorities;
+DROP TABLE IF EXISTS db_users.oauth2_registered_client;
+DROP TABLE IF EXISTS db_users.oauth2_authorization_consent;
+DROP TABLE IF EXISTS db_users.oauth2_authorization;
+DROP TABLE IF EXISTS db_users.users;
+DROP TABLE IF EXISTS db_users.authorities;
 
-CREATE TABLE public.oauth2_registered_client
+CREATE TABLE db_users.oauth2_registered_client
 (
     id                            varchar(100)                            NOT NULL,
     client_id                     varchar(100)                            NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE public.oauth2_registered_client
     PRIMARY KEY (id)
 );
 
-CREATE TABLE public.oauth2_authorization_consent
+CREATE TABLE db_users.oauth2_authorization_consent
 (
     registered_client_id varchar(100)  NOT NULL,
     principal_name       varchar(200)  NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE public.oauth2_authorization_consent
     PRIMARY KEY (registered_client_id, principal_name)
 );
 
-CREATE TABLE public.oauth2_authorization
+CREATE TABLE db_users.oauth2_authorization
 (
     id                            varchar(100) NOT NULL,
     registered_client_id          varchar(100) NOT NULL,
@@ -58,7 +58,7 @@ CREATE TABLE public.oauth2_authorization
     PRIMARY KEY (id)
 );
 
-create table public.users
+create table db_users.users
 (
     username varchar(50) NOT NULL,
     password varchar(50) NOT NULL,
@@ -66,10 +66,10 @@ create table public.users
     PRIMARY KEY (username)
 );
 
-create table public.authorities
+create table db_users.authorities
 (
     username  varchar(50) NOT NULL,
     authority varchar(50) NOT NULL,
-    CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES public.users (username)
+    CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES db_users.users (username)
 );
-create unique index ix_auth_username on public.authorities (username, authority);
+create unique index ix_auth_username on db_users.authorities (username, authority);

@@ -2,14 +2,14 @@ spring:
   application:
     name: 'flyway-database-migrations-tool'
   flyway:
-    url: jdbc:postgresql://localhost:5432/db_users
-    user: postgres
-    password: postgres
+    url: ${DATABASE_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
+    user: ${DATABASE_JDBC_USERNAME:postgres}
+    password: ${DATABASE_JDBC_PASSWORD:postgres}
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/db_users
-    username: postgres
-    password: postgres
+    url: ${DATABASE_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
+    username: ${DATABASE_JDBC_USERNAME:postgres}
+    password: ${DATABASE_JDBC_PASSWORD:postgres}
     jpa:
       hibernate:
         ddl-auto: none
