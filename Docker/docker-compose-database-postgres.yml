@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  mhpasswordmanager-db:
+    image: postgres:14.5-alpine
+    container_name: 'postgres-database-mhpasswordmanager'
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    restart: unless-stopped
+    volumes:
+      - db-data-mhpasswordmanager:/var/lib/postgresql/data
+    ports:
+      - "55432:5432"
+    networks:
+      - net-mhpasswordmanager
+volumes:
+  db-data-mhpasswordmanager:
+networks:
+  net-mhpasswordmanager: # default for project
+    driver: bridge
