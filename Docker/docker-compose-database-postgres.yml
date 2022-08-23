@@ -12,7 +12,7 @@ services:
     volumes:
       - db-data-mhpasswordmanager:/var/lib/postgresql/data
     ports:
-      - "55432:5432"
+      - "5432:5432"
     networks:
       - net-mhpasswordmanager
 volumes:
