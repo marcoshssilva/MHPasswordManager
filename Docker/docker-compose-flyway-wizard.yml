@@ -5,7 +5,7 @@ services:
     container_name: 'mhpasswordmanager-flyway-database-migrations-tool'
     build:
       context: ../mhpasswordmanager-flyway-database-migrations-tool
-      dockerfile: ./docs/Dockerfile
+      dockerfile: ./docker/docs/Dockerfile
     environment:
       DATABASE_JDBC_URL: 'jdbc:postgresql://host.docker.internal:5432/postgres'
       DATABASE_JDBC_USERNAME: 'postgres'
