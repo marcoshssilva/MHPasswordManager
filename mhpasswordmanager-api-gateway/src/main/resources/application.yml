@@ -29,7 +29,7 @@ spring:
           include: '*'
 
 server:
-  port: ${PORT:8888}
+  port: ${PORT:8765}
 
 eureka:
   client:
