@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  mhpasswordmanager-pwa-client:
+    container_name: 'mhpasswordmanager-pwa-client'
+    build:
+      context: ../mhpasswordmanager-pwa-client
+      dockerfile: ./Dockerfile
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "80:80"
+networks:
+  net-mhpasswordmanager: # default for project
+    driver: bridge
