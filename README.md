@@ -6,7 +6,7 @@
 | Group ID             | br.com.marcoshssilva |
 | Java Version         | temurin-11           |
 | Spring Cloud Version | 2021.0.3             |
-| Spring Boot          | 2.7.2                |
+| Spring Boot          | 2.7.3                |
 
 ## Node Standard Configuration
 | Node Project |            |
@@ -18,4 +18,4 @@
 ## Data Storage
 | DataSources |          |
 |-------------|----------|
-| Postgres    | **14.4** |
+| Postgres    | **14.5** |

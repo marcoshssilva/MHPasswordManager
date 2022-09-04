@@ -5,10 +5,9 @@ spring:
     console:
       enabled: true
       path: /h2
-
 server:
-  port: ${PORT:9000}
+  port: 9000
 eureka:
   client:
     service-url:
-      default-zone: http://localhost:8761/eureka
+      defaultZone: ${SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}

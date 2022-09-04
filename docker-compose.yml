@@ -1,0 +1,65 @@
+version: '3.8'
+name: mhpasswordmanager
+services:
+  eureka-service-discovery:
+    image: mhpasswordmanager/service-registry:latest
+    container_name: 'eureka-server'
+    restart: always
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "8761:8761"
+  oauth2-authorization-server:
+    container_name: 'authorization-server'
+    image: mhpasswordmanager/oauth2-authorization-server:latest
+    environment:
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_users
+      SPRING_DATASOURCE_USERNAME: "postgres"
+      SPRING_DATASOURCE_PASSWORD: "postgres"
+      SERVICE_URL_DEFAULT_ZONE: http://eureka-service-discovery:8761/eureka
+    depends_on:
+      - eureka-service-discovery
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "9000:9000"
+  api-gateway:
+    image: mhpasswordmanager/api-gateway:latest
+    container_name: 'api-gateway'
+    restart: on-failure
+    environment:
+      SERVICE_URL_DEFAULT_ZONE: http://eureka-service-discovery:8761/eureka
+    depends_on:
+      - eureka-service-discovery
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "8765:8765"
+  pwa-client:
+    image: mhpasswordmanager/pwa-client:latest
+    container_name: 'pwa-client'
+    restart: unless-stopped
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "8080:80"
+  user-service:
+    image: mhpasswordmanager/user-service:latest
+    container_name: 'user-service-api'
+    restart: unless-stopped
+    environment:
+      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
+      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_users
+      SPRING_DATASOURCE_USERNAME: "postgres"
+      SPRING_DATASOURCE_PASSWORD: "postgres"
+      SERVICE_URL_DEFAULT_ZONE: http://eureka-service-discovery:8761/eureka
+    depends_on:
+      - eureka-service-discovery
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "0:8080"
+networks:
+  net-mhpasswordmanager: # default for project
+    driver: bridge

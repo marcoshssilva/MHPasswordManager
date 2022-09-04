@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.controllers;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.controllers.view;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.dto.user.UserDto;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.JpaUserService;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
-@RequestMapping("/")
+@RequestMapping("/all")
 @RestController
 @RequiredArgsConstructor
-public class UsersController {
+public class ViewUsersController {
 
     private final JpaUserService jpaUserService;
 

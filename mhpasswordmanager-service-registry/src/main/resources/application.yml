@@ -1,14 +1,12 @@
 spring:
   application:
-    name: 'mhpasswordmanager-service-registry'
+    name: 'eureka-service-registry'
 server:
-  port: ${PORT:8761}
+  port: 8761
 eureka:
   client:
     register-with-eureka: false
     fetch-registry: false
-  instance:
-    prefer-ip-address: true
 logging:
   level:
     com:
