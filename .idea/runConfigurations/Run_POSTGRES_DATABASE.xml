@@ -3,7 +3,12 @@
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envFilePath" value="" />
-        <option name="sourceFilePath" value="Docker/docker-compose-database-postgres.yml" />
+        <option name="services">
+          <list>
+            <option value="mhpasswordmanager-db" />
+          </list>
+        </option>
+        <option name="sourceFilePath" value="docker-compose-files/docker-compose-database-postgres.yml" />
       </settings>
     </deployment>
     <method v="2" />
