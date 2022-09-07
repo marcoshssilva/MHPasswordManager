@@ -1,5 +1,4 @@
 version: '3.8'
-name: mhpasswordmanager
 services:
   eureka-service-discovery:
     image: mhpasswordmanager/service-registry:latest
