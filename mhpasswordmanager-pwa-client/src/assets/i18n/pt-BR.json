@@ -41,6 +41,7 @@
     "notes": { "title": "Notas" },
     "passwordCheck": { "title": "Verificador de senhas" },
     "passwordGenerator": { "title": "Gerador de senhas" },
-    "perfil": { "title": "Perfil" }
+    "perfil": { "title": "Perfil" },
+    "authorize": { "title": "Autorizando" , "helpMessage": "Aguarde um pouco..."}
   }
 }

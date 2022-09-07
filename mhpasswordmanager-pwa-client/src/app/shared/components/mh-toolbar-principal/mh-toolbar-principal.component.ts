@@ -9,6 +9,7 @@ export class MhToolbarPrincipalComponent implements OnInit {
 
   @Input() title: string;
   @Input() searchButton = false;
+  @Input() showToolbar = true;
   constructor() {}
 
   async ngOnInit() {}

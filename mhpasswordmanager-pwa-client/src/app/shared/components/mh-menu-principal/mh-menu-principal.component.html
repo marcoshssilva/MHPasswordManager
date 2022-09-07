@@ -1,5 +1,5 @@
 <ion-split-pane [contentId]="contentID" [disabled]="!setMenuOpen">
-  <ion-menu [contentId]="contentID" [menuId]="menuID" [side]="positionMenu" [type]="typeMenu">
+  <ion-menu *ngIf="setMenuOpen" [contentId]="contentID" [menuId]="menuID" [side]="positionMenu" [type]="typeMenu">
 
     <ion-header class="ion-no-border">
       <app-mh-avatar-user-principal></app-mh-avatar-user-principal>

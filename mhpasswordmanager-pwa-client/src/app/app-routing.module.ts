@@ -60,9 +60,9 @@ const routes: Routes = [
     loadChildren: () => import('./perfil/perfil.module').then( m => m.PerfilPageModule)
   },
   {
-    path: 'login',
-    canActivate: [MenuGuard, AuthGuard],
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    path: 'authorize',
+    canActivate: [MenuGuard],
+    loadChildren: () => import('./authorize/authorize.module').then( m => m.AuthorizePageModule)
   },
 
 

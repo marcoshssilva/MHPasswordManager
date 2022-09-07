@@ -16,7 +16,7 @@ export class MenuGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-      if (route.routeConfig.path.startsWith('login')) {
+      if (route.routeConfig.path.startsWith('authorize')) {
         this.menuServiceHelper.hiddenMenu();
       } else {
         this.menuServiceHelper.showMenu();
