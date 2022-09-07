@@ -1,7 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.controllers.view;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.dto.user.UserDto;
-import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.JpaUserService;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,10 +17,10 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class ViewUsersController {
 
-    private final JpaUserService jpaUserService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Set<UserDto>> getAllUsers() {
-        return ResponseEntity.ok(jpaUserService.getAllUsers());
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }

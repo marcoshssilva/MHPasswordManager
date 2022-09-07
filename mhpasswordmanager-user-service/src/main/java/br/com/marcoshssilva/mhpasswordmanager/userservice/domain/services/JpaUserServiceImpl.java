@@ -1,26 +1,20 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.dto.user.UserDto;
-import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.UserHasRoleRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.UserRepository;
-import lombok.RequiredArgsConstructor;
 
-import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import lombok.RequiredArgsConstructor;
+
 @RequiredArgsConstructor
-public class JpaUserServiceImpl implements JpaUserService {
+public class JpaUserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final UserHasRoleRepository userHasRoleRepository;
 
-    @Transactional
     public Set<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(user -> UserDto.toUserDto(user, userHasRoleRepository.searchAllByUser(user)))
+        return userRepository.findAll().stream().map(UserDto::fromEntity)
                 .collect(Collectors.toSet());
     }
-
 }

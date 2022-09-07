@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 
 @Service
-public interface JpaUserService {
+public interface UserService {
     Set<UserDto> getAllUsers();
 }

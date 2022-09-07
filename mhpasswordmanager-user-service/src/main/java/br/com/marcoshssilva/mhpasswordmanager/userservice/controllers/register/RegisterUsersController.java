@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.controllers.register;
 
-import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.JpaUserService;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.dto.user.UserNewDto;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,11 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RegisterUsersController {
 
-    private final JpaUserService jpaUserService;
+    private final UserService userService;
 
     @PostMapping
-    ResponseEntity<?> registerNewUser(Model newUser) {
-        return ResponseEntity.ok()
-                .build();
+    ResponseEntity<?> registerNewUser(UserNewDto newUser) {
+        return ResponseEntity.ok().build();
     }
 }
