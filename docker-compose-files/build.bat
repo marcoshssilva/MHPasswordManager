@@ -9,3 +9,4 @@ docker build -t mhpasswordmanager/pwa-client:latest ../mhpasswordmanager-pwa-cli
 docker build -t mhpasswordmanager/user-service:latest ../mhpasswordmanager-user-service
 
 echo 'OK.'
+pause

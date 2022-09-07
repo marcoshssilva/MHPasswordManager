@@ -1,4 +1,4 @@
 set COMPOSE_CONVERT_WINDOWS_PATHS=1
 set COMPOSE_PROJECT_NAME=MHPASSWORDMANAGER
-docker-compose up -f "docker-compose.yml" -d user-service
+docker-compose -f "docker-compose.yml" up -d user-service
 pause
