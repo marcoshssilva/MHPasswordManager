@@ -3,7 +3,7 @@ services:
   eureka-service-discovery:
     image: mhpasswordmanager/service-registry:latest
     container_name: 'eureka-server'
-    restart: unless-stopped
+    restart: on-failure
     networks:
       - net-mhpasswordmanager
     ports:
@@ -39,7 +39,7 @@ services:
   pwa-client:
     image: mhpasswordmanager/pwa-client:latest
     container_name: 'pwa-client'
-    restart: always
+    restart: on-failure
     networks:
       - net-mhpasswordmanager
     ports:
