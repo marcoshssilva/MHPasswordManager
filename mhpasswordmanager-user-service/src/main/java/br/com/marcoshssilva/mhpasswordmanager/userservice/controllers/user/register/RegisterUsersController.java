@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.controllers.register;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.controllers.user.register;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.dto.user.UserNewDto;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.UserService;
