@@ -121,12 +121,6 @@ export class ElectronCapacitorApp {
         // preload: join(app.getAppPath(), "node_modules", "@capacitor-community", "electron", "dist", "runtime", "electron-rt.js"),
         preload: preloadPath,
       },
-      titleBarStyle: 'hidden',
-      titleBarOverlay: {
-        color: '#2f3241',
-        symbolColor: '#74b1be'
-      },
-      movable: true
     });
     this.mainWindowState.manage(this.MainWindow);
 
