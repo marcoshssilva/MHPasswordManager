@@ -19,12 +19,17 @@ public class SecurityConfig {
     @Order(1)
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        // enable cors and disable csrf for specific routes
+        // csrf for specific routes
         http.csrf().ignoringAntMatchers(IGNORED_CSRF_ROUTES);
         // allow frame options only to sameOrigin -> fix /h2
         http.headers().frameOptions().sameOrigin();
         // config security routes
-        http.authorizeHttpRequests((authorize) -> authorize.antMatchers(PUBLIC_ROUTES).permitAll()
+        http.authorizeHttpRequests((authorize) -> authorize
+                // register public routes
+                .antMatchers(PUBLIC_ROUTES).permitAll()
+                // register available path -> /h2 <- only to ROLE_ADMIN and ROLE_MASTER
+                .antMatchers("/h2/**").hasAnyRole("ADMIN", "MASTER")
+                // any other requests for authenticated
                 .anyRequest().authenticated()
         );
 
