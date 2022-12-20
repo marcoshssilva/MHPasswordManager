@@ -15,3 +15,21 @@ gateway:
   host: http://localhost:8765/authorization-server
 authorization:
   issuer-uri: http://localhost:9000
+management:
+  endpoint:
+    health:
+      group:
+        custom:
+          show-components: ALWAYS
+          show-details: ALWAYS
+          include:
+            - diskSpace
+            - ping
+            - db
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
