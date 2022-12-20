@@ -2,7 +2,7 @@
 
 http://localhost:9000/oauth2/authorize?response_type=code
 &
-client_id=738c62bd-a915-4c18-a6cb-547c5f9037f4
+client_id=92a67091-4264-4ce4-8fcb-3ec6dbfeea16
 &
 redirect_uri=https://oidcdebugger.com/debug
 &
