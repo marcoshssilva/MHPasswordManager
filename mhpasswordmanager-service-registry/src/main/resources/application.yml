@@ -5,11 +5,28 @@ server:
   port: 8761
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
+    register-with-eureka: true
+    fetch-registry: true
 logging:
   level:
     com:
       netflix:
         eureka: OFF
         discovery: OFF
+management:
+  endpoint:
+    health:
+      group:
+        custom:
+          show-components: ALWAYS
+          show-details: ALWAYS
+          include:
+            - diskSpace
+            - ping
+    shutdown:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'
