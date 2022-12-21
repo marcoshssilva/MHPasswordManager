@@ -46,16 +46,14 @@ export class MhAuthService {
 
   private getRedirectUri() {
 
+    const protocol = window.location.protocol;
     const hostname = window.location.hostname;
     const port = window.location.port;
 
-    switch (port) {
-      case '443':
-        return 'https://' + hostname + '/authorize';
-      case '80':
-        return 'http://' + hostname + '/authorize';
-      default:
-        return 'http://' + hostname + ':' + port + '/authorize';
+    if (port && port !== '') {
+      return protocol + hostname + '/authorize';
+    } else {
+      return protocol + hostname + ':' + port + '/authorize';
     }
   }
 
