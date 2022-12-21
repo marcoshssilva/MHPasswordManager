@@ -33,15 +33,14 @@
 
                 .redirectUri("https://oidcdebugger.com/debug")
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
-                .redirectUri("http://localhost:4200/auth")
-                .redirectUri("http://localhost:8100/auth")
+                .redirectUri("http://localhost:4200/authorize")
+                .redirectUri("http://localhost:8100/authorize")
 
                 .scope("user:canRead")
                 .scope("user:canSelfWrite")
                 .scope("user:canSelfDelete")
 
                 .build();
-
 
 
         RegisteredClient register2 = RegisteredClient.withId(uid2)
@@ -52,7 +51,6 @@
                 .clientSecret(passwordEncoder.encode(uid2Pass))
 
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
 
                 .tokenSettings(
                         TokenSettings.builder()
@@ -60,11 +58,6 @@
                                 .reuseRefreshTokens(true)
                                 .refreshTokenTimeToLive(Duration.ofMinutes(15L))
                                 .build())
-
-                .redirectUri("https://oidcdebugger.com/debug")
-                .redirectUri("https://oauth.pstmn.io/v1/callback")
-                .redirectUri("http://localhost:4200/auth")
-                .redirectUri("http://localhost:8100/auth")
 
                 .scope("user:canRead")
                 .scope("user:canWrite")
@@ -76,6 +69,5 @@
         registeredClientRepository.save(register1);
         registeredClientRepository.save(register2);
 
-        log.info(" :: Password UID1: {} :: Password UID2: {} :: ", uid1Pass, uid2Pass);
         return http.build();
     }
