@@ -4,8 +4,10 @@
 
 export const environment = {
   production: false,
-  clientId: '',
-  clientSecret: ''
+  clientId: '92a67091-4264-4ce4-8fcb-3ec6dbfeea16',
+  clientSecret: 'fd04f93e-5e4d-4f16-98ae-9247f68d8619',
+  authorizationServerUrl: 'http://localhost:9000',
+  apiGatewayUrl: 'http://localhost:8765'
 };
 
 /*

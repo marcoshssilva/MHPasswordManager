@@ -64,7 +64,7 @@ export class MhMessageHelperService {
     const htmlDefaultTitle = await this.translateHelperService.getKey('messageHelper.functionDoesntWorktTitle', this.translate);
     const htmlDefaultMessage = await this.translateHelperService.getKey('messageHelper.functionDoesntWorkDescription', this.translate);
     // show alert
-    this.showAlertWithOkOnly(htmlDefaultTitle, htmlMessage || htmlDefaultMessage);
+    await this.showAlertWithOkOnly(htmlDefaultTitle, htmlMessage || htmlDefaultMessage);
   }
 
   private async createDefaultAlert(header: string, message: string,buttons: AlertButton[]) {
