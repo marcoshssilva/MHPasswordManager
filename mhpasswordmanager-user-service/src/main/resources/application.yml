@@ -16,6 +16,12 @@ spring:
     default-property-inclusion: non_null
     serialization:
       fail-on-empty-beans: false
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: ${SERVICE_URL_AUTHORIZATION_SERVER:http://localhost:9000}
+          jwk-set-uri: ${SERVICE_URL_AUTHORIZATION_SERVER_JWK_URI:http://localhost:9000/oauth2/jwks}
 eureka:
   client:
     service-url:
