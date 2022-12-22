@@ -5,12 +5,13 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build --configuration production",
+    "start": "ionic serve",
+    "build": "ionic build --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "electron-run": "npx cap open @capacitor-community/electron"
+    "electron-run": "ionic capacitor open @capacitor-community/electron",
+    "electron-build": "ionic capacitor open @capacitor-community/electron --prod"
   },
   "private": true,
   "dependencies": {
