@@ -1,4 +1,4 @@
-<ion-split-pane [contentId]="contentID" [disabled]="!setMenuOpen">
+<ion-split-pane when="md" [contentId]="contentID" [disabled]="!setMenuOpen">
   <ion-menu *ngIf="setMenuOpen" [contentId]="contentID" [menuId]="menuID" [side]="positionMenu" [type]="typeMenu">
 
     <ion-header class="ion-no-border">
