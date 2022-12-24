@@ -34,37 +34,37 @@ export class MhMenuPrincipalComponent implements OnInit {
         icon: 'folder-outline',
         text: 'menuPrincipal.itemsMenu.allEntries',
         quantity: 10,
-        routerRedirect: 'all-entries'
+        routerRedirect: 'client/all-entries'
       },
       {
         icon: 'mail-outline',
         text: 'menuPrincipal.itemsMenu.emails',
         quantity: 10,
-        routerRedirect: 'emails'
+        routerRedirect: 'client/emails'
       },
       {
         icon: 'cloud-outline',
         text: 'menuPrincipal.itemsMenu.socialMedia',
         quantity: 10,
-        routerRedirect: 'social-media'
+        routerRedirect: 'client/social-media'
       },
       {
         icon: 'globe-outline',
         text: 'menuPrincipal.itemsMenu.websites',
         quantity: 10,
-        routerRedirect: 'websites'
+        routerRedirect: 'client/websites'
       },
       {
         icon: 'layers-outline',
         text: 'menuPrincipal.itemsMenu.applications',
         quantity: 10,
-        routerRedirect: 'applications'
+        routerRedirect: 'client/applications'
       },
       {
         icon: 'card-outline',
         text: 'menuPrincipal.itemsMenu.bankCards',
         quantity: 10,
-        routerRedirect: 'bank-cards'
+        routerRedirect: 'client/bank-cards'
       }
     ];
   }
