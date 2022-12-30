@@ -27,16 +27,17 @@
                 .tokenSettings(
                         TokenSettings.builder()
                                 .accessTokenTimeToLive(Duration.ofMinutes(15L))
-                                .reuseRefreshTokens(true)
+                                .reuseRefreshTokens(false)
                                 .refreshTokenTimeToLive(Duration.ofHours(3L))
                                 .build())
 
                 .redirectUri("https://oidcdebugger.com/debug")
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
-                .redirectUri("http://localhost:4200/authorize")
-                .redirectUri("http://localhost:8100/authorize")
+                .redirectUri("http://127.0.0.1:4200/authorize")
+                .redirectUri("http://127.0.0.1:8100/authorize")
+                .redirectUri("capacitor-electron://-/authorize")
 
-                .scope("user:canRead")
+                .scope("user:canSelfRead")
                 .scope("user:canSelfWrite")
                 .scope("user:canSelfDelete")
 
@@ -55,8 +56,6 @@
                 .tokenSettings(
                         TokenSettings.builder()
                                 .accessTokenTimeToLive(Duration.ofMinutes(3L))
-                                .reuseRefreshTokens(true)
-                                .refreshTokenTimeToLive(Duration.ofMinutes(15L))
                                 .build())
 
                 .scope("user:canRead")

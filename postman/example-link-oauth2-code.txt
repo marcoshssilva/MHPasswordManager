@@ -1,6 +1,6 @@
 # Link Authorize with Authorization Code
 
-http://localhost:9000/oauth2/authorize?response_type=code
+http://127.0.0.1:9000/oauth2/authorize?response_type=code
 &
 client_id=92a67091-4264-4ce4-8fcb-3ec6dbfeea16
 &
@@ -8,4 +8,4 @@ redirect_uri=https://oidcdebugger.com/debug
 &
 state=login
 &
-scope=user:canRead
+scope=user:canSelfRead
