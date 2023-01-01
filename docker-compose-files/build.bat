@@ -7,9 +7,6 @@ docker build -t mhpasswordmanager/oauth2-authorization-server:latest ../mhpasswo
 echo 'mhpasswordmanager-api-gateway...'
 docker build -t mhpasswordmanager/api-gateway:latest ../mhpasswordmanager-api-gateway
 
-echo 'mhpasswordmanager-pwa-client...'
-docker build -t mhpasswordmanager/pwa-client:latest ../mhpasswordmanager-pwa-client
-
 echo 'mhpasswordmanager-user-service...'
 docker build -t mhpasswordmanager/user-service:latest ../mhpasswordmanager-user-service
 
