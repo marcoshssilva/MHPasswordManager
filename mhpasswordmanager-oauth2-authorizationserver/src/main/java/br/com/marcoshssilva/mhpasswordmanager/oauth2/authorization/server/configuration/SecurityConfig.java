@@ -35,6 +35,7 @@ public class SecurityConfig {
 
         return http
                 .formLogin(Customizer.withDefaults())
+                //.formLogin(login -> login.loginPage("/login").permitAll())
                 .build();
     }
 }
