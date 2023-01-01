@@ -1,7 +1,0 @@
-{
-  "name": "mhpasswordmanager-pwa-client",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
-}
