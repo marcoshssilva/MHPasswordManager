@@ -7,6 +7,12 @@ spring:
     console:
       enabled: true
       path: /h2
+  redis:
+    host: 127.0.0.1
+    password: MARCOSHSSILVA#20230101
+    port: 6379
+  session:
+    store-type: redis
 server:
   port: 9000
 eureka:

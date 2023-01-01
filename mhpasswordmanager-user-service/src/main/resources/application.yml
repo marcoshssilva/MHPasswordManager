@@ -1,6 +1,12 @@
 spring:
   application:
     name: 'users'
+  redis:
+    host: 127.0.0.1
+    password: MARCOSHSSILVA#20230101
+    port: 6379
+  session:
+    store-type: redis
   datasource:
     driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.postgresql.Driver}
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=db_users}
@@ -28,3 +34,21 @@ eureka:
       defaultZone: ${SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}
 server:
   port: 8000
+management:
+  endpoint:
+    health:
+      group:
+        custom:
+          show-components: ALWAYS
+          show-details: ALWAYS
+          include:
+            - diskSpace
+            - ping
+            - db
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - '*'

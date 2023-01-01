@@ -24,7 +24,7 @@ management:
             - diskSpace
             - ping
     shutdown:
-      enabled: true
+      enabled: false
   endpoints:
     web:
       exposure:
