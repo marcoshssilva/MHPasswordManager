@@ -15,11 +15,13 @@ public class ResourceServerSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests().anyRequest().authenticated()
+        return http.authorizeRequests()
+                    // enable Swagger MVC public
+                    .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                    // any other requests authenticated
+                    .anyRequest().authenticated()
                 .and()
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-
-        return http
+                    .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
     }
 

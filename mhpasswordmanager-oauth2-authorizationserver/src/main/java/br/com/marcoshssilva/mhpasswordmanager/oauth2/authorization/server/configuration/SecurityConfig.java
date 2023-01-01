@@ -14,7 +14,7 @@ public class SecurityConfig {
 
     private final String[] IGNORED_CSRF_ROUTES = new String[]{"/h2/**"};
 
-    private final String[] PUBLIC_ROUTES = new String[]{};
+    private final String[] PUBLIC_ROUTES = new String[]{ "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**" };
 
     @Order(1)
     @Bean

@@ -76,6 +76,17 @@
 			<artifactId>spring-session-data-redis</artifactId>
 		</dependency>
 
+		<!-- spring doc - swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.6.14</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-security</artifactId>
+			<version>1.6.14</version>
+		</dependency>
 
 		<!-- h2 database -->
 		<dependency>
