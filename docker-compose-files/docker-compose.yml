@@ -36,14 +36,6 @@ services:
       - net-mhpasswordmanager
     ports:
       - "8765:8765"
-  pwa-client:
-    image: mhpasswordmanager/pwa-client:latest
-    container_name: 'pwa-client'
-    restart: on-failure
-    networks:
-      - net-mhpasswordmanager
-    ports:
-      - "80:80"
   user-service:
     image: mhpasswordmanager/user-service:latest
     container_name: 'user-service-api'
