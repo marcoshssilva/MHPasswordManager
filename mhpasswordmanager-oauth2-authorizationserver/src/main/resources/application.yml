@@ -1,6 +1,6 @@
 spring:
-  profiles:
-    active: test
+#  profiles:
+#    active: test
   application:
     name: 'authorization-server'
   h2:
