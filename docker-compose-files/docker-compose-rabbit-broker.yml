@@ -1,8 +1,9 @@
 version: '3.8'
-name: MHPASSWORDMANAGER
+name: RABBITMQ-BROKER
 services:
   rabbit-broker:
     image: rabbitmq:3.9-management
+    container_name: broker
     restart: on-failure
     ports:
       - '5672:5672'
