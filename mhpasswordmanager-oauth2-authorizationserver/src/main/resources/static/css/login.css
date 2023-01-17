@@ -1,0 +1,86 @@
+.panel-window {
+    min-height: 100vh;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background: #f2f2f2;
+}
+
+.panel-login {
+    width: 360px;
+    margin-top: -8px;
+
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 77px 40px 0px;
+
+    background: #fff;
+    box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+
+    -moz-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -webkit-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -o-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+    -ms-box-shadow: 0 5px 10px 0 rgba(0,0,0,.1);
+
+}
+
+.panel-register {
+    background: white;
+    width: 640px !important;
+    max-width: 100vw !important;
+}
+
+.login-title {
+    display: block;
+    text-align: center;
+}
+
+
+.email-field {
+    margin-top: 16px;
+}
+
+.password-field {
+    margin-bottom: 16px;
+}
+
+#email-input {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+  
+#password-input {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.login-group-buttons-field {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.terms-field {
+    position: absolute;
+    bottom: 0;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#offcanvas-register, #offcanvas-forgot-password {
+    width: 100vw !important;
+}
+
+.panel-register > .btn-close {
+    font-size: 24px;
+}

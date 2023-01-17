@@ -12,7 +12,6 @@
         <module name="mhpasswordmanager.service.registry" />
         <module name="mhpasswordmanager.oauth2.authorization.server" />
         <module name="mhpasswordmanager.flyway.database.migrations.tool" />
-        <module name="mhpasswordmanager.pwa-client" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -20,6 +19,7 @@
       <module name="MHPasswordManager-Flyway-Database-Migrations" target="11" />
       <module name="mhpasswordmanager-frontend-client" target="11" />
       <module name="mhpasswordmanager.frontend.client" target="11" />
+      <module name="mhpasswordmanager.pwa-client" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
