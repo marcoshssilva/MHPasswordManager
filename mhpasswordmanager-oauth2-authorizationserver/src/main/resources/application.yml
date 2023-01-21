@@ -51,8 +51,8 @@ springdoc:
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
   # enable actuator to Swagger
   show-actuator: true
-  # hidde login-endpoint to Swagger
-  show-login-endpoint: false
+  # show login-endpoint to Swagger
+  show-login-endpoint: true
   swagger-ui:
     csrf:
-      enabled: false
+      enabled: true # enable csrf in swagger-ui requests

@@ -6,6 +6,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.models.UserRegistrationData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.UserService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/account")
 @RequiredArgsConstructor
+@Tag(name = "register-endpoint")
 public class AccountRegisterController {
     private final UserService userService;
 
