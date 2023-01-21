@@ -2,7 +2,9 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domai
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.UserRolesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.models.UserRegistrationData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.CannotRegisterUserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,29 +13,39 @@ import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.validation.Valid;
-
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JdbcTemplate jdbcTemplate;
 
     /**
      * Create a new account in this system
      *
      * @param userRegistrationData -> Model for user data
-     * @param role -> Role for use granted authorities
+     * @param role                 -> Role for use granted authorities
      */
     @Override
     @Transactional
-    public void registerNewUser(@Valid UserRegistrationData userRegistrationData, UserRolesEnum role) {
+    public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) {
+        final String errorMessageCannotUse = "Cannot use this email.";
+        // check if email already used by another account
+        if (getUserDetailsManager().userExists(userRegistrationData.getEmail())) throw new CannotRegisterUserException(errorMessageCannotUse);
+
         getUserDetailsManager().createUser(
                 User.builder()
                         .username(userRegistrationData.getEmail())
                         .password(passwordEncoder.encode(userRegistrationData.getPassword()))
                         .roles(role.name())
                         .build());
+
+        final String querySaveAccountDetails = "INSERT INTO db_users.users_details(username, firstname, lastname) values('?','?','?')"
+                .replace("?", userRegistrationData.getEmail())
+                .replace("?", userRegistrationData.getFirstName())
+                .replace("?", userRegistrationData.getLastName());
+
+        jdbcTemplate.execute(querySaveAccountDetails);
     }
 
     /**

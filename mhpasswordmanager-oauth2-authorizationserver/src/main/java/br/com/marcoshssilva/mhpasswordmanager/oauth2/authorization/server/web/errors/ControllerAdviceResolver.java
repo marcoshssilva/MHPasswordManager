@@ -2,6 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.e
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.StatusTypeEnum;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.responses.HttpJsonResponse;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.CannotRegisterUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -24,5 +25,13 @@ public class ControllerAdviceResolver {
                         .build());
     }
 
-
+    @ExceptionHandler(CannotRegisterUserException.class)
+    public ResponseEntity<HttpJsonResponse<?>> cannorRegisterUserExceptionHandler(CannotRegisterUserException exception, HttpServletRequest req, HttpServletResponse res) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(HttpJsonResponse.builder()
+                        .status(StatusTypeEnum.ERROR)
+                        .message(HttpStatus.BAD_GATEWAY.getReasonPhrase())
+                        .error(exception.getMessage())
+                        .build());
+    }
 }

@@ -1,6 +1,5 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.models;
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.validations.EmailHasUsedForOtherAccount;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.validations.UserRegistrationMustHavePasswordAndConfirmationEquals;
 import lombok.*;
 
@@ -8,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Objects;
 
 @NoArgsConstructor
@@ -15,11 +15,11 @@ import java.util.Objects;
 @Data
 @Builder(access = AccessLevel.PUBLIC)
 @UserRegistrationMustHavePasswordAndConfirmationEquals(message = "A senha e contra-senha devem ser identicos")
-public class UserRegistrationData {
+public class UserRegistrationData implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @NotBlank(message = "O email não pode ser vazio")
     @Email(message = "Deve ser um email válido")
-    @EmailHasUsedForOtherAccount(message = "Este email já é utilizado por outro usuário")
     private String email;
     @NotBlank(message = "O nome não pode ser vazio")
     private String firstName;
@@ -27,10 +27,10 @@ public class UserRegistrationData {
     private String lastName;
     @NotBlank(message = "A senha não pode ser vazio")
     @Size(min = 8, max = 64)
-    @Pattern(regexp = "/^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[$*&@#])[0-9a-zA-Z$*&@#]{8,}$/")
+    @Pattern(regexp = "^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z]).{8,64}$", message = "A senha deve possuir entre 8 e 64 caracteres, contendo números e letras maiúsculas e minúsculas")
     private String password;
     @NotBlank(message = "O contra-senha não pode ser vazio")
-    @Size(min = 8, max = 64)
+    @Size(min = 8, max = 64, message = "A contra-senha deve possuir entre 8 e 64 caracteres.")
     private String confirmationPassword;
 
     @Override
