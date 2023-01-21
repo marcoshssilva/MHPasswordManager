@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.responses;
+package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

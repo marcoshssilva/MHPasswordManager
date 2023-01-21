@@ -1,7 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.errors;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.StatusTypeEnum;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.responses.HttpJsonResponse;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.responses.HttpJsonResponse;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.CannotRegisterUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

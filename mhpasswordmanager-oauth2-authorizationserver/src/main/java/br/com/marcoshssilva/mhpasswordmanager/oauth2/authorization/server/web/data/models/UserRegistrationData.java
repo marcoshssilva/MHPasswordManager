@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.models;
+package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.validations.UserRegistrationMustHavePasswordAndConfirmationEquals;
 import lombok.*;

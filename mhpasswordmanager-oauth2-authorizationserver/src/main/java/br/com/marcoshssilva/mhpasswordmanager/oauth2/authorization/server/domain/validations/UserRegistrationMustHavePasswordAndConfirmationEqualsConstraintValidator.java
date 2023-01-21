@@ -1,7 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.validations;
 
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.models.UserRegistrationData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserRegistrationData;
 import lombok.RequiredArgsConstructor;
 
 import javax.validation.ConstraintValidator;

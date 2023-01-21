@@ -2,8 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.r
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.StatusTypeEnum;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.UserRolesEnum;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.responses.HttpJsonResponse;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.data.models.UserRegistrationData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.responses.HttpJsonResponse;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserRegistrationData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.UserService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
