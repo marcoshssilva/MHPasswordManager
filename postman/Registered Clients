@@ -1,7 +1,7 @@
 Authorization Code
-User: pwa-oauth2-authorization-code
+User: MHPasswordManager
 Pass: fd04f93e-5e4d-4f16-98ae-9247f68d8619
 
 CLient Credentials
-User: pwa-oauth2-client-credentials
+User: MHPasswordManager-GlobalAdmin
 Pass: 8e18ee56-ab7c-4ed9-b192-ff4472e5c697
