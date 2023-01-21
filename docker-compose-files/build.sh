@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash/sh
 echo 'mhpasswordmanager-service-registry...'
 docker build -t mhpasswordmanager/service-registry:latest ../mhpasswordmanager-service-registry
 
