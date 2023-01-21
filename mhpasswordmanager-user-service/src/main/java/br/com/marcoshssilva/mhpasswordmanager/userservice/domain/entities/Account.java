@@ -9,8 +9,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @RequiredArgsConstructor
+@ToString
 @Table(schema = "db_users", name = "users")
-@Entity(name = "User")
+@Entity
 public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
 

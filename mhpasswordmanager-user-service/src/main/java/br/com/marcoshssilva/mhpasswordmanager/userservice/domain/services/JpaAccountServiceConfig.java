@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services;
 
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountDetailsRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ public class JpaAccountServiceConfig {
 
     @Primary
     @Bean
-    AccountService jpaUserService(@Autowired AccountRepository accountRepository) {
-        return new JpaAccountServiceImpl(accountRepository);
+    AccountService jpaUserService(@Autowired AccountRepository accountRepository, @Autowired AccountDetailsRepository accountDetailsRepository) {
+        return new JpaAccountServiceImpl(accountRepository, accountDetailsRepository);
     }
 }

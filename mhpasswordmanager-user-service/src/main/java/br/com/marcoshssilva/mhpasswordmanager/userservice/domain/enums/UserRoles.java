@@ -10,7 +10,7 @@ public enum UserRoles {
     USER("ROLE_USER");
 
     @Getter
-    private String value;
+    private final String value;
 
     public UserRoles findByValue(String value) {
         for (UserRoles u: UserRoles.values())
