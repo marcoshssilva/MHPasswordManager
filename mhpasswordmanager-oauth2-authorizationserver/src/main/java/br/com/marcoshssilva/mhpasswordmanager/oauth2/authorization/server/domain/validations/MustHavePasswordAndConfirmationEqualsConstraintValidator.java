@@ -9,9 +9,9 @@ import javax.validation.ConstraintValidatorContext;
 import java.io.Serializable;
 
 @RequiredArgsConstructor
-public class UserRegistrationMustHavePasswordAndConfirmationEqualsConstraintValidator implements ConstraintValidator<UserRegistrationMustHavePasswordAndConfirmationEquals, UserRegistrationData>, Serializable {
+public class MustHavePasswordAndConfirmationEqualsConstraintValidator implements ConstraintValidator<MustHavePasswordAndConfirmationEquals, UserRegistrationData>, Serializable {
     @Override
-    public void initialize(UserRegistrationMustHavePasswordAndConfirmationEquals constraintAnnotation) {
+    public void initialize(MustHavePasswordAndConfirmationEquals constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);
     }
 

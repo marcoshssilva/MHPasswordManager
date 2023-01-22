@@ -8,10 +8,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Constraint(validatedBy = UserRegistrationMustHavePasswordAndConfirmationEqualsConstraintValidator.class)
+@Constraint(validatedBy = MustHavePasswordAndConfirmationEqualsConstraintValidator.class)
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UserRegistrationMustHavePasswordAndConfirmationEquals {
+public @interface MustHavePasswordAndConfirmationEquals {
     String message() default "Password and Confirmation Password doesn't are equals.";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

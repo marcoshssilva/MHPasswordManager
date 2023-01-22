@@ -1,6 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models;
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.validations.UserRegistrationMustHavePasswordAndConfirmationEquals;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.validations.MustHavePasswordAndConfirmationEquals;
 import lombok.*;
 
 import javax.validation.constraints.Email;
@@ -14,7 +14,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @Data
 @Builder(access = AccessLevel.PUBLIC)
-@UserRegistrationMustHavePasswordAndConfirmationEquals(message = "A senha e contra-senha devem ser identicos")
+@MustHavePasswordAndConfirmationEquals(message = "A senha e contra-senha devem ser identicos")
 public class UserRegistrationData implements Serializable {
     private static final long serialVersionUID = 1L;
 
