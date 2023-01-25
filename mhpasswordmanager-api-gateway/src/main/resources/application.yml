@@ -3,18 +3,19 @@ spring:
     name: 'gateway'
   cloud:
     gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+      routes:
+        - id: user-service
+          uri: lb://USERS
+          predicates:
+            - Path=/users/**
+        - id: authorization-server
+          uri: lb://AUTHORIZATION-SERVER
+          predicates:
+            - Path=/oauth2/**
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins:
-              - "http://localhost:8100"
-              - "http://localhost:4200"
-              - "http://localhost:8080"
-              - "http://localhost"
+            allowedOrigins: '*'
             allowedMethods:
               - GET
               - POST
@@ -22,6 +23,9 @@ spring:
               - DELETE
               - HEAD
               - OPTIONS
+            allowedHeaders:
+              - Content-type
+              - Authorization
   management:
     endpoints:
       web:
