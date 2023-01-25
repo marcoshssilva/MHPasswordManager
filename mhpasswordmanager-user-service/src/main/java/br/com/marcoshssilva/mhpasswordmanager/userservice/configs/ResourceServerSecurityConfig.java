@@ -17,7 +17,7 @@ public class ResourceServerSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.authorizeRequests()
                     // enable Swagger MVC public
-                    .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+                    .antMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/actuator/**").permitAll()
                     // any other requests authenticated
                     .anyRequest().authenticated()
                 .and()

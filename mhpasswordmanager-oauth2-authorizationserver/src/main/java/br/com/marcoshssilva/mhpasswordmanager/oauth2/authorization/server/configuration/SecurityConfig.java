@@ -15,7 +15,7 @@ public class SecurityConfig {
 
     private final String[] IGNORED_CSRF_ROUTES = new String[]{"/h2/**"};
 
-    private final String[] PUBLIC_ROUTES = new String[]{"/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/content/**"};
+    private final String[] PUBLIC_ROUTES = new String[]{"/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/content/**", "/actuator/**"};
 
     private final String[] GET_METHOD_ONLY_PUBLIC = new String[] {"/forgotPassword", "/"};
 
