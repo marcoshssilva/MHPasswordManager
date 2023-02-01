@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="mhpasswordmanager.userservice" />
         <module name="mhpasswordmanager.api.gateway" />
+        <module name="mhpasswordmanager.passwordservice" />
         <module name="mhpasswordmanager.service.registry" />
         <module name="mhpasswordmanager.oauth2.authorization.server" />
         <module name="mhpasswordmanager.flyway.database.migrations.tool" />
@@ -30,6 +31,7 @@
       <module name="mhpasswordmanager.flyway.database.migrations.tool" options="-parameters" />
       <module name="mhpasswordmanager.frontend.client" options="-parameters" />
       <module name="mhpasswordmanager.oauth2.authorization.server" options="-parameters" />
+      <module name="mhpasswordmanager.passwordservice" options="-parameters" />
       <module name="mhpasswordmanager.pwa-client" options="-parameters" />
       <module name="mhpasswordmanager.service.registry" options="-parameters" />
       <module name="mhpasswordmanager.userservice" options="-parameters" />

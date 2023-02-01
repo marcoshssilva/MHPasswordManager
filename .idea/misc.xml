@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations-tool/pom.xml" />
         <option value="$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/mhpasswordmanager-frontend-client/pom.xml" />
         <option value="$PROJECT_DIR$/mhpasswordmanager-pwa-client/pom.xml" />
+        <option value="$PROJECT_DIR$/mhpasswordmanager-password-service/pom.xml" />
       </list>
     </option>
   </component>
