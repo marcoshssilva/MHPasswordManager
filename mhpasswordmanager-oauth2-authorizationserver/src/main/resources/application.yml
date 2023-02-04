@@ -16,26 +16,24 @@ spring:
   mvc:
     static-path-pattern: /content/**
 server:
-  port: 9000
+  port: 12010
 eureka:
   instance:
     hostname: localhost
-    non-secure-port: 9000
-    secure-port: 9000
   client:
     service-url:
-      defaultZone: ${SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}
+      defaultZone: http://localhost:8761/eureka
 authorization:
   issuer-uri: http://localhost:9000
 management:
   endpoint:
     health:
       group:
-        custom:
+        integrations-details:
           show-components: ALWAYS
           show-details: ALWAYS
           include:
-            - diskSpace
+            - redis
             - ping
             - db
     shutdown:

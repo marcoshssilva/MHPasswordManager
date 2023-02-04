@@ -8,10 +8,10 @@ spring:
   session:
     store-type: redis
   datasource:
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.postgresql.Driver}
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/postgres?currentSchema=db_passwords}
-    username: ${SPRING_DATASOURCE_USERNAME:postgres}
-    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres?currentSchema=db_passwords
+    username: postgres
+    password: postgres
     jpa:
       hibernate:
         ddl-auto: validate
@@ -26,20 +26,18 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          issuer-uri: ${SERVICE_URL_AUTHORIZATION_SERVER:http://localhost:9000}
-#          jwk-set-uri: ${SERVICE_URL_AUTHORIZATION_SERVER_JWK_URI:http://localhost:9000/oauth2/jwks}
+          issuer-uri: http://localhost:9000
+#          jwk-set-uri: http://localhost:9000/oauth2/jwks
 eureka:
-#  instance:
-#    hostname: localhost
-#    non-secure-port: 12010
-#    secure-port: 12010
+  instance:
+    hostname: localhost
   client:
     service-url:
-      defaultZone: ${SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}
+      defaultZone: http://localhost:8761/eureka
 server:
   servlet:
     context-path: /passwords
-  port: 12010
+  port: 12012
 management:
   endpoint:
     health:
@@ -50,6 +48,7 @@ management:
           include:
             - db
             - redis
+            - ping
     shutdown:
       enabled: false
   endpoints:
@@ -67,8 +66,3 @@ springdoc:
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
   # enable actuator to Swagger
   show-actuator: true
-  # hidde login-endpoint to Swagger
-  show-login-endpoint: false
-  swagger-ui:
-    csrf:
-      enabled: false

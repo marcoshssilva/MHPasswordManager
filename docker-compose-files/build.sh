@@ -1,4 +1,4 @@
-#!/bin/bash/sh
+#!/bin/sh
 echo 'mhpasswordmanager-service-registry...'
 docker build -t mhpasswordmanager/service-registry:latest ../mhpasswordmanager-service-registry
 
@@ -10,5 +10,8 @@ docker build -t mhpasswordmanager/api-gateway:latest ../mhpasswordmanager-api-ga
 
 echo 'mhpasswordmanager-user-service...'
 docker build -t mhpasswordmanager/user-service:latest ../mhpasswordmanager-user-service
+
+echo 'mhpasswordmanager-password-service...'
+docker build -t mhpasswordmanager/password-service:latest ../mhpasswordmanager-password-service
 
 echo 'BUILD CONTAINERS SUCCESSFULLY.'

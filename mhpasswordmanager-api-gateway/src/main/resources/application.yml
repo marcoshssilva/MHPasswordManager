@@ -5,13 +5,13 @@ spring:
     gateway:
       routes:
         - id: user-service
-          uri: lb://USERS
+          uri: lb://USER-SERVICE
           predicates:
             - Path=/users/**
-        - id: authorization-server
-          uri: lb://AUTHORIZATION-SERVER
+        - id: password-service
+          uri: lb://PASSWORD-SERVICE
           predicates:
-            - Path=/oauth2/**
+            - Path=/passwords/**
       globalcors:
         cors-configurations:
           '[/**]':
@@ -31,11 +31,11 @@ spring:
       web:
         exposure:
           include: '*'
-
 server:
-  port: 8765
-
+  port: 12001
 eureka:
+  instance:
+    hostname: localhost
   client:
     service-url:
-      defaultZone: ${SERVICE_URL_DEFAULT_ZONE:http://localhost:8761/eureka}
+      defaultZone: http://localhost:8761/eureka
