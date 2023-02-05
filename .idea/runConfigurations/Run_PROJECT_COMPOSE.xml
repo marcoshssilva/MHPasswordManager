@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run PROJECT-COMPOSE" type="docker-deploy" factoryName="docker-compose.yml">
+  <configuration default="false" name="Run PROJECT-COMPOSE" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envFilePath" value="" />
@@ -8,8 +8,8 @@
             <option value="eureka-service-discovery" />
             <option value="oauth2-authorization-server" />
             <option value="api-gateway" />
-            <option value="pwa-client" />
             <option value="user-service" />
+            <option value="password-service" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose-files/docker-compose.yml" />
