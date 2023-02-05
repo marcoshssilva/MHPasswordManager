@@ -24,6 +24,7 @@ services:
       SPRING_REDIS_HOST: host.docker.internal
       SPRING_REDIS_PORT: 6379
       SPRING_REDIS_PASSWORD: "MARCOSHSSILVA#20230101"
+      AUTHORIZATION_ISSUERURI: http://oauth2-authorization-server:12010
     depends_on:
       - eureka-service-discovery
     networks:
@@ -42,7 +43,7 @@ services:
     networks:
       - net-mhpasswordmanager
     ports:
-      - "12001:12001"
+      - "12050:12050"
   user-service:
     image: mhpasswordmanager/user-service:latest
     container_name: 'user-service-api'
@@ -50,6 +51,7 @@ services:
     environment:
       EUREKA_INSTANCE_HOSTNAME: host.docker.internal
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service-discovery:8761/eureka
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://oauth2-authorization-server:12010
       SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_users
       SPRING_DATASOURCE_USERNAME: "postgres"
@@ -70,6 +72,7 @@ services:
     environment:
       EUREKA_INSTANCE_HOSTNAME: host.docker.internal
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service-discovery:8761/eureka
+      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://oauth2-authorization-server:12010
       SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
       SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_passwords
       SPRING_DATASOURCE_USERNAME: "postgres"
