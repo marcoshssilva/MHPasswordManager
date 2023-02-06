@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -18,13 +19,13 @@ public class SecurityConfig {
 
     private final String[] PUBLIC_ROUTES = new String[]{"/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/content/**", "/actuator/**"};
 
-    private final String[] GET_METHOD_ONLY_PUBLIC = new String[] {"/forgotPassword", "/"};
+    private final String[] GET_METHOD_ONLY_PUBLIC = new String[]{"/forgotPassword", "/"};
 
-    private final String[] POST_METHOD_ONLY_PUBLIC = new String[] {"/api/account/register"};
+    private final String[] POST_METHOD_ONLY_PUBLIC = new String[]{"/api/account/register"};
 
     @Order(1)
     @Bean
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http, @Value("${authorization.success-logout-uri}") String logoutSuccessUrl) throws Exception {
         // csrf for specific routes
         http.csrf().ignoringAntMatchers(IGNORED_CSRF_ROUTES).csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
         // allow frame options only to sameOrigin -> fix /h2
@@ -46,7 +47,10 @@ public class SecurityConfig {
         return http
                 // don't need to add in PUBLIC ROUTES because this method make it from default
                 .formLogin(login -> login.loginPage("/login").permitAll())
-                .logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET")).permitAll())
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutSuccessUrl(logoutSuccessUrl)
+                        .permitAll())
                 .build();
     }
 }
