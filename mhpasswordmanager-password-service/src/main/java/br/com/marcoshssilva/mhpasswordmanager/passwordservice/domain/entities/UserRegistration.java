@@ -32,6 +32,56 @@ public class UserRegistration implements Serializable {
     @Setter
     private String publicKey;
 
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey10;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey1;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey2;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey3;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey4;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey5;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey6;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey7;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey8;
+
+    @Column(columnDefinition = "TEXT")
+    @Getter
+    @Setter
+    private String encriptedKey9;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
