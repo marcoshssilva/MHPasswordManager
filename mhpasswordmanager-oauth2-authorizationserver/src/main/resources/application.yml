@@ -24,7 +24,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 authorization:
-  issuer-uri: http://localhost:9000
+  issuer-uri: http://localhost:12010
 management:
   endpoint:
     health:
