@@ -26,8 +26,8 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          issuer-uri: http://localhost:15010
-#          jwk-set-uri: http://localhost:15010/oauth2/jwks
+          issuer-uri: http://localhost:12010
+#          jwk-set-uri: http://localhost:12010/oauth2/jwks
 eureka:
   instance:
     hostname: localhost
