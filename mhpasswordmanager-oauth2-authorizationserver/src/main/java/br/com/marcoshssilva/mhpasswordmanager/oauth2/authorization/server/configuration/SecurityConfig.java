@@ -45,6 +45,7 @@ public class SecurityConfig {
         return http
                 // don't need to add in PUBLIC ROUTES because this method make it from default
                 .formLogin(login -> login.loginPage("/login").permitAll())
+                .logout(logout -> logout.logoutUrl("/logout").permitAll())
                 .build();
     }
 }
