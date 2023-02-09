@@ -5,5 +5,6 @@ RUN mvn clean install -DskipTests
 
 FROM eclipse-temurin:11-jre-alpine
 COPY --from=builder /app/target/mhpasswordmanager.passwordservice-0.0.1-SNAPSHOT.jar app.jar
+ENV JAVA_TOOL_OPTIONS --add-exports java.base/sun.security.rsa=ALL-UNNAMED
 ENTRYPOINT java -jar app.jar
 EXPOSE 12010
