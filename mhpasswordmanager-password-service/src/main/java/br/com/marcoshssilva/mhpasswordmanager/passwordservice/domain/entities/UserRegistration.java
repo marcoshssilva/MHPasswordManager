@@ -14,73 +14,24 @@ import java.util.Objects;
 @ToString
 @Entity
 @Table(schema = "db_passwords", name = "users_registration")
+@Builder
 public class UserRegistration implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Getter
-    @Setter
     private String id;
 
     @Column(nullable = false)
-    @Getter
-    @Setter
     private String email;
 
     @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String publicKey;
+    private String encodedPublicKey;
 
     @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey10;
+    private String encriptedPrivateKeyWithPassword;
 
     @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey1;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey2;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey3;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey4;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey5;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey6;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey7;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey8;
-
-    @Column(columnDefinition = "TEXT")
-    @Getter
-    @Setter
-    private String encriptedKey9;
+    private String[] encriptedPrivateKeys = new String[10];
 
     @Override
     public boolean equals(Object o) {
@@ -94,4 +45,45 @@ public class UserRegistration implements Serializable {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getEncodedPublicKey() {
+        return encodedPublicKey;
+    }
+
+    public void setEncodedPublicKey(String encodedPublicKey) {
+        this.encodedPublicKey = encodedPublicKey;
+    }
+
+    public String getEncriptedPrivateKeyWithPassword() {
+        return encriptedPrivateKeyWithPassword;
+    }
+
+    public void setEncriptedPrivateKeyWithPassword(String encriptedPrivateKeyWithPassword) {
+        this.encriptedPrivateKeyWithPassword = encriptedPrivateKeyWithPassword;
+    }
+
+    public String getEncriptedPrivateKey(int i) {
+        return encriptedPrivateKeys[i];
+    }
+
+    public void setEncriptedPrivateKey(int i, String encriptedPrivateKey) {
+        this.encriptedPrivateKeys[i] = encriptedPrivateKey;
+    }
+
 }
