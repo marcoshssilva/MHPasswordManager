@@ -6,7 +6,9 @@ spring:
     user: ${DATABASE_JDBC_USERNAME:postgres}
     password: ${DATABASE_JDBC_PASSWORD:postgres}
     schemas:
+      - 'flyway_control'
       - 'db_users'
+      - 'db_passwords'
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${DATABASE_JDBC_URL:jdbc:postgresql://localhost:5432/postgres}
