@@ -15,21 +15,22 @@ import java.util.Base64;
 
 @Service
 public class RSAUtilService {
+    private static final String ALGORITHM = "RSA";
     public PrivateKey getPrivateFromPKCS8(String privateKeyString) throws Exception {
-        KeyFactory kf = KeyFactory.getInstance("RSA");
+        KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
         PKCS8EncodedKeySpec spec = getPKCS8EncodedKeySpec(privateKeyString.getBytes(), false);
         return kf.generatePrivate(spec);
     }
 
     public PublicKey getPublicFromX509(String publicKeyString) throws Exception {
-        KeyFactory kf = KeyFactory.getInstance("RSA");
+        KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
         X509EncodedKeySpec spec = getX509EncodedKeySpec(publicKeyString.getBytes(), false);
         return kf.generatePublic(spec);
     }
 
     public PublicKey getPublic(PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         RSAPrivateCrtKey rsaPrivateKey = (RSAPrivateCrtKey) privateKey;
-        return KeyFactory.getInstance("RSA").generatePublic(new RSAPublicKeySpec(rsaPrivateKey.getModulus(), rsaPrivateKey.getPublicExponent()));
+        return KeyFactory.getInstance(ALGORITHM).generatePublic(new RSAPublicKeySpec(rsaPrivateKey.getModulus(), rsaPrivateKey.getPublicExponent()));
     }
 
     public X509EncodedKeySpec getX509EncodedKeySpec(byte[] payload, boolean isDecoded) {
