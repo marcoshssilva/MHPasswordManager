@@ -31,7 +31,7 @@
       <module name="mhpasswordmanager.flyway.database.migrations.tool" options="-parameters" />
       <module name="mhpasswordmanager.frontend.client" options="-parameters" />
       <module name="mhpasswordmanager.oauth2.authorization.server" options="-parameters" />
-      <module name="mhpasswordmanager.passwordservice" options="-parameters --add-exports java.base/sun.security.rsa=ALL-UNNAMED" />
+      <module name="mhpasswordmanager.passwordservice" options="-parameters" />
       <module name="mhpasswordmanager.pwa-client" options="-parameters" />
       <module name="mhpasswordmanager.service.registry" options="-parameters" />
       <module name="mhpasswordmanager.userservice" options="-parameters" />
