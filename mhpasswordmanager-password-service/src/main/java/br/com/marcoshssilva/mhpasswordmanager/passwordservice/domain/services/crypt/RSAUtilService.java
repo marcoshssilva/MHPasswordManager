@@ -1,12 +1,12 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt;
 
 import org.springframework.stereotype.Service;
-import sun.security.rsa.RSAPrivateCrtKeyImpl;
 
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.interfaces.RSAPrivateCrtKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPublicKeySpec;
@@ -28,7 +28,7 @@ public class RSAUtilService {
     }
 
     public PublicKey getPublic(PrivateKey privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        RSAPrivateCrtKeyImpl rsaPrivateKey = (RSAPrivateCrtKeyImpl) privateKey;
+        RSAPrivateCrtKey rsaPrivateKey = (RSAPrivateCrtKey) privateKey;
         return KeyFactory.getInstance("RSA").generatePublic(new RSAPublicKeySpec(rsaPrivateKey.getModulus(), rsaPrivateKey.getPublicExponent()));
     }
 
