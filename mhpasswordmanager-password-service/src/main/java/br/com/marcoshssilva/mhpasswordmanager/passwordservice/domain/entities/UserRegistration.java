@@ -28,10 +28,10 @@ public class UserRegistration implements Serializable {
     private String encodedPublicKey;
 
     @Column(columnDefinition = "TEXT")
-    private String encriptedPrivateKeyWithPassword;
+    private String encryptedPrivateKeyWithPassword;
 
     @Column(columnDefinition = "TEXT")
-    private String[] encriptedPrivateKeys = new String[10];
+    private String[] encryptedPrivateKeys = new String[10];
 
     @Override
     public boolean equals(Object o) {
@@ -71,19 +71,19 @@ public class UserRegistration implements Serializable {
     }
 
     public String getEncriptedPrivateKeyWithPassword() {
-        return encriptedPrivateKeyWithPassword;
+        return encryptedPrivateKeyWithPassword;
     }
 
-    public void setEncriptedPrivateKeyWithPassword(String encriptedPrivateKeyWithPassword) {
-        this.encriptedPrivateKeyWithPassword = encriptedPrivateKeyWithPassword;
+    public void setEncriptedPrivateKeyWithPassword(String encryptedPrivateKeyWithPassword) {
+        this.encryptedPrivateKeyWithPassword = encryptedPrivateKeyWithPassword;
     }
 
     public String getEncriptedPrivateKey(int i) {
-        return encriptedPrivateKeys[i];
+        return encryptedPrivateKeys[i];
     }
 
-    public void setEncriptedPrivateKey(int i, String encriptedPrivateKey) {
-        this.encriptedPrivateKeys[i] = encriptedPrivateKey;
+    public void setEncriptedPrivateKey(int i, String encryptedPrivateKey) {
+        this.encryptedPrivateKeys[i] = encryptedPrivateKey;
     }
 
 }
