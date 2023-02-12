@@ -12,12 +12,12 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=db_users
     username: postgres
     password: postgres
-    jpa:
-      hibernate:
-        ddl-auto: validate
-      show-sql: true
-      properties:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
   jackson:
     default-property-inclusion: non_null
     serialization:
