@@ -2,7 +2,7 @@ CREATE SCHEMA IF NOT EXISTS db_passwords;
 DROP TABLE IF EXISTS db_passwords.users_registration;
 CREATE TABLE db_passwords.users_registration
 (
-    id                                  VARCHAR(255) PRIMARY KEY,
+    id                                  VARCHAR(36) PRIMARY KEY,
     email                               VARCHAR(255) NOT NULL,
     encoded_public_key                  TEXT,
     encrypted_private_key_with_password TEXT,

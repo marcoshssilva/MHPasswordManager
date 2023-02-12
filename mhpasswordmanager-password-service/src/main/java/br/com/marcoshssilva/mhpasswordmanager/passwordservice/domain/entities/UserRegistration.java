@@ -19,6 +19,7 @@ public class UserRegistration implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
+    @Column(nullable = false, length = 36)
     private String id;
 
     @Column(nullable = false)
