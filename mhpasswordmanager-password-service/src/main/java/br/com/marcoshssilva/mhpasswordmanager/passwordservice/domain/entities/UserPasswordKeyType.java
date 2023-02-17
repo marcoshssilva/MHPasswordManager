@@ -13,7 +13,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(schema = "db_passwords", name = "users_keys_types")
+@Table(name = "users_keys_types")
 @Builder
 public class UserPasswordKeyType implements Serializable {
     private static final long serialVersionUID = 1L;

@@ -17,7 +17,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @Entity
-@Table(schema = "db_passwords", name = "users_keys")
+@Table(name = "users_keys")
 @Builder
 public class UserPasswordKey implements Serializable {
     private static final long serialVersionUID = 1L;
