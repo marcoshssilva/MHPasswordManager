@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class AESCryptServiceImpl implements CryptService {
@@ -15,9 +17,9 @@ public class AESCryptServiceImpl implements CryptService {
     @Override
     public byte[] encrypt(byte[] payload, String secret) {
         try {
-            SecretKeySpec key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            SecretKeySpec key = new SecretKeySpec(getSHA256Hash(secret), ALGORITHM);
             Cipher encrypt = Cipher.getInstance(TRANSFORMATION, "SunJCE");
-            encrypt.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(generateIV(secret).getBytes(StandardCharsets.UTF_8)));
+            encrypt.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(getFirst16Bytes(secret)));
             return encrypt.doFinal(payload);
         } catch (Exception e) {
             throw new EncryptionException("Encryption failed", e);
@@ -27,16 +29,22 @@ public class AESCryptServiceImpl implements CryptService {
     @Override
     public byte[] decrypt(byte[] payload, String secret) {
         try {
-            SecretKeySpec key = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), ALGORITHM);
+            SecretKeySpec key = new SecretKeySpec(getSHA256Hash(secret), ALGORITHM);
             Cipher decrypt = Cipher.getInstance(TRANSFORMATION, "SunJCE");
-            decrypt.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(generateIV(secret).getBytes(StandardCharsets.UTF_8)));
+            decrypt.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(getFirst16Bytes(secret)));
             return decrypt.doFinal(payload);
         } catch (Exception e) {
             throw new DecryptionException("Decryption failed", e);
         }
     }
 
-    private String generateIV(String secret) {
-        return "A".repeat(secret.length());
+    private byte[] getFirst16Bytes(String key) throws NoSuchAlgorithmException {
+        byte[] hash = getSHA256Hash(key);
+        return Arrays.copyOf(hash, 16); // return the first 16 bytes as the IV
+    }
+
+    private byte[] getSHA256Hash(String key) throws NoSuchAlgorithmException {
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        return digest.digest(key.getBytes());
     }
 }
