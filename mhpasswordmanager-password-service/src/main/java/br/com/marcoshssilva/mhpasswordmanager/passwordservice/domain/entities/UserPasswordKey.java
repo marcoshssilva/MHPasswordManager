@@ -1,10 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,31 +17,43 @@ import java.util.Objects;
 @Table(name = "users_keys")
 @Builder
 public class UserPasswordKey implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter
+    @Setter
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_registration_id", nullable = false)
+    @Getter
+    @Setter
     private UserRegistration userRegistration;
 
     @ElementCollection
     @CollectionTable(schema = "db_passwords", name = "users_key_tags")
     @Column(nullable = false)
+    @Getter
+    @Setter
     private Collection<String> tags = Collections.emptySet();
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false, name = "user_key_type_id")
+    @Getter
+    @Setter
     private PasswordKeyTypesEnum type;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
+    @Getter
+    @Setter
     private Date createdAt;
 
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
+    @Getter
+    @Setter
     private Date lastUpdate;
 
     @Override
@@ -57,53 +66,5 @@ public class UserPasswordKey implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public UserRegistration getUserRegistration() {
-        return userRegistration;
-    }
-
-    public void setUserRegistration(UserRegistration userRegistration) {
-        this.userRegistration = userRegistration;
-    }
-
-    public Collection<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(Collection<String> tags) {
-        this.tags = tags;
-    }
-
-    public PasswordKeyTypesEnum getType() {
-        return type;
-    }
-
-    public void setType(PasswordKeyTypesEnum type) {
-        this.type = type;
-    }
-
-    public Date getCreateAt() {
-        return createdAt;
-    }
-
-    public void setCreateAt(Date createAt) {
-        this.createdAt = createAt;
-    }
-
-    public Date getLastUpdate() {
-        return lastUpdate;
-    }
-
-    public void setLastUpdate(Date lastUpdate) {
-        this.lastUpdate = lastUpdate;
     }
 }
