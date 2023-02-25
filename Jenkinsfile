@@ -8,6 +8,13 @@ pipeline {
                 }
             }    
         }
+        stage('Compile and Test Api-Gateway') {
+            steps{
+                dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway"){
+                    sh "mvn clean test package"
+                }
+            }
+        }
         stage('Compile and Test OAuth2-Authorization Server') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver"){
@@ -25,13 +32,6 @@ pipeline {
         stage('Compile and Test Password-Service-Api') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
-                    sh "mvn clean test package"
-                }
-            }
-        }
-        stage('Compile and Test Api-Gateway') {
-            steps{
-                dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway"){
                     sh "mvn clean test package"
                 }
             }
