@@ -2,11 +2,10 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-@SpringBootTest
 public class UserRegistrationTests {
     @DisplayName("Test hashCode and equals methods")
     @Test

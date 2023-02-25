@@ -2,11 +2,9 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 public class UserPasswordKeyTypeTests {
 
     @DisplayName("Test data for getters and setters")

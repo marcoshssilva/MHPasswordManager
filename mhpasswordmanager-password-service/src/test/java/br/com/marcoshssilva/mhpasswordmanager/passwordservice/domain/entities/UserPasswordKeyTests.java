@@ -3,7 +3,6 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +10,6 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest
 public class UserPasswordKeyTests {
 
     @DisplayName("Test hashCode and equals methods")
