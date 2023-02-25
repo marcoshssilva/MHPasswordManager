@@ -1,12 +1,8 @@
 spring:
+  profiles:
+    active: redis
   application:
     name: 'password-service'
-  redis:
-    host: 127.0.0.1
-    password: MARCOSHSSILVA#20230101
-    port: 6379
-  session:
-    store-type: redis
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=db_passwords
@@ -82,3 +78,16 @@ spring:
     show-sql: true
     properties:
       dialect: org.hibernate.dialect.H2Dialect
+  session:
+    store-type: none
+---
+spring:
+  config:
+    activate:
+      on-profile: redis
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: MARCOSHSSILVA#20230101
+    port: 6379
