@@ -1,18 +1,12 @@
 spring:
-#  profiles:
-#    active: test
+  profiles:
+    active: redis
   application:
     name: 'authorization-server'
   h2:
     console:
       enabled: true
       path: /h2
-  redis:
-    host: 127.0.0.1
-    password: MARCOSHSSILVA#20230101
-    port: 6379
-  session:
-    store-type: redis
   mvc:
     static-path-pattern: /content/**
 server:
@@ -34,7 +28,6 @@ management:
           show-components: ALWAYS
           show-details: ALWAYS
           include:
-            - redis
             - ping
             - db
     shutdown:
@@ -59,3 +52,21 @@ springdoc:
   swagger-ui:
     csrf:
       enabled: true # enable csrf in swagger-ui requests
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  session:
+    store-type: none
+---
+spring:
+  config:
+    activate:
+      on-profile: redis
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: MARCOSHSSILVA#20230101
+    port: 6379

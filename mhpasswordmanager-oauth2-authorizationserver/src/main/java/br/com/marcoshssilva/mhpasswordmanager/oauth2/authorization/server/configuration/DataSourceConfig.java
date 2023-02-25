@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import javax.sql.DataSource;
 
@@ -29,6 +32,7 @@ public class DataSourceConfig {
     }
 
     @Bean
+    @Profile("!test")
     public DataSource dataSource() {
         return DataSourceBuilder.create().driverClassName(datasourceDriver)
                 .url(datasourceUrl)
@@ -37,4 +41,15 @@ public class DataSourceConfig {
                 .build();
     }
 
+    @Bean
+    @Profile("test")
+    public DataSource embeddedDatabase() {
+        return new EmbeddedDatabaseBuilder().generateUniqueName(true)
+                .setType(EmbeddedDatabaseType.H2)
+                .setScriptEncoding("UTF-8")
+                .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
+                .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
+                .addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
+                .build();
+    }
 }
