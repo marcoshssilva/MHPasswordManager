@@ -27,14 +27,13 @@ public class UserPasswordStoredValueRepositoryTests {
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 
-    private UserRegistration userRegistration;
     private UserPasswordKey userPasswordKey;
     private final UUID userRegistrationUid = UUID.randomUUID();
 
     @BeforeEach
     public void setUp() {
         // save user registration
-        userRegistration = userRegistrationRepository.save(UserRegistration.builder()
+        UserRegistration userRegistration = userRegistrationRepository.save(UserRegistration.builder()
                 .id(userRegistrationUid.toString())
                 .email("test@example.com")
                 .build());
