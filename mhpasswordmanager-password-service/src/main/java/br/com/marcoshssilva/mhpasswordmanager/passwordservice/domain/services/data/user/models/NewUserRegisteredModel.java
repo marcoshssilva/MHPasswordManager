@@ -5,4 +5,4 @@ import lombok.Builder;
 import java.util.Collection;
 
 @Builder
-public record UserRegisteredModel(String id, String email, Collection<RecoveryKeyData> recoveryKeys, String encodedPublicKey) { }
+public record NewUserRegisteredModel(String id, String email, Collection<RecoveryKeyData> recoveryKeys, String encodedPublicKey) { }

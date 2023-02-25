@@ -4,7 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.Us
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserRegistrationRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.RecoveryKeyData;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.NewUserRegisteredModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +25,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public UserRegisteredModel createUserRegistration(String email, String vaultKey) throws UserRegistrationException {
+    public NewUserRegisteredModel createUserRegistration(String email, String vaultKey) throws UserRegistrationException {
         try {
             // negate if user already used by another registration
             Optional<UserRegistration> getFromDb = userRegistrationRepository.findUserRegistrationByEmail(email);
@@ -67,7 +67,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             // save in db
             userRegistrationRepository.save(userRegistration);
             // return object
-            return UserRegisteredModel.builder().id(userRegistration.getId())
+            return NewUserRegisteredModel.builder().id(userRegistration.getId())
                     .email(userRegistration.getEmail())
                     .recoveryKeys(Arrays.asList(recoveryKeys))
                     .encodedPublicKey(base64PublicKey)

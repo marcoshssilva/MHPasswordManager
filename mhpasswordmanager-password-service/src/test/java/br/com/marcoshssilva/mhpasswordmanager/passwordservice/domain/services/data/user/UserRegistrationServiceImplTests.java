@@ -1,6 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user;
 
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.NewUserRegisteredModel;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class UserRegistrationServiceImplTests {
     public void shouldCreateUser() {
         assertDoesNotThrow(() -> {
             String email = "johndoe@gmail.com";
-            UserRegisteredModel userRegistration = service.createUserRegistration(email, "Hellbound#3090");
+            NewUserRegisteredModel userRegistration = service.createUserRegistration(email, "Hellbound#3090");
             assertEquals(email, userRegistration.email());
         });
     }
