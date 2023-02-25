@@ -1,12 +1,8 @@
 spring:
+  profiles:
+    active: redis
   application:
     name: 'user-service'
-  redis:
-    host: 127.0.0.1
-    password: MARCOSHSSILVA#20230101
-    port: 6379
-  session:
-    store-type: redis
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/postgres?currentSchema=db_users
@@ -65,3 +61,32 @@ springdoc:
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
   # enable actuator to Swagger
   show-actuator: true
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:db_passwords;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      dialect: org.hibernate.dialect.H2Dialect
+  session:
+    store-type: none
+---
+spring:
+  config:
+    activate:
+      on-profile: redis
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: MARCOSHSSILVA#20230101
+    port: 6379
