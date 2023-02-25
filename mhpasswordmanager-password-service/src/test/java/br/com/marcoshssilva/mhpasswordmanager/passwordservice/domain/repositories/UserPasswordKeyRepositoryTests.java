@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.Us
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -38,6 +39,7 @@ public class UserPasswordKeyRepositoryTests {
         userRegistrationRepository.save(userRegistration);
     }
 
+    @DisplayName("Test if can save in database")
     @Test
     public void testSave() {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
@@ -56,6 +58,7 @@ public class UserPasswordKeyRepositoryTests {
         assertThat(savedUserPasswordKey.getLastUpdate()).isNotNull();
     }
 
+    @DisplayName("Test if can update in database")
     @Test
     public void testUpdate() {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
@@ -74,6 +77,7 @@ public class UserPasswordKeyRepositoryTests {
         assertThat(updatedUserPasswordKey.getLastUpdate()).isNotEqualTo(userPasswordKey.getCreatedAt());
     }
 
+    @DisplayName("Test if can delete in database")
     @Test
     public void testDelete() {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()

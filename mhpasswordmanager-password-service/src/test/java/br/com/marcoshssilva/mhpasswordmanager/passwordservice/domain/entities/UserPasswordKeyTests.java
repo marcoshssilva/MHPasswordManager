@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class UserPasswordKeyTests {
 
+    @DisplayName("Test hashCode and equals methods")
     @Test
     void testEqualsAndHashCode() {
         UserRegistration userRegistration1 = UserRegistration.builder().id("123").build();
@@ -45,6 +47,7 @@ public class UserPasswordKeyTests {
         assertNotEquals(key1.hashCode(), key3.hashCode());
     }
 
+    @DisplayName("Test data for getters and setters")
     @Test
     public void testGettersAndSetters() {
         Long id = 1L;

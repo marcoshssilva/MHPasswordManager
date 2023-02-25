@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,6 +20,7 @@ public class UserRegistrationRepositoryTests {
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 
+    @DisplayName("Test if can save in database")
     @Test
     public void testSaveUserRegistration() {
         // Given
@@ -59,6 +61,7 @@ public class UserRegistrationRepositoryTests {
         assertEquals(userRegistration.getEncryptedPrivateKey9(), savedUserRegistration.getEncryptedPrivateKey9());
     }
 
+    @DisplayName("Test if can update in database")
     @Test
     public void testUpdate() {
         // Create a new user registration entity
@@ -94,6 +97,7 @@ public class UserRegistrationRepositoryTests {
         assertEquals(savedUserRegistration, retrievedUserRegistration.orElse(UserRegistration.builder().id(UUID.randomUUID().toString()).build()));
     }
 
+    @DisplayName("Test if can delete in database")
     @Test
     public void testDeleteUserRegistration() {
         // Create a new UserRegistration

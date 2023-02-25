@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -18,6 +19,7 @@ public class UserPasswordStoredValueTests {
         userPasswordStoredValue = new UserPasswordStoredValue();
     }
 
+    @DisplayName("Test data for getters and setters")
     @Test
     void testGettersAndSetters() {
         UserPasswordKey key = new UserPasswordKey();
@@ -35,6 +37,7 @@ public class UserPasswordStoredValueTests {
         assertEquals(now, userPasswordStoredValue.getLastUpdate());
     }
 
+    @DisplayName("Test hashCode and equals methods")
     @Test
     void testHashCodeAndEquals() {
         UserPasswordStoredValue obj1 = new UserPasswordStoredValue();

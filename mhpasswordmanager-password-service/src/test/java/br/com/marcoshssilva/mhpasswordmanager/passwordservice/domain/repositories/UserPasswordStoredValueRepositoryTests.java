@@ -5,6 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.Us
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -47,6 +48,7 @@ public class UserPasswordStoredValueRepositoryTests {
                 .build());
     }
 
+    @DisplayName("Test if can save in database")
     @Test
     public void testSave() {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
@@ -60,6 +62,7 @@ public class UserPasswordStoredValueRepositoryTests {
         assertEquals(storedValue.getData(), saved.getData());
     }
 
+    @DisplayName("Test if can update in database")
     @Test
     public void testUpdate() {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
@@ -79,6 +82,7 @@ public class UserPasswordStoredValueRepositoryTests {
         assertEquals(saved.getData(), updated.getData());
     }
 
+    @DisplayName("Test if can delete in database")
     @Test
     public void testDelete() {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()

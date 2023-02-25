@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -7,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserRegistrationTests {
+    @DisplayName("Test hashCode and equals methods")
     @Test
     public void testEqualsAndHashCode() {
         // Create two UserRegistration objects with the same id and email
@@ -35,6 +37,7 @@ public class UserRegistrationTests {
         assertNotEquals(userRegistration1.hashCode(), userRegistration2.hashCode());
     }
 
+    @DisplayName("Test data for getters and setters")
     @Test
     public void testUserRegistrationFields() {
         // Create a new UserRegistration

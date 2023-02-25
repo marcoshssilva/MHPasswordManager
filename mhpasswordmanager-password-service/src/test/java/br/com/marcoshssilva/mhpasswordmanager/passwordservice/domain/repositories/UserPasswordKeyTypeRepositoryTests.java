@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKeyType;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,6 +17,7 @@ public class UserPasswordKeyTypeRepositoryTests {
     @Autowired
     private UserPasswordKeyTypeRepository repository;
 
+    @DisplayName("Test if can save in database")
     @Test
     public void testSave() {
         UserPasswordKeyType keyType = UserPasswordKeyType.builder()
@@ -36,6 +38,7 @@ public class UserPasswordKeyTypeRepositoryTests {
         assertEquals(savedKeyType.getDescription(), retrievedKeyType.getDescription());
     }
 
+    @DisplayName("Test if can delete in database")
     @Test
     public void testDelete() {
         UserPasswordKeyType keyType = UserPasswordKeyType.builder()
@@ -52,6 +55,7 @@ public class UserPasswordKeyTypeRepositoryTests {
         assertFalse(repository.existsById(savedKeyType.getId()));
     }
 
+    @DisplayName("Test if can update in database")
     @Test
     public void testUpdate() {
         UserPasswordKeyType keyType = UserPasswordKeyType.builder()
