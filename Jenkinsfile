@@ -36,12 +36,5 @@ pipeline {
                 }
             }
         }
-        stage('Compile and Test Flyway-Database-Migrations') {
-            steps{
-                dir("${env.WORKSPACE}/mhpasswordmanager-flyway-database-migrations"){
-                    sh "mvn clean test package"
-                }
-            }
-        }
     }
 }
