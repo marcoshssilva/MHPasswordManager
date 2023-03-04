@@ -5,6 +5,7 @@ pipeline {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
                     sh "mvn clean test package"
+                    sh "mvn -DskipTests install"
                 }
             }    
         }
@@ -12,6 +13,7 @@ pipeline {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway"){
                     sh "mvn clean test package"
+                    sh "mvn -DskipTests install"
                 }
             }
         }
@@ -19,6 +21,7 @@ pipeline {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver"){
                     sh "mvn clean test package"
+                    sh "mvn -DskipTests install"
                 }
             }
         }
@@ -26,6 +29,7 @@ pipeline {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service"){
                     sh "mvn clean test package"
+                    sh "mvn -DskipTests install"
                 }
             }
         }
@@ -33,6 +37,7 @@ pipeline {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
                     sh "mvn clean test package"
+                    sh "mvn -DskipTests install"
                 }
             }
         }
