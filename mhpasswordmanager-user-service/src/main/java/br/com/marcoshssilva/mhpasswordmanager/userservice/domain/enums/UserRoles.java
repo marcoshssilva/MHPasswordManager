@@ -12,7 +12,7 @@ public enum UserRoles {
     @Getter
     private final String value;
 
-    public UserRoles findByValue(String value) {
+    public static UserRoles findByValue(String value) {
         for (UserRoles u: UserRoles.values())
             if (u.getValue().equals(value))
                 return u;
