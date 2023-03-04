@@ -1,9 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +10,8 @@ import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Objects;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Table(schema = "db_users", name = "users_details")
 @Entity

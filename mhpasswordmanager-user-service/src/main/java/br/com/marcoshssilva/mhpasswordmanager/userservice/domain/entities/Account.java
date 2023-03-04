@@ -8,7 +8,8 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @ToString
 @Table(schema = "db_users", name = "users")
 @Entity
