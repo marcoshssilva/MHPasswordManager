@@ -34,7 +34,7 @@ public class Account implements Serializable {
 
     @Column(name = "authority")
     @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(schema = "db_users", name = "authorities",joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
+    @CollectionTable(name = "authorities",joinColumns = @JoinColumn(name = "username", referencedColumnName = "username"))
     @Getter
     @Setter
     private Set<String> roles = new HashSet<>();
