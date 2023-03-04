@@ -13,7 +13,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(schema = "db_users", name = "users_details")
+@Table(name = "users_details")
 @Entity
 public class AccountDetails implements Serializable {
     private static final long serialVersionUID = 1L;

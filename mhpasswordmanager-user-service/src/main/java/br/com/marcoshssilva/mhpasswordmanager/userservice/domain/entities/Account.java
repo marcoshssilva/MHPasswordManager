@@ -11,7 +11,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-@Table(schema = "db_users", name = "users")
+@Table(name = "users")
 @Entity
 public class Account implements Serializable {
     private static final long serialVersionUID = 1L;
