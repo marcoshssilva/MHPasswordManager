@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: redis, embedded-database
+    active: redis
   application:
     name: 'authorization-server'
   mvc:
