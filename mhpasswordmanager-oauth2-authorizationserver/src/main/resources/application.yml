@@ -1,12 +1,8 @@
 spring:
   profiles:
-    active: redis
+    active: redis, embedded-database
   application:
     name: 'authorization-server'
-  h2:
-    console:
-      enabled: true
-      path: /h2
   mvc:
     static-path-pattern: /content/**
 server:
@@ -37,7 +33,6 @@ management:
       exposure:
         include:
           - '*'
-
 springdoc:
   # description
   version: @project.version@
@@ -70,3 +65,12 @@ spring:
     host: 127.0.0.1
     password: MARCOSHSSILVA#20230101
     port: 6379
+---
+spring:
+  config:
+    activate:
+      on-profile: embedded-database
+  h2:
+    console:
+      enabled: true
+      path: /h2

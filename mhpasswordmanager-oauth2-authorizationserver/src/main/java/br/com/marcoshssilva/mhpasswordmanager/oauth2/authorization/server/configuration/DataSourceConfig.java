@@ -32,7 +32,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile("!test")
+    @Profile({"!test", "!embedded-database"})
     public DataSource dataSource() {
         return DataSourceBuilder.create().driverClassName(datasourceDriver)
                 .url(datasourceUrl)
@@ -42,7 +42,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile("test")
+    @Profile("embedded-database")
     public DataSource embeddedDatabase() {
         return new EmbeddedDatabaseBuilder().generateUniqueName(true)
                 .setType(EmbeddedDatabaseType.H2)
@@ -50,6 +50,8 @@ public class DataSourceConfig {
                 .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
                 .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
                 .addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
+                .addScript("db/schema.sql")
+                .addScript("db/data.sql")
                 .build();
     }
 }
