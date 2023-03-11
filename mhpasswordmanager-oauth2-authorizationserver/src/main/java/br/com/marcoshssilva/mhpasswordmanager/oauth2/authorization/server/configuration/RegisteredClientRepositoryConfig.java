@@ -31,7 +31,7 @@ public class RegisteredClientRepositoryConfig {
     public RegisteredClientRepository inMemoryRegisteredClientRepository(PasswordEncoder encoder) {
         RegisteredClient register1 = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientName("Registered client for PWA Client")
-                .clientId("pwa-oauth2-authorization-code")
+                .clientId("MHPasswordManager")
                 .clientSecret(encoder.encode("fd04f93e-5e4d-4f16-98ae-9247f68d8619"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 
@@ -40,9 +40,6 @@ public class RegisteredClientRepositoryConfig {
 
                 .redirectUri("https://oidcdebugger.com/debug")
                 .redirectUri("https://oauth.pstmn.io/v1/callback")
-                .redirectUri("http://127.0.0.1:4200/authorize")
-                .redirectUri("http://127.0.0.1:8100/authorize")
-                .redirectUri("capacitor-electron://-/authorize")
 
                 .scope("user:canSelfRead")
                 .scope("user:canSelfWrite")
@@ -61,7 +58,7 @@ public class RegisteredClientRepositoryConfig {
 
         RegisteredClient register2 = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientName("Registered client for Client Credentials")
-                .clientId("pwa-oauth2-client-credentials")
+                .clientId("MHPasswordManager-GlobalAdmin")
                 .clientSecret(encoder.encode("8e18ee56-ab7c-4ed9-b192-ff4472e5c697"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 

@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration;
 
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.UserRolesEnum;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,7 +36,7 @@ public class SecurityConfig {
                 // register public routes
                 .antMatchers(PUBLIC_ROUTES).permitAll()
                 // register available path -> /h2 <- only to ROLE_ADMIN and ROLE_MASTER
-                .antMatchers("/h2/**").hasAnyRole("ADMIN", "MASTER")
+                .antMatchers("/h2/**").hasAnyRole(UserRolesEnum.ADMIN.name(), UserRolesEnum.MASTER.name())
                 // register as public access only when GET method
                 .antMatchers(HttpMethod.GET, GET_METHOD_ONLY_PUBLIC).permitAll()
                 // register as public access only when POST method
