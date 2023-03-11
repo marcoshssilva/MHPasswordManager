@@ -32,7 +32,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile({"!test", "!embedded-database"})
+    @Profile({"!test", "external-jdbc-database"})
     public DataSource dataSource() {
         return DataSourceBuilder.create().driverClassName(datasourceDriver)
                 .url(datasourceUrl)
