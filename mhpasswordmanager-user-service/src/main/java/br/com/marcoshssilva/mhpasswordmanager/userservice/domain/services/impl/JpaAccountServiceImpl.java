@@ -1,9 +1,10 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.Account;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetails;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountDetailsRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRepository;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.Accoun
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetails;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountDetailsRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRepository;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl.JpaAccountServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,7 +23,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-public class AccountServiceTests {
+public class JpaAccountServiceTests {
     @Mock
     private AccountRepository accountRepository;
 

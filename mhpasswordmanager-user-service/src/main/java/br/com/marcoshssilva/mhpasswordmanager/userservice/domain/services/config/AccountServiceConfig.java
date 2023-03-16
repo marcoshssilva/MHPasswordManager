@@ -1,15 +1,17 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.config;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountDetailsRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRepository;
 
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl.JpaAccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 @Configuration
-public class JpaAccountServiceConfig {
+public class AccountServiceConfig {
 
     @Primary
     @Bean

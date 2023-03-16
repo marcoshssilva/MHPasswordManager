@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @AllArgsConstructor
-public enum UserRoles {
+public enum DefaultUserRoles {
     ADMIN("ROLE_ADMIN"),
     MASTER("ROLE_MASTER"),
     USER("ROLE_USER");
@@ -12,8 +12,8 @@ public enum UserRoles {
     @Getter
     private final String value;
 
-    public static UserRoles findByValue(String value) {
-        for (UserRoles u: UserRoles.values())
+    public static DefaultUserRoles findByValue(String value) {
+        for (DefaultUserRoles u: DefaultUserRoles.values())
             if (u.getValue().equals(value))
                 return u;
 
