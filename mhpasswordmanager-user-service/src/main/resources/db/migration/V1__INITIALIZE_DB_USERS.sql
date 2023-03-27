@@ -75,7 +75,7 @@ VALUES ('anonymous@mhpasswordmanager.com',
         'ROLE_USER');
 
 INSERT INTO users_details (username, firstName, lastName, imageUrl)
-VALUES ('marcoshssilva.dev@gmail.com',
+VALUES ('admin@mhpasswordmanager.com',
         'Default',
         'Administrator',
         null),
