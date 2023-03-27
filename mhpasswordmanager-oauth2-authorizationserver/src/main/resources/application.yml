@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: in-memory-users
+    default: in-jdbc-users
   application:
     name: 'authorization-server'
   mvc:
