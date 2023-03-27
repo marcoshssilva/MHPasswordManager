@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -11,7 +12,6 @@ import org.springframework.security.oauth2.server.authorization.client.InMemoryR
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 
 import java.time.Duration;
@@ -21,42 +21,21 @@ import java.util.UUID;
 public class RegisteredClientRepositoryConfig {
 
     @Bean
-    @Profile("!test")
-    public RegisteredClientRepository jdbcRegisteredClientRepository(JdbcTemplate jdbcTemplate) {
+    @Profile("!in-memory-client & !embedded-database")
+    public RegisteredClientRepository dbAuthJdbcRegisteredClientRepository(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate) {
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
 
     @Bean
-    @Profile("test")
+    @Profile("embedded-database")
+    public RegisteredClientRepository embeddedJdbcRegisteredClientRepository(@Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate) {
+        return new JdbcRegisteredClientRepository(jdbcTemplate);
+    }
+
+    @Bean
+    @Profile("in-memory-client")
     public RegisteredClientRepository inMemoryRegisteredClientRepository(PasswordEncoder encoder) {
-        RegisteredClient register1 = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientName("Registered client for PWA Client")
-                .clientId("MHPasswordManager")
-                .clientSecret(encoder.encode("fd04f93e-5e4d-4f16-98ae-9247f68d8619"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-
-                .redirectUri("https://oidcdebugger.com/debug")
-                .redirectUri("https://oauth.pstmn.io/v1/callback")
-
-                .scope("user:canSelfRead")
-                .scope("user:canSelfWrite")
-                .scope("user:canSelfDelete")
-
-                .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofMinutes(15L))
-                        .reuseRefreshTokens(false)
-                        .refreshTokenTimeToLive(Duration.ofHours(3L))
-                        .build())
-                .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(true)
-                        .requireProofKey(false)
-                        .build())
-                .build();
-
-        RegisteredClient register2 = RegisteredClient.withId(UUID.randomUUID().toString())
+        RegisteredClient defaultClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientName("Registered client for Client Credentials")
                 .clientId("MHPasswordManager-GlobalAdmin")
                 .clientSecret(encoder.encode("8e18ee56-ab7c-4ed9-b192-ff4472e5c697"))
@@ -74,6 +53,6 @@ public class RegisteredClientRepositoryConfig {
 
                 .build();
 
-        return new InMemoryRegisteredClientRepository(register1, register2);
+        return new InMemoryRegisteredClientRepository(defaultClient);
     }
 }
