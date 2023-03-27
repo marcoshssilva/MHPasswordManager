@@ -47,7 +47,6 @@ server:
 management:
   endpoint:
     health:
-      show-details: when_authorized
       group:
         details:
           show-components: ALWAYS
@@ -55,7 +54,6 @@ management:
           include:
             - ping
             - db
-            - redis
     shutdown:
       enabled: false
   endpoints:
@@ -75,7 +73,7 @@ springdoc:
   show-actuator: true # list actuator endpoints into Swagger
   show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
   swagger-ui:
-    oauth2-redirect-url: https://oidcdebugger.com/debug
+    oauth2-redirect-url: http://127.0.0.1:12050/users/swagger-ui/redirect
     oauth:
       client-id: MHPasswordManager
       client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619

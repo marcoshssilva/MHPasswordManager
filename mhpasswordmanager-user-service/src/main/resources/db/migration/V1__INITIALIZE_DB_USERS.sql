@@ -57,40 +57,29 @@ CREATE TABLE users_details
 );
 
 INSERT INTO users (username, password, enabled)
-VALUES ('johndoe@email.com',
-        '$2a$10$6EG8N4N7jbOsY/RNPTK98eL2vft7ig7SPO/IOFd.PdnL66HgI6oDe',
+VALUES ('admin@mhpasswordmanager.com',
+        '$2a$10$DoB60YPE7LytjiVBrNR7ieKkMUVB5QaIWm0gtTeOPpgSOkkNi1L3i',
         true),
-       ('emmywatson@email.com',
-        '$2a$10$BGG3r6z9udsLHBKLXZV0iuDvPdChNaEVoFINr.Myh0l2iEEwU.tFm',
-        true),
-       ('marcoshssilva.dev@gmail.com',
-        '$2a$10$KkW5uV9JjrRJ13/56.5h.e.qovf4YMlxCR7FhZngm7/2m/HLDG7dO',
+       ('anonymous@mhpasswordmanager.com',
+        '$2a$10$DoB60YPE7LytjiVBrNR7ieKkMUVB5QaIWm0gtTeOPpgSOkkNi1L3i',
         true);
 
 INSERT INTO authorities (username, authority)
-VALUES ('johndoe@email.com',
-        'ROLE_ADMIN'),
-       ('johndoe@email.com',
+VALUES ('anonymous@mhpasswordmanager.com',
         'ROLE_USER'),
-       ('emmywatson@email.com',
-        'ROLE_USER'),
-       ('marcoshssilva.dev@gmail.com',
+       ('admin@mhpasswordmanager.com',
         'ROLE_ADMIN'),
-       ('marcoshssilva.dev@gmail.com',
+       ('admin@mhpasswordmanager.com',
         'ROLE_MASTER'),
-       ('marcoshssilva.dev@gmail.com',
+       ('admin@mhpasswordmanager.com',
         'ROLE_USER');
 
 INSERT INTO users_details (username, firstName, lastName, imageUrl)
 VALUES ('marcoshssilva.dev@gmail.com',
-        'Marcos',
-        'Silva',
+        'Default',
+        'Administrator',
         null),
-       ('johndoe@email.com',
-        'John',
-        'Doe',
-        null),
-       ('emmywatson@email.com',
-        'Emmy',
-        'Watson',
+       ('anonymous@mhpasswordmanager.com',
+        'Anonymous',
+        'User',
         null);

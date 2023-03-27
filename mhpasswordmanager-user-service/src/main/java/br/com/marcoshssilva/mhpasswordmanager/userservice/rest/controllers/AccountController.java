@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.rest.controllers;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.converter.AccountConverter;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.requests.AccountCreateRequestData;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.requests.AccountUpdatePasswordRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.requests.AccountUpdateRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.responses.AccountResponseData;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -65,6 +66,18 @@ public class AccountController {
     @PreAuthorize("hasAnyRole('ADMIN', 'MASTER')")
     @PostMapping("{email}/updateEnabled")
     public ResponseEntity<Void> enableAccount(@PathVariable String email, @RequestBody AccountCreateRequestData data) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    @PreAuthorize("#email == authentication.principal.subject and hasAuthority('SCOPE_user:canSelfWrite')")
+    @PostMapping("{email}/updatePassword")
+    public ResponseEntity<Void> updateAccountPassword(@PathVariable String email, @RequestBody AccountUpdatePasswordRequestData data) {
+        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MASTER') and hasAuthority('SCOPE_user:canSelfWrite')")
+    @PostMapping("{email}/resetPassword")
+    public ResponseEntity<Void> resetAccountPassword(@PathVariable String email, @RequestBody AccountUpdatePasswordRequestData data) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
