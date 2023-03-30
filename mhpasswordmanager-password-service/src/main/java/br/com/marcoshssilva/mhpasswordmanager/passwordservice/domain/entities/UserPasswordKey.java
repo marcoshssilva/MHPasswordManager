@@ -32,7 +32,7 @@ public class UserPasswordKey implements Serializable {
     private UserRegistration userRegistration;
 
     @ElementCollection
-    @CollectionTable(schema = "db_passwords", name = "users_key_tags")
+    @CollectionTable(name = "users_key_tags")
     @Column(nullable = false)
     @Getter
     @Setter
