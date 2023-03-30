@@ -3,10 +3,8 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.confi
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -34,7 +32,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile("!test & !embedded-database")
+    @Profile("!test & !embedded-database & !in-memory-client")
     public JdbcTemplate dbAuthJdbcTemplate(@Qualifier("dataSourceDbAuth") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
@@ -52,7 +50,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile("!embedded-database")
+    @Profile("!embedded-database & !in-memory-client")
     public DataSource dataSourceDbAuth(@Qualifier("dbAuthDatasourceProperties") DataSourceProperties dataSourceProperties) {
         LOG.info("Starting database using DB-Auth datasource");
         return dataSourceProperties.initializeDataSourceBuilder().build();

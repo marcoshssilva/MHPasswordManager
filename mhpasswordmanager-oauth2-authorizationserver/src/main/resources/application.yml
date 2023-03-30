@@ -1,6 +1,6 @@
 spring:
   profiles:
-    default: in-jdbc-users
+    default: in-jdbc-users # in future must be use Web-client with Eureka service discovery
   application:
     name: 'authorization-server'
   mvc:
@@ -128,7 +128,6 @@ oauth-config-starter:
         - http://127.0.0.1:12050/passwords/swagger-ui/redirect
         - http://127.0.0.1:12050/emails/swagger-ui/redirect
         - http://127.0.0.1:12050/documents/swagger-ui/redirect
-        - http://127.0.0.1:12050/emails/swagger-ui/redirect
         - http://127.0.0.1:12050/log/swagger-ui/redirect
         - https://oauth.pstmn.io/v1/callback
         - https://oidcdebugger.com/debug
@@ -152,6 +151,8 @@ oauth-config-starter:
         - CLIENT_CREDENTIALS
       scopes:
         - 'openid'
+        - 'profile'
+        - 'email'
         - 'user:canRead'
         - 'user:canDelete'
         - 'user:canWrite'
