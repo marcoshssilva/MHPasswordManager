@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run All TestUnits in PasswordManager" type="JUnit" factoryName="JUnit">
-    <module name="mhpasswordmanager.passwordservice" />
+  <configuration default="false" name="Run All TestUnits in UserService" type="JUnit" factoryName="JUnit">
+    <module name="mhpasswordmanager.userservice" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
