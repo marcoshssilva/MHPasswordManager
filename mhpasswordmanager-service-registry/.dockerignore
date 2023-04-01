@@ -25,3 +25,5 @@
 **/target
 
 README.md
+build-image.bat
+build-image.sh
