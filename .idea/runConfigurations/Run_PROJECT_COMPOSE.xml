@@ -10,6 +10,8 @@
             <option value="api-gateway" />
             <option value="user-service" />
             <option value="password-service" />
+            <option value="postgres-db" />
+            <option value="redis-store" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose-files/docker-compose.yml" />
