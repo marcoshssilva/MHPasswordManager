@@ -7,4 +7,4 @@ FROM eclipse-temurin:17-jre-alpine AS java
 COPY --from=builder /build/target/mhpasswordmanager.userservice-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT java -jar app.jar
 
-EXPOSE 8000
+EXPOSE 12011
