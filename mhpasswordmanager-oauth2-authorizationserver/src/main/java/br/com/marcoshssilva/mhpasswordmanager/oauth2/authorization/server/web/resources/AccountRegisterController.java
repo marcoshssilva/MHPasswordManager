@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/account")
 @RequiredArgsConstructor
-@Tag(name = "register-endpoint")
+@Tag(name = "Register Account")
 public class AccountRegisterController {
     private final UserService userService;
 

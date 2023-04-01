@@ -1,15 +1,17 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.utils.JwksUtils;
-
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -31,6 +33,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 @Configuration(proxyBeanMethods = false)
 public class AuthorizationServerSecurityConfig {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AuthorizationServerSecurityConfig.class);
 
     @Value("${authorization.issuer-uri}")
     private String issuerUri;
@@ -52,12 +55,26 @@ public class AuthorizationServerSecurityConfig {
     }
 
     @Bean
-    public OAuth2AuthorizationService authorizationService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+    @Profile("!test & !embedded-database")
+    public OAuth2AuthorizationService inJdbcDbAuthAuthorizationService(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
-    public OAuth2AuthorizationConsentService authorizationConsentService(JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+    @Profile("!test & !embedded-database")
+    public OAuth2AuthorizationConsentService inJdbcDbAuthAuthorizationConsentService(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
+    }
+
+    @Bean
+    @Profile("embedded-database")
+    public OAuth2AuthorizationService inEmbeddedAuthAuthorizationService(@Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
+    }
+
+    @Bean
+    @Profile("embedded-database")
+    public OAuth2AuthorizationConsentService inEmbeddedAuthorizationConsentService(@Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 
@@ -75,10 +92,7 @@ public class AuthorizationServerSecurityConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings
-                .builder()
-                .issuer(issuerUri)
-                .build();
+        return AuthorizationServerSettings.builder().issuer(issuerUri).build();
     }
 
 }

@@ -4,29 +4,22 @@ services:
     image: mhpasswordmanager/service-registry:latest
     container_name: 'eureka-server'
     restart: on-failure
-    environment:
-      EUREKA_INSTANCE_HOSTNAME: host.docker.internal
+    env_file:
+      - configs-composable/SERVICE-REGISTRY.env
     networks:
       - net-mhpasswordmanager
     ports:
-      - "8761:8761"
+      - "12761:8761"
   oauth2-authorization-server:
     container_name: 'authorization-server'
     image: mhpasswordmanager/oauth2-authorization-server:latest
     restart: on-failure
-    environment:
-      EUREKA_INSTANCE_HOSTNAME: host.docker.internal
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service-discovery:8761/eureka
-      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_users
-      SPRING_DATASOURCE_USERNAME: "postgres"
-      SPRING_DATASOURCE_PASSWORD: "postgres"
-      SPRING_REDIS_HOST: host.docker.internal
-      SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: "MARCOSHSSILVA#20230101"
-      AUTHORIZATION_ISSUERURI: http://oauth2-authorization-server:12010
+    env_file:
+      - configs-composable/OAUTH2-AUTHORIZATION-SERVER.env
     depends_on:
+      - redis-store
       - eureka-service-discovery
+      - postgres-db
     networks:
       - net-mhpasswordmanager
     ports:
@@ -35,9 +28,8 @@ services:
     image: mhpasswordmanager/api-gateway:latest
     container_name: 'api-gateway'
     restart: on-failure
-    environment:
-      EUREKA_INSTANCE_HOSTNAME: host.docker.internal
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service-discovery:8761/eureka
+    env_file:
+      - configs-composable/API-GATEWAY.env
     depends_on:
       - eureka-service-discovery
     networks:
@@ -48,19 +40,11 @@ services:
     image: mhpasswordmanager/user-service:latest
     container_name: 'user-service-api'
     restart: on-failure
-    environment:
-      EUREKA_INSTANCE_HOSTNAME: host.docker.internal
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service-discovery:8761/eureka
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://oauth2-authorization-server:12010
-      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_users
-      SPRING_DATASOURCE_USERNAME: "postgres"
-      SPRING_DATASOURCE_PASSWORD: "postgres"
-      SPRING_REDIS_HOST: host.docker.internal
-      SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: "MARCOSHSSILVA#20230101"
+    env_file:
+      - configs-composable/USER-SERVICE.env
     depends_on:
       - eureka-service-discovery
+      - postgres-db
     networks:
       - net-mhpasswordmanager
     ports:
@@ -69,23 +53,41 @@ services:
     image: mhpasswordmanager/password-service:latest
     container_name: 'password-service-api'
     restart: on-failure
-    environment:
-      EUREKA_INSTANCE_HOSTNAME: host.docker.internal
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-service-discovery:8761/eureka
-      SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUERURI: http://oauth2-authorization-server:12010
-      SPRING_DATASOURCE_DRIVER: org.postgresql.Driver
-      SPRING_DATASOURCE_URL: jdbc:postgresql://host.docker.internal:5432/postgres?currentSchema=db_passwords
-      SPRING_DATASOURCE_USERNAME: "postgres"
-      SPRING_DATASOURCE_PASSWORD: "postgres"
-      SPRING_REDIS_HOST: host.docker.internal
-      SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: "MARCOSHSSILVA#20230101"
+    env_file:
+      - configs-composable/PASSWORD-SERVICE.env
     depends_on:
       - eureka-service-discovery
+      - postgres-db
     networks:
       - net-mhpasswordmanager
     ports:
       - "12012:12012"
+  postgres-db:
+    image: mhpasswordmanager/postgres:latest
+    container_name: 'postgres-db'
+    restart: on-failure
+    env_file:
+      - configs-composable/POSTGRES-DB.env
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "12432:5432"
+    volumes:
+      - data-mhpasswordmanager-postgres-db:/var/lib/postgresql/data
+  redis-store:
+    image: redis:6.2-alpine
+    container_name: redis-cache
+    command: redis-server --save 20 1 --loglevel warning --requirepass MHP@SSW0R3#20230401
+    restart: on-failure
+    ports:
+      - '12379:6379'
+    volumes:
+      - data-mhpasswordmanager-redis:/data
+    networks:
+      - net-mhpasswordmanager
 networks:
-  net-mhpasswordmanager: # default for project
+  net-mhpasswordmanager:
     driver: bridge
+volumes:
+  data-mhpasswordmanager-postgres-db:
+  data-mhpasswordmanager-redis:

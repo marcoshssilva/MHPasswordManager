@@ -8,9 +8,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 public class UsersRolesTests {
     @Test
     void testFindByValue() {
-        assertEquals(UserRoles.ADMIN, UserRoles.findByValue("ROLE_ADMIN"));
-        assertEquals(UserRoles.MASTER, UserRoles.findByValue("ROLE_MASTER"));
-        assertEquals(UserRoles.USER, UserRoles.findByValue("ROLE_USER"));
-        assertNull(UserRoles.findByValue("ROLE_INVALID"));
+        assertEquals(DefaultUserRoles.ADMIN, DefaultUserRoles.findByValue("ROLE_ADMIN"));
+        assertEquals(DefaultUserRoles.MASTER, DefaultUserRoles.findByValue("ROLE_MASTER"));
+        assertEquals(DefaultUserRoles.USER, DefaultUserRoles.findByValue("ROLE_USER"));
+        assertNull(DefaultUserRoles.findByValue("ROLE_INVALID"));
     }
 }

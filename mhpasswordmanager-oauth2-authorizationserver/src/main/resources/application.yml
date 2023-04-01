@@ -1,38 +1,65 @@
 spring:
   profiles:
-    active: redis
+    default: in-jdbc-users # in future must be use Web-client with Eureka service discovery
   application:
     name: 'authorization-server'
   mvc:
     static-path-pattern: /content/**
+  flyway:
+    enabled: true
+    user: ${spring.datasource.auth.username:postgres}
+    password: ${spring.datasource.auth.password:postgres}
+    schemas:
+      - 'public'
+    url: ${spring.datasource.auth.url:jdbc:postgresql://localhost:5432/db_auth}
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+  h2:
+    console:
+      enabled: false
+      path: /h2
+
+  datasource:
+    users:
+      username: 'sa-user-service'
+      password: 'P@ssw0rdUs3rS3rvic3'
+      url: 'jdbc:postgresql://localhost:5432/db_users'
+    auth:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:5432/db_auth'
+
 server:
   port: 12010
-eureka:
-  instance:
-    hostname: localhost
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
+
 authorization:
   issuer-uri: http://localhost:12010
   success-logout-uri: http://127.0.0.1:8100
+
 management:
   endpoint:
     health:
       group:
-        integrations-details:
-          show-components: ALWAYS
-          show-details: ALWAYS
+        details:
+          show-components: when_authorized
+          show-details: when_authorized
           include:
             - ping
             - db
+            - redis
     shutdown:
       enabled: false
   endpoints:
     web:
       exposure:
         include:
-          - '*'
+          - 'health'
+          - 'metrics'
+          - 'info'
 springdoc:
   # description
   version: @project.version@
@@ -43,10 +70,23 @@ springdoc:
   # enable actuator to Swagger
   show-actuator: true
   # show login-endpoint to Swagger
-  show-login-endpoint: true
+  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
   swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
+    oauth:
+      client-id: MHPasswordManager
+      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
     csrf:
       enabled: true # enable csrf in swagger-ui requests
+
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka
 ---
 spring:
   config:
@@ -54,23 +94,69 @@ spring:
       on-profile: test
   session:
     store-type: none
----
-spring:
-  config:
-    activate:
-      on-profile: redis
-  session:
-    store-type: redis
-  redis:
-    host: 127.0.0.1
-    password: MARCOSHSSILVA#20230101
-    port: 6379
+  flyway:
+    enabled: false
+
+eureka:
+  client:
+    enabled: false
+
 ---
 spring:
   config:
     activate:
       on-profile: embedded-database
+  flyway:
+    enabled: false
   h2:
     console:
       enabled: true
       path: /h2
+
+oauth-config-starter:
+  clients:
+    - clientName: 'Registered client for PWA Client'
+      clientId: MHPasswordManager
+      clientSecret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - AUTHORIZATION_CODE
+        - REFRESH_TOKEN
+      redirectUris:
+        - http://127.0.0.1:8100/authorize
+        - http://127.0.0.1:12050/users/swagger-ui/redirect
+        - http://127.0.0.1:12050/passwords/swagger-ui/redirect
+        - http://127.0.0.1:12050/emails/swagger-ui/redirect
+        - http://127.0.0.1:12050/documents/swagger-ui/redirect
+        - http://127.0.0.1:12050/log/swagger-ui/redirect
+        - http://127.0.0.1:12010/swagger-ui/redirect
+        - https://oauth.pstmn.io/v1/callback
+        - https://oidcdebugger.com/debug
+      scopes:
+        - 'openid'
+        - 'profile'
+        - 'email'
+        - 'user:canSelfRead'
+        - 'user:canSelfDelete'
+        - 'user:canSelfWrite'
+      tokenSettings:
+        durationInMillis: 900000
+        reuseRefreshToken: false
+        refreshTokenTimeToLiveInMillis: 10800000
+      clientSettings:
+        requireAuthorizationConsent: true
+        requireProofKey: false
+
+    - clientName: 'Registered client for Client Credentials'
+      clientId: MHPasswordManager-GlobalAdmin
+      clientSecret: 8e18ee56-ab7c-4ed9-b192-ff4472e5c697
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - CLIENT_CREDENTIALS
+      scopes:
+        - 'user:canRead'
+        - 'user:canDelete'
+        - 'user:canWrite'
+        - 'user:canCreate'
+      tokenSettings:
+        durationInMillis: 180000
