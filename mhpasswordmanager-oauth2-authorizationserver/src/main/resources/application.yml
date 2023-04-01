@@ -16,7 +16,7 @@ spring:
     store-type: redis
   redis:
     host: 127.0.0.1
-    password: MARCOSHSSILVA#20230101
+    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
     port: 6379
   h2:
     console:
@@ -25,8 +25,8 @@ spring:
 
   datasource:
     users:
-      username: 'sa-authorization-server-users'
-      password: 'P@ssword'
+      username: 'sa-user-service'
+      password: 'P@ssw0rdUs3rS3rvic3'
       url: 'jdbc:postgresql://localhost:5432/db_users'
     auth:
       username: 'sa-authorization-server'
@@ -132,6 +132,9 @@ oauth-config-starter:
         - https://oauth.pstmn.io/v1/callback
         - https://oidcdebugger.com/debug
       scopes:
+        - 'openid'
+        - 'profile'
+        - 'email'
         - 'user:canSelfRead'
         - 'user:canSelfDelete'
         - 'user:canSelfWrite'
@@ -150,9 +153,6 @@ oauth-config-starter:
       authenticationGrantTypes:
         - CLIENT_CREDENTIALS
       scopes:
-        - 'openid'
-        - 'profile'
-        - 'email'
         - 'user:canRead'
         - 'user:canDelete'
         - 'user:canWrite'

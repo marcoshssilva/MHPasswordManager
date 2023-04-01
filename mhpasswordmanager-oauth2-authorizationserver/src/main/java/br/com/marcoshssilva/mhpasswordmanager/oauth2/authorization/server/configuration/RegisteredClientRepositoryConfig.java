@@ -94,9 +94,6 @@ public class RegisteredClientRepositoryConfig {
                         .accessTokenTimeToLive(Duration.ofMinutes(3L))
                         .build())
 
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope(OidcScopes.EMAIL)
                 .scope("user:canRead")
                 .scope("user:canWrite")
                 .scope("user:canDelete")
