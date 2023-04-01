@@ -30,12 +30,6 @@ spring:
         jwt:
           issuer-uri: http://localhost:12010
 #          jwk-set-uri: http://localhost:12010/oauth2/jwks # optional when used with Spring Authorization Server
-  session:
-    store-type: redis
-  redis:
-    host: 127.0.0.1
-    password: MARCOSHSSILVA#20230101
-    port: 6379
 eureka:
   client:
     service-url:
