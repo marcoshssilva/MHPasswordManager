@@ -26,11 +26,18 @@ spring:
             allowedHeaders:
               - Content-type
               - Authorization
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: '*'
+
+management:
+  endpoint:
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'health'
+          - 'metrics'
+          - 'info'
 server:
   port: 12050
 eureka:
