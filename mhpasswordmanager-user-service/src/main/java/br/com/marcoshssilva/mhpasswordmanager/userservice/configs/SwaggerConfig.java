@@ -17,9 +17,12 @@ import org.springframework.context.annotation.Configuration;
                 type = SecuritySchemeType.OAUTH2,
                 flows = @OAuthFlows(
                         authorizationCode = @OAuthFlow(
-                                authorizationUrl = "${spring.security.oauth2.resource-server.jwt.issuer-uri}/oauth2/authorize",
-                                tokenUrl = "${spring.security.oauth2.resource-server.jwt.issuer-uri}/oauth2/token",
+                                authorizationUrl = "${springdoc.swagger-ui.oauth2-authorization-url}",
+                                tokenUrl = "${springdoc.swagger-ui.oauth2-token-url}",
                                 scopes = {
+                                        @OAuthScope(name = "openid", description = "Can use openid connect"),
+                                        @OAuthScope(name = "profile", description = "Can read your own profile"),
+                                        @OAuthScope(name = "email", description = "Can do login using email"),
                                         @OAuthScope(name = "user:canSelfRead", description = "Can read your own Account Data"),
                                         @OAuthScope(name = "user:canSelfWrite", description = "Can update your own Account Data"),
                                         @OAuthScope(name = "user:canSelfDelete", description = "Can delete your own Account Data")

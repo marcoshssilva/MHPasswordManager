@@ -43,8 +43,8 @@ management:
     health:
       group:
         details:
-          show-components: ALWAYS
-          show-details: ALWAYS
+          show-components: when_authorized
+          show-details: when_authorized
           include:
             - ping
             - db
@@ -67,10 +67,13 @@ springdoc:
   show-actuator: true # list actuator endpoints into Swagger
   show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
   swagger-ui:
-    oauth2-redirect-url: http://127.0.0.1:12050/users/swagger-ui/redirect
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12050/users/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
     oauth:
       client-id: MHPasswordManager
       client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
     csrf:
       enabled: false
 ---
