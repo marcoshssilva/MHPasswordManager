@@ -72,7 +72,7 @@ springdoc:
   # show login-endpoint to Swagger
   show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
   swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/users/swagger-ui/redirect}
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/swagger-ui/redirect}
     oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
     oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
     oauth:
