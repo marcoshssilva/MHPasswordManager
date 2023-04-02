@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'mestre'
+        label 'master'
     }
     stages {
         stage('Eureka Server - Compile, Tests and Deploy') {
