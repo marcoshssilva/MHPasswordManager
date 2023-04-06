@@ -19,12 +19,6 @@ echo 'mhpasswordmanager-password-service...'
 docker build -t mhpasswordmanager/password-service:latest ../mhpasswordmanager-password-service
 
 echo 'Cleaning images...'
-if [ "$(docker images -f dangling=true -q | awk '{print $3}' | sort -u)x" != "x" ]
-then
-  docker rmi --force $(docker images -f dangling=true)
-  echo "Cleaned images with _< none >_"
-else
-  echo "No images found with _< none >_"
-fi
+docker rmi --force $(docker images -f dangling=true)
 
 echo 'BUILD CONTAINERS SUCCESSFULLY.'
