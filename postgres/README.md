@@ -1,4 +1,4 @@
-# MHPasswordManager-User-Service
+# MHPasswordManager-Postgres
 this is an open-source project by me ([@marcoshssilva](https://github.com/marcoshssilva))
 
 ---
