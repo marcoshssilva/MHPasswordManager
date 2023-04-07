@@ -19,12 +19,16 @@ public class UserRegistrationTests {
                 .id("123")
                 .email("test@test.com")
                 .build();
+        Object object = new Object();
 
         // Assert that the two objects are equal
         assertEquals(userRegistration1, userRegistration2);
 
         // Assert that the two objects have the same hash code
         assertEquals(userRegistration1.hashCode(), userRegistration2.hashCode());
+
+        // Assert that two objects has not equals because its not same class
+        assertEquals(Boolean.FALSE, userRegistration1.equals(object));
 
         // Change the id of userRegistration2
         userRegistration2.setId("456");

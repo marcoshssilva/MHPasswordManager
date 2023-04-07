@@ -51,6 +51,18 @@ public class UserPasswordKeyTests {
         Long id = 1L;
         UserRegistration userRegistration = new UserRegistration();
         userRegistration.setId("123");
+        userRegistration.setEmail("teste@teste.com.br");
+        userRegistration.setEncodedPublicKey("12345678910");
+        userRegistration.setEncryptedPrivateKey0("12345678910");
+        userRegistration.setEncryptedPrivateKey1("12345678910");
+        userRegistration.setEncryptedPrivateKey2("12345678910");
+        userRegistration.setEncryptedPrivateKey3("12345678910");
+        userRegistration.setEncryptedPrivateKey4("12345678910");
+        userRegistration.setEncryptedPrivateKey5("12345678910");
+        userRegistration.setEncryptedPrivateKey6("12345678910");
+        userRegistration.setEncryptedPrivateKey7("12345678910");
+        userRegistration.setEncryptedPrivateKey8("12345678910");
+        userRegistration.setEncryptedPrivateKey9("12345678910");
         PasswordKeyTypesEnum type = PasswordKeyTypesEnum.SOCIAL_MEDIA;
         Date createdAt = new Date();
         Date lastUpdate = new Date();
