@@ -22,4 +22,12 @@ public record RecoveryKeyData(String key, byte[] encryptedData) {
         result = 31 * result + Arrays.hashCode(encryptedData);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RecoveryKeyData{" +
+                "key='" + key + '\'' +
+                ", encryptedData=" + Arrays.toString(encryptedData) +
+                '}';
+    }
 }
