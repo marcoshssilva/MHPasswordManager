@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 public class AccountServiceConfig {
-
     @Primary
     @Bean
-    AccountService jpaUserService(@Autowired AccountRepository accountRepository, @Autowired AccountDetailsRepository accountDetailsRepository) {
-        return new JpaAccountServiceImpl(accountRepository, accountDetailsRepository);
+    AccountService jpaUserService(@Autowired AccountRepository accountRepository, @Autowired AccountDetailsRepository accountDetailsRepository, @Autowired PasswordEncoder encoder) {
+        return new JpaAccountServiceImpl(accountRepository, accountDetailsRepository, encoder);
     }
 }

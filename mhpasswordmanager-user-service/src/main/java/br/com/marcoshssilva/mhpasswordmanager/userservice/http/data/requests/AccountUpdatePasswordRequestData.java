@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.requests;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests;
 
 import lombok.*;
 
@@ -9,8 +9,9 @@ import java.io.Serializable;
 @Builder
 @Data
 @ToString
-public class AccountResetPasswordRequestData implements Serializable {
+public class AccountUpdatePasswordRequestData implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    String oldPassword;
     String newPassword;
 }

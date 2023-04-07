@@ -46,7 +46,6 @@ management:
           show-components: when_authorized
           show-details: when_authorized
           include:
-            - ping
             - db
     shutdown:
       enabled: false

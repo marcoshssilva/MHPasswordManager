@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.requests;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

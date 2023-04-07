@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.requests;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.enums.DefaultUserRoles;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,8 @@ public class AccountCreateRequestData implements Serializable {
 
     private String firstName;
     private String lastName;
-    private String username;
+    private String email;
     private String password;
+
     private Set<DefaultUserRoles> roles;
 }

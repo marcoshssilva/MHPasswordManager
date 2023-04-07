@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.rest.data.responses;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

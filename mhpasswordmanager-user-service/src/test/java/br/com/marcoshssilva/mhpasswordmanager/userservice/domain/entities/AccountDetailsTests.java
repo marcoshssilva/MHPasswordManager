@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AccountDetailsTests {
+class AccountDetailsTests {
     @Test
     void testEquals() {
         AccountDetails accountDetails1 = new AccountDetails();

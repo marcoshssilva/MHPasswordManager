@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.rest.views;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.http.views;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
