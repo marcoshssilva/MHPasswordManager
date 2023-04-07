@@ -49,11 +49,11 @@ public class Account implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Account account)) return false;
-        return Objects.equals(username, account.username) && Objects.equals(password, account.password) && Objects.equals(enabled, account.enabled) && Objects.equals(roles, account.roles) && Objects.equals(accountDetails, account.accountDetails);
+        return Objects.equals(username, account.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, password, enabled, roles, accountDetails);
+        return Objects.hash(username);
     }
 }
