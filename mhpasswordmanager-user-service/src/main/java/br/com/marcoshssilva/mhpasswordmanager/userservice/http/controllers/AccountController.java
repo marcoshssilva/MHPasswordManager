@@ -6,6 +6,7 @@ import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.Accoun
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.converter.AccountDataModelToAccountResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.*;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountResponseData;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/account")
 @RestController
 @Tag(name = "Account")
+@SecurityRequirement(name = "OAuth2 Authorization Code Flow")
+@SecurityRequirement(name = "Bearer Authorization")
 public class AccountController {
     private static final AccountDataModelToAccountResponseData DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA = new AccountDataModelToAccountResponseData();
     private final AccountService accountService;
