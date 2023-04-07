@@ -36,8 +36,8 @@ pipeline {
         stage('User-Service - Compile, Tests and Deploy') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service"){
-                    sh "mvn clean install -DskipTests"
                     sh "mvn test"
+                    sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
                 }
             }
