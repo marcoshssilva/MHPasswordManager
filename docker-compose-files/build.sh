@@ -1,4 +1,7 @@
 #!/bin/sh
+echo 'mhpasswordmanager-redis...'
+docker build -t mhpasswordmanager/redis:latest ../redis
+
 echo 'mhpasswordmanager-postgres-db...'
 docker build -t mhpasswordmanager/postgres:latest ../postgres
 
