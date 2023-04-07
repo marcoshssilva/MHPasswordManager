@@ -6,8 +6,9 @@ pipeline {
         stage('Eureka Server - Compile, Tests and Deploy') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
-                    sh "mvn clean install -DskipTests"
+                    sh "mvn clean"
                     sh "mvn test"
+                    sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
                 }
             }
@@ -16,8 +17,9 @@ pipeline {
         stage('API-Gateway - Compile, Tests and Deploy') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway"){
-                    sh "mvn clean install -DskipTests"
+                    sh "mvn clean"
                     sh "mvn test"
+                    sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
                 }
             }
@@ -26,8 +28,9 @@ pipeline {
         stage('OAuth2-Authorization-Server - Compile, Tests and Deploy') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver"){
-                    sh "mvn clean install -DskipTests"
+                    sh "mvn clean"
                     sh "mvn test"
+                    sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
                 }
             }
@@ -36,6 +39,7 @@ pipeline {
         stage('User-Service - Compile, Tests and Deploy') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service"){
+                    sh "mvn clean"
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
@@ -46,8 +50,9 @@ pipeline {
         stage('Password-Service - Compile, Tests and Deploy') {
             steps{
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
-                    sh "mvn clean install -DskipTests"
+                    sh "mvn clean"
                     sh "mvn test"
+                    sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
                 }
             }
