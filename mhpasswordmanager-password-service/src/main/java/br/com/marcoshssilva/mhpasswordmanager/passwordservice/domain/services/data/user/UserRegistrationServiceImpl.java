@@ -67,12 +67,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             // save in db
             userRegistrationRepository.save(userRegistration);
             // return object
-            return NewUserRegisteredModel.builder().id(userRegistration.getId())
-                    .email(userRegistration.getEmail())
-                    .recoveryKeys(Arrays.asList(recoveryKeys))
-                    .encodedPublicKey(base64PublicKey)
-                    .build();
-
+            return new NewUserRegisteredModel(userRegistration.getId(), userRegistration.getEmail(), Arrays.asList(recoveryKeys), base64PublicKey);
         } catch (Exception e) {
             final String msgErr = "Cannot create user.";
             throw new UserRegistrationException(msgErr, e);
