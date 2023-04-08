@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>17</java.version>
 		<spring-cloud.version>2021.0.5</spring-cloud.version>
+		<sonar.coverage.exclusions>br.com.marcoshssilva.mhpasswordmanager.passwordservice.MhPasswordManagerPasswordServiceApplication</sonar.coverage.exclusions>
 	</properties>
 	<dependencies>
 		<dependency>
