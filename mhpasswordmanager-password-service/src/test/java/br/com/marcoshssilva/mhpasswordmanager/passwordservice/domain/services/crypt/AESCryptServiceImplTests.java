@@ -9,8 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -32,5 +31,18 @@ class AESCryptServiceImplTests {
             byte[] decrypt = cryptService.decrypt(encrypt, secretKey);
             assertEquals(message, cryptService.convertByteToString(decrypt));
         });
+    }
+
+    @DisplayName("Test if can using an null secret, throw an EncryptionException")
+    @Test
+    void mustThrowAndEncryptionException() {
+        final String message = "Helo àáòó;;/21415678!@#!%@¨&*()";
+        assertThrows(EncryptionException.class,() -> cryptService.encrypt(cryptService.convertStringToByte(message), null));
+    }
+
+    @DisplayName("Test if can using an null secret and null payload, throw an DecryptionException")
+    @Test
+    void mustThrowAndDecryptionException() {
+        assertThrows(DecryptionException.class,() -> cryptService.decrypt(null, null));
     }
 }
