@@ -51,7 +51,7 @@ class UserPasswordKeyTypeTests {
 
     @DisplayName("Test equals()")
     @Test
-    public void testEquals() {
+    void testEquals() {
         UserPasswordKeyType keyType1 = new UserPasswordKeyType(1L, "Description 1");
         UserPasswordKeyType keyType2 = new UserPasswordKeyType(1L, "Description 1");
         UserPasswordKeyType keyType3 = new UserPasswordKeyType(2L, "Description 2");
@@ -65,7 +65,7 @@ class UserPasswordKeyTypeTests {
 
     @DisplayName("Test toString()")
     @Test
-    public void testToString() {
+    void testToString() {
         UserPasswordKeyType keyType = new UserPasswordKeyType(1L, "Description 1");
         String expectedString = "UserPasswordKeyType(id=1, description=Description 1)";
         assertEquals(expectedString, keyType.toString());
