@@ -7,8 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -23,6 +22,16 @@ class UserRegistrationServiceImplTests {
             String email = "johndoe@gmail.com";
             NewUserRegisteredModel userRegistration = service.createUserRegistration(email, "Hellbound#3090");
             assertEquals(email, userRegistration.email());
+        });
+    }
+
+    @DisplayName("Test if throw UserRegistrationException for existent account")
+    @Test
+    void shouldThrowUserRegistrationException() {
+        String email = "johndoe@gmail.com";
+        assertThrows(UserRegistrationException.class, () -> {
+            NewUserRegisteredModel mustWork = service.createUserRegistration(email, "Hellbound#3090");
+            NewUserRegisteredModel mustNotWork = service.createUserRegistration(email, "Hellbound#3090");
         });
     }
 }
