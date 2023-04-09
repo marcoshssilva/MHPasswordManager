@@ -8,11 +8,12 @@ import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @ToString
 public class RegistrationNewAccountRequest implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
     @NotBlank
     @Size(min = 10, max = 36)
