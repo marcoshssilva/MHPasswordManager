@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -32,6 +33,26 @@ class CustomJwtGrantedAuthoritiesConverterTest {
 
         // Assert that the expected authorities were generated
         List<GrantedAuthority> expectedAuthorities = List.of(new SimpleGrantedAuthority("SCOPE_read"), new SimpleGrantedAuthority("SCOPE_write"), new SimpleGrantedAuthority("ROLE_USER"), new SimpleGrantedAuthority("ROLE_ADMIN"));
+        assertEquals(expectedAuthorities, authorities);
+    }
+
+    @DisplayName("Should test if authorities has included in CustomJwtGrantedAuthorities, but none authorities")
+    @Test
+    void testConvertWhenNotHasAuthorities() {
+        CustomJwtGrantedAuthoritiesConverter converter = new CustomJwtGrantedAuthoritiesConverter();
+
+        // Create a mock JWT object with a sample "authorities" claim
+        List<String> userRoleAuthorities = Collections.emptyList();
+        Jwt jwt = mock(Jwt.class);
+        when(jwt.getClaimAsStringList("authorities")).thenReturn(null);
+        when(jwt.getIssuedAt()).thenReturn(Instant.now());
+        when(jwt.getExpiresAt()).thenReturn(Instant.now().plusSeconds(3600));
+
+        // Convert the JWT to a collection of GrantedAuthority objects
+        Collection<GrantedAuthority> authorities = converter.convert(jwt);
+
+        // Assert that the expected authorities were generated
+        List<GrantedAuthority> expectedAuthorities = Collections.emptyList();
         assertEquals(expectedAuthorities, authorities);
     }
 }
