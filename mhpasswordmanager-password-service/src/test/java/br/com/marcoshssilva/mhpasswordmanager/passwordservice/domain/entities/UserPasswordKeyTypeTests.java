@@ -70,4 +70,18 @@ class UserPasswordKeyTypeTests {
         String expectedString = "UserPasswordKeyType(id=1, description=Description 1)";
         assertEquals(expectedString, keyType.toString());
     }
+
+    @DisplayName("Test getters and setters individual")
+    @Test
+    public void testGettersAndSetters() {
+        UserPasswordKeyType keyType = new UserPasswordKeyType();
+        Long id = 1L;
+        String description = "Test description";
+
+        keyType.setId(id);
+        keyType.setDescription(description);
+
+        assertEquals(id, keyType.getId());
+        assertEquals(description, keyType.getDescription());
+    }
 }
