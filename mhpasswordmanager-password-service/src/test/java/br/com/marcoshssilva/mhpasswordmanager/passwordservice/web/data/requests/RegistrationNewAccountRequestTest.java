@@ -1,35 +1,28 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.validation.*;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import java.util.Set;
 
-public class RegistrationNewAccountRequestTest {
-    private static Validator validator;
-
-    @BeforeClass
-    public static void setup() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        validator = factory.getValidator();
-    }
+class RegistrationNewAccountRequestTest {
+    private static final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
 
     @DisplayName("Should test if create object from NoArgsConstructor")
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest();
         assertNotNull(request);
     }
 
     @DisplayName("Should test if create object from AllArgsConstructor")
     @Test
-    public void testAllArgsConstructor() {
+    void testAllArgsConstructor() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest(privateKey);
         assertNotNull(request);
@@ -38,7 +31,7 @@ public class RegistrationNewAccountRequestTest {
 
     @DisplayName("Should test getters and setters")
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest();
         request.setPrivateKey(privateKey);
@@ -47,7 +40,7 @@ public class RegistrationNewAccountRequestTest {
 
     @DisplayName("Should test if Builder works")
     @Test
-    public void testBuilder() {
+    void testBuilder() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = RegistrationNewAccountRequest.builder()
                 .privateKey(privateKey)
@@ -58,7 +51,7 @@ public class RegistrationNewAccountRequestTest {
 
     @DisplayName("Should invoke a ToString")
     @Test
-    public void testToString() {
+    void testToString() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest(privateKey);
         String expectedString = "RegistrationNewAccountRequest(privateKey=1234567890)";
@@ -67,7 +60,7 @@ public class RegistrationNewAccountRequestTest {
 
     @DisplayName("Should invoke 2 constraint violations: @Size and @NotBlank")
     @Test
-    public void testPrivateKeyNotBlank() {
+    void testPrivateKeyNotBlank() {
         String privateKey = "";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest(privateKey);
         Set<ConstraintViolation<RegistrationNewAccountRequest>> validated = validator.validate(request);
@@ -76,7 +69,7 @@ public class RegistrationNewAccountRequestTest {
 
     @DisplayName("Should invoke 1 constraint violations: @Size")
     @Test
-    public void testPrivateKeySize() {
+    void testPrivateKeySize() {
         String privateKey = "123456789";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest(privateKey);
         Set<ConstraintViolation<RegistrationNewAccountRequest>> validated = validator.validate(request);
