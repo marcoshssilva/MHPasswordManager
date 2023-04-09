@@ -1,25 +1,25 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
-public class RegistrationNewAccountResponseTest {
+class RegistrationNewAccountResponseTest {
     @DisplayName("Should invoke a NoArgsConstructor")
     @Test
-    public void testNoArgsConstructor() {
+    void testNoArgsConstructor() {
         RegistrationNewAccountResponse response = new RegistrationNewAccountResponse();
         assertNotNull(response);
     }
 
     @DisplayName("Should test all getters and setters")
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         String email = "test@example.com";
         Set<String> recoveryCodes = new HashSet<>();
         recoveryCodes.add("abc123");
@@ -35,7 +35,7 @@ public class RegistrationNewAccountResponseTest {
 
     @DisplayName("Should test ToString")
     @Test
-    public void testToString() {
+    void testToString() {
         String email = "test@example.com";
         Set<String> recoveryCodes = new HashSet<>();
         recoveryCodes.add("abc123");
