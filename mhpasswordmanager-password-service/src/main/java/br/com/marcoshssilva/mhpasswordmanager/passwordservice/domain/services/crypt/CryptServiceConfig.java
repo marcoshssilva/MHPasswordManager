@@ -5,16 +5,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
-import javax.crypto.NoSuchPaddingException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-
 @Configuration
 public class CryptServiceConfig {
 
     @Bean("aesCryptService")
     @Primary
-    CryptService aesCryptService() throws NoSuchPaddingException, NoSuchAlgorithmException, NoSuchProviderException {
+    CryptService aesCryptService() {
         return new AESCryptServiceImpl();
     }
 
