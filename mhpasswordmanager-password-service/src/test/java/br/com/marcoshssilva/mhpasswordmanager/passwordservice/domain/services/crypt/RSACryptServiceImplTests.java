@@ -55,10 +55,10 @@ class RSACryptServiceImplTests {
     @DisplayName("Must resolve an EncryptionException")
     @Test
     void mustThrowEncryptionExceptionWhenCallIncorrectKeys() {
-        final String message = "Some message to encode";
+        final byte[] message = "Some message to encode".getBytes();
         final String secret  = "P@ssw0rd";
 
-        assertThrows(EncryptionException.class, () -> cryptService.encrypt(message.getBytes(), secret));
+        assertThrows(EncryptionException.class, () -> cryptService.encrypt(message, secret));
     }
 
     @DisplayName("Must resolve an DecryptionException")
