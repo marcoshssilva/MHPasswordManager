@@ -1,12 +1,11 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import org.junit.Test;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-public class UserRegistrationExceptionTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class UserRegistrationExceptionTest {
     @DisplayName("Should test constructor with Message")
     @Test
     public void testConstructorWithMessage() {
@@ -20,7 +19,7 @@ public class UserRegistrationExceptionTest {
 
     @DisplayName("Should test constructor with Message and Throwable Cause")
     @Test
-    public void testConstructorWithMessageAndCause() {
+    void testConstructorWithMessageAndCause() {
         String message = "Test exception message";
         Throwable cause = new RuntimeException("Test cause");
 
