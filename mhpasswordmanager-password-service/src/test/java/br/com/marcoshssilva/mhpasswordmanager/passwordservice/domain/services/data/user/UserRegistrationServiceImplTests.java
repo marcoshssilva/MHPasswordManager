@@ -27,11 +27,11 @@ class UserRegistrationServiceImplTests {
 
     @DisplayName("Test if throw UserRegistrationException for existent account")
     @Test
-    void shouldThrowUserRegistrationException() {
+    void shouldThrowUserRegistrationException() throws Exception{
         String email = "johndoe@gmail.com";
-        assertThrows(UserRegistrationException.class, () -> {
-            NewUserRegisteredModel mustWork = service.createUserRegistration(email, "Hellbound#3090");
-            NewUserRegisteredModel mustNotWork = service.createUserRegistration(email, "Hellbound#3090");
-        });
+        // must work
+        service.createUserRegistration(email, "Hellbound#3090");
+        // must not work
+        assertThrows(UserRegistrationException.class, () -> service.createUserRegistration(email, "Hellbound#3090"));
     }
 }
