@@ -55,20 +55,19 @@ class RSACryptServiceImplTests {
     @DisplayName("Must resolve an EncryptionException")
     @Test
     void mustThrowEncryptionExceptionWhenCallIncorrectKeys() {
-        assertThrows(EncryptionException.class, () -> {
-            final String message = "Some message to encode";
-            cryptService.encrypt(message.getBytes(), "P@ssw0rd");
-        });
+        final String message = "Some message to encode";
+        final String secret  = "P@ssw0rd";
+
+        assertThrows(EncryptionException.class, () -> cryptService.encrypt(message.getBytes(), secret));
     }
 
     @DisplayName("Must resolve an DecryptionException")
     @Test
     void mustThrowDecryptionExceptionWhenCallIncorrectKeys() {
-        assertThrows(DecryptionException.class, () -> {
-            final String message = "Some message to encode";
-            final String k2 = encoder.encodeToString(publicKey.getEncoded());
-            byte[] bytesCrypt = cryptService.encrypt(message.getBytes(), k2);
-            cryptService.decrypt(bytesCrypt, "P@ssw0rd");
-        });
+        final String message = "Some message to encode";
+        final String k2 = encoder.encodeToString(publicKey.getEncoded());
+        final byte[] bytesCrypt = cryptService.encrypt(message.getBytes(), k2);
+
+        assertThrows(DecryptionException.class, () -> cryptService.decrypt(bytesCrypt, "P@ssw0rd"));
     }
 }
