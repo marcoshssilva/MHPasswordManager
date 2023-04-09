@@ -16,13 +16,13 @@ import java.util.Base64;
 @Service
 public class RSAUtilService {
     private static final String ALGORITHM = "RSA";
-    public PrivateKey getPrivateFromPKCS8(String privateKeyString) throws Exception {
+    public PrivateKey getPrivateFromPKCS8(String privateKeyString) throws InvalidKeySpecException, NoSuchAlgorithmException {
         KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
         PKCS8EncodedKeySpec spec = getPKCS8EncodedKeySpec(privateKeyString.getBytes(), false);
         return kf.generatePrivate(spec);
     }
 
-    public PublicKey getPublicFromX509(String publicKeyString) throws Exception {
+    public PublicKey getPublicFromX509(String publicKeyString) throws NoSuchAlgorithmException, InvalidKeySpecException {
         KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
         X509EncodedKeySpec spec = getX509EncodedKeySpec(publicKeyString.getBytes(), false);
         return kf.generatePublic(spec);
