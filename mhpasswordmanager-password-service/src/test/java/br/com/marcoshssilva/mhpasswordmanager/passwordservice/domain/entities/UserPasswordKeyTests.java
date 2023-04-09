@@ -53,6 +53,7 @@ class UserPasswordKeyTests {
         userRegistration.setId("123");
         userRegistration.setEmail("teste@teste.com.br");
         userRegistration.setEncodedPublicKey("12345678910");
+        userRegistration.setEncryptedPrivateKeyWithPassword("12345678910");
         userRegistration.setEncryptedPrivateKey0("12345678910");
         userRegistration.setEncryptedPrivateKey1("12345678910");
         userRegistration.setEncryptedPrivateKey2("12345678910");
