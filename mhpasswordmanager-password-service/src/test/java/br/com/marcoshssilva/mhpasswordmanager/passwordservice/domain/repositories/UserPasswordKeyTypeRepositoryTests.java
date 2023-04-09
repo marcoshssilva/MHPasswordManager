@@ -13,13 +13,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @DataJpaTest
 @Transactional
-public class UserPasswordKeyTypeRepositoryTests {
+class UserPasswordKeyTypeRepositoryTests {
     @Autowired
     private UserPasswordKeyTypeRepository repository;
 
     @DisplayName("Test if can save in database")
     @Test
-    public void testSave() {
+    void testSave() {
         UserPasswordKeyType keyType = UserPasswordKeyType.builder()
                 .description("password")
                 .build();
@@ -40,7 +40,7 @@ public class UserPasswordKeyTypeRepositoryTests {
 
     @DisplayName("Test if can delete in database")
     @Test
-    public void testDelete() {
+    void testDelete() {
         UserPasswordKeyType keyType = UserPasswordKeyType.builder()
                 .description("password")
                 .build();
@@ -57,7 +57,7 @@ public class UserPasswordKeyTypeRepositoryTests {
 
     @DisplayName("Test if can update in database")
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         UserPasswordKeyType keyType = UserPasswordKeyType.builder()
                 .description("password")
                 .build();

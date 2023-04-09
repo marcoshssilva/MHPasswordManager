@@ -10,7 +10,7 @@ import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserPasswordKeyTests {
+class UserPasswordKeyTests {
 
     @DisplayName("Test hashCode and equals methods")
     @Test
@@ -47,7 +47,7 @@ public class UserPasswordKeyTests {
 
     @DisplayName("Test data for getters and setters")
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         Long id = 1L;
         UserRegistration userRegistration = new UserRegistration();
         userRegistration.setId("123");

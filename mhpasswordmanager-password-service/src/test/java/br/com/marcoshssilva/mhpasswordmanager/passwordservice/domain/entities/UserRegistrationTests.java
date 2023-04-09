@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class UserRegistrationTests {
+class UserRegistrationTests {
     @DisplayName("Test hashCode and equals methods")
     @Test
-    public void testEqualsAndHashCode() {
+    void testEqualsAndHashCode() {
         // Create two UserRegistration objects with the same id and email
         UserRegistration userRegistration1 = UserRegistration.builder()
                 .id("123")
@@ -42,7 +42,7 @@ public class UserRegistrationTests {
 
     @DisplayName("Test data for getters and setters")
     @Test
-    public void testUserRegistrationFields() {
+    void testUserRegistrationFields() {
         // Create a new UserRegistration
         UserRegistration userRegistration = UserRegistration.builder()
                 .email("test@test.com")

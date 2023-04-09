@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class AESCryptServiceImplTests {
+class AESCryptServiceImplTests {
 
     @Autowired
     @Qualifier("aesCryptService")
@@ -25,7 +25,7 @@ public class AESCryptServiceImplTests {
 
     @DisplayName("Test if can convert String into bytes and encrypt and decrypt")
     @Test
-    public void mustEncryptAndDecryptData() {
+    void mustEncryptAndDecryptData() {
         final String message = "Helo àáòó;;/21415678!@#!%@¨&*()";
         assertDoesNotThrow(() -> {
             byte[] encrypt = cryptService.encrypt(cryptService.convertStringToByte(message), secretKey);

@@ -9,7 +9,7 @@ import java.util.Date;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class UserPasswordStoredValueTests {
+class UserPasswordStoredValueTests {
     private UserPasswordStoredValue userPasswordStoredValue;
 
     @BeforeEach

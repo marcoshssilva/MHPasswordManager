@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test")
 @SpringBootTest
-public class UserRegistrationServiceImplTests {
+class UserRegistrationServiceImplTests {
     @Autowired
     UserRegistrationService service;
 
     @DisplayName("Test if can create an user")
     @Test
-    public void shouldCreateUser() {
+    void shouldCreateUser() {
         assertDoesNotThrow(() -> {
             String email = "johndoe@gmail.com";
             NewUserRegisteredModel userRegistration = service.createUserRegistration(email, "Hellbound#3090");

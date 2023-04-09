@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @DataJpaTest
 @Transactional
-public class UserPasswordStoredValueRepositoryTests {
+class UserPasswordStoredValueRepositoryTests {
     @Autowired
     private UserPasswordStoredValueRepository userPasswordStoredValueRepository;
     @Autowired
@@ -50,7 +50,7 @@ public class UserPasswordStoredValueRepositoryTests {
 
     @DisplayName("Test if can save in database")
     @Test
-    public void testSave() {
+    void testSave() {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
@@ -64,7 +64,7 @@ public class UserPasswordStoredValueRepositoryTests {
 
     @DisplayName("Test if can update in database")
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
@@ -84,7 +84,7 @@ public class UserPasswordStoredValueRepositoryTests {
 
     @DisplayName("Test if can delete in database")
     @Test
-    public void testDelete() {
+    void testDelete() {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")

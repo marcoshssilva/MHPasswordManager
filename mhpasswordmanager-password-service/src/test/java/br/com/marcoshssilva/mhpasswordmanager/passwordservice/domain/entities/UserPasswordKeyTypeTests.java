@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserPasswordKeyTypeTests {
+class UserPasswordKeyTypeTests {
 
     @DisplayName("Test data for getters and setters")
     @Test
-    public void testUserPasswordKeyTypeFields() {
+    void testUserPasswordKeyTypeFields() {
         // Create a new UserPasswordKeyType
         UserPasswordKeyType userPasswordKeyType = UserPasswordKeyType.builder()
                 .description("password")
@@ -22,7 +22,7 @@ public class UserPasswordKeyTypeTests {
 
     @DisplayName("Test hashCode and equals methods")
     @Test
-    public void testEqualsAndHashCode() {
+    void testEqualsAndHashCode() {
         // Create two UserPasswordKeyType objects with the same description
         UserPasswordKeyType keyType1 = UserPasswordKeyType.builder()
                 .id(1L)

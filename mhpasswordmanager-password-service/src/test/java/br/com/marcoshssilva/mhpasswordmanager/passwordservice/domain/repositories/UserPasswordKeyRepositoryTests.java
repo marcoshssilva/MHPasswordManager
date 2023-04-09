@@ -20,7 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 @ActiveProfiles("test")
 @DataJpaTest
 @Transactional
-public class UserPasswordKeyRepositoryTests {
+class UserPasswordKeyRepositoryTests {
     @Autowired
     private UserPasswordKeyRepository userPasswordKeyRepository;
 
@@ -41,7 +41,7 @@ public class UserPasswordKeyRepositoryTests {
 
     @DisplayName("Test if can save in database")
     @Test
-    public void testSave() {
+    void testSave() {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
                 .type(PasswordKeyTypesEnum.WEBSITE)
@@ -60,7 +60,7 @@ public class UserPasswordKeyRepositoryTests {
 
     @DisplayName("Test if can update in database")
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
                 .type(PasswordKeyTypesEnum.EMAILS)
@@ -79,7 +79,7 @@ public class UserPasswordKeyRepositoryTests {
 
     @DisplayName("Test if can delete in database")
     @Test
-    public void testDelete() {
+    void testDelete() {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
                 .type(PasswordKeyTypesEnum.APPLICATION)

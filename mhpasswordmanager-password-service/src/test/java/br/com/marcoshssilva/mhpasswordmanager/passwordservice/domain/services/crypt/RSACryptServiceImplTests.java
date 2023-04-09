@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class RSACryptServiceImplTests {
+class RSACryptServiceImplTests {
     static PrivateKey privateKey;
     static PublicKey publicKey;
     static Base64.Encoder encoder = Base64.getEncoder();
@@ -39,7 +39,7 @@ public class RSACryptServiceImplTests {
 
     @DisplayName("Test if can encrypt and decrypt a message")
     @Test
-    public void mustEncodeAndDecodeMessage() {
+    void mustEncodeAndDecodeMessage() {
         final String message = "Some message to encode";
         final String k1 = encoder.encodeToString(privateKey.getEncoded());
         final String k2 = encoder.encodeToString(publicKey.getEncoded());
@@ -54,7 +54,7 @@ public class RSACryptServiceImplTests {
 
     @DisplayName("Must resolve an EncryptionException")
     @Test
-    public void mustThrowEncryptionExceptionWhenCallIncorrectKeys() {
+    void mustThrowEncryptionExceptionWhenCallIncorrectKeys() {
         assertThrows(EncryptionException.class, () -> {
             final String message = "Some message to encode";
             cryptService.encrypt(message.getBytes(), "P@ssw0rd");
@@ -63,7 +63,7 @@ public class RSACryptServiceImplTests {
 
     @DisplayName("Must resolve an DecryptionException")
     @Test
-    public void mustThrowDecryptionExceptionWhenCallIncorrectKeys() {
+    void mustThrowDecryptionExceptionWhenCallIncorrectKeys() {
         assertThrows(DecryptionException.class, () -> {
             final String message = "Some message to encode";
             final String k2 = encoder.encodeToString(publicKey.getEncoded());

@@ -16,13 +16,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @DataJpaTest
 @Transactional
-public class UserRegistrationRepositoryTests {
+class UserRegistrationRepositoryTests {
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 
     @DisplayName("Test if can save in database")
     @Test
-    public void testSaveUserRegistration() {
+    void testSaveUserRegistration() {
         // Given
         UserRegistration userRegistration = UserRegistration.builder()
                 .id(UUID.randomUUID().toString())
@@ -63,7 +63,7 @@ public class UserRegistrationRepositoryTests {
 
     @DisplayName("Test if can update in database")
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         // Create a new user registration entity
         UserRegistration userRegistration = UserRegistration.builder()
                 .id(UUID.randomUUID().toString())
@@ -99,7 +99,7 @@ public class UserRegistrationRepositoryTests {
 
     @DisplayName("Test if can delete in database")
     @Test
-    public void testDeleteUserRegistration() {
+    void testDeleteUserRegistration() {
         // Create a new UserRegistration
         UserRegistration userRegistration = UserRegistration.builder()
                 .id(UUID.randomUUID().toString())
