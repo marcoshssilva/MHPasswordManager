@@ -28,7 +28,7 @@ class UserRegistrationServiceImplTests {
     @DisplayName("Test if throw UserRegistrationException for existent account")
     @Test
     void shouldThrowUserRegistrationException() throws Exception{
-        String email = "johndoe@gmail.com";
+        String email = "marywheater@gmail.com";
         // must work
         service.createUserRegistration(email, "Hellbound#3090");
         // must not work
