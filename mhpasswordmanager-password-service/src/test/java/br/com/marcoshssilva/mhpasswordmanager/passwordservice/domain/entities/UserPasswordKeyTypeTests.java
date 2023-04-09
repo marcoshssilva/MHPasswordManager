@@ -48,4 +48,26 @@ class UserPasswordKeyTypeTests {
         assertEquals(keyType1.hashCode(), keyType2.hashCode()); // hashCode should be the same for keyType1 and keyType2
         assertNotEquals(keyType1.hashCode(), keyType3.hashCode()); // hashCode should be different for keyType1 and keyType3
     }
+
+    @DisplayName("Test equals()")
+    @Test
+    public void testEquals() {
+        UserPasswordKeyType keyType1 = new UserPasswordKeyType(1L, "Description 1");
+        UserPasswordKeyType keyType2 = new UserPasswordKeyType(1L, "Description 1");
+        UserPasswordKeyType keyType3 = new UserPasswordKeyType(2L, "Description 2");
+
+        assertEquals(keyType1, keyType2);
+        assertNotEquals(keyType1, keyType3);
+        assertNotEquals(keyType2, keyType3);
+        assertNotEquals(keyType1, null);
+        assertNotEquals(keyType1, "not a key type");
+    }
+
+    @DisplayName("Test toString()")
+    @Test
+    public void testToString() {
+        UserPasswordKeyType keyType = new UserPasswordKeyType(1L, "Description 1");
+        String expectedString = "UserPasswordKeyType(id=1, description=Description 1)";
+        assertEquals(expectedString, keyType.toString());
+    }
 }
