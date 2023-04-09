@@ -109,4 +109,25 @@ class UserPasswordStoredValueTests {
         // Equals objects have the same hashCode
         assertEquals(value1.hashCode(), value2.hashCode());
     }
+
+    @DisplayName("Test toString() method")
+    @Test
+    void testToString() {
+        UserPasswordKey key = new UserPasswordKey();
+        key.setId(1L);
+        Date date = new Date();
+
+        UserPasswordStoredValue value = UserPasswordStoredValue.builder()
+                .id(1L)
+                .keyId(key)
+                .data("data1")
+                .createdAt(date)
+                .lastUpdate(date)
+                .build();
+
+        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userRegistration=null, tags=[], type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", date.toString(), date.toString());
+        String actual = value.toString();
+
+        assertEquals(expected, actual);
+    }
 }
