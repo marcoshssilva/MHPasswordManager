@@ -8,10 +8,13 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="mhpasswordmanager.userservice" />
-        <module name="mhpasswordmanager.api.gateway" />
         <module name="mhpasswordmanager.passwordservice" />
+        <module name="mhpasswordmanager.emailservice" />
+        <module name="mhpasswordmanager.configservices" />
+        <module name="mhpasswordmanager.api.gateway" />
         <module name="mhpasswordmanager.service.registry" />
         <module name="mhpasswordmanager.oauth2.authorization.server" />
+        <module name="mhpasswordmanager.fileservice" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -28,6 +31,9 @@
       <module name="MHPasswordManager-Flyway-Database-Migrations" options="-parameters" />
       <module name="mhpasswordmanager-frontend-client" options="-parameters" />
       <module name="mhpasswordmanager.api.gateway" options="-parameters" />
+      <module name="mhpasswordmanager.configservices" options="-parameters" />
+      <module name="mhpasswordmanager.emailservice" options="-parameters" />
+      <module name="mhpasswordmanager.fileservice" options="-parameters" />
       <module name="mhpasswordmanager.flyway.database.migrations.tool" options="-parameters" />
       <module name="mhpasswordmanager.frontend.client" options="-parameters" />
       <module name="mhpasswordmanager.oauth2.authorization.server" options="-parameters" />
