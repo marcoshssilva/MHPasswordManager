@@ -1,0 +1,145 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      console-path: /h2
+  datasource:
+    users:
+      username: 'sa-user-service'
+      password: 'P@ssw0rdUs3rS3rvic3'
+      url: 'jdbc:postgresql://localhost:5432/db_users'
+    auth:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:5432/db_auth'
+  flyway:
+    enabled: true
+    user: 'sa-authorization-server'
+    password: 'P@sswordAuthS3rv3r'
+    schemas:
+      - 'public'
+    url: jdbc:postgresql://localhost:5432/db_auth
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+management:
+  endpoint:
+    health:
+      group:
+        jdbc-connection:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - db
+        redis-connection:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - redis
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'health'
+          - 'metrics'
+          - 'info'
+
+springdoc:
+  # description
+  version: 1.0.0
+  title: 'MHPasswordManager-AuthorizationServer'
+  description: 'Some description...'
+  license-name: 'MIT'
+  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
+  # enable actuator to Swagger
+  show-actuator: true
+  # show login-endpoint to Swagger
+  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/auth/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
+    oauth:
+      client-id: MHPasswordManager
+      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
+    csrf:
+      enabled: true # enable csrf in swagger-ui requests
+
+authorization:
+  issuer-uri: http://localhost:12010
+  success-logout-uri: http://127.0.0.1:8100
+
+---
+spring:
+  config:
+    activate:
+      on-profile: embedded-database
+  flyway:
+    enabled: false
+
+oauth-config-starter:
+  clients:
+    - clientName: 'Registered client for PWA Client'
+      clientId: MHPasswordManager
+      clientSecret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - AUTHORIZATION_CODE
+        - REFRESH_TOKEN
+      redirectUris:
+        # Users-Service Api
+        - http://127.0.0.1:12050/users/swagger-ui/redirect
+        - http://127.0.0.1:12011/users/swagger-ui/redirect
+        # Passwords-Service Api
+        - http://127.0.0.1:12050/passwords/swagger-ui/redirect
+        - http://127.0.0.1:12012/passwords/swagger-ui/redirect
+        # Email-Service Api
+        - http://127.0.0.1:12050/emails/swagger-ui/redirect
+        - http://127.0.0.1:12013/emails/swagger-ui/redirect
+        # File-Service Api
+        - http://127.0.0.1:12050/files/swagger-ui/redirect
+        - http://127.0.0.1:12014/files/swagger-ui/redirect
+        # Authorization Server
+        - http://127.0.0.1:12010/swagger-ui/redirect
+        # WebApp Ionic
+        - http://127.0.0.1:8100/authorize
+        - http://127.0.0.1:4200/authorize
+        - http://127.0.0.1:8080/authorize
+        - http://127.0.0.1/authorize
+        # Tests and Postman
+        - https://oauth.pstmn.io/v1/callback
+        - https://oidcdebugger.com/debug
+      scopes:
+        - 'openid'
+        - 'profile'
+        - 'email'
+        - 'user:canSelfRead'
+        - 'user:canSelfDelete'
+        - 'user:canSelfWrite'
+      tokenSettings:
+        durationInMillis: 900000
+        reuseRefreshToken: false
+        refreshTokenTimeToLiveInMillis: 10800000
+      clientSettings:
+        requireAuthorizationConsent: true
+        requireProofKey: false
+
+    - clientName: 'Registered client for Client Credentials'
+      clientId: MHPasswordManager-GlobalAdmin
+      clientSecret: 8e18ee56-ab7c-4ed9-b192-ff4472e5c697
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - CLIENT_CREDENTIALS
+      scopes:
+        - 'user:canRead'
+        - 'user:canDelete'
+        - 'user:canWrite'
+        - 'user:canCreate'
+      tokenSettings:
+        durationInMillis: 180000

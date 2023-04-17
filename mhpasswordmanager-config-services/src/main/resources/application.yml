@@ -1,0 +1,40 @@
+server:
+  port: 8888
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    enabled: true
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native # if you need use git remote repository, just use profile 'default' and set cloud.config.server properties
+
+#  cloud:
+#    config:
+#      enabled: true
+#      server:
+#        git:
+#          uri: https://github.com/someuser/ExampleConfigServer
+#          username: my_username # optional, don't need if repo is public
+#          password: my_git_pass_or_token # optional, don't need if repo is public
+#          try-master-branch: false # if true, always fetch branch 'master'
+#          default-label: main # default branch to use
+#
+#          # list of sub-folders from git project
+#          search-paths:
+#            - 'configs-marcoshssilva.com.br*'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  cloud:
+    config:
+      server:
+        enabled: false
+eureka:
+  client:
+    enabled: false
