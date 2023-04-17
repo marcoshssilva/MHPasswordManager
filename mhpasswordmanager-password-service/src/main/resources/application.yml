@@ -1,36 +1,9 @@
 spring:
   application:
     name: 'password-service'
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/db_passwords
-    username: 'sa-password-service'
-    password: 'P@ssw0rdP@ssw0rds'
-  flyway:
-    enabled: true
-    driver-class-name: org.postgresql.Driver
-    url: ${spring.datasource.url}
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    schemas:
-      - 'public'
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: true
-    properties:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-  jackson:
-    default-property-inclusion: non_null
-    serialization:
-      fail-on-empty-beans: false
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://localhost:12010
-#          jwk-set-uri: http://localhost:12010/oauth2/jwks # optional when used with Spring Authorization Server
-
+  config:
+    import:
+      - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
 eureka:
   client:
     service-url:
@@ -40,46 +13,6 @@ server:
   servlet:
     context-path: /passwords
   port: 12012
-
-management:
-  endpoint:
-    health:
-      group:
-        details:
-          show-components: ALWAYS
-          show-details: ALWAYS
-          include:
-            - db
-            - ping
-    shutdown:
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include:
-          - health
-          - metrics
-          - info
-
-springdoc:
-  # description
-  version: @project.version@
-  title: @project.name@
-  description: @project.description@
-  license-name: 'MIT'
-  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
-  show-actuator: true # list actuator endpoints into Swagger
-  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
-  swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12050/passwords/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
-    oauth:
-      client-id: MHPasswordManager
-      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
-      use-basic-authentication-with-access-code-grant: on
-    csrf:
-      enabled: false
 ---
 spring:
   config:

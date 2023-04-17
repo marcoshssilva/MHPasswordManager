@@ -78,6 +78,17 @@
 			<version>1.6.15</version>
 		</dependency>
 
+		<!-- support for read properties from Config Server-->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-config-client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<!-- h2 database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
