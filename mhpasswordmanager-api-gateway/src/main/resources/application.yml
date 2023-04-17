@@ -1,17 +1,10 @@
+server:
+  port: 12050
 spring:
   application:
     name: 'gateway'
   cloud:
     gateway:
-      routes:
-        - id: user-service
-          uri: lb://USER-SERVICE
-          predicates:
-            - Path=/users/**
-        - id: password-service
-          uri: lb://PASSWORD-SERVICE
-          predicates:
-            - Path=/passwords/**
       globalcors:
         cors-configurations:
           '[/**]':
@@ -26,6 +19,23 @@ spring:
             allowedHeaders:
               - Content-type
               - Authorization
+      routes:
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/users/**
+        - id: password-service
+          uri: lb://PASSWORD-SERVICE
+          predicates:
+            - Path=/passwords/**
+        - id: email-service
+          uri: lb://EMAIL-SERVICE
+          predicates:
+            - Path=/emails/**
+        - id: file-service
+          uri: lb://FILE-SERVICE
+          predicates:
+            - Path=/files/**
 
 management:
   endpoint:
@@ -38,9 +48,15 @@ management:
           - 'health'
           - 'metrics'
           - 'info'
-server:
-  port: 12050
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+eureka:
+  client:
+    enabled: false
