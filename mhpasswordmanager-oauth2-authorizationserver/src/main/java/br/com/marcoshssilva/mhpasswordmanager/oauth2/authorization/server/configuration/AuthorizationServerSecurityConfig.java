@@ -5,10 +5,10 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -31,12 +31,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
 @Configuration(proxyBeanMethods = false)
+@RequiredArgsConstructor
 public class AuthorizationServerSecurityConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(AuthorizationServerSecurityConfig.class);
 
-    @Value("${authorization.issuer-uri}")
-    private String issuerUri;
+    private final AuthorizationConfigProperties authorizationConfigProperties;
 
     @Order(Ordered.HIGHEST_PRECEDENCE)
     @Bean
@@ -48,7 +48,7 @@ public class AuthorizationServerSecurityConfig {
 
         return http
                 // register path to login and when not logged in redirect to login page -> /login
-                .exceptionHandling((exception) -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))
                 // enable access for user info and client registration
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .build();
@@ -92,7 +92,8 @@ public class AuthorizationServerSecurityConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        return AuthorizationServerSettings.builder().issuer(issuerUri).build();
+        LOG.info("{}", authorizationConfigProperties);
+        return AuthorizationServerSettings.builder().issuer(authorizationConfigProperties.getIssuerUri()).build();
     }
 
 }

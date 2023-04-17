@@ -2,13 +2,13 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.confi
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.models.OAuthClient;
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.models.OAuthServerSettings;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +26,7 @@ public class OAuth2ConfigStarterPropertiesConfig {
     }
 
     @Bean
+    @RefreshScope
     @ConfigurationProperties(prefix = "oauth-config-starter")
     public OAuth2ConfigStarterProperties oAuth2ConfigStarterProperties() {
         return new OAuth2ConfigStarterProperties();
