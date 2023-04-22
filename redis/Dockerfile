@@ -1,10 +1,9 @@
 FROM redis:6.2-alpine
-
+# Create directory to use
+WORKDIR /startup
 # Copy the run.sh script into the container
-COPY scripts/run.sh /
-
+COPY scripts/run.sh init.sh
 # Make the script executable
-RUN chmod +x /run.sh
-
+RUN chmod +x /startup/init.sh
 # Run the script when the container starts
-CMD ["/run.sh"]
+ENTRYPOINT ["sh", "/startup/init.sh"]
