@@ -4,7 +4,7 @@ server:
     context-path: /users
 spring:
   application:
-    name: 'user-service'
+    name: user-service
   config:
     import:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
@@ -12,6 +12,18 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+springdoc:
+  version: @project.version@
+  title: @project.name@
+  description: @project.description@
+  license-name: 'MIT'
+  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12050/users/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
+    csrf:
+      enabled: false
 ---
 spring:
   config:
@@ -28,10 +40,18 @@ spring:
     show-sql: true
     properties:
       dialect: org.hibernate.dialect.H2Dialect
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://mhpasswordmanager.test.fake.com
   session:
     store-type: none
   flyway:
     enabled: false
 eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
   client:
     enabled: false
