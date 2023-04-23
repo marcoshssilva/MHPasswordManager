@@ -5,8 +5,8 @@ spring:
       console-path: /h2
   datasource:
     users:
-      username: 'sa-user-service'
-      password: 'P@ssw0rdUs3rS3rvic3'
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
       url: 'jdbc:postgresql://localhost:5432/db_users'
     auth:
       username: 'sa-authorization-server'
@@ -50,27 +50,15 @@ management:
           - 'info'
 
 springdoc:
-  # description
-  version: 1.0.0
-  title: 'MHPasswordManager-AuthorizationServer'
-  description: 'Some description...'
-  license-name: 'MIT'
-  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
   # enable actuator to Swagger
   show-actuator: true
   # show login-endpoint to Swagger
   show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
   swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/auth/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
     oauth:
       client-id: MHPasswordManager
       client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
       use-basic-authentication-with-access-code-grant: on
-    csrf:
-      enabled: true # enable csrf in swagger-ui requests
-
 authorization:
   issuer-uri: http://localhost:12010
   success-logout-uri: http://127.0.0.1:8100
