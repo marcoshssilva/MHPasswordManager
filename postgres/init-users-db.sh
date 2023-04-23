@@ -39,3 +39,16 @@ else
     psql -c "CREATE DATABASE db_auth WITH OWNER = 'sa-authorization-server' ENCODING = 'UTF8' LC_COLLATE = 'en_US.utf8' LC_CTYPE = 'en_US.utf8' TABLESPACE = pg_default CONNECTION LIMIT = -1 IS_TEMPLATE = False;"
     echo "db_auth OK."
 fi
+
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "db_users" <<-EOSQL
+
+DO \$\$
+BEGIN
+  IF EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-authorization-server')
+      GRANT CONNECT ON DATABASE db_users TO "sa-authorization-server";
+      GRANT USAGE ON SCHEMA public TO "sa-authorization-server";
+      GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO "sa-authorization-server";
+  END IF;
+END \$\$;
+
+EOSQL
