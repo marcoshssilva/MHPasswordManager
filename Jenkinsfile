@@ -10,6 +10,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -21,6 +22,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -32,6 +34,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -43,6 +46,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -54,6 +58,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -65,6 +70,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -76,6 +82,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -87,6 +94,7 @@ pipeline {
                     sh "mvn test"
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
