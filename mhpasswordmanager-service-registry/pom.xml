@@ -95,7 +95,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<serverId>nexus-deploy-java</serverId>
+					<serverId>nexus-deploy</serverId>
 					<nexusUrl>http://nexus.apps.marcoshssilva.com.br/</nexusUrl>
 					<skipStaging>true</skipStaging>
 				</configuration>
