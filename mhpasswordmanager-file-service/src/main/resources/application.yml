@@ -1,22 +1,38 @@
+server:
+  port: 12014
+  servlet:
+    context-path: /files
 spring:
   application:
     name: file-service
   config:
     import:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
-server:
-  port: 12014
-  servlet:
-    context-path: /files
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+springdoc:
+  version: @project.version@
+  title: @project.name@
+  description: @project.description@
+  license-name: 'MIT'
+  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
 ---
 spring:
   config:
     activate:
       on-profile: test
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://mhpasswordmanager.test.fake.com
+  session:
+    store-type: none
 eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
   client:
     enabled: false
