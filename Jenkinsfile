@@ -6,6 +6,9 @@ pipeline {
         maven 'maven-default'
     }
     stages {
+        stage('Maven Check Details') {
+            sh "mvn -version"
+        }
         stage('Eureka Server - Compile, Tests and Deploy') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
