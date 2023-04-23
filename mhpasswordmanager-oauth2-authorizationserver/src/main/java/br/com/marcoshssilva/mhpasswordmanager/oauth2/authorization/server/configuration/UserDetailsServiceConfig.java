@@ -54,7 +54,7 @@ public class UserDetailsServiceConfig {
     }
 
     @Bean
-    @Profile("in-jdbc-users")
+    @Profile("!embedded-database & !in-memory-users")
     public UserDetailsManager jdbcUserDetailsManager(@Qualifier("dataSourceDbUsers") DataSource dataSource) {
         return new JdbcUserDetailsManager(dataSource);
     }

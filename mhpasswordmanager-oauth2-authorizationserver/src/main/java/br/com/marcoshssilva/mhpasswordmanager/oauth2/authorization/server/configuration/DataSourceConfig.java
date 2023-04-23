@@ -44,7 +44,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile("in-jdbc-users")
+    @Profile("!embedded-database & !in-memory-users")
     public JdbcTemplate dbUsersJdbcTemplate(@Qualifier("dataSourceDbUsers") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
@@ -57,7 +57,7 @@ public class DataSourceConfig {
     }
 
     @Bean
-    @Profile("in-jdbc-users")
+    @Profile("!embedded-database & !in-memory-users")
     public DataSource dataSourceDbUsers(@Qualifier("dbUsersDatasourceProperties") DataSourceProperties dataSourceProperties) {
         LOG.info("Starting database using DB-Users datasource");
         return dataSourceProperties.initializeDataSourceBuilder().build();

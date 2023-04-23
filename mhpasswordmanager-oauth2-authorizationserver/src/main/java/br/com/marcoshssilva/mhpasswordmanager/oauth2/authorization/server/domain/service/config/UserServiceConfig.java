@@ -15,7 +15,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 @Configuration
 public class UserServiceConfig {
     @Bean
-    @Profile("in-jdbc-users")
+    @Profile("!embedded-database & !in-memory-users")
     public UserService inJdbcUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired @Qualifier("dbUsersJdbcTemplate") JdbcTemplate jdbcTemplate) {
         return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate);
     }

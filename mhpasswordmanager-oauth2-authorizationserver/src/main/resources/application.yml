@@ -3,8 +3,6 @@ server:
 spring:
   application:
     name: authorization-server
-  profiles:
-    default: default, in-jdbc-users # in future must be use Web-client with Eureka service discovery
   mvc:
     static-path-pattern: /content/**
   config:
@@ -12,11 +10,20 @@ spring:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
 eureka:
   client:
-    enabled: true
-    register-with-eureka: true
-    fetch-registry: true
     serviceUrl:
       defaultZone: http://localhost:8761/eureka
+springdoc:
+  version: @project.version@
+  title: @project.name@
+  description: @project.description@
+  license-name: 'MIT'
+  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
+    csrf:
+      enabled: true # enable csrf in swagger-ui requests
 ---
 spring:
   config:
@@ -27,5 +34,11 @@ spring:
   flyway:
     enabled: false
 eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
   client:
     enabled: false
+authorization:
+  issuer-uri: http://localhost:12010
+  success-logout-uri: http://127.0.0.1:8100
