@@ -57,5 +57,38 @@ pipeline {
                 }
             }
         }
+
+        stage('Config-Services - Compile, Tests and Deploy') {
+            steps{
+                dir("${env.WORKSPACE}/mhpasswordmanager-config-services"){
+                    sh "mvn clean"
+                    sh "mvn test"
+                    sh "mvn install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
+                }
+            }
+        }
+
+        stage('File-Service - Compile, Tests and Deploy') {
+            steps{
+                dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
+                    sh "mvn clean"
+                    sh "mvn test"
+                    sh "mvn install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
+                }
+            }
+        }
+
+        stage('Email-Service - Compile, Tests and Deploy') {
+            steps{
+                dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
+                    sh "mvn clean"
+                    sh "mvn test"
+                    sh "mvn install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
+                }
+            }
+        }
     }
 }
