@@ -8,6 +8,7 @@ pipeline {
     stages {
         stage('Maven Check Details') {
             sh "mvn -version"
+            sh "mvn help:effective-settings"
         }
         stage('Eureka Server - Compile, Tests and Deploy') {
             steps {
