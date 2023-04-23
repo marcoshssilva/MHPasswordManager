@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'master'
     }
+    tools {
+        maven 'maven-default'
+    }
     stages {
         stage('Eureka Server - Compile, Tests and Deploy') {
             steps {
