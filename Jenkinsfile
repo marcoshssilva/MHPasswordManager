@@ -71,7 +71,7 @@ pipeline {
 
         stage('File-Service - Compile, Tests and Deploy') {
             steps{
-                dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
+                dir("${env.WORKSPACE}/mhpasswordmanager-file-service"){
                     sh "mvn clean"
                     sh "mvn test"
                     sh "mvn install"
@@ -82,7 +82,7 @@ pipeline {
 
         stage('Email-Service - Compile, Tests and Deploy') {
             steps{
-                dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
+                dir("${env.WORKSPACE}/mhpasswordmanager-email-service"){
                     sh "mvn clean"
                     sh "mvn test"
                     sh "mvn install"
