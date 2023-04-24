@@ -57,12 +57,12 @@
 
 	<distributionManagement>
 		<repository>
-			<id>nexus</id>
+			<id>nexus-deploy</id>
 			<name>nexus-release</name>
 			<url>http://nexus.apps.marcoshssilva.com.br/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
-			<id>nexus</id>
+			<id>nexus-deploy</id>
 			<name>nexus-snapshot</name>
 			<url>http://nexus.apps.marcoshssilva.com.br/repository/maven-snapshots/</url>
 		</snapshotRepository>
