@@ -1,6 +1,10 @@
 spring:
   application:
     name: eureka-service-registry
+  security:
+    user:
+      name: ${SPRING_SECURITY_USERNAME:admin}
+      password: ${SPRING_SECURITY_PASSWORD:admin}
 server:
   port: 8761
 eureka:
