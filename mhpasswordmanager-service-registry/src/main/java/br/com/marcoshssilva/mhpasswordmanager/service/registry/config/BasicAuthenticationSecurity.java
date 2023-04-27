@@ -13,7 +13,9 @@ import org.springframework.security.web.SecurityFilterChain;
 public class BasicAuthenticationSecurity {
     @Bean
     SecurityFilterChain basicAuthenticationSecurityFilterChainConfigurer(HttpSecurity http) throws Exception {
-        return http.csrf().disable()
+        return http
+                .csrf().disable()
+                .cors().disable()
                 .authorizeRequests().anyRequest().authenticated()
                 .and().httpBasic().and()
                 .build();
