@@ -9,7 +9,8 @@ spring:
   application:
     name: config-server
   profiles:
-    active: native # if you need use git remote repository, just use profile 'default' and set cloud.config.server properties
+    active: default # default for use remote git or specific directory to read git config
+#   active: native  # native if you need use config from default of this project, reading all .yml files
 
 #  cloud:
 #    config:
