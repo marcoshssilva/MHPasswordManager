@@ -22,6 +22,11 @@
       <option name="url" value="https://dl.google.com/dl/android/maven2/" />
     </remote-repository>
     <remote-repository>
+      <option name="id" value="nexus-deploy" />
+      <option name="name" value="Nexus Repository Maven Public" />
+      <option name="url" value="http://nexus.apps.marcoshssilva.com.br/repository/maven-public/" />
+    </remote-repository>
+    <remote-repository>
       <option name="id" value="spring-milestones" />
       <option name="name" value="Spring Milestones" />
       <option name="url" value="https://repo.spring.io/milestone" />
