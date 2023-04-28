@@ -1,5 +1,5 @@
 FROM eclipse-temurin:17-jre-alpine AS java
-COPY /target/mhpasswordmanager.userservice-*.jar app.jar
+COPY /target/mhpasswordmanager.configservices-*.jar app.jar
 ENTRYPOINT java $JAVA_OPTS -jar app.jar
 
-EXPOSE 12011
+EXPOSE 8888

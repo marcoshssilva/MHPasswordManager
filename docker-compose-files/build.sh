@@ -21,6 +21,15 @@ docker build -t mhpasswordmanager/user-service:latest ../mhpasswordmanager-user-
 echo 'mhpasswordmanager-password-service...'
 docker build -t mhpasswordmanager/password-service:latest ../mhpasswordmanager-password-service
 
+echo 'mhpasswordmanager-config-services...'
+docker build -t mhpasswordmanager/config-services:latest ../mhpasswordmanager-config-services
+
+echo 'mhpasswordmanager-email-service...'
+docker build -t mhpasswordmanager/email-service:latest ../mhpasswordmanager-email-service
+
+echo 'mhpasswordmanager-file-service...'
+docker build -t mhpasswordmanager/file-service:latest ../mhpasswordmanager-file-service
+
 echo 'Cleaning images...'
 docker rmi --force $(docker images -f dangling=true)
 

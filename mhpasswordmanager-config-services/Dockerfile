@@ -1,10 +1,10 @@
 FROM maven:3.8.7-eclipse-temurin-17-alpine AS builder
-WORKDIR /app
+WORKDIR /build
 COPY . .
 RUN mvn clean install -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine AS java
-COPY --from=builder /app/target/mhpasswordmanager.passwordservice-*.jar app.jar
+COPY --from=builder /build/target/mhpasswordmanager.configservices-*.jar app.jar
 ENTRYPOINT java $JAVA_OPTS -jar app.jar
 
-EXPOSE 12012
+EXPOSE 8888

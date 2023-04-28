@@ -1,5 +1,15 @@
 version: '3.8'
 services:
+  config-services:
+    image: mhpasswordmanager/config-services:latest
+    container_name: 'config-services'
+    restart: on-failure
+    env_file:
+      - configs-composable/CONFIG-SERVICES.env
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "8888:8888"
   eureka-service-discovery:
     image: mhpasswordmanager/service-registry:latest
     container_name: 'eureka-server'
@@ -9,7 +19,7 @@ services:
     networks:
       - net-mhpasswordmanager
     ports:
-      - "12761:8761"
+      - "8761:8761"
   oauth2-authorization-server:
     container_name: 'authorization-server'
     image: mhpasswordmanager/oauth2-authorization-server:latest
@@ -20,6 +30,7 @@ services:
       - redis-store
       - eureka-service-discovery
       - postgres-db
+      - config-services
     networks:
       - net-mhpasswordmanager
     ports:
@@ -45,6 +56,8 @@ services:
     depends_on:
       - eureka-service-discovery
       - postgres-db
+      - config-services
+      - redis-store
     networks:
       - net-mhpasswordmanager
     ports:
@@ -58,6 +71,8 @@ services:
     depends_on:
       - eureka-service-discovery
       - postgres-db
+      - config-services
+      - redis-store
     networks:
       - net-mhpasswordmanager
     ports:
