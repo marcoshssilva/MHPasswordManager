@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jre-alpine AS java
+FROM arm64v8/eclipse-temurin:17.0.7_7-jre AS java
 COPY /target/mhpasswordmanager.oauth2.authorization.server-*.jar app.jar
 ENTRYPOINT java -jar app.jar
 
