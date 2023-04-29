@@ -9,24 +9,24 @@ spring:
   application:
     name: config-server
   profiles:
-    active: default # default for use remote git or specific directory to read git config
 #   active: native  # native if you need use config from default of this project, reading all .yml files
-
-#  cloud:
-#    config:
-#      enabled: true
-#      server:
-#        git:
-#          uri: https://github.com/someuser/ExampleConfigServer
-#          username: my_username # optional, don't need if repo is public
-#          password: my_git_pass_or_token # optional, don't need if repo is public
-#          try-master-branch: false # if true, always fetch branch 'master'
-#          default-label: main # default branch to use
-#
-#          # list of sub-folders from git project
-#          search-paths:
-#            - 'configs-marcoshssilva.com.br*'
-
+    active: default # default for use remote git or specific directory to read git config
+  cloud:
+    config:
+      enabled: ${SPRING_CLOUD_CONFIG_ENABLED:false}
+      server:
+        git:
+          uri: ${SPRING_CLOUD_CONFIG_SERVER_URI:}
+          # optional, don't need if repo is public
+          username: ${SPRING_CLOUD_CONFIG_SERVER_USERNAME:}
+          # optional, don't need if repo is public
+          password: ${SPRING_CLOUD_CONFIG_SERVER_PASSWORD:}
+          # if true, always fetch branch 'master'
+          try-master-branch: ${SPRING_CLOUD_CONFIG_SERVER_TRY_MASTER_BRANCH:false}
+          # default branch to use
+          default-label: ${SPRING_CLOUD_CONFIG_SERVER_DEFAULT_LABEL:master}
+          # list of sub-folders from git project
+          search-paths: ${SPRING_CLOUD_CONFIG_SERVER_SEARCH_PATHS:*}
 ---
 spring:
   config:
