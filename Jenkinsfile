@@ -1,3 +1,6 @@
+def version = "1.0.0-SNAPSHOT"
+def project = "mhpassword-manager"
+
 pipeline {
     agent {
         label 'master'
@@ -98,6 +101,14 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
                     sh "mvn deploy -Dmaven.test.skip=true"
+                }
+            }
+        }
+
+        stage('Docker - compile and deploy on registry') {
+            steps{
+                dir("${env.WORKSPACE}/docker-compose-files"){
+                    sh "build.sh ${version}"
                 }
             }
         }
