@@ -17,7 +17,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/service-registry:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/service-registry:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -30,7 +30,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/api-gateway:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/api-gateway:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -43,7 +43,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/oauth2-authorization-server:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/oauth2-authorization-server:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -56,7 +56,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/user-service:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/user-service:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -69,7 +69,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/password-service:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/password-service:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -82,7 +82,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/config-services:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/config-services:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -95,7 +95,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/file-service:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/file-service:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -108,7 +108,7 @@ pipeline {
                     sh "mvn install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
                     sh "mvn deploy -Dmaven.test.skip=true"
-                    sh "docker build -t ${project}/email-service:${version} -f ./DockerfileJenkins"
+                    sh "docker build -t ${project}/email-service:${version} -f ./DockerfileJenkins ."
                 }
             }
         }
@@ -116,10 +116,10 @@ pipeline {
         stage('Docker - Build and Cleaning images') {
             steps{
                 dir("${env.WORKSPACE}/postgres"){
-                    sh "docker build -t ${project}/postgres:${version}"
+                    sh "docker build -t ${project}/postgres:${version} ."
                 }
                 dir("${env.WORKSPACE}/redis"){
-                    sh "docker build -t ${project}/redis:${version}"
+                    sh "docker build -t ${project}/redis:${version} ."
                 }
                 dir("${env.WORKSPACE}/mongo"){
                     echo "NOTHING TO COMPILE YET."
