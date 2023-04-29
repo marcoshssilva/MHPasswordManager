@@ -108,7 +108,7 @@ pipeline {
         stage('Docker - compile and deploy on registry') {
             steps{
                 dir("${env.WORKSPACE}/docker-compose-files"){
-                    sh "build.sh ${version}"
+                    sh "./build.sh ${version}"
                 }
             }
         }
