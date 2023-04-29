@@ -124,7 +124,11 @@ pipeline {
                 dir("${env.WORKSPACE}/mongo"){
                     echo "NOTHING TO COMPILE YET."
                 }
-                sh "docker rmi --force \$(docker images -f dangling=true)"
+                try {
+                    sh "docker rmi --force \$(docker images -f dangling=true)"
+                } catch(err) {
+                    echo "OK. Always return error."
+                }
             }
         }
     }
