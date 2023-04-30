@@ -7,6 +7,15 @@ spring:
       password: ${SPRING_SECURITY_PASSWORD:admin}
 server:
   servlet:
+    ssl:
+      enabled: ${SERVER_SERVLET_SSL_ENABLED:false}
+      key-alias: ${SERVER_SERVLET_SSL_KEY_ALIAS:}
+      key-store: ${SERVER_SERVLET_SSL_KEY_STORE:}
+      key-store-type: ${SERVER_SERVLET_SSL_KEY_STORE_TYPE:}
+      key-store-password: ${SERVER_SERVLET_SSL_KEY_STORE_PASSWORD:}
+      key-password: ${SERVER_SERVLET_SSL_KEY_PASSWORD:}
+      trust-store: ${SERVER_SERVLET_SSL_TRUST_STORE:}
+      trust-store-password: ${SERVER_SERVLET_SSL_TRUST_STORE_PASSWORD:}
     session:
       cookie:
         http-only: on
