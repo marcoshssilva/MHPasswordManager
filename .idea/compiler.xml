@@ -23,12 +23,12 @@
       <module name="mhpasswordmanager.api.gateway" options="-parameters" />
       <module name="mhpasswordmanager.configservices" options="-parameters" />
       <module name="mhpasswordmanager.emailservice" options="-parameters" />
-      <module name="mhpasswordmanager.fileservice" options="" />
-      <module name="mhpasswordmanager.oauth2.authorization.server" options="" />
-      <module name="mhpasswordmanager.passwordservice" options="" />
+      <module name="mhpasswordmanager.fileservice" options="-parameters" />
+      <module name="mhpasswordmanager.oauth2.authorization.server" options="-parameters" />
+      <module name="mhpasswordmanager.passwordservice" options="-parameters" />
       <module name="mhpasswordmanager.pwa-client" options="-parameters" />
-      <module name="mhpasswordmanager.service.registry" options="" />
-      <module name="mhpasswordmanager.userservice" options="" />
+      <module name="mhpasswordmanager.service.registry" options="-parameters" />
+      <module name="mhpasswordmanager.userservice" options="-parameters" />
     </option>
   </component>
 </project>
