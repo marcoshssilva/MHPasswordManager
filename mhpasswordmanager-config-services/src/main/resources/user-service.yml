@@ -1,21 +1,7 @@
-management:
-  endpoint:
-    health:
-      group:
-        jdbc-connection:
-          show-components: when_authorized
-          show-details: when_authorized
-          include:
-            - db
-    shutdown:
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include:
-          - 'health'
-          - 'metrics'
-          - 'info'
+spring:
+  config:
+    activate:
+      on-profile: config-swagger
 
 springdoc:
   show-actuator: true # list actuator endpoints into Swagger
@@ -25,6 +11,31 @@ springdoc:
       client-id: MHPasswordManager
       client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
       use-basic-authentication-with-access-code-grant: on
+
+---
+spring:
+  config:
+    activate:
+      on-profile: enable-actuator
+
+management:
+  endpoint:
+    health:
+      group:
+        jdbc-connection:
+          show-components: ALWAYS
+          show-details: ALWAYS
+          include:
+            - db
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - metrics
+          - info
 
 ---
 spring:
