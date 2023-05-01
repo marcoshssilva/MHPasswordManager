@@ -4,15 +4,15 @@
   <component name="MavenProjectsManager">
     <option name="originalFiles">
       <list>
-        <option value="$PROJECT_DIR$/mhpasswordmanager-service-registry/pom.xml" />
-        <option value="$PROJECT_DIR$/mhpasswordmanager-api-gateway/pom.xml" />
-        <option value="$PROJECT_DIR$/mhpasswordmanager-user-service/pom.xml" />
-        <option value="$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/pom.xml" />
         <option value="$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/mhpasswordmanager-frontend-client/pom.xml" />
-        <option value="$PROJECT_DIR$/mhpasswordmanager-password-service/pom.xml" />
+        <option value="$PROJECT_DIR$/mhpasswordmanager-api-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/mhpasswordmanager-config-services/pom.xml" />
         <option value="$PROJECT_DIR$/mhpasswordmanager-email-service/pom.xml" />
         <option value="$PROJECT_DIR$/mhpasswordmanager-file-service/pom.xml" />
+        <option value="$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/pom.xml" />
+        <option value="$PROJECT_DIR$/mhpasswordmanager-password-service/pom.xml" />
+        <option value="$PROJECT_DIR$/mhpasswordmanager-service-registry/pom.xml" />
+        <option value="$PROJECT_DIR$/mhpasswordmanager-user-service/pom.xml" />
       </list>
     </option>
   </component>

@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/docker-compose-files/docker-compose-files.iml" filepath="$PROJECT_DIR$/docker-compose-files/docker-compose-files.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongo/mongo.iml" filepath="$PROJECT_DIR$/mongo/mongo.iml" />
       <module fileurl="file://$PROJECT_DIR$/postgres/postgres.iml" filepath="$PROJECT_DIR$/postgres/postgres.iml" />
       <module fileurl="file://$PROJECT_DIR$/postman/postman.iml" filepath="$PROJECT_DIR$/postman/postman.iml" />

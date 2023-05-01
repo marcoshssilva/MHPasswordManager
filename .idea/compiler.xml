@@ -7,9 +7,9 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="mhpasswordmanager.userservice" />
-        <module name="mhpasswordmanager.passwordservice" />
         <module name="mhpasswordmanager.emailservice" />
+        <module name="mhpasswordmanager.passwordservice" />
+        <module name="mhpasswordmanager.userservice" />
         <module name="mhpasswordmanager.configservices" />
         <module name="mhpasswordmanager.api.gateway" />
         <module name="mhpasswordmanager.service.registry" />
