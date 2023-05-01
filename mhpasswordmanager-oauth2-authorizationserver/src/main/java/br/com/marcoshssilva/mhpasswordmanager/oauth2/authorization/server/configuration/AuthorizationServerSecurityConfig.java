@@ -19,10 +19,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
-import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.*;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
@@ -55,13 +52,25 @@ public class AuthorizationServerSecurityConfig {
     }
 
     @Bean
-    @Profile("!test & !embedded-database")
+    @Profile({"in-memory-client", "test & !embedded-database"})
+    public OAuth2AuthorizationService inMemoryAuthAuthorizationService() {
+        return new InMemoryOAuth2AuthorizationService();
+    }
+
+    @Bean
+    @Profile({"in-memory-client", "test & !embedded-database"})
+    public OAuth2AuthorizationConsentService inMemoryAuthorizationConsentService() {
+        return new InMemoryOAuth2AuthorizationConsentService();
+    }
+
+    @Bean
+    @Profile("!test & !embedded-database & !in-memory-client")
     public OAuth2AuthorizationService inJdbcDbAuthAuthorizationService(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
-    @Profile("!test & !embedded-database")
+    @Profile("!test & !embedded-database & !in-memory-client")
     public OAuth2AuthorizationConsentService inJdbcDbAuthAuthorizationConsentService(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }

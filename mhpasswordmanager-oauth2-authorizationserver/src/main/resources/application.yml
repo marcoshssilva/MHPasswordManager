@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: authorization-server
+  profiles:
+    default: local,enable-actuator,config-springdoc,issuer-local
   mvc:
     static-path-pattern: /content/**
   config:
@@ -41,4 +43,4 @@ eureka:
     enabled: false
 authorization:
   issuer-uri: http://localhost:12010
-  success-logout-uri: http://127.0.0.1:8100
+  success-logout-uri: http://localhost:8100
