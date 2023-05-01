@@ -27,6 +27,19 @@ spring:
           default-label: ${SPRING_CLOUD_CONFIG_SERVER_DEFAULT_LABEL:master}
           # list of sub-folders from git project
           search-paths: ${SPRING_CLOUD_CONFIG_SERVER_SEARCH_PATHS:*}
+
+management:
+  endpoint:
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'health'
+          - 'metrics'
+          - 'info'
+
 ---
 spring:
   config:

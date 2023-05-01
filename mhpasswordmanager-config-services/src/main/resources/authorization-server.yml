@@ -1,75 +1,27 @@
 spring:
-  h2:
-    console:
-      enabled: true
-      console-path: /h2
-  datasource:
-    users:
-      username: 'sa-authorization-server'
-      password: 'P@sswordAuthS3rv3r'
-      url: 'jdbc:postgresql://localhost:5432/db_users'
-    auth:
-      username: 'sa-authorization-server'
-      password: 'P@sswordAuthS3rv3r'
-      url: 'jdbc:postgresql://localhost:5432/db_auth'
-  flyway:
-    enabled: true
-    user: 'sa-authorization-server'
-    password: 'P@sswordAuthS3rv3r'
-    schemas:
-      - 'public'
-    url: jdbc:postgresql://localhost:5432/db_auth
-  session:
-    store-type: redis
-  redis:
-    host: 127.0.0.1
-    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
-    port: 6379
-management:
-  endpoint:
-    health:
-      group:
-        jdbc-connection:
-          show-components: when_authorized
-          show-details: when_authorized
-          include:
-            - db
-        redis-connection:
-          show-components: when_authorized
-          show-details: when_authorized
-          include:
-            - redis
-    shutdown:
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include:
-          - 'health'
-          - 'metrics'
-          - 'info'
+  config:
+    activate:
+      on-profile: issuer-local
 
-springdoc:
-  # enable actuator to Swagger
-  show-actuator: true
-  # show login-endpoint to Swagger
-  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
-  swagger-ui:
-    oauth:
-      client-id: MHPasswordManager
-      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
-      use-basic-authentication-with-access-code-grant: on
 authorization:
   issuer-uri: http://localhost:12010
-  success-logout-uri: http://127.0.0.1:8100
+  success-logout-uri: http://localhost:8100
 
 ---
 spring:
   config:
     activate:
-      on-profile: embedded-database
-  flyway:
-    enabled: false
+      on-profile: issuer-docker
+
+authorization:
+  issuer-uri: http://host.docker.internal:12010
+  success-logout-uri: http://host.docker.internal:8100
+
+---
+spring:
+  config:
+    activate:
+      on-profile: generate-clients-local
 
 oauth-config-starter:
   clients:
@@ -131,3 +83,129 @@ oauth-config-starter:
         - 'user:canCreate'
       tokenSettings:
         durationInMillis: 180000
+
+---
+spring:
+  config:
+    activate:
+      on-profile: enable-actuator
+
+management:
+  endpoint:
+    health:
+      group:
+        jdbc-connection:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - db
+        redis-connection:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - redis
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'health'
+          - 'metrics'
+          - 'info'
+
+---
+spring:
+  config:
+    activate:
+      on-profile: config-springdoc
+springdoc:
+  # enable actuator to Swagger
+  show-actuator: true
+  # show login-endpoint to Swagger
+  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
+  swagger-ui:
+    oauth:
+      client-id: MHPasswordManager
+      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  h2:
+    console:
+      enabled: true
+      console-path: /h2
+  datasource:
+    users:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:5432/db_users'
+    auth:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:5432/db_auth'
+  flyway:
+    enabled: true
+    user: 'sa-authorization-server'
+    password: 'P@sswordAuthS3rv3r'
+    schemas:
+      - 'public'
+    url: jdbc:postgresql://localhost:5432/db_auth
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    users:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://postgres-db:5432/db_users'
+    auth:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://postgres-db:5432/db_auth'
+  flyway:
+    enabled: true
+    user: 'sa-authorization-server'
+    password: 'P@sswordAuthS3rv3r'
+    schemas:
+      - 'public'
+    url: jdbc:postgresql://postgres-db:5432/db_auth
+  session:
+    store-type: redis
+  redis:
+    host: redis-store
+    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+
+authorization:
+  issuer-uri: http://host.docker.internal:12010
+  success-logout-uri: http://host.docker.internal:8100
+
+---
+spring:
+  config:
+    activate:
+      on-profile: embedded-database
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  flyway:
+    enabled: false

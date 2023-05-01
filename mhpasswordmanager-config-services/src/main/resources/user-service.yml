@@ -1,4 +1,36 @@
+management:
+  endpoint:
+    health:
+      group:
+        jdbc-connection:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - db
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'health'
+          - 'metrics'
+          - 'info'
+
+springdoc:
+  show-actuator: true # list actuator endpoints into Swagger
+  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
+  swagger-ui:
+    oauth:
+      client-id: MHPasswordManager
+      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
+
+---
 spring:
+  config:
+    activate:
+      on-profile: local
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/db_users
@@ -34,30 +66,42 @@ spring:
         jwt:
           issuer-uri: http://localhost:12010
 
-management:
-  endpoint:
-    health:
-      group:
-        jdbc-connection:
-          show-components: when_authorized
-          show-details: when_authorized
-          include:
-            - db
-    shutdown:
-      enabled: false
-  endpoints:
-    web:
-      exposure:
-        include:
-          - 'health'
-          - 'metrics'
-          - 'info'
-
-springdoc:
-  show-actuator: true # list actuator endpoints into Swagger
-  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
-  swagger-ui:
-    oauth:
-      client-id: MHPasswordManager
-      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
-      use-basic-authentication-with-access-code-grant: on
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://postgres-db:5432/db_users
+    username: 'sa-user-service'
+    password: 'P@ssw0rdUs3rS3rvic3'
+  session:
+    store-type: redis
+  redis:
+    host: redis-store
+    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+  flyway:
+    enabled: true
+    driver-class-name: org.postgresql.Driver
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    schemas:
+      - 'public'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      fail-on-empty-beans: false
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://host.docker.internal:12010
