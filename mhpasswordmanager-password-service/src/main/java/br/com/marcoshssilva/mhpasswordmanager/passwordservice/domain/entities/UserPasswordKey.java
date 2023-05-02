@@ -14,6 +14,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @Entity
+@Getter
+@Setter
 @Table(name = "users_keys")
 @Builder
 public class UserPasswordKey implements Serializable {
@@ -21,39 +23,27 @@ public class UserPasswordKey implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_registration_id", nullable = false)
-    @Getter
-    @Setter
     private UserRegistration userRegistration;
 
     @ElementCollection
     @CollectionTable(name = "users_key_tags")
     @Column(nullable = false)
-    @Getter
-    @Setter
     private Collection<String> tags = Collections.emptySet();
 
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false, name = "user_key_type_id")
-    @Getter
-    @Setter
     private PasswordKeyTypesEnum type;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @Getter
-    @Setter
     private Date createdAt;
 
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
-    @Getter
-    @Setter
     private Date lastUpdate;
 
     @Override

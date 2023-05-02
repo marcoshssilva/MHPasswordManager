@@ -9,6 +9,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
+@Getter
+@Setter
 @Entity
 @Table(name = "users_keys_types")
 @Builder
@@ -17,13 +19,9 @@ public class UserPasswordKeyType implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     private Long id;
 
     @Column(nullable = false)
-    @Getter
-    @Setter
     private String description;
 
     @Override

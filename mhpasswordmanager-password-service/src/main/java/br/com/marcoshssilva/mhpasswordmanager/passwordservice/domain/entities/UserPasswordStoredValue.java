@@ -11,6 +11,8 @@ import java.util.Objects;
 @NoArgsConstructor
 @ToString
 @Entity
+@Getter
+@Setter
 @Table(name = "users_stored_values")
 @Builder
 public class UserPasswordStoredValue implements Serializable {
@@ -18,31 +20,21 @@ public class UserPasswordStoredValue implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter
-    @Setter
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_key_id", nullable = false)
-    @Getter
-    @Setter
     private UserPasswordKey keyId;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    @Getter
-    @Setter
     private String data;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
-    @Getter
-    @Setter
     private Date createdAt;
 
     @Column(name = "last_update")
     @Temporal(TemporalType.TIMESTAMP)
-    @Getter
-    @Setter
     private Date lastUpdate;
 
     @Override
