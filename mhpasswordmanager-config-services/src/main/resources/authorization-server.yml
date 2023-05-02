@@ -77,6 +77,7 @@ oauth-config-starter:
       authenticationGrantTypes:
         - CLIENT_CREDENTIALS
       scopes:
+        - 'global:fullAccess'
         - 'user:canRead'
         - 'user:canDelete'
         - 'user:canWrite'
