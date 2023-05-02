@@ -8,7 +8,6 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.*;
@@ -25,20 +24,20 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public NewUserRegisteredModel createUserRegistration(String email, String vaultKey) throws UserRegistrationException {
+    public NewUserRegisteredModel createUserRegistration(String email, String vaultKey) throws UserRegistrationException, UserRegistrationAlreadyExistsException {
+        // negate if user already used by another registration
+        Optional<UserRegistration> getFromDb = userRegistrationRepository.findUserRegistrationByEmail(email);
+        if (getFromDb.isPresent()) {
+            final String msgErr = "Users already used.";
+            throw new UserRegistrationAlreadyExistsException(msgErr);
+        }
         try {
-            // negate if user already used by another registration
-            Optional<UserRegistration> getFromDb = userRegistrationRepository.findUserRegistrationByEmail(email);
-            if (getFromDb.isPresent()) {
-                final String msgErr = "Cannot use this email. Its already used.";
-                throw new UserRegistrationException(msgErr);
-            }
             // generate RSA keys
             KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
             // encrypt with vault key
             RecoveryKeyData encryptedPrivateKeyWithVaultKey = new RecoveryKeyData(vaultKey, cryptService.encrypt(keyPair.getPrivate().getEncoded(), vaultKey));
             // encode publicKey as Base64
-            String base64PublicKey = new String(keyPair.getPublic().getEncoded(), StandardCharsets.UTF_8);
+            String base64PublicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
             // generate 10 random keys with UUID
             RecoveryKeyData[] recoveryKeys = new RecoveryKeyData[10];
             IntStream.range(0, 10).forEach(num -> {
@@ -51,6 +50,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             UserRegistration userRegistration = UserRegistration.builder()
                     .id(UUID.randomUUID().toString())
                     .email(email)
+                    .encodedPublicKey(base64PublicKey)
                     .encryptedPrivateKeyWithPassword(encryptedPrivateKeyWithVaultKey.getEncryptedDataAsBase64())
                     .encryptedPrivateKey0(recoveryKeys[0].getEncryptedDataAsBase64())
                     .encryptedPrivateKey1(recoveryKeys[1].getEncryptedDataAsBase64())
@@ -69,8 +69,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
             // return object
             return new NewUserRegisteredModel(userRegistration.getId(), userRegistration.getEmail(), Arrays.asList(recoveryKeys), base64PublicKey);
         } catch (Exception e) {
-            final String msgErr = "Cannot create user.";
-            throw new UserRegistrationException(msgErr, e);
+            final String msgErr = "Cannot create user. Cause: %s";
+            throw new UserRegistrationException(String.format(msgErr, e.getMessage()), e);
         }
     }
 }

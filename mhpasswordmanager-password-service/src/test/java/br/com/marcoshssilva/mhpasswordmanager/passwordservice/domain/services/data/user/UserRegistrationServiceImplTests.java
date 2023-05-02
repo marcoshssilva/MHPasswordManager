@@ -19,9 +19,17 @@ class UserRegistrationServiceImplTests {
     @Test
     void shouldCreateUser() {
         assertDoesNotThrow(() -> {
-            String email = "johndoe@gmail.com";
+            final int expectedSizeKeys = 10;
+            final String email = "johndoe@gmail.com";
+
             NewUserRegisteredModel userRegistration = service.createUserRegistration(email, "Hellbound#3090");
+
             assertEquals(email, userRegistration.email());
+            assertEquals(expectedSizeKeys, userRegistration.recoveryKeys().size());
+            assertNotNull(userRegistration.email());
+            assertNotNull(userRegistration.encodedPublicKey());
+            assertNotNull(userRegistration.id());
+            assertNotNull(userRegistration.recoveryKeys());
         });
     }
 
@@ -32,6 +40,6 @@ class UserRegistrationServiceImplTests {
         // must work
         service.createUserRegistration(email, "Hellbound#3090");
         // must not work
-        assertThrows(UserRegistrationException.class, () -> service.createUserRegistration(email, "Hellbound#3090"));
+        assertThrows(UserRegistrationAlreadyExistsException.class, () -> service.createUserRegistration(email, "Hellbound#3090"));
     }
 }

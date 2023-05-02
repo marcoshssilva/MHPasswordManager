@@ -26,7 +26,7 @@ class RegistrationNewAccountRequestTest {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest(privateKey);
         assertNotNull(request);
-        assertEquals(privateKey, request.getPrivateKey());
+        assertEquals(privateKey, request.getSecret());
     }
 
     @DisplayName("Should test getters and setters")
@@ -34,8 +34,8 @@ class RegistrationNewAccountRequestTest {
     void testGettersAndSetters() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest();
-        request.setPrivateKey(privateKey);
-        assertEquals(privateKey, request.getPrivateKey());
+        request.setSecret(privateKey);
+        assertEquals(privateKey, request.getSecret());
     }
 
     @DisplayName("Should test if Builder works")
@@ -43,10 +43,10 @@ class RegistrationNewAccountRequestTest {
     void testBuilder() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = RegistrationNewAccountRequest.builder()
-                .privateKey(privateKey)
+                .secret(privateKey)
                 .build();
         assertNotNull(request);
-        assertEquals(privateKey, request.getPrivateKey());
+        assertEquals(privateKey, request.getSecret());
     }
 
     @DisplayName("Should invoke a ToString")
@@ -54,7 +54,7 @@ class RegistrationNewAccountRequestTest {
     void testToString() {
         String privateKey = "1234567890";
         RegistrationNewAccountRequest request = new RegistrationNewAccountRequest(privateKey);
-        String expectedString = "RegistrationNewAccountRequest(privateKey=1234567890)";
+        String expectedString = "RegistrationNewAccountRequest(secret=1234567890)";
         assertEquals(expectedString, request.toString());
     }
 
