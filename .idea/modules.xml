@@ -2,14 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-api-gateway/mhpasswordmanager.api.gateway.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-api-gateway/mhpasswordmanager.api.gateway.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-config-services/mhpasswordmanager.configservices.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-config-services/mhpasswordmanager.configservices.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-email-service/mhpasswordmanager.emailservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-email-service/mhpasswordmanager.emailservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-file-service/mhpasswordmanager.fileservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-file-service/mhpasswordmanager.fileservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/mhpasswordmanager.oauth2.authorization.server.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/mhpasswordmanager.oauth2.authorization.server.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-password-service/mhpasswordmanager.passwordservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-password-service/mhpasswordmanager.passwordservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-service-registry/mhpasswordmanager.service.registry.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-service-registry/mhpasswordmanager.service.registry.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-user-service/mhpasswordmanager.userservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-user-service/mhpasswordmanager.userservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/MHPasswordManager.iml" filepath="$PROJECT_DIR$/.idea/MHPasswordManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/docker-compose-files/docker-compose-files.iml" filepath="$PROJECT_DIR$/docker-compose-files/docker-compose-files.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-pwa-client/mhpasswordmanager.pwa.client.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-pwa-client/mhpasswordmanager.pwa.client.iml" />
     </modules>
   </component>
 </project>

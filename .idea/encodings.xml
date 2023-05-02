@@ -9,11 +9,18 @@
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-email-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-file-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-file-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations-tool/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations-tool/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-flyway-database-migrations/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-frontend-client/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-frontend-client/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/mhpasswordmanager-frontend-client/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-oauth2-authorizationserver/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-password-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-password-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-pwa-client/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-pwa-client/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-service-registry/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-service-registry/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-user-service/src/main/java" charset="UTF-8" />
