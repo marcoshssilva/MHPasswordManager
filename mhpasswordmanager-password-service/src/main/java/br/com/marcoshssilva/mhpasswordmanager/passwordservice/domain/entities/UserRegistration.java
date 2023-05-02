@@ -22,7 +22,6 @@ public class UserRegistration implements Serializable {
 
     @Id
     @Column(nullable = false, length = 36)
-
     private String id;
 
     @Column(nullable = false)
