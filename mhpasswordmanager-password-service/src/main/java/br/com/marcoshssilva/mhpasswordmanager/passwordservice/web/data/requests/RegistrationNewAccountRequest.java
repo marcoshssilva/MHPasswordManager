@@ -17,5 +17,5 @@ public class RegistrationNewAccountRequest implements Serializable {
 
     @NotBlank
     @Size(min = 10, max = 36)
-    private String privateKey;
+    private String secret;
 }
