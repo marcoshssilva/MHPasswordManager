@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 @RequiredArgsConstructor
 public class AESCryptServiceImpl implements CryptService {
-    private static final String ALGORITHM = "AES";
-    private static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
+    public static final String ALGORITHM = "AES";
+    public static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
 
     @Override
     public byte[] encrypt(byte[] payload, String secret) {
