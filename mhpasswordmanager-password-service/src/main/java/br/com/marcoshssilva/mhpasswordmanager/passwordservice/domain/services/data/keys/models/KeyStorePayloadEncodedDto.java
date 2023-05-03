@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -16,7 +17,9 @@ public final class KeyStorePayloadEncodedDto implements Serializable {
 
     private Long id;
     private String data;
+    @JsonProperty(value = "created_at")
     private Date createdAt;
+    @JsonProperty(value = "last_update")
     private Date lastUpdate;
 
     @Override

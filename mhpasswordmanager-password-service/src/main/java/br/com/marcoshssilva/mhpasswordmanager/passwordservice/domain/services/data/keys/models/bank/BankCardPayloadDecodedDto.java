@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,11 +19,16 @@ import java.util.Objects;
 public class BankCardPayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(required = true)
     private String brand;
+    @JsonProperty(required = true)
     private String cardNumber;
+    @JsonProperty(required = true)
     private String validity;
     private String cvv;
+    @JsonProperty(value = "identification_owner")
     private String identificationOwner;
+    @JsonProperty(value = "full_name_owner")
     private String fullNameOwner;
 
     @Override

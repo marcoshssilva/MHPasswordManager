@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.application;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util.PasswordPayloadDecodedDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -15,7 +16,9 @@ import java.util.Set;
 public class AppDataDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(required = true)
     private String username;
+    @JsonProperty(required = true, value = "stored_passwords")
     private Set<PasswordPayloadDecodedDto> storedPasswords;
 
     @Override

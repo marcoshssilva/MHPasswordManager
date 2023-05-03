@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
@@ -14,11 +15,15 @@ import java.util.Objects;
 public class PasswordPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(required = true)
     private String password;
 
+    @JsonProperty(required = true)
     private Boolean active;
 
+    @JsonProperty(value = "created_at")
     private Date createdAt;
+    @JsonProperty(value = "update_last")
     private Date updateLast;
 
     @Override

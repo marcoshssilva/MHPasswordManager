@@ -5,6 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util.PasswordPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util.SecurityQuestionsPayloadDecodedDto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +22,20 @@ import java.util.Set;
 public class SocialMediaPayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(value = "profile_url")
     private String profileUrl;
-    private String email;
     private String username;
+
+    @JsonProperty(required = true)
+    private String email;
+
+    @JsonProperty(value = "phone_number")
     private String phoneNumber;
 
+    @JsonProperty(required = true, value = "stored_passwords")
     private Set<PasswordPayloadDecodedDto> storedPasswords;
+
+    @JsonProperty(value = "stored_security_questions")
     private Set<SecurityQuestionsPayloadDecodedDto> storedSecurityQuestions;
 
     @Override

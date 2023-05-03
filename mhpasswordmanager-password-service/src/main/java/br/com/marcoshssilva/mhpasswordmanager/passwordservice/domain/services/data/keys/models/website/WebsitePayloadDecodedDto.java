@@ -5,6 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.Passw
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util.PasswordPayloadDecodedDto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,9 +22,13 @@ import java.util.Set;
 public class WebsitePayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(defaultValue = "")
     private String email;
+
+    @JsonProperty(defaultValue = "")
     private String username;
 
+    @JsonProperty(required = true, value = "stored_passwords")
     private Set<PasswordPayloadDecodedDto> storedPasswords;
 
     @Override

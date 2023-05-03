@@ -5,6 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util.PasswordPayloadDecodedDto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,12 +22,22 @@ import java.util.Set;
 public class EmailPayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(required = true)
     private String email;
+
+    @JsonProperty(value = "smtp_server")
     private String smtpServer;
+
+    @JsonProperty(value = "phone_number")
     private String phoneNumber;
 
+    @JsonProperty(required = true, value = "stored_passwords")
     private Set<PasswordPayloadDecodedDto> storedPasswords;
+
+    @JsonProperty(value = "stored_security_questions")
     private Set<SecurityQuestionsPayloadDecodedDto> storedSecurityQuestions;
+
+    @JsonProperty(value = "recovery_emails")
     private Set<String> recoveryEmails;
 
 
