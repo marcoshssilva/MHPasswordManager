@@ -2,9 +2,11 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserRegistrationRepository;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.AESCryptServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.RecoveryKeyData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.NewUserRegisteredModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,38 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     public UserRegistrationServiceImpl(UserRegistrationRepository userRegistrationRepository, @Qualifier("aesCryptService") CryptService cryptService) {
         this.userRegistrationRepository = userRegistrationRepository;
         this.cryptService = cryptService;
+    }
+
+    @Override
+    public UserRegisteredModel getUserRegistration(String email) throws UserRegistrationNotFoundException {
+        // search user in db, throw exception if null
+        Optional<UserRegistration> getFromDb = userRegistrationRepository.findUserRegistrationByEmail(email);
+        if (getFromDb.isEmpty()) {
+            final String msgErr = "UserRegistration not found. Check your data";
+            throw new UserRegistrationNotFoundException(msgErr);
+        }
+
+        Map<String, String> keys = new HashMap<>(10);
+        // key encrypted with vaultKey
+        keys.put("encrypted-default", getFromDb.get().getEncodedPublicKey());
+        // keys using recover-key
+        keys.put("recover-0", getFromDb.get().getEncryptedPrivateKey0());
+        keys.put("recover-1", getFromDb.get().getEncryptedPrivateKey1());
+        keys.put("recover-2", getFromDb.get().getEncryptedPrivateKey2());
+        keys.put("recover-3", getFromDb.get().getEncryptedPrivateKey3());
+        keys.put("recover-4", getFromDb.get().getEncryptedPrivateKey4());
+        keys.put("recover-5", getFromDb.get().getEncryptedPrivateKey5());
+        keys.put("recover-6", getFromDb.get().getEncryptedPrivateKey6());
+        keys.put("recover-7", getFromDb.get().getEncryptedPrivateKey7());
+        keys.put("recover-8", getFromDb.get().getEncryptedPrivateKey8());
+        keys.put("recover-9", getFromDb.get().getEncryptedPrivateKey9());
+
+        return UserRegisteredModel.builder().uuid(getFromDb.get().getId())
+                .createdAt(getFromDb.get().getCreatedAt())
+                .lastUpdate(getFromDb.get().getLastUpdate())
+                .keys(keys)
+                .keyAlg(AESCryptServiceImpl.TRANSFORMATION)
+                .build();
     }
 
     @Override
