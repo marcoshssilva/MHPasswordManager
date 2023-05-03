@@ -62,6 +62,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
                     .encryptedPrivateKey7(recoveryKeys[7].getEncryptedDataAsBase64())
                     .encryptedPrivateKey8(recoveryKeys[8].getEncryptedDataAsBase64())
                     .encryptedPrivateKey9(recoveryKeys[9].getEncryptedDataAsBase64())
+                    .createdAt(new Date())
+                    .lastUpdate(new Date())
                     .build();
 
             // save in db
