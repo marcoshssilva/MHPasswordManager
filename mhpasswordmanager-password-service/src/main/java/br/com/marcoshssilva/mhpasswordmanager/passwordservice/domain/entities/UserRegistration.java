@@ -2,11 +2,9 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -62,6 +60,14 @@ public class UserRegistration implements Serializable {
 
     @Column(columnDefinition = "TEXT")
     private String encryptedPrivateKey9;
+
+    @Column(name = "created_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Column(name = "last_update")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date lastUpdate;
 
     @Override
     public boolean equals(Object o) {
