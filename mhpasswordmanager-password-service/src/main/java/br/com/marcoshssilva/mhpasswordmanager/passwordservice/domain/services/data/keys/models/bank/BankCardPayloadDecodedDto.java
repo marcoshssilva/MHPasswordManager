@@ -6,6 +6,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
@@ -15,6 +16,7 @@ import java.util.Objects;
 @SuperBuilder
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Setter
 public class BankCardPayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
