@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models;
 
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordStoredValue;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
@@ -42,5 +43,14 @@ public final class KeyStorePayloadEncodedDto implements Serializable {
                 ", createdAt=" + createdAt +
                 ", lastUpdate=" + lastUpdate +
                 '}';
+    }
+
+    public UserPasswordStoredValue toEntity() {
+        return UserPasswordStoredValue.builder()
+                .data(this.data)
+                .id(this.id)
+                .createdAt(this.createdAt)
+                .lastUpdate(this.lastUpdate)
+                .build();
     }
 }

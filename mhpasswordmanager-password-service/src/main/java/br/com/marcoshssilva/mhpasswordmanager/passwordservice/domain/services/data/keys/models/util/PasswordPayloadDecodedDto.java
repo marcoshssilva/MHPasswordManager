@@ -15,6 +15,7 @@ import java.util.Objects;
 public class PasswordPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    private Long id;
     @JsonProperty(required = true)
     private String password;
 
@@ -30,18 +31,19 @@ public class PasswordPayloadDecodedDto implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PasswordPayloadDecodedDto that)) return false;
-        return Objects.equals(password, that.password) && Objects.equals(active, that.active) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updateLast, that.updateLast);
+        return Objects.equals(id, that.id) && Objects.equals(password, that.password) && Objects.equals(active, that.active) && Objects.equals(createdAt, that.createdAt) && Objects.equals(updateLast, that.updateLast);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(password, active, createdAt, updateLast);
+        return Objects.hash(id, password, active, createdAt, updateLast);
     }
 
     @Override
     public String toString() {
         return "PasswordPayloadDecodedDto{" +
-                "password='" + password + '\'' +
+                "id=" + id +
+                ", password='" + password + '\'' +
                 ", active=" + active +
                 ", createdAt=" + createdAt +
                 ", updateLast=" + updateLast +

@@ -57,5 +57,5 @@ public abstract class AbstractKeyPayloadDecodedDto implements Serializable {
     private Date createdAt;
 
     @JsonIgnore
-    protected abstract PasswordKeyTypesEnum getType();
+    public abstract PasswordKeyTypesEnum getType();
 }

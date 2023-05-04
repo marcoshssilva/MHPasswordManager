@@ -32,7 +32,7 @@ public class WebsitePayloadDecodedDto extends AbstractKeyPayloadDecodedDto imple
     private Set<PasswordPayloadDecodedDto> storedPasswords;
 
     @Override
-    protected PasswordKeyTypesEnum getType() {
+    public PasswordKeyTypesEnum getType() {
         return PasswordKeyTypesEnum.WEBSITE;
     }
 

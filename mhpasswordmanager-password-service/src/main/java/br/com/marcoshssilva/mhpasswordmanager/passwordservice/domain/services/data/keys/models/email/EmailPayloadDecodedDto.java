@@ -42,7 +42,7 @@ public class EmailPayloadDecodedDto extends AbstractKeyPayloadDecodedDto impleme
 
 
     @Override
-    protected PasswordKeyTypesEnum getType() {
+    public PasswordKeyTypesEnum getType() {
         return PasswordKeyTypesEnum.EMAILS;
     }
 

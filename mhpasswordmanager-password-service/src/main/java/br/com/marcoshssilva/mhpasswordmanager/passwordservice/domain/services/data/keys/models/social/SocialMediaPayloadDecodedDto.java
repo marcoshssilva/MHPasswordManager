@@ -39,7 +39,7 @@ public class SocialMediaPayloadDecodedDto extends AbstractKeyPayloadDecodedDto i
     private Set<SecurityQuestionsPayloadDecodedDto> storedSecurityQuestions;
 
     @Override
-    protected PasswordKeyTypesEnum getType() {
+    public PasswordKeyTypesEnum getType() {
         return PasswordKeyTypesEnum.SOCIAL_MEDIA;
     }
 

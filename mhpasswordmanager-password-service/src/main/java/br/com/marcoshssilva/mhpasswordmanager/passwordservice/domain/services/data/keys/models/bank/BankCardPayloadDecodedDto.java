@@ -19,6 +19,7 @@ import java.util.Objects;
 public class BankCardPayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    private Long id;
     @JsonProperty(required = true)
     private String brand;
     @JsonProperty(required = true)
@@ -32,7 +33,7 @@ public class BankCardPayloadDecodedDto extends AbstractKeyPayloadDecodedDto impl
     private String fullNameOwner;
 
     @Override
-    protected PasswordKeyTypesEnum getType() {
+    public PasswordKeyTypesEnum getType() {
         return PasswordKeyTypesEnum.BANK_CARD;
     }
 
@@ -40,18 +41,20 @@ public class BankCardPayloadDecodedDto extends AbstractKeyPayloadDecodedDto impl
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof BankCardPayloadDecodedDto that)) return false;
-        return Objects.equals(brand, that.brand) && Objects.equals(cardNumber, that.cardNumber) && Objects.equals(validity, that.validity) && Objects.equals(cvv, that.cvv) && Objects.equals(identificationOwner, that.identificationOwner) && Objects.equals(fullNameOwner, that.fullNameOwner);
+        return Objects.equals(id, that.id) && Objects.equals(brand, that.brand) && Objects.equals(cardNumber, that.cardNumber) && Objects.equals(validity, that.validity) && Objects.equals(cvv, that.cvv) && Objects.equals(identificationOwner, that.identificationOwner) && Objects.equals(fullNameOwner, that.fullNameOwner);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(brand, cardNumber, validity, cvv, identificationOwner, fullNameOwner);
+        return Objects.hash(id, brand, cardNumber, validity, cvv, identificationOwner, fullNameOwner);
     }
 
     @Override
-    public String toString() {
+    public String
+    toString() {
         return "BankCardPayloadDecodedDto{" +
-                "brand='" + brand + '\'' +
+                "id=" + id +
+                ", brand='" + brand + '\'' +
                 ", cardNumber='" + cardNumber + '\'' +
                 ", validity='" + validity + '\'' +
                 ", cvv='" + cvv + '\'' +
