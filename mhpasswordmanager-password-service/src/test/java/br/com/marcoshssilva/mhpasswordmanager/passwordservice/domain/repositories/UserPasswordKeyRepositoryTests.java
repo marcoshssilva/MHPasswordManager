@@ -47,6 +47,7 @@ class UserPasswordKeyRepositoryTests {
                 .type(PasswordKeyTypesEnum.WEBSITE)
                 .createdAt(new Date())
                 .lastUpdate(new Date())
+                .description("Some test")
                 .build();
 
         UserPasswordKey savedUserPasswordKey = userPasswordKeyRepository.save(userPasswordKey);
@@ -56,6 +57,7 @@ class UserPasswordKeyRepositoryTests {
         assertThat(savedUserPasswordKey.getType()).isEqualTo(PasswordKeyTypesEnum.WEBSITE);
         assertThat(savedUserPasswordKey.getCreatedAt()).isNotNull();
         assertThat(savedUserPasswordKey.getLastUpdate()).isNotNull();
+        assertThat(savedUserPasswordKey.getDescription()).isNotNull();
     }
 
     @DisplayName("Test if can update in database")
@@ -64,6 +66,7 @@ class UserPasswordKeyRepositoryTests {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
                 .type(PasswordKeyTypesEnum.EMAILS)
+                .description("Some test")
                 .createdAt(new Date())
                 .lastUpdate(new Date())
                 .build();
@@ -83,6 +86,7 @@ class UserPasswordKeyRepositoryTests {
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
                 .type(PasswordKeyTypesEnum.APPLICATION)
+                .description("Some test")
                 .createdAt(new Date())
                 .lastUpdate(new Date())
                 .build();

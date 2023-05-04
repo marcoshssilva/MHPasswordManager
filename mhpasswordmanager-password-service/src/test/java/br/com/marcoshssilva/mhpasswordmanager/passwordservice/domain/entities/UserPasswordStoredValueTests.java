@@ -125,7 +125,7 @@ class UserPasswordStoredValueTests {
                 .lastUpdate(date)
                 .build();
 
-        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userRegistration=null, tags=[], type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", date.toString(), date.toString());
+        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userRegistration=null, tags=[], description=null, type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", date.toString(), date.toString());
         String actual = value.toString();
 
         assertEquals(expected, actual);

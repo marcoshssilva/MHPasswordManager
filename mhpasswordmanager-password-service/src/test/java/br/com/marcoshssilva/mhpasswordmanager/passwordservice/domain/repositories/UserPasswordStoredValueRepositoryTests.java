@@ -45,6 +45,7 @@ class UserPasswordStoredValueRepositoryTests {
                 .type(PasswordKeyTypesEnum.WEBSITE)
                 .createdAt(new Date())
                 .lastUpdate(new Date())
+                .description("Example for test method")
                 .build());
     }
 
@@ -54,6 +55,8 @@ class UserPasswordStoredValueRepositoryTests {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
+                .lastUpdate(new Date())
+                .createdAt(new Date())
                 .build();
         assertNull(storedValue.getId());
 
@@ -68,6 +71,8 @@ class UserPasswordStoredValueRepositoryTests {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
+                .lastUpdate(new Date())
+                .createdAt(new Date())
                 .build();
         assertNull(storedValue.getId());
 
@@ -88,6 +93,8 @@ class UserPasswordStoredValueRepositoryTests {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
+                .lastUpdate(new Date())
+                .createdAt(new Date())
                 .build();
         assertNull(storedValue.getId());
 
