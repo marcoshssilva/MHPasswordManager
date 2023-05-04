@@ -34,6 +34,9 @@ public class UserPasswordKey implements Serializable {
     @Column(nullable = false)
     private Collection<String> tags = Collections.emptySet();
 
+    @Column(nullable = false)
+    private String description;
+
     @Enumerated(EnumType.ORDINAL)
     @Column(nullable = false, name = "user_key_type_id")
     private PasswordKeyTypesEnum type;
@@ -49,12 +52,12 @@ public class UserPasswordKey implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserPasswordKey userPasswordKey)) return false;
-        return id.equals(userPasswordKey.id);
+        if (!(o instanceof UserPasswordKey that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(userRegistration, that.userRegistration) && Objects.equals(tags, that.tags) && Objects.equals(description, that.description) && type == that.type && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, userRegistration, tags, description, type, createdAt, lastUpdate);
     }
 }
