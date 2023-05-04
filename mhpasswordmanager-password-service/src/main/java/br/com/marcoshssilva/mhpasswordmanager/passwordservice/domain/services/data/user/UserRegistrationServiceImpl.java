@@ -54,6 +54,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
                 .lastUpdate(getFromDb.get().getLastUpdate())
                 .keys(keys)
                 .keyAlg(AESCryptServiceImpl.TRANSFORMATION)
+                .publicKey(getFromDb.get().getEncodedPublicKey())
                 .build();
     }
 
