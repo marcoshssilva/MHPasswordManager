@@ -1,5 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyPayloadUpdateDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.UserKeysService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
@@ -15,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 import org.springdoc.api.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -36,13 +39,27 @@ public class ManageKeysController {
     private final UserKeysService userKeysService;
 
     @GetMapping("{uuid}/get/all")
-    public ResponseEntity<Void> getAllKeys(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @ParameterObject @PageableDefault(page = 0, size = 500, sort = {"createdAt DESC"}) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<Page<KeyPayloadEncodedDto>> getAllKeys(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @ParameterObject @PageableDefault(page = 0, size = 500) Pageable pageable) throws UserRegistrationNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Page<KeyPayloadEncodedDto> allEncodedKey = userKeysService.getAllEncodedKey(token.getSubject(), pageable);
+        return ResponseEntity.ok(allEncodedKey);
     }
 
     @GetMapping("{uuid}/get/{id}")
-    public ResponseEntity<Void> getKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") String id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<KeyPayloadEncodedDto> getKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id) throws UserRegistrationNotFoundException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        KeyPayloadEncodedDto encodedKey = userKeysService.getEncodedKey(token.getSubject(), id);
+        return ResponseEntity.ok(encodedKey);
     }
 
     @PostMapping("/{uuid}/post/new")
@@ -56,14 +73,14 @@ public class ManageKeysController {
         payload.setOwnerId(uuid);
         KeyPayloadEncodedDto keyPayloadEncodedDto = userKeysService.transformAsKeyPayloadEncodedDto(payload, userRegistration.getPublicKey());
         keyPayloadEncodedDto.setId(null);
-        Arrays.stream(keyPayloadEncodedDto.getEncodedKeys()).forEach(item -> { item.setId(null); });
+        Arrays.stream(keyPayloadEncodedDto.getEncodedKeys()).forEach(item -> item.setId(null));
 
         KeyPayloadEncodedDto saved = userKeysService.saveKeyPayloadEncodedDto(keyPayloadEncodedDto);
         return ResponseEntity.ok(saved);
     }
 
     @PutMapping("/{uuid}/put/{id}")
-    public ResponseEntity<Void> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") String id, @RequestBody AbstractKeyPayloadDecodedDto payload) {
+    public ResponseEntity<Void> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") String id, @RequestBody KeyPayloadUpdateDto payload) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 

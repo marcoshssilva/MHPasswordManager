@@ -53,6 +53,7 @@ public class UserKeysServiceImpl implements UserKeysService {
         KeyPayloadEncodedDto.KeyPayloadEncodedDtoBuilder builder = KeyPayloadEncodedDto.builder();
 
         builder.id(key.get().getId());
+        builder.ownerId(key.get().getUserRegistration().getId());
         builder.description(key.get().getDescription());
         builder.createdAt(key.get().getCreatedAt());
         builder.lastUpdate(key.get().getLastUpdate());
@@ -75,6 +76,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             Set<UserPasswordStoredValue> storedValues = this.userPasswordStoredValueRepository.findAllByKeyId(k);
             return KeyPayloadEncodedDto.builder()
                     .id(k.getId())
+                    .ownerId(k.getUserRegistration().getId())
                     .description(k.getDescription())
                     .createdAt(k.getCreatedAt())
                     .lastUpdate(k.getLastUpdate())
