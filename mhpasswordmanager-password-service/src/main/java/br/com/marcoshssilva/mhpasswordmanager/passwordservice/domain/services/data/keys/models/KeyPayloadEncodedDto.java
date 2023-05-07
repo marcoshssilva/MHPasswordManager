@@ -67,6 +67,7 @@ public final class KeyPayloadEncodedDto implements Serializable {
 
     public UserPasswordKey toEntity() {
         return UserPasswordKey.builder()
+            .id(this.id)
             .description(this.description)
             .tags(List.of(this.tags))
             .type(UserPasswordKeyType.builder().id(this.type.getId().longValue()).build())

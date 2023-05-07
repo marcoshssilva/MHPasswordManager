@@ -75,13 +75,20 @@ public class ManageKeysController {
         keyPayloadEncodedDto.setId(null);
         Arrays.stream(keyPayloadEncodedDto.getEncodedKeys()).forEach(item -> item.setId(null));
 
-        KeyPayloadEncodedDto saved = userKeysService.saveKeyPayloadEncodedDto(keyPayloadEncodedDto);
+        KeyPayloadEncodedDto saved = userKeysService.saveKeyPayloadEncodedDto(keyPayloadEncodedDto, Boolean.TRUE);
         return ResponseEntity.ok(saved);
     }
 
     @PutMapping("/{uuid}/put/{id}")
-    public ResponseEntity<Void> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") String id, @RequestBody KeyPayloadUpdateDto payload) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<Void> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody KeyPayloadUpdateDto payload) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        userKeysService.updateKeyPayloadEncodedDto(payload, id, token.getSubject());
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/{uuid}/del/{id}")

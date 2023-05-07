@@ -88,6 +88,17 @@ public class UserKeysServiceImpl implements UserKeysService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void updateKeyPayloadEncodedDto(KeyPayloadUpdateDto keyPayloadUpdateDto, Long keyId, String registrationEmail) throws KeyNotFoundException, KeyRegistrationErrorException {
+        KeyPayloadEncodedDto encodedKey = getEncodedKey(registrationEmail, keyId);
+
+        encodedKey.setDescription(keyPayloadUpdateDto.getDescription());
+        encodedKey.setTags(keyPayloadUpdateDto.getTags());
+
+        saveKeyPayloadEncodedDto(encodedKey, Boolean.FALSE);
+    }
+
+    @Override
     public KeyPayloadEncodedDto transformAsKeyPayloadEncodedDto(AbstractKeyPayloadDecodedDto data, String key)
             throws KeyEncodedErrorConverterException {
 
@@ -109,7 +120,7 @@ public class UserKeysServiceImpl implements UserKeysService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public KeyPayloadEncodedDto saveKeyPayloadEncodedDto(KeyPayloadEncodedDto data)
+    public KeyPayloadEncodedDto saveKeyPayloadEncodedDto(KeyPayloadEncodedDto data, Boolean includeStoredValues)
             throws KeyRegistrationErrorException {
 
         try {
@@ -127,10 +138,10 @@ public class UserKeysServiceImpl implements UserKeysService {
                 entity.setCreatedAt(new Date());
             }
             UserPasswordKey userPasswordKey = userPasswordKeyRepository.save(entity);
-            Arrays
-                    .stream(data.getEncodedKeys())
-                    .forEach(key -> {
 
+            if (includeStoredValues) {
+                Arrays.stream(data.getEncodedKeys())
+                    .forEach(key -> {
                         UserPasswordStoredValue userPasswordStoredValue = key.toEntity();
                         if (Objects.equals(userPasswordStoredValue.getId(), null)) {
                             userPasswordStoredValue.setCreatedAt(new Date());
@@ -141,6 +152,8 @@ public class UserKeysServiceImpl implements UserKeysService {
 
                         userPasswordStoredValueRepository.save(userPasswordStoredValue);
                     });
+            }
+
 
             return this.getEncodedKey(userRegistration.get().getEmail(), userPasswordKey.getId());
         } catch (Exception e) {
