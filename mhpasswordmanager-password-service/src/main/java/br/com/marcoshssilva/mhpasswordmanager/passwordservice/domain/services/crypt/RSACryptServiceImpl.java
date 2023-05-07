@@ -8,7 +8,7 @@ import java.security.PublicKey;
 
 @RequiredArgsConstructor
 public class RSACryptServiceImpl implements CryptService {
-    private static final String ALGORITHM = "RSA/ECB/OAEPWITHSHA-256ANDMGF1PADDING";
+    private static final String ALGORITHM = "RSA/ECB/OAEPPADDING";
     private final RSAUtilService rsaUtilService;
 
     @Override

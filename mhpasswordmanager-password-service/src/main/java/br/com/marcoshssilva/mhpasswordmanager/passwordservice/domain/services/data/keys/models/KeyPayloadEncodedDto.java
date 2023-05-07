@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKey;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKeyType;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -68,7 +69,7 @@ public final class KeyPayloadEncodedDto implements Serializable {
         return UserPasswordKey.builder()
             .description(this.description)
             .tags(List.of(this.tags))
-            .type(this.type)
+            .type(UserPasswordKeyType.builder().id(this.type.getId().longValue()).build())
             .userRegistration(UserRegistration.builder().id(this.ownerId).build())
             .createdAt(this.createdAt)
             .lastUpdate(this.lastUpdate)

@@ -19,7 +19,7 @@ public class BankCardKeyToEncodedConverter extends AbstractKeyDecodedToEncodedCo
     @Override
     public KeyPayloadEncodedDto convert(BankCardPayloadDecodedDto data, String key) throws KeyEncodedErrorConverterException {
         try {
-            KeyPayloadEncodedDto.KeyPayloadEncodedDtoBuilder builder = super.prepareConvert(data);
+            var builder = super.prepareConvert(data);
             Map<String, Object> dataDecrypted = new HashMap<>();
 
             dataDecrypted.put("brand", data.getBrand());
@@ -28,6 +28,7 @@ public class BankCardKeyToEncodedConverter extends AbstractKeyDecodedToEncodedCo
             dataDecrypted.put("cvv", data.getCvv());
             dataDecrypted.put("identification_owner", data.getIdentificationOwner());
             dataDecrypted.put("full_name_owner", data.getFullNameOwner());
+            dataDecrypted.put("type", "bank_card");
 
             String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
 

@@ -53,6 +53,7 @@ public class ManageKeysController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
+        payload.setOwnerId(uuid);
         KeyPayloadEncodedDto keyPayloadEncodedDto = userKeysService.transformAsKeyPayloadEncodedDto(payload, userRegistration.getPublicKey());
         keyPayloadEncodedDto.setId(null);
         Arrays.stream(keyPayloadEncodedDto.getEncodedKeys()).forEach(item -> { item.setId(null); });

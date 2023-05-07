@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKey;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKeyType;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,9 @@ class UserPasswordKeyRepositoryTests {
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 
+    @Autowired
+    private UserPasswordKeyTypeRepository userPasswordKeyTypeRepository;
+
     private UserRegistration userRegistration;
     private final UUID userRegistrationUid = UUID.randomUUID();
 
@@ -42,9 +46,10 @@ class UserPasswordKeyRepositoryTests {
     @DisplayName("Test if can save in database")
     @Test
     void testSave() {
+        UserPasswordKeyType value = userPasswordKeyTypeRepository.save(UserPasswordKeyType.builder().id(1L).description("Test").build());
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
-                .type(PasswordKeyTypesEnum.WEBSITE)
+                .type(value)
                 .createdAt(new Date())
                 .lastUpdate(new Date())
                 .description("Some test")
@@ -54,7 +59,7 @@ class UserPasswordKeyRepositoryTests {
 
         assertThat(savedUserPasswordKey.getId()).isNotNull();
         assertThat(savedUserPasswordKey.getUserRegistration()).isEqualTo(userRegistration);
-        assertThat(savedUserPasswordKey.getType()).isEqualTo(PasswordKeyTypesEnum.WEBSITE);
+        assertThat(savedUserPasswordKey.getType()).isEqualTo(value);
         assertThat(savedUserPasswordKey.getCreatedAt()).isNotNull();
         assertThat(savedUserPasswordKey.getLastUpdate()).isNotNull();
         assertThat(savedUserPasswordKey.getDescription()).isNotNull();
@@ -63,29 +68,31 @@ class UserPasswordKeyRepositoryTests {
     @DisplayName("Test if can update in database")
     @Test
     void testUpdate() {
+        UserPasswordKeyType value = userPasswordKeyTypeRepository.save(UserPasswordKeyType.builder().id(1L).description("Test").build());
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
-                .type(PasswordKeyTypesEnum.EMAILS)
+                .type(value)
                 .description("Some test")
                 .createdAt(new Date())
                 .lastUpdate(new Date())
                 .build();
         userPasswordKeyRepository.save(userPasswordKey);
 
-        userPasswordKey.setType(PasswordKeyTypesEnum.EMAILS);
+        userPasswordKey.setType(value);
         userPasswordKey.setLastUpdate(new Date());
         UserPasswordKey updatedUserPasswordKey = userPasswordKeyRepository.save(userPasswordKey);
 
-        assertThat(updatedUserPasswordKey.getType()).isEqualTo(PasswordKeyTypesEnum.EMAILS);
+        assertThat(updatedUserPasswordKey.getType()).isEqualTo(value);
         assertThat(updatedUserPasswordKey.getLastUpdate()).isNotEqualTo(userPasswordKey.getCreatedAt());
     }
 
     @DisplayName("Test if can delete in database")
     @Test
     void testDelete() {
+        UserPasswordKeyType value = userPasswordKeyTypeRepository.save(UserPasswordKeyType.builder().id(1L).description("Test").build());
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
-                .type(PasswordKeyTypesEnum.APPLICATION)
+                .type(value)
                 .description("Some test")
                 .createdAt(new Date())
                 .lastUpdate(new Date())

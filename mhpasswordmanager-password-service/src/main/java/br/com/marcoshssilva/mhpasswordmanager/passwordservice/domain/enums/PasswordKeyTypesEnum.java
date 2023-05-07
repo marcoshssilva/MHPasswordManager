@@ -3,6 +3,8 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.stream.Stream;
+
 @AllArgsConstructor
 public enum PasswordKeyTypesEnum {
     EMAILS(1),
@@ -13,4 +15,10 @@ public enum PasswordKeyTypesEnum {
 
     @Getter
     private final Integer id;
+
+    public static PasswordKeyTypesEnum fromId(Integer id) {
+        return Stream.of(PasswordKeyTypesEnum.values())
+                .filter(item -> item.id.equals(id))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Not found PasswordKeyType with ID. Value: " + id));
+    }
 }

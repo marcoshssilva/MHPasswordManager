@@ -1,6 +1,5 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -37,9 +36,9 @@ public class UserPasswordKey implements Serializable {
     @Column(nullable = false)
     private String description;
 
-    @Enumerated(EnumType.ORDINAL)
-    @Column(nullable = false, name = "user_key_type_id")
-    private PasswordKeyTypesEnum type;
+    @ManyToOne
+    @JoinColumn(name = "user_key_type_id", nullable = false, referencedColumnName = "id")
+    private UserPasswordKeyType type;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)
@@ -53,7 +52,7 @@ public class UserPasswordKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserPasswordKey that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(userRegistration, that.userRegistration) && Objects.equals(tags, that.tags) && Objects.equals(description, that.description) && type == that.type && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
+        return Objects.equals(id, that.id) && Objects.equals(userRegistration, that.userRegistration) && Objects.equals(tags, that.tags) && Objects.equals(description, that.description) && Objects.equals(type, that.type) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
 
         Map<String, String> keys = new HashMap<>(10);
         // key encrypted with vaultKey
-        keys.put("encrypted-default", getFromDb.get().getEncodedPublicKey());
+        keys.put("encrypted-default", getFromDb.get().getEncryptedPrivateKeyWithPassword());
         // keys using recover-key
         keys.put("recover-0", getFromDb.get().getEncryptedPrivateKey0());
         keys.put("recover-1", getFromDb.get().getEncryptedPrivateKey1());
@@ -68,7 +68,9 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         }
         try {
             // generate RSA keys
-            KeyPair keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
+            KeyPairGenerator rsa = KeyPairGenerator.getInstance("RSA");
+            rsa.initialize(4096);
+            KeyPair keyPair = rsa.generateKeyPair();
             // encrypt with vault key
             RecoveryKeyData encryptedPrivateKeyWithVaultKey = new RecoveryKeyData(vaultKey, cryptService.encrypt(keyPair.getPrivate().getEncoded(), vaultKey));
             // encode publicKey as Base64

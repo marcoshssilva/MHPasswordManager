@@ -21,22 +21,25 @@ class UserPasswordKeyTests {
         UserPasswordKey key1 = UserPasswordKey.builder()
                 .id(1L)
                 .userRegistration(userRegistration1)
-                .type(PasswordKeyTypesEnum.APPLICATION)
+                .type(UserPasswordKeyType.builder().id(PasswordKeyTypesEnum.APPLICATION.getId().longValue()).build())
                 .build();
 
         UserPasswordKey key2 = UserPasswordKey.builder()
                 .id(1L)
                 .userRegistration(userRegistration1)
-                .type(PasswordKeyTypesEnum.APPLICATION)
+                .type(UserPasswordKeyType.builder().id(PasswordKeyTypesEnum.APPLICATION.getId().longValue()).build())
                 .build();
 
         UserPasswordKey key3 = UserPasswordKey.builder()
                 .id(2L)
                 .userRegistration(userRegistration2)
-                .type(PasswordKeyTypesEnum.BANK_CARD)
+                .type(UserPasswordKeyType.builder().id(PasswordKeyTypesEnum.BANK_CARD.getId().longValue()).build())
                 .build();
 
+        UserPasswordKey clone = key1;
+
         // Check equals method
+        assertEquals(key1, clone);
         assertEquals(key1, key2);
         assertNotEquals(key1, key3);
 
@@ -74,14 +77,14 @@ class UserPasswordKeyTests {
         UserPasswordKey userPasswordKey = new UserPasswordKey();
         userPasswordKey.setId(id);
         userPasswordKey.setUserRegistration(userRegistration);
-        userPasswordKey.setType(type);
+        userPasswordKey.setType(UserPasswordKeyType.builder().id(type.getId().longValue()).build());
         userPasswordKey.setCreatedAt(createdAt);
         userPasswordKey.setLastUpdate(lastUpdate);
         userPasswordKey.setTags(tags);
 
         assertEquals(id, userPasswordKey.getId());
         assertEquals(userRegistration, userPasswordKey.getUserRegistration());
-        assertEquals(type, userPasswordKey.getType());
+        assertEquals(UserPasswordKeyType.builder().id(type.getId().longValue()).build(), userPasswordKey.getType());
         assertEquals(createdAt, userPasswordKey.getCreatedAt());
         assertEquals(lastUpdate, userPasswordKey.getLastUpdate());
         assertEquals(tags, userPasswordKey.getTags());

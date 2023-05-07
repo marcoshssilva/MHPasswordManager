@@ -1,19 +1,22 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKey;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKeyType;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordStoredValue;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordStoredValueRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserRegistrationRepository;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.ApplicationKeyToEncodedConverter;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.BankCardKeyToEncodedConverter;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.*;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyStorePayloadEncodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.application.ApplicationPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.bank.BankCardPayloadDecodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailPayloadDecodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.social.SocialMediaPayloadDecodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.website.WebsitePayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +37,9 @@ public class UserKeysServiceImpl implements UserKeysService {
 
     private final ApplicationKeyToEncodedConverter applicationKeyToEncodedConverter;
     private final BankCardKeyToEncodedConverter bankCardKeyToEncodedConverter;
+    private final EmailKeyToEncodedConverter emailKeyToEncodedConverter;
+    private final SocialMediaKeyToEncodedConverter socialMediaKeyToEncodedConverter;
+    private final WebsiteKeyDecodedToEncodedConverter websiteKeyDecodedToEncodedConverter;
 
     @Override
     public KeyPayloadEncodedDto getEncodedKey(String registration, Long id)
@@ -51,7 +57,7 @@ public class UserKeysServiceImpl implements UserKeysService {
         builder.createdAt(key.get().getCreatedAt());
         builder.lastUpdate(key.get().getLastUpdate());
         builder.tags(key.get().getTags().toArray(new String[0]));
-        builder.type(key.get().getType());
+        builder.type(PasswordKeyTypesEnum.fromId(key.get().getType().getId().intValue()));
 
         Set<UserPasswordStoredValue> storedValues = this.userPasswordStoredValueRepository.findAllByKeyId(key.get());
         builder.encodedKeys(storedValues.stream()
@@ -73,7 +79,7 @@ public class UserKeysServiceImpl implements UserKeysService {
                     .createdAt(k.getCreatedAt())
                     .lastUpdate(k.getLastUpdate())
                     .tags(k.getTags().toArray(new String[0]))
-                    .type(k.getType())
+                    .type(PasswordKeyTypesEnum.fromId(k.getType().getId().intValue()))
                     .encodedKeys(storedValues.stream().map(this::keyStoreFromEntity).distinct().toArray(KeyStorePayloadEncodedDto[]::new))
                     .build();
         });
@@ -87,6 +93,12 @@ public class UserKeysServiceImpl implements UserKeysService {
             return applicationKeyToEncodedConverter.convert((ApplicationPayloadDecodedDto) data, key);
         } else if (data instanceof BankCardPayloadDecodedDto) {
             return bankCardKeyToEncodedConverter.convert((BankCardPayloadDecodedDto) data, key);
+        } else if (data instanceof EmailPayloadDecodedDto) {
+            return emailKeyToEncodedConverter.convert((EmailPayloadDecodedDto) data, key);
+        } else if (data instanceof SocialMediaPayloadDecodedDto) {
+            return socialMediaKeyToEncodedConverter.convert((SocialMediaPayloadDecodedDto) data, key);
+        } else if (data instanceof WebsitePayloadDecodedDto) {
+            return websiteKeyDecodedToEncodedConverter.convert((WebsitePayloadDecodedDto) data, key);
         } else {
             throw new KeyEncodedErrorConverterException("Unknown type of instance");
         }
@@ -107,6 +119,8 @@ public class UserKeysServiceImpl implements UserKeysService {
             UserPasswordKey entity = data.toEntity();
 
             entity.setLastUpdate(new Date());
+            entity.setType(UserPasswordKeyType.builder().id(data.getType().getId().longValue()).build());
+
             if (Objects.equals(entity.getId(), null)) {
                 entity.setCreatedAt(new Date());
             }

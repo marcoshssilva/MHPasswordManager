@@ -1,0 +1,1 @@
+ALTER TABLE users_keys ALTER COLUMN user_key_type_id TYPE bigint;

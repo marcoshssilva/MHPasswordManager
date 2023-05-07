@@ -24,6 +24,9 @@ import java.util.Set;
 public class WebsitePayloadDecodedDto extends AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
+    @JsonProperty(required = true)
+    private String url;
+
     @JsonProperty(defaultValue = "")
     private String email;
 
@@ -42,18 +45,19 @@ public class WebsitePayloadDecodedDto extends AbstractKeyPayloadDecodedDto imple
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof WebsitePayloadDecodedDto that)) return false;
-        return Objects.equals(email, that.email) && Objects.equals(username, that.username) && Objects.equals(storedPasswords, that.storedPasswords);
+        return Objects.equals(url, that.url) && Objects.equals(email, that.email) && Objects.equals(username, that.username) && Objects.equals(storedPasswords, that.storedPasswords);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, username, storedPasswords);
+        return Objects.hash(url, email, username, storedPasswords);
     }
 
     @Override
     public String toString() {
         return "WebsitePayloadDecodedDto{" +
-                "email='" + email + '\'' +
+                "url='" + url + '\'' +
+                ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", storedPasswords=" + storedPasswords +
                 '}';

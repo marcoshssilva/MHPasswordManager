@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKey;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKeyType;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordStoredValue;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,6 +27,8 @@ class UserPasswordStoredValueRepositoryTests {
     private UserPasswordStoredValueRepository userPasswordStoredValueRepository;
     @Autowired
     private UserPasswordKeyRepository userPasswordKeyRepository;
+    @Autowired
+    private UserPasswordKeyTypeRepository userPasswordKeyTypeRepository;
     @Autowired
     private UserRegistrationRepository userRegistrationRepository;
 
@@ -40,9 +44,10 @@ class UserPasswordStoredValueRepositoryTests {
                 .build());
 
         // save user password key
+        UserPasswordKeyType value = userPasswordKeyTypeRepository.save(UserPasswordKeyType.builder().id(1L).description("Test").build());
         userPasswordKey = userPasswordKeyRepository.save(UserPasswordKey.builder()
                 .userRegistration(userRegistration)
-                .type(PasswordKeyTypesEnum.WEBSITE)
+                .type(value)
                 .createdAt(new Date())
                 .lastUpdate(new Date())
                 .description("Example for test method")

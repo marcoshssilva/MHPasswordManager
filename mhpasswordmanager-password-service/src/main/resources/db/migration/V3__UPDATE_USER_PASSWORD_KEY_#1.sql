@@ -1,1 +1,1 @@
-alter table users_keys add column description TEXT COLLATE pg_catalog."default" NOT NULL default '';
+alter table users_keys ALTER COLUMN description TYPE TEXT;
