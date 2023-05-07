@@ -1,0 +1,16 @@
+{
+    "tags": [
+        "key-teste-app",
+        "key-principal-teste-app",
+        "key-card"
+    ],
+    "description": "Fake Credit Card",
+    "owner_id": "9df61f6d-f036-400a-a851-11218df91fad",
+    "classifier": "bank-card",
+    "brand": "VISA",
+    "cardNumber": "5050-5050-5050-5050",
+    "validity": "12/99",
+    "cvv": "999",
+    "identification_owner": "123.456.789-10",
+    "full_name_owner": "Mario de la Puerta"
+}

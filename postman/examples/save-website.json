@@ -1,0 +1,20 @@
+{
+    "tags": [
+        "key-somesite.com"
+    ],
+    "description": "Website somesite.com",
+    "classifier": "website",
+    "url": "https://somesite.com",
+    "email": "example@marcoshssilva.com.br",
+    "username": "test",
+    "stored_passwords": [
+        {
+            "password": "SomePass123@",
+            "active": true
+        },
+        {
+            "password": "OldPassw0rd",
+            "active": false
+        }
+    ]
+}

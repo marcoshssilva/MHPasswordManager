@@ -1,0 +1,26 @@
+{
+    "tags": [
+        "key-facebook"
+    ],
+    "description": "Social Media - Facebook",
+    "classifier": "social-media",
+    "username": "me-4216516",
+    "email": "example@marcoshssilva.com.br",
+    "profile_url": "facebook.com/me-449",
+    "stored_passwords": [
+        {
+            "password": "SomePass123@",
+            "active": true
+        },
+        {
+            "password": "OldPassw0rd",
+            "active": false
+        }
+    ],
+    "stored_security_questions": [
+        {
+            "question": "How is name of your mother?",
+            "expected_value": "Ana"
+        }
+    ]
+}

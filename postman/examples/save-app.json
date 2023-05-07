@@ -1,0 +1,24 @@
+{
+    "tags": [
+        "key-teste-app",
+        "key-principal-teste-app"
+    ],
+    "description": "Key to teste-app",
+    "classifier": "application",
+    "credentials": [
+        {
+            "username": "MySuperUser",
+            "stored_passwords": [
+                {
+                    "password": "SomePass123@",
+                    "active": true
+                },
+                {
+                    "password": "OldPassw0rd",
+                    "active": false
+                }
+            ]
+        }
+    ],
+    "app_name": "teste-app"
+}

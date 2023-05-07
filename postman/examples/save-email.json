@@ -1,0 +1,29 @@
+{
+    "tags": [
+        "key-teste-email"
+    ],
+    "description": "Store Email",
+    "classifier": "email",
+    "email": "example@mail.com.br",
+    "smtp_server": "smtp.google.com.br",
+    "phone_number": "+99(99)9999-999",
+    "stored_passwords": [
+        {
+            "password": "SomePass123@",
+            "active": true
+        },
+        {
+            "password": "OldPassw0rd",
+            "active": false
+        }
+    ],
+    "stored_security_questions": [
+        {
+            "question": "How is name of your mother?",
+            "expected_value": "Ana"
+        }
+    ],
+    "recovery_emails": [
+        "me@marcoshssilva.com.br"
+    ]
+}
