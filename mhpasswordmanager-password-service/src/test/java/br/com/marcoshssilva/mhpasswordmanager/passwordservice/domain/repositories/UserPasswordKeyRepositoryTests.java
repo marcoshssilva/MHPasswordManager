@@ -69,21 +69,24 @@ class UserPasswordKeyRepositoryTests {
     @Test
     void testUpdate() {
         UserPasswordKeyType value = userPasswordKeyTypeRepository.save(UserPasswordKeyType.builder().id(1L).description("Test").build());
+        Date now = new Date();
         UserPasswordKey userPasswordKey = UserPasswordKey.builder()
                 .userRegistration(userRegistration)
                 .type(value)
                 .description("Some test")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(now)
+                .lastUpdate(now)
                 .build();
-        userPasswordKeyRepository.save(userPasswordKey);
 
-        userPasswordKey.setType(value);
-        userPasswordKey.setLastUpdate(new Date());
-        UserPasswordKey updatedUserPasswordKey = userPasswordKeyRepository.save(userPasswordKey);
+        UserPasswordKey saved = userPasswordKeyRepository.save(userPasswordKey);
+
+        saved.setType(value);
+        saved.setLastUpdate(new Date(System.currentTimeMillis() * 2));
+
+        UserPasswordKey updatedUserPasswordKey = userPasswordKeyRepository.save(saved);
 
         assertThat(updatedUserPasswordKey.getType()).isEqualTo(value);
-        assertThat(updatedUserPasswordKey.getLastUpdate()).isNotEqualTo(userPasswordKey.getCreatedAt());
+        assertThat(updatedUserPasswordKey.getLastUpdate()).isNotEqualTo(now);
     }
 
     @DisplayName("Test if can delete in database")
