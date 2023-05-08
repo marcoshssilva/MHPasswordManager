@@ -11,7 +11,7 @@ import java.util.Objects;
 @Setter
 @ToString
 @Builder
-public class DecryptKeyResponse implements Serializable {
+public class DecryptKeyBase64Response implements Serializable {
     public static final long serialVersionUID = 1L;
 
     private String data;
@@ -19,7 +19,7 @@ public class DecryptKeyResponse implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DecryptKeyResponse that)) return false;
+        if (!(o instanceof DecryptKeyBase64Response that)) return false;
         return Objects.equals(data, that.data);
     }
 

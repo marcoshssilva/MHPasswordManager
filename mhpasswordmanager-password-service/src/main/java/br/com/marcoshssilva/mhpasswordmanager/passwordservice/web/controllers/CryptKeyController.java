@@ -4,8 +4,8 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.cr
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.DecryptKeyRequest;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.DecryptKeyResponse;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.CryptKeyRequest;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.DecryptKeyBase64Response;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -50,37 +50,56 @@ public class CryptKeyController {
     }
 
     @PostMapping("/rsa/decrypt/base64")
-    public ResponseEntity<DecryptKeyResponse> decryptRsaDataAsBase64(@AuthenticationPrincipal Jwt token, @RequestBody DecryptKeyRequest payload) throws UserRegistrationNotFoundException {
+    public ResponseEntity<DecryptKeyBase64Response> decryptRsaDataAsBase64(@AuthenticationPrincipal Jwt token, @RequestBody CryptKeyRequest payload) throws UserRegistrationNotFoundException {
         byte[] decryptedRsaData = decryptRsaData(decoder.decode(payload.getBase64Data()), payload.getSecret(), token.getSubject());
         return ResponseEntity.ok(
-                DecryptKeyResponse.builder()
+                DecryptKeyBase64Response.builder()
                         .data(encoder.encodeToString(decryptedRsaData))
                         .build()
         );
     }
 
     @PostMapping("/rsa/decrypt/json")
-    public ResponseEntity<JsonNode> decryptRsaDataAsJson(@AuthenticationPrincipal Jwt token, @RequestBody DecryptKeyRequest payload) throws UserRegistrationNotFoundException, JsonProcessingException {
+    public ResponseEntity<JsonNode> decryptRsaDataAsJson(@AuthenticationPrincipal Jwt token, @RequestBody CryptKeyRequest payload) throws UserRegistrationNotFoundException, JsonProcessingException {
         byte[] decryptedRsaData = decryptRsaData(decoder.decode(payload.getBase64Data()), payload.getSecret(), token.getSubject());
         JsonNode json = mapper.readTree(cryptRsaService.convertByteToString(decryptedRsaData));
         return ResponseEntity.ok(json);
     }
 
     @PostMapping("/aes/decrypt/base64")
-    public ResponseEntity<DecryptKeyResponse> decryptAesDataAsBase64(@RequestBody DecryptKeyRequest payload) {
+    public ResponseEntity<DecryptKeyBase64Response> decryptAesDataAsBase64(@RequestBody CryptKeyRequest payload) {
         byte[] decrypted = decryptAesData(decoder.decode(payload.getBase64Data()), payload.getSecret());
         return ResponseEntity.ok(
-                DecryptKeyResponse.builder()
+                DecryptKeyBase64Response.builder()
                         .data(encoder.encodeToString(decrypted))
                         .build()
         );
     }
 
     @PostMapping("/aes/decrypt/json")
-    public ResponseEntity<JsonNode> decryptAesDataAsJson(@RequestBody DecryptKeyRequest payload) throws JsonProcessingException {
+    public ResponseEntity<JsonNode> decryptAesDataAsJson(@RequestBody CryptKeyRequest payload) throws JsonProcessingException {
         byte[] decrypted = decryptAesData(decoder.decode(payload.getBase64Data()), payload.getSecret());
         JsonNode json = mapper.readTree(cryptRsaService.convertByteToString(decrypted));
         return ResponseEntity.ok(json);
+    }
+
+    @PostMapping("/aes/encrypt/base64")
+    public ResponseEntity<String> encryptDataInAesAndConvertAsBase64(@RequestBody CryptKeyRequest payload) {
+        byte[] decoded = decoder.decode(payload.getBase64Data());
+        byte[] encrypted = cryptAesService.encrypt(decoded, payload.getSecret());
+
+        return ResponseEntity.ok(cryptAesService.convertByteToBase64(encrypted));
+    }
+
+    @PostMapping("/rsa/encrypt/base64")
+    public ResponseEntity<String> encryptDataInRsaAndConvertAsBase64(@AuthenticationPrincipal Jwt token, @RequestBody CryptKeyRequest payload) throws UserRegistrationNotFoundException {
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+
+        String publicKey = userRegistration.getPublicKey();
+        byte[] encrypted = cryptRsaService.encrypt(decoder.decode(payload.getBase64Data()), publicKey);
+        String encodeToString = encoder.encodeToString(encrypted);
+
+        return ResponseEntity.ok(encodeToString);
     }
 
     private byte[] decryptRsaData(byte[] data, String secret, String userRegistrationEmail) throws UserRegistrationNotFoundException {
@@ -100,4 +119,5 @@ public class CryptKeyController {
     private byte[] decryptAesData(byte[] data, String secret) {
         return cryptAesService.decrypt(data, secret);
     }
+
 }

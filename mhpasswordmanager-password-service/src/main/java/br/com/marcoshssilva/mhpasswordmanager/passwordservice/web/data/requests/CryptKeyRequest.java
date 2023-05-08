@@ -14,7 +14,7 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @ToString
-public class DecryptKeyRequest implements Serializable {
+public class CryptKeyRequest implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @NotBlank
@@ -26,7 +26,7 @@ public class DecryptKeyRequest implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof DecryptKeyRequest that)) return false;
+        if (!(o instanceof CryptKeyRequest that)) return false;
         return Objects.equals(base64Data, that.base64Data) && Objects.equals(secret, that.secret);
     }
 
