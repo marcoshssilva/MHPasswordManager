@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -87,16 +89,6 @@ public class UserKeysServiceImpl implements UserKeysService {
         });
     }
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void updateKeyPayloadEncodedDto(KeyPayloadUpdateDto keyPayloadUpdateDto, Long keyId, String registrationEmail) throws KeyNotFoundException, KeyRegistrationErrorException {
-        KeyPayloadEncodedDto encodedKey = getEncodedKey(registrationEmail, keyId);
-
-        encodedKey.setDescription(keyPayloadUpdateDto.getDescription());
-        encodedKey.setTags(keyPayloadUpdateDto.getTags());
-
-        saveKeyPayloadEncodedDto(encodedKey, Boolean.FALSE);
-    }
 
     @Override
     public KeyPayloadEncodedDto transformAsKeyPayloadEncodedDto(AbstractKeyPayloadDecodedDto data, String key)
@@ -120,7 +112,7 @@ public class UserKeysServiceImpl implements UserKeysService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public KeyPayloadEncodedDto saveKeyPayloadEncodedDto(KeyPayloadEncodedDto data, Boolean includeStoredValues)
+    public KeyPayloadEncodedDto saveKeyPayloadEncodedDto(KeyPayloadEncodedDto data)
             throws KeyRegistrationErrorException {
 
         try {
@@ -138,24 +130,53 @@ public class UserKeysServiceImpl implements UserKeysService {
                 entity.setCreatedAt(new Date());
             }
             UserPasswordKey userPasswordKey = userPasswordKeyRepository.save(entity);
+            Arrays.stream(data.getEncodedKeys())
+                .forEach(key -> {
+                    UserPasswordStoredValue userPasswordStoredValue = key.toEntity();
+                    if (Objects.equals(userPasswordStoredValue.getId(), null)) {
+                        userPasswordStoredValue.setCreatedAt(new Date());
+                    }
 
-            if (includeStoredValues) {
-                Arrays.stream(data.getEncodedKeys())
-                    .forEach(key -> {
-                        UserPasswordStoredValue userPasswordStoredValue = key.toEntity();
-                        if (Objects.equals(userPasswordStoredValue.getId(), null)) {
-                            userPasswordStoredValue.setCreatedAt(new Date());
-                        }
+                    userPasswordStoredValue.setLastUpdate(new Date());
+                    userPasswordStoredValue.setKeyId(userPasswordKey);
 
-                        userPasswordStoredValue.setLastUpdate(new Date());
-                        userPasswordStoredValue.setKeyId(userPasswordKey);
-
-                        userPasswordStoredValueRepository.save(userPasswordStoredValue);
-                    });
-            }
-
+                    userPasswordStoredValueRepository.save(userPasswordStoredValue);
+                });
 
             return this.getEncodedKey(userRegistration.get().getEmail(), userPasswordKey.getId());
+        } catch (Exception e) {
+            throw new KeyRegistrationErrorException("Key cannot be saved, cause: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public KeyPayloadEncodedDto updateKeyPayloadEncodedDto(KeyPayloadEncodedDto data)
+            throws KeyRegistrationErrorException {
+
+        try {
+            Optional<UserRegistration> userRegistration = userRegistrationRepository.findById(data.getOwnerId());
+            if (userRegistration.isEmpty()) {
+                throw new UserRegistrationNotFoundException("UserRegistration not found");
+            }
+
+            KeyPayloadEncodedDto key = this.getEncodedKey(userRegistration.get().getEmail(), data.getId());
+
+            key.setDescription(data.getDescription());
+            key.setTags(data.getTags());
+            key.setLastUpdate(new Date());
+
+            for (int i = 0; i < key.getEncodedKeys().length; i++) {
+
+                final int finalI = i;
+                var find = Stream.of(data.getEncodedKeys()).filter(item -> item.getId().equals(key.getEncodedKeys()[finalI].getId())).findFirst();
+                if (find.isPresent()) {
+                    key.getEncodedKeys()[i].setData(find.get().getData());
+                    key.getEncodedKeys()[i].setLastUpdate(new Date());
+                }
+            }
+
+            return this.saveKeyPayloadEncodedDto(key);
         } catch (Exception e) {
             throw new KeyRegistrationErrorException("Key cannot be saved, cause: " + e.getMessage(), e);
         }

@@ -1,7 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyPayloadUpdateDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.UserKeysService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
@@ -27,6 +26,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/keys")
@@ -75,20 +75,25 @@ public class ManageKeysController {
         keyPayloadEncodedDto.setId(null);
         Arrays.stream(keyPayloadEncodedDto.getEncodedKeys()).forEach(item -> item.setId(null));
 
-        KeyPayloadEncodedDto saved = userKeysService.saveKeyPayloadEncodedDto(keyPayloadEncodedDto, Boolean.TRUE);
+        KeyPayloadEncodedDto saved = userKeysService.saveKeyPayloadEncodedDto(keyPayloadEncodedDto);
         return ResponseEntity.ok(saved);
     }
 
     @PutMapping("/{uuid}/put/{id}")
-    public ResponseEntity<Void> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody KeyPayloadUpdateDto payload) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException {
+    public ResponseEntity<KeyPayloadEncodedDto> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody AbstractKeyPayloadDecodedDto payload) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException, KeyEncodedErrorConverterException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
         if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        userKeysService.updateKeyPayloadEncodedDto(payload, id, token.getSubject());
-        return ResponseEntity.status(HttpStatus.OK).build();
+        KeyPayloadEncodedDto keyPayloadEncodedDto = userKeysService.transformAsKeyPayloadEncodedDto(payload, userRegistration.getPublicKey());
+
+        keyPayloadEncodedDto.setId(id);
+        keyPayloadEncodedDto.setOwnerId(uuid);
+
+        KeyPayloadEncodedDto saved = userKeysService.updateKeyPayloadEncodedDto(keyPayloadEncodedDto);
+        return ResponseEntity.ok(saved);
     }
 
     @DeleteMapping("/{uuid}/del/{id}")
