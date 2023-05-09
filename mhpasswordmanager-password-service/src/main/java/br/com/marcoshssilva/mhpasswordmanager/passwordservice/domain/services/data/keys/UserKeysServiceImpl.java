@@ -112,6 +112,19 @@ public class UserKeysServiceImpl implements UserKeysService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public void deleteKeyPayload(String registration, Long id) throws KeyNotFoundException {
+        // find key in database
+        KeyPayloadEncodedDto key = getEncodedKey(registration, id);
+        // delete all stored-values
+        for (var keyStored: key.getEncodedKeys()) {
+            userPasswordStoredValueRepository.deleteById(keyStored.getId());
+        }
+        // delete key
+        userPasswordKeyRepository.deleteById(key.getId());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public KeyPayloadEncodedDto saveKeyPayloadEncodedDto(KeyPayloadEncodedDto data)
             throws KeyRegistrationErrorException {
 

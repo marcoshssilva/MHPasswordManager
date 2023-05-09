@@ -15,4 +15,5 @@ public interface UserKeysService {
     KeyPayloadEncodedDto saveKeyPayloadEncodedDto(KeyPayloadEncodedDto data) throws KeyRegistrationErrorException;
     KeyPayloadEncodedDto updateKeyPayloadEncodedDto(KeyPayloadEncodedDto data) throws KeyRegistrationErrorException;
     KeyPayloadEncodedDto transformAsKeyPayloadEncodedDto(AbstractKeyPayloadDecodedDto data, String key) throws KeyEncodedErrorConverterException;
+    void deleteKeyPayload(String registration, Long id) throws KeyNotFoundException;
 }

@@ -26,7 +26,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.Date;
 
 @RestController
 @RequestMapping("/keys")
@@ -97,7 +96,14 @@ public class ManageKeysController {
     }
 
     @DeleteMapping("/{uuid}/del/{id}")
-    public ResponseEntity<Void> deleteKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable String id) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+    public ResponseEntity<Void> deleteKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id) throws UserRegistrationNotFoundException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        userKeysService.deleteKeyPayload(token.getSubject(), id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
