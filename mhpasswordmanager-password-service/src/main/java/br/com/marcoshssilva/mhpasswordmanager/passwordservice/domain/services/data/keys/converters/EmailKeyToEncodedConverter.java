@@ -1,16 +1,18 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.DefaultTypesStoredValuesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyStorePayloadEncodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailPasswordStoredValueDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailPayloadDecodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailSecurityQuestionStoredValueDto;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Component
@@ -28,13 +30,14 @@ public class EmailKeyToEncodedConverter extends AbstractKeyDecodedToEncodedConve
 
             for (var pass : data.getStoredPasswords()) {
 
-                Map<String, Object> dataDecrypted = new HashMap<>();
-
-                dataDecrypted.put("email", data.getEmail());
-                dataDecrypted.put("smtp_server", data.getSmtpServer());
-                dataDecrypted.put("phone_number", data.getPhoneNumber());
-                dataDecrypted.put("password", pass.getPassword());
-                dataDecrypted.put("active", pass.getActive());
+                EmailPasswordStoredValueDto dataDecrypted = EmailPasswordStoredValueDto.builder()
+                        .email(data.getEmail())
+                        .smtpServer(data.getSmtpServer())
+                        .phoneNumber(data.getPhoneNumber())
+                        .type(DefaultTypesStoredValuesEnum.PASSWORD.getValue())
+                        .password(pass.getPassword())
+                        .active(pass.getActive())
+                        .build();
 
                 String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
 
@@ -49,13 +52,14 @@ public class EmailKeyToEncodedConverter extends AbstractKeyDecodedToEncodedConve
 
             for (var question: data.getStoredSecurityQuestions()) {
 
-                Map<String, Object> dataDecrypted = new HashMap<>();
-
-                dataDecrypted.put("email", data.getEmail());
-                dataDecrypted.put("smtp_server", data.getSmtpServer());
-                dataDecrypted.put("phone_number", data.getPhoneNumber());
-                dataDecrypted.put("question", question.getQuestion());
-                dataDecrypted.put("expected_value", question.getExpectedValue());
+                var dataDecrypted = EmailSecurityQuestionStoredValueDto.builder()
+                        .email(data.getEmail())
+                        .smtpServer(data.getSmtpServer())
+                        .phoneNumber(data.getPhoneNumber())
+                        .type(DefaultTypesStoredValuesEnum.SECURITY_QUESTION.getValue())
+                        .question(question.getQuestion())
+                        .expectedValue(question.getExpectedValue())
+                        .build();
 
                 String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
 

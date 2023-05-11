@@ -2,6 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractPasswordStoredValueDecodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractSecurityQuestionStoredValueDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +35,20 @@ public abstract class AbstractKeyDecodedToEncodedConverter<T extends AbstractKey
 
     protected String encryptAndEncodeAsBase64(Map<String, Object> json, String key) throws JsonProcessingException {
         byte[] bytes = objectMapper.writeValueAsBytes(json);
+        byte[] bytesEncrypted  = cryptService.encrypt(bytes, key);
+
+        return cryptService.convertByteToBase64(bytesEncrypted);
+    }
+
+    protected String encryptAndEncodeAsBase64(AbstractPasswordStoredValueDecodedDto data, String key) throws JsonProcessingException {
+        byte[] bytes = objectMapper.writeValueAsBytes(data);
+        byte[] bytesEncrypted  = cryptService.encrypt(bytes, key);
+
+        return cryptService.convertByteToBase64(bytesEncrypted);
+    }
+
+    protected String encryptAndEncodeAsBase64(AbstractSecurityQuestionStoredValueDecodedDto data, String key) throws JsonProcessingException {
+        byte[] bytes = objectMapper.writeValueAsBytes(data);
         byte[] bytesEncrypted  = cryptService.encrypt(bytes, key);
 
         return cryptService.convertByteToBase64(bytesEncrypted);

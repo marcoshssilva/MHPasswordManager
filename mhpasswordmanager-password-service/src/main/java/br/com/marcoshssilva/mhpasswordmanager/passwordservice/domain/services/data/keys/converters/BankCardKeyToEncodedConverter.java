@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.DefaultTypesStoredValuesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyStorePayloadEncodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.bank.BankCardPayloadDecodedDto;
@@ -28,7 +29,7 @@ public class BankCardKeyToEncodedConverter extends AbstractKeyDecodedToEncodedCo
             dataDecrypted.put("cvv", data.getCvv());
             dataDecrypted.put("identification_owner", data.getIdentificationOwner());
             dataDecrypted.put("full_name_owner", data.getFullNameOwner());
-            dataDecrypted.put("type", "bank_card");
+            dataDecrypted.put("type", DefaultTypesStoredValuesEnum.BANK_CARD.getValue());
 
             String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
 
