@@ -3,12 +3,14 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.UserKeysService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.UserStoredKeysService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.*;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -36,6 +38,7 @@ import java.util.Arrays;
 public class ManageKeysController {
     private final UserRegistrationService userRegistrationService;
     private final UserKeysService userKeysService;
+    private final UserStoredKeysService userStoredKeysService;
 
     @GetMapping("{uuid}/get/all")
     public ResponseEntity<Page<KeyPayloadEncodedDto>> getAllKeys(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @ParameterObject @PageableDefault(page = 0, size = 500) Pageable pageable) throws UserRegistrationNotFoundException {
@@ -105,5 +108,77 @@ public class ManageKeysController {
 
         userKeysService.deleteKeyPayload(token.getSubject(), id);
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @GetMapping("{uuid}/key/{id}/stored/{keyStoreId}")
+    public ResponseEntity<KeyStorePayloadEncodedDto> getKeyPayload(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @PathVariable("keyStoreId") Long keyStoredId) throws UserRegistrationNotFoundException, KeyRegistrationErrorException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        KeyStorePayloadEncodedDto storedKey = userStoredKeysService.getStoredKey(token.getSubject(), id, keyStoredId);
+        return ResponseEntity.ok(storedKey);
+    }
+
+    @PostMapping("{uuid}/key/{id}/stored/new/password")
+    public ResponseEntity<KeyStorePayloadEncodedDto> saveKeyPayload(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody AbstractPasswordStoredValueDecodedDto body) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, JsonProcessingException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        KeyStorePayloadEncodedDto encodedDto = userStoredKeysService.createPasswordStoredKey(token.getSubject(), id, body);
+        return ResponseEntity.ok(encodedDto);
+    }
+
+    @PutMapping("{uuid}/key/{keyId}/stored/{keyStoredId}/password")
+    public ResponseEntity<KeyStorePayloadEncodedDto> updateKeyPayload(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("keyId") Long keyId, @PathVariable("keyStoredId") Long keyStoredId, @RequestBody AbstractPasswordStoredValueDecodedDto body) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        KeyStorePayloadEncodedDto encodedDto = userStoredKeysService.savePasswordStoredKey(token.getSubject(), keyId, keyStoredId, body);
+        return ResponseEntity.ok(encodedDto);
+    }
+
+    @PostMapping("{uuid}/key/{id}/stored/new/security-question")
+    public ResponseEntity<KeyStorePayloadEncodedDto> saveKeyPayloadSecurity(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody AbstractSecurityQuestionStoredValueDecodedDto body) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, JsonProcessingException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        KeyStorePayloadEncodedDto encodedDto = userStoredKeysService.createSecurityQuestionStoredKey(token.getSubject(), id, body);
+        return ResponseEntity.ok(encodedDto);
+    }
+
+    @PutMapping("{uuid}/key/{keyId}/stored/{keyStoredId}/security-question")
+    public ResponseEntity<KeyStorePayloadEncodedDto> updateKeyPayloadSecurity(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("keyId") Long keyId, @PathVariable("keyStoredId") Long keyStoredId, @RequestBody AbstractSecurityQuestionStoredValueDecodedDto body) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        KeyStorePayloadEncodedDto encodedDto = userStoredKeysService.saveStoredQuestionStoredKey(token.getSubject(), keyId, keyStoredId, body);
+        return ResponseEntity.ok(encodedDto);
+    }
+
+    @DeleteMapping("{uuid}/key/{keyId}/stored/{keyStoredId}")
+    public ResponseEntity<Void> deleteKeyPayload(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("keyId") Long keyId, Long keyStoredId) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, KeyNotFoundException {
+
+        UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
+        if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        userStoredKeysService.deleteStoredKey(token.getSubject(), keyId, keyStoredId);
+        return ResponseEntity.ok().build();
     }
 }
