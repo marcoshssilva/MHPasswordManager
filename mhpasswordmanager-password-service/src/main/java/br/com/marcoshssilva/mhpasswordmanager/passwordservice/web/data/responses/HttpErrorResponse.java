@@ -38,7 +38,7 @@ public class HttpErrorResponse implements Serializable {
                 "path='" + path + '\'' +
                 ", error='" + error + '\'' +
                 ", timestamp=" + timestamp  +
-                ", message='" + message + + '\'' +
+                ", message='" + message + '\'' +
                 '}';
     }
 }
