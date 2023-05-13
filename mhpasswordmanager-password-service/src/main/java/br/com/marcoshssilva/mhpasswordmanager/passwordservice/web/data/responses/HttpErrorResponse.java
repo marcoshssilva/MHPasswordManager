@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.io.Serializable;
@@ -17,6 +18,8 @@ public class HttpErrorResponse implements Serializable {
     private String path;
     private String error;
     private String message;
+
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     private Date timestamp;
 
     @Override
