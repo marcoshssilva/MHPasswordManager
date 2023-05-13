@@ -171,7 +171,7 @@ public class ManageKeysController {
     }
 
     @DeleteMapping("{uuid}/key/{keyId}/stored/{keyStoredId}")
-    public ResponseEntity<Void> deleteKeyPayload(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("keyId") Long keyId, Long keyStoredId) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, KeyNotFoundException {
+    public ResponseEntity<Void> deleteKeyPayload(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("keyId") Long keyId, @PathVariable("keyStoredId") Long keyStoredId) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, KeyNotFoundException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
         if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
