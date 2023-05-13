@@ -40,8 +40,8 @@ public class ManageKeysController {
     private final UserKeysService userKeysService;
     private final UserStoredKeysService userStoredKeysService;
 
-    @GetMapping("{uuid}/get/all")
-    public ResponseEntity<Page<KeyPayloadEncodedDto>> getAllKeys(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @ParameterObject @PageableDefault(page = 0, size = 500) Pageable pageable) throws UserRegistrationNotFoundException {
+    @GetMapping("{uuid}/key/all")
+    public ResponseEntity<Page<KeyPayloadEncodedDto>> getAllKeys(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @ParameterObject @PageableDefault(size = 500) Pageable pageable) throws UserRegistrationNotFoundException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
         if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
@@ -52,7 +52,7 @@ public class ManageKeysController {
         return ResponseEntity.ok(allEncodedKey);
     }
 
-    @GetMapping("{uuid}/get/{id}")
+    @GetMapping("{uuid}/key/{id}")
     public ResponseEntity<KeyPayloadEncodedDto> getKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id) throws UserRegistrationNotFoundException, KeyNotFoundException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
@@ -64,7 +64,7 @@ public class ManageKeysController {
         return ResponseEntity.ok(encodedKey);
     }
 
-    @PostMapping("/{uuid}/post/new")
+    @PostMapping("/{uuid}/key/new")
     public ResponseEntity<KeyPayloadEncodedDto> saveKey(@AuthenticationPrincipal Jwt token, @RequestBody AbstractKeyPayloadDecodedDto payload, @PathVariable("uuid") String uuid) throws UserRegistrationNotFoundException, KeyEncodedErrorConverterException, KeyRegistrationErrorException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
@@ -81,8 +81,8 @@ public class ManageKeysController {
         return ResponseEntity.ok(saved);
     }
 
-    @PutMapping("/{uuid}/put/{id}")
-    public ResponseEntity<KeyPayloadEncodedDto> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody AbstractKeyPayloadDecodedDto payload) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException, KeyEncodedErrorConverterException {
+    @PutMapping("/{uuid}/key/{id}")
+    public ResponseEntity<KeyPayloadEncodedDto> updateKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id, @RequestBody AbstractKeyPayloadDecodedDto payload) throws KeyRegistrationErrorException, UserRegistrationNotFoundException, KeyEncodedErrorConverterException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
         if (Boolean.FALSE.equals(uuid.equals(userRegistration.getUuid()))) {
@@ -98,7 +98,7 @@ public class ManageKeysController {
         return ResponseEntity.ok(saved);
     }
 
-    @DeleteMapping("/{uuid}/del/{id}")
+    @DeleteMapping("/{uuid}/key/{id}")
     public ResponseEntity<Void> deleteKey(@AuthenticationPrincipal Jwt token, @PathVariable("uuid") String uuid, @PathVariable("id") Long id) throws UserRegistrationNotFoundException, KeyNotFoundException {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
