@@ -2,6 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKey;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordStoredValue;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordStoredValueRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
@@ -10,21 +11,32 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.cr
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractPasswordStoredValueDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractSecurityQuestionStoredValueDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyStorePayloadEncodedDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.application.ApplicationPasswordStoredValueDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailPasswordStoredValueDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailSecurityQuestionStoredValueDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.social.SocialMediaPasswordStoredValueDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.social.SocialMediaSecurityQuestionStoredValueDto;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.website.WebsitePasswordStoredValueDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserStoredKeysServiceImpl implements UserStoredKeysService {
     private final CryptService cryptService = new RSACryptServiceImpl(new RSAUtilService());
 
@@ -36,12 +48,14 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public KeyStorePayloadEncodedDto createPasswordStoredKey(String registration, Long keyId, AbstractPasswordStoredValueDecodedDto decodedPassword) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException, JsonProcessingException {
+        checkIfKeyStoredIsValidForKey(findKey(registration, keyId), decodedPassword);
         return encryptAndSaveInDatabase(registration, keyId, objectMapper.writeValueAsBytes(decodedPassword));
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public KeyStorePayloadEncodedDto createSecurityQuestionStoredKey(String registration, Long keyId, AbstractSecurityQuestionStoredValueDecodedDto decodedPassword) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException, JsonProcessingException {
+        checkIfKeyStoredIsValidForKey(findKey(registration, keyId), decodedPassword);
         return encryptAndSaveInDatabase(registration, keyId, objectMapper.writeValueAsBytes(decodedPassword));
     }
 
@@ -49,6 +63,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
     @Transactional(rollbackFor = Exception.class)
     public KeyStorePayloadEncodedDto savePasswordStoredKey(String registration, Long keyId, Long keyStoreId, AbstractPasswordStoredValueDecodedDto decodedPassword) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException {
         UserRegisteredModel userRegistration = getUserRegistrationData(registration);
+        checkIfKeyStoredIsValidForKey(findKey(registration, keyId), decodedPassword);
         var keyStored = findPasswordKey(registration, keyId, keyStoreId);
         var builder = KeyStorePayloadEncodedDto.builder();
 
@@ -77,6 +92,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
     @Transactional(rollbackFor = Exception.class)
     public KeyStorePayloadEncodedDto saveStoredQuestionStoredKey(String registration, Long keyId, Long keyStoreId, AbstractSecurityQuestionStoredValueDecodedDto decodedPassword) throws KeyRegistrationErrorException, KeyNotFoundException, UserRegistrationNotFoundException {
         UserRegisteredModel userRegistration = getUserRegistrationData(registration);
+        checkIfKeyStoredIsValidForKey(findKey(registration, keyId), decodedPassword);
         var keyStored = findPasswordKey(registration, keyId, keyStoreId);
         var builder = KeyStorePayloadEncodedDto.builder();
 
@@ -102,7 +118,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
     }
 
     @Override
-    public KeyStorePayloadEncodedDto getStoredKey(String registration, Long keyId, Long keyStoreId) throws KeyRegistrationErrorException, KeyNotFoundException {
+    public KeyStorePayloadEncodedDto getStoredKey(String registration, Long keyId, Long keyStoreId) throws KeyNotFoundException {
         var keyStored = findPasswordKey(registration, keyId, keyStoreId);
         return KeyStorePayloadEncodedDto.builder()
                 .id(keyStored.getId())
@@ -174,4 +190,25 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
         return builder.build();
     }
+
+    void checkIfKeyStoredIsValidForKey(UserPasswordKey key, AbstractPasswordStoredValueDecodedDto keyStored) throws KeyRegistrationErrorException {
+        if ((keyStored instanceof ApplicationPasswordStoredValueDto && Boolean.FALSE.equals(Objects.equals(PasswordKeyTypesEnum.APPLICATION, PasswordKeyTypesEnum.fromId(Math.toIntExact(key.getType().getId())))))
+                || (keyStored instanceof EmailPasswordStoredValueDto && Boolean.FALSE.equals(Objects.equals(PasswordKeyTypesEnum.EMAILS, PasswordKeyTypesEnum.fromId(Math.toIntExact(key.getType().getId())))))
+                || (keyStored instanceof SocialMediaPasswordStoredValueDto && Boolean.FALSE.equals(Objects.equals(PasswordKeyTypesEnum.SOCIAL_MEDIA, PasswordKeyTypesEnum.fromId(Math.toIntExact(key.getType().getId())))))
+                || (keyStored instanceof WebsitePasswordStoredValueDto && Boolean.FALSE.equals(Objects.equals(PasswordKeyTypesEnum.WEBSITE, PasswordKeyTypesEnum.fromId(Math.toIntExact(key.getType().getId())))))
+        ) {
+            log.error("StoredValue is not type of Key: {} {}", keyStored.getClass(), key.getType());
+            throw new KeyRegistrationErrorException("Type of StoredValue is not a type of Key");
+        }
+    }
+
+    void checkIfKeyStoredIsValidForKey(UserPasswordKey key, AbstractSecurityQuestionStoredValueDecodedDto keyStored) throws KeyRegistrationErrorException {
+        if ((keyStored instanceof EmailSecurityQuestionStoredValueDto && Boolean.FALSE.equals(Objects.equals(PasswordKeyTypesEnum.EMAILS, PasswordKeyTypesEnum.fromId(Math.toIntExact(key.getType().getId())))))
+                || (keyStored instanceof SocialMediaSecurityQuestionStoredValueDto && Boolean.FALSE.equals(Objects.equals(PasswordKeyTypesEnum.SOCIAL_MEDIA, PasswordKeyTypesEnum.fromId(Math.toIntExact(key.getType().getId())))))
+        ) {
+            log.error("StoredValue is not type of Key: {} {}", keyStored.getClass(), key.getType());
+            throw new KeyRegistrationErrorException("Type of StoredValue is not a type of Key");
+        }
+    }
+
 }

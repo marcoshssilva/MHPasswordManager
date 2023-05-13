@@ -4,4 +4,8 @@ public class KeyRegistrationErrorException extends Exception {
     public KeyRegistrationErrorException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public KeyRegistrationErrorException(String message) {
+        super(message);
+    }
 }
