@@ -39,15 +39,7 @@ public class RegistrationAccountController {
     }
 
     @GetMapping("/data")
-    public ResponseEntity<UserRegisteredModel> registrationData(@AuthenticationPrincipal Jwt token) {
-        try {
-            // try find user-registration
+    public ResponseEntity<UserRegisteredModel> registrationData(@AuthenticationPrincipal Jwt token) throws UserRegistrationNotFoundException {
             return ResponseEntity.ok(userRegistrationService.getUserRegistration(token.getSubject()));
-            // return 404 if not found
-        } catch (UserRegistrationNotFoundException e) {
-            return ResponseEntity.notFound()
-                    .build();
-        }
-
     }
 }
