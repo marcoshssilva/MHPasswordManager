@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,10 +25,7 @@ import org.springframework.context.annotation.Configuration;
                         scopes = {
                                 @OAuthScope(name = "openid", description = "Can use openid connect"),
                                 @OAuthScope(name = "profile", description = "Can read your own profile"),
-                                @OAuthScope(name = "email", description = "Can do login using email"),
-                                @OAuthScope(name = "user:canSelfRead", description = "Can read your own Account Data"),
-                                @OAuthScope(name = "user:canSelfWrite", description = "Can update your own Account Data"),
-                                @OAuthScope(name = "user:canSelfDelete", description = "Can delete your own Account Data")
+                                @OAuthScope(name = "email", description = "Can do login using email")
                         }))
 )
 @OpenAPIDefinition
