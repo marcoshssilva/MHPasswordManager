@@ -17,4 +17,7 @@ import org.springframework.stereotype.Component;
 public class AuthorizationConfigProperties {
     private String issuerUri;
     private String successLogoutUri;
+    private String jwkPrivateKey;
+    private String jwkPublicKey;
+    private String jwkUuid;
 }

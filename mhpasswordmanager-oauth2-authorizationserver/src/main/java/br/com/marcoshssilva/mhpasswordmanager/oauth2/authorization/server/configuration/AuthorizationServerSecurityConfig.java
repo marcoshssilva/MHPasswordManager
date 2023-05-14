@@ -1,13 +1,16 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration;
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.utils.JwksUtils;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.JwkKeyService;
+
 import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+
 import lombok.RequiredArgsConstructor;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -88,10 +91,8 @@ public class AuthorizationServerSecurityConfig {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource() {
-        RSAKey rsaKey = JwksUtils.generateRsa();
-        JWKSet jwkSet = new JWKSet(rsaKey);
-        return (jwkSelector, securityContext) -> jwkSelector.select(jwkSet);
+    public JWKSource<SecurityContext> jwkSource(JwkKeyService jwkKeyService) {
+        return (jwkSelector, securityContext) -> jwkSelector.select(new JWKSet(jwkKeyService.getRSAKey()));
     }
 
     @Bean
@@ -101,7 +102,6 @@ public class AuthorizationServerSecurityConfig {
 
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
-        LOG.info("{}", authorizationConfigProperties);
         return AuthorizationServerSettings.builder().issuer(authorizationConfigProperties.getIssuerUri()).build();
     }
 
