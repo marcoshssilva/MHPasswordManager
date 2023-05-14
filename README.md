@@ -11,7 +11,18 @@
 **Group Id**: br.com.marcoshssilva
 
 ---
-## Generate PKCS12 Self-Signed Certificate
+# Utilities
+## How to generate private-key with PKCS8 and 2048 bits using OpenSSL
+```
+openssl genpkey -out private-key.pem -algorithm RSA -pkeyopt rsa_keygen_bits:2048
+```
+
+## How to generate public-key with X509 using OpenSSL
+```
+openssl rsa -in private-key.pem -pubout -out public-key.pem
+```
+
+## Generate PKCS12 Self-Signed Certificate using Keytool
 
 Run:
 ````
