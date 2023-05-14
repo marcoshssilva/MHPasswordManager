@@ -6,7 +6,42 @@ spring:
 authorization:
   issuer-uri: http://localhost:12010
   success-logout-uri: http://localhost:8100
-
+  jwk-uuid: '0107f47a-2263-421c-81bb-10210c9c2e6d'
+  jwk-private-key: |
+    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+SZVY+zC5UVHD
+    av7pRQzh11P7DuzFncvWgZ+8H/l2N0J4p9BCuEeRO99+gkRITDMhIkiXboSAZ+AD
+    4G+ea+42Xc1bdmeu9SCupm0jBWk8avW77QczuaPzA3+myby1MKgmXD3M87NPCbRT
+    ntn+bSBfcF1NVbI9Yu/nFmpS/8XLnX6reei1KcaHMTMboQrYUp1wUy9wn5ObqLtl
+    uAW/xytMeo0dcvT79sX18RAtvFcBMgHytZuetrX4ZCFX+kbEPLD3zem6QC8EhFE2
+    Fqsl8NstQ6c6SZtuVP3EH07Cati/8oek+rjHMQJd6/fgiZ7y2CU5LgzJqeGDi9Ew
+    IbUic0ZDAgMBAAECggEAPI0gw6hnCEl6ubMV+7fX0hPZqvXEXVwJrbAg2tXX5YjP
+    E6Le8CRAzdPeGh0syk7JJF2K+PkXm96yF7m2+xQAQPeXbeffNXrWVA0shGzn4Gxu
+    1saluI11wNJXsATZElUx5McMeWgBIoEFi2hsmPwzxXr1jbLb3ZHaok/tNI0kbVab
+    EdeDy8OyfSl1YBaKxhWvNwp72dbSLo87Xp1QGOijofzcuMXcs6wKpcwv163dajji
+    kFXGzOVt8tgLguH//tZ29Q4EFuNPMlgRb8XID5+8HHJQ5hgUyAPgfrJYZDcmL/1Q
+    rBm5eAvmIi8RTo3AH2+4LOTiacuk3JVnI3BGHF5ByQKBgQDyM9Sqt1jJqeeMTWVN
+    YQiSRTC7Eg0FwM48wdp74LA8caHjWR3o9x0du/Yp3oHGaQ8iRFoCNA8UBGyN3pTz
+    Aawn3GtEMoEYzpRInbcMQ+BA4KnH2fKwnvfY0xhALG32t4lKuNq5Ao5dnQiR24Mv
+    AP6WroBVcZEKM7BGgdaaK8eqSQKBgQDJIKXUZmwfbYm/b5V7Z1ZzVGiaufrm6MAd
+    jgmJn4rbQWPYvmPL2rYj3hmLNVMp8Gl5EskuZw+3/xngLC6+3B9rShs4PHyFjD/w
+    C83DzYlardexq2RwtEOAJ2drNcvZezMTjHmwe7hmVNYr95hS2XRDj7eJ+kr6gMpt
+    Sf251nxMKwKBgQCoD2T7DHwUesvLpAyt863B6TbWJ8FXg6DXsd/L424Gkwa1Paou
+    dAIFFt7J0LaWGWJB8dHPA5aO2j8E9jS+piNyCVV5Hd5Me1OTS7SvUw3xlrLYlRf8
+    jGIIVvnV1b572oDuk3RZujdVJ9jBdOMDI5qErhMotsPgo1smoYNquQQz2QKBgEXl
+    AZwBh/uX/nG3nlQHQmTL5Zo3nXjXU8QxkyDvf7rYS5GMAHRcakWmrmvROThu4sh/
+    fciRakX/8gcUc55CMuz/ENyHMKLcbW/HOlecOup3VWjZ7gq4qmiDyQ3Z4SCQDtzx
+    SWzKYfe17cPTxGyuQxgjfp4FjD7nuPEn8HO/lOyHAoGAGQkZXlFd2EyOBqk4AmWP
+    OAkG8vvnzwHkfzmYKi+C/6yUokaXMljNVA/jQTaTZlpv3dBQmmVPMM6VEHqZGUzC
+    0JCQKG2tohut1IMFyE89gFVnSHAoTvKq6S7ffe1Cgf5hwiu5EBnkUJ7GX7rXPyxX
+    8xNWG6kkbXaRfEoExx7ydXY=
+  jwk-public-key: |
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvkmVWPswuVFRw2r+6UUM
+    4ddT+w7sxZ3L1oGfvB/5djdCeKfQQrhHkTvffoJESEwzISJIl26EgGfgA+Bvnmvu
+    Nl3NW3ZnrvUgrqZtIwVpPGr1u+0HM7mj8wN/psm8tTCoJlw9zPOzTwm0U57Z/m0g
+    X3BdTVWyPWLv5xZqUv/Fy51+q3notSnGhzEzG6EK2FKdcFMvcJ+Tm6i7ZbgFv8cr
+    THqNHXL0+/bF9fEQLbxXATIB8rWbnra1+GQhV/pGxDyw983pukAvBIRRNharJfDb
+    LUOnOkmbblT9xB9OwmrYv/KHpPq4xzECXev34Ime8tglOS4Myanhg4vRMCG1InNG
+    QwIDAQAB
 ---
 spring:
   config:
@@ -16,6 +51,42 @@ spring:
 authorization:
   issuer-uri: http://host.docker.internal:12010
   success-logout-uri: http://host.docker.internal:8100
+  jwk-uuid: '0107f47a-2263-421c-81bb-10210c9c2e6d'
+  jwk-private-key: |
+    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC+SZVY+zC5UVHD
+    av7pRQzh11P7DuzFncvWgZ+8H/l2N0J4p9BCuEeRO99+gkRITDMhIkiXboSAZ+AD
+    4G+ea+42Xc1bdmeu9SCupm0jBWk8avW77QczuaPzA3+myby1MKgmXD3M87NPCbRT
+    ntn+bSBfcF1NVbI9Yu/nFmpS/8XLnX6reei1KcaHMTMboQrYUp1wUy9wn5ObqLtl
+    uAW/xytMeo0dcvT79sX18RAtvFcBMgHytZuetrX4ZCFX+kbEPLD3zem6QC8EhFE2
+    Fqsl8NstQ6c6SZtuVP3EH07Cati/8oek+rjHMQJd6/fgiZ7y2CU5LgzJqeGDi9Ew
+    IbUic0ZDAgMBAAECggEAPI0gw6hnCEl6ubMV+7fX0hPZqvXEXVwJrbAg2tXX5YjP
+    E6Le8CRAzdPeGh0syk7JJF2K+PkXm96yF7m2+xQAQPeXbeffNXrWVA0shGzn4Gxu
+    1saluI11wNJXsATZElUx5McMeWgBIoEFi2hsmPwzxXr1jbLb3ZHaok/tNI0kbVab
+    EdeDy8OyfSl1YBaKxhWvNwp72dbSLo87Xp1QGOijofzcuMXcs6wKpcwv163dajji
+    kFXGzOVt8tgLguH//tZ29Q4EFuNPMlgRb8XID5+8HHJQ5hgUyAPgfrJYZDcmL/1Q
+    rBm5eAvmIi8RTo3AH2+4LOTiacuk3JVnI3BGHF5ByQKBgQDyM9Sqt1jJqeeMTWVN
+    YQiSRTC7Eg0FwM48wdp74LA8caHjWR3o9x0du/Yp3oHGaQ8iRFoCNA8UBGyN3pTz
+    Aawn3GtEMoEYzpRInbcMQ+BA4KnH2fKwnvfY0xhALG32t4lKuNq5Ao5dnQiR24Mv
+    AP6WroBVcZEKM7BGgdaaK8eqSQKBgQDJIKXUZmwfbYm/b5V7Z1ZzVGiaufrm6MAd
+    jgmJn4rbQWPYvmPL2rYj3hmLNVMp8Gl5EskuZw+3/xngLC6+3B9rShs4PHyFjD/w
+    C83DzYlardexq2RwtEOAJ2drNcvZezMTjHmwe7hmVNYr95hS2XRDj7eJ+kr6gMpt
+    Sf251nxMKwKBgQCoD2T7DHwUesvLpAyt863B6TbWJ8FXg6DXsd/L424Gkwa1Paou
+    dAIFFt7J0LaWGWJB8dHPA5aO2j8E9jS+piNyCVV5Hd5Me1OTS7SvUw3xlrLYlRf8
+    jGIIVvnV1b572oDuk3RZujdVJ9jBdOMDI5qErhMotsPgo1smoYNquQQz2QKBgEXl
+    AZwBh/uX/nG3nlQHQmTL5Zo3nXjXU8QxkyDvf7rYS5GMAHRcakWmrmvROThu4sh/
+    fciRakX/8gcUc55CMuz/ENyHMKLcbW/HOlecOup3VWjZ7gq4qmiDyQ3Z4SCQDtzx
+    SWzKYfe17cPTxGyuQxgjfp4FjD7nuPEn8HO/lOyHAoGAGQkZXlFd2EyOBqk4AmWP
+    OAkG8vvnzwHkfzmYKi+C/6yUokaXMljNVA/jQTaTZlpv3dBQmmVPMM6VEHqZGUzC
+    0JCQKG2tohut1IMFyE89gFVnSHAoTvKq6S7ffe1Cgf5hwiu5EBnkUJ7GX7rXPyxX
+    8xNWG6kkbXaRfEoExx7ydXY=
+  jwk-public-key: |
+    MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvkmVWPswuVFRw2r+6UUM
+    4ddT+w7sxZ3L1oGfvB/5djdCeKfQQrhHkTvffoJESEwzISJIl26EgGfgA+Bvnmvu
+    Nl3NW3ZnrvUgrqZtIwVpPGr1u+0HM7mj8wN/psm8tTCoJlw9zPOzTwm0U57Z/m0g
+    X3BdTVWyPWLv5xZqUv/Fy51+q3notSnGhzEzG6EK2FKdcFMvcJ+Tm6i7ZbgFv8cr
+    THqNHXL0+/bF9fEQLbxXATIB8rWbnra1+GQhV/pGxDyw983pukAvBIRRNharJfDb
+    LUOnOkmbblT9xB9OwmrYv/KHpPq4xzECXev34Ime8tglOS4Myanhg4vRMCG1InNG
+    QwIDAQAB
 
 ---
 spring:
