@@ -1,3 +1,14 @@
+---
+spring:
+  config:
+    activate:
+      on-profile: default
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:12010
+
 management:
   endpoint:
     shutdown:
