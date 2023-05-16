@@ -91,7 +91,7 @@ public class AccountController {
     @PostMapping("/create")
     public ResponseEntity<Void> createNewAccount(@RequestBody AccountCreateRequestData data)
             throws Exception {
-        accountService.register(new AccountRegistrationModel(data.getEmail(), data.getPassword(), Boolean.TRUE, data.getRoles(), data.getFirstName(), data.getLastName()));
+        accountService.register(new AccountRegistrationModel(data.getEmail(), data.getUsername(), data.getPassword(), Boolean.TRUE, data.getRoles(), data.getFirstName(), data.getLastName()));
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 

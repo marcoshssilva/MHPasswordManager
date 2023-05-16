@@ -1,6 +1,8 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories;
 
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.Account;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetails;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetailsPK;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,10 @@ class AccountDetailsRepositoryTests {
 
     @BeforeEach
     void setUp() {
+        AccountDetailsPK pk = new AccountDetailsPK("john_doe", "johndoe@email.com");
+
         AccountDetails accountDetails = new AccountDetails();
-        accountDetails.setUsername("john_doe");
+        accountDetails.setId(pk);
         accountDetails.setFirstName("John");
         accountDetails.setLastName("Doe");
         accountDetails.setImageUrl("https://example.com/profile.jpg");
@@ -32,42 +36,46 @@ class AccountDetailsRepositoryTests {
     @Test
     void testSaveAccountDetails() {
         AccountDetails accountDetails = new AccountDetails();
-        accountDetails.setUsername("jane_doe");
+        AccountDetailsPK pk = new AccountDetailsPK("john_doe", "johndoe@email.com");
+        accountDetails.setId(pk);
         accountDetails.setFirstName("Jane");
         accountDetails.setLastName("Doe");
         accountDetails.setImageUrl("https://example.com/profile.jpg");
         accountDetailsRepository.save(accountDetails);
 
-        assertTrue(accountDetailsRepository.findById(accountDetails.getUsername()).isPresent());
+        assertTrue(accountDetailsRepository.findById(pk).isPresent());
     }
 
     @Test
     void testUpdateAccountDetails() {
-        AccountDetails accountDetails = accountDetailsRepository.findById("john_doe").orElseThrow();
+        AccountDetailsPK pk = new AccountDetailsPK("john_doe", "johndoe@email.com");
+        AccountDetails accountDetails = accountDetailsRepository.findById(pk).orElseThrow();
         accountDetails.setImageUrl("https://example.com/new_profile.jpg");
         accountDetailsRepository.save(accountDetails);
 
-        AccountDetails updatedAccountDetails = accountDetailsRepository.findById("john_doe").orElseThrow();
+        AccountDetails updatedAccountDetails = accountDetailsRepository.findById(pk).orElseThrow();
         assertEquals("https://example.com/new_profile.jpg", updatedAccountDetails.getImageUrl());
     }
 
     @Test
     void testDeleteAccountDetails() {
-        AccountDetails accountDetails = accountDetailsRepository.findById("john_doe").orElseThrow();
+        AccountDetailsPK pk = new AccountDetailsPK("john_doe", "johndoe@email.com");
+        AccountDetails accountDetails = accountDetailsRepository.findById(pk).orElseThrow();
         accountDetailsRepository.delete(accountDetails);
 
-        assertFalse(accountDetailsRepository.existsById("john_doe"));
+        assertFalse(accountDetailsRepository.existsById(pk));
     }
 
     @Test
     void testUpdateAccountDetailsByUsername() {
-        AccountDetails accountDetails = accountDetailsRepository.findById("john_doe").orElseThrow();
+        AccountDetailsPK pk = new AccountDetailsPK("john_doe", "johndoe@email.com");
+        AccountDetails accountDetails = accountDetailsRepository.findById(pk).orElseThrow();
         String newFirstName = "Maria";
         String newLastName = "Do Carmo";
 
-        accountDetailsRepository.updateAccountDetailsByUsername(accountDetails.getUsername(), "Maria", "Do Carmo");
+        accountDetailsRepository.updateAccountDetailsByUsername(accountDetails.getId().getUsername(), "Maria", "Do Carmo");
 
-        Optional<AccountDetails> id = accountDetailsRepository.findById(accountDetails.getUsername());
+        Optional<AccountDetails> id = accountDetailsRepository.findById(pk);
         if (id.isPresent()) {
             assertEquals(newFirstName, id.get().getFirstName());
             assertEquals(newLastName, id.get().getLastName());

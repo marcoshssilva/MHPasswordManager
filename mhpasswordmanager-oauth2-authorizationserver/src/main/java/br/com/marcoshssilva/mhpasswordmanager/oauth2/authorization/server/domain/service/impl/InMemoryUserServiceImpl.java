@@ -16,21 +16,21 @@ public class InMemoryUserServiceImpl implements UserService {
 
     @Override
     public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) {
-        final String errorMessageCannotUse = "Cannot use this email.";
+        final String errorMessageCannotUse = "Cannot use this username/email.";
         // check if email already used by another account
-        if (userDetailsManager.userExists(userRegistrationData.getEmail())) throw new CannotRegisterUserException(errorMessageCannotUse);
+        if (userDetailsManager.userExists(userRegistrationData.getUsername())) throw new CannotRegisterUserException(errorMessageCannotUse);
 
         userDetailsManager.createUser(
                 User.builder()
-                        .username(userRegistrationData.getEmail())
+                        .username(userRegistrationData.getUsername())
                         .password(passwordEncoder.encode(userRegistrationData.getPassword()))
                         .roles(role.name())
                         .build());
     }
 
     @Override
-    public Boolean isUserExistsAccount(String email) {
-        return userDetailsManager.userExists(email);
+    public Boolean isUserExistsAccount(String username) {
+        return userDetailsManager.userExists(username);
     }
 
 }

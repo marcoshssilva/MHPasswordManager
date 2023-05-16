@@ -16,8 +16,12 @@ import java.util.Objects;
 @Builder(access = AccessLevel.PUBLIC)
 @MustHavePasswordAndConfirmationEquals(message = "A senha e contra-senha devem ser identicos")
 public class UserRegistrationData implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
+    @NotBlank(message = "O usuario de acesso deve estar preenchido corretamente.")
+    @Size(min = 8, max = 64, message = "O usuario de acesso deve possuir entre 8 e 32 caracteres.")
+    @Pattern(regexp = "^(?=.{8,32}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$")
+    private String username;
     @NotBlank(message = "O email não pode ser vazio")
     @Email(message = "Deve ser um email válido")
     private String email;
@@ -36,13 +40,12 @@ public class UserRegistrationData implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserRegistrationData that = (UserRegistrationData) o;
-        return Objects.equals(email, that.email) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(password, that.password) && Objects.equals(confirmationPassword, that.confirmationPassword);
+        if (!(o instanceof UserRegistrationData that)) return false;
+        return Objects.equals(username, that.username) && Objects.equals(email, that.email) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(password, that.password) && Objects.equals(confirmationPassword, that.confirmationPassword);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(email, firstName, lastName, password, confirmationPassword);
+        return Objects.hash(username, email, firstName, lastName, password, confirmationPassword);
     }
 }

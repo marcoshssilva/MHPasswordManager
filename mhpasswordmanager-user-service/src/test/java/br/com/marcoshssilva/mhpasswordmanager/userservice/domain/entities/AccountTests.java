@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccountTests {
     @Test
     void testEqualsAndHashCode() {
-        Account account1 = new Account("user1", "password1", true, Set.of("ROLE_USER"), new AccountDetails());
-        Account account2 = new Account("user1", "password2", false, Set.of("ROLE_ADMIN"), new AccountDetails());
-        Account account3 = new Account("user2", "password3", true, Set.of("ROLE_USER"), new AccountDetails());
+        Account account1 = new Account("user1", "password1", true, Set.of("ROLE_USER"));
+        Account account2 = new Account("user1", "password2", false, Set.of("ROLE_ADMIN"));
+        Account account3 = new Account("user2", "password3", true, Set.of("ROLE_USER"));
 
         // Test equals method
         assertEquals(account1, account2);

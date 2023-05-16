@@ -11,6 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+
 @RequiredArgsConstructor
 public class JdbcUserServiceImpl implements UserService {
     private final UserDetailsManager userDetailsManager;
@@ -20,18 +23,24 @@ public class JdbcUserServiceImpl implements UserService {
     @Override
     @Transactional
     public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) {
-        final String errorMessageCannotUse = "Cannot use this email.";
+        final String errorMessageCannotUse = "Cannot use this username/email.";
         // check if email already used by another account
-        if (userDetailsManager.userExists(userRegistrationData.getEmail())) throw new CannotRegisterUserException(errorMessageCannotUse);
+        if (userDetailsManager.userExists(userRegistrationData.getUsername())) throw new CannotRegisterUserException(errorMessageCannotUse);
+        List<Map<String, Object>> query = jdbcTemplate.queryForList("SELECT * FROM users_details WHERE email = '" + userRegistrationData.getEmail() + "'");
+
+        if (!query.isEmpty()) {
+            throw new CannotRegisterUserException(errorMessageCannotUse);
+        }
 
         userDetailsManager.createUser(
                 User.builder()
-                        .username(userRegistrationData.getEmail())
+                        .username(userRegistrationData.getUsername())
                         .password(passwordEncoder.encode(userRegistrationData.getPassword()))
                         .roles(role.name())
                         .build());
 
-        final String querySaveAccountDetails = "INSERT INTO users_details(username, firstname, lastname) values('?','?','?')"
+        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname) values('?','?','?','?')"
+                .replace("?", userRegistrationData.getUsername())
                 .replace("?", userRegistrationData.getEmail())
                 .replace("?", userRegistrationData.getFirstName())
                 .replace("?", userRegistrationData.getLastName());

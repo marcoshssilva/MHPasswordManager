@@ -2,10 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -15,40 +12,33 @@ import java.util.Objects;
 @ToString
 @Table(name = "users_details")
 @Entity
+@Getter
+@Setter
+@Builder
 public class AccountDetails implements Serializable {
-    private static final long serialVersionUID = 1L;
+    public static final long serialVersionUID = 1L;
 
-    @Id
-    @Column(name = "username", length = 50, nullable = false)
-    @Getter
-    @Setter
-    private String username;
+    @EmbeddedId
+    private AccountDetailsPK id;
 
-    @Getter
-    @Setter
     @Column(name = "firstname", length = 32, nullable = false)
     private String firstName;
 
-    @Getter
-    @Setter
     @Column(name = "lastname", length = 32, nullable = false)
     private String lastName;
 
-    @Getter
-    @Setter
     @Column(name = "imageurl")
     private String imageUrl;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AccountDetails that = (AccountDetails) o;
-        return username.equals(that.username);
+        if (!(o instanceof AccountDetails that)) return false;
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username);
+        return Objects.hash(id, firstName, lastName, imageUrl);
     }
 }

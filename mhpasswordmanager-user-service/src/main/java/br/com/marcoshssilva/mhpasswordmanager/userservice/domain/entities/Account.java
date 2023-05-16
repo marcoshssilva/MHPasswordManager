@@ -39,12 +39,6 @@ public class Account implements Serializable {
     @Setter
     private Set<String> roles = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "username")
-    @Getter
-    @Setter
-    private AccountDetails accountDetails;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
