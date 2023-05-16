@@ -2,6 +2,7 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/mhpasswordmanager-password-service/src/main/resources/db/migration/V4__UPDATE_USER_PASSWORD_KEY_#2.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/mhpasswordmanager-user-service/src/main/resources/db/migration/V5__UPDATE_GRANTS.sql" dialect="PostgreSQL" />
     <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>
