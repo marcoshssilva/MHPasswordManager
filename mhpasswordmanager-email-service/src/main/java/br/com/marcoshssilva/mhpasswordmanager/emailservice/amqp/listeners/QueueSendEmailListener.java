@@ -30,7 +30,7 @@ public class QueueSendEmailListener {
             log.debug("Received message: {}", content);
 
             SimpleMailMessage simpleMailMessage = objectMapper.readValue(message.getBody(), SimpleMailMessage.class);
-            MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(simpleMailMessage.getDestination(), simpleMailMessage.getSubject(), simpleMailMessage.getMessage(), false);
+            MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(simpleMailMessage.getDestination(), simpleMailMessage.getSubject(), simpleMailMessage.getMessage(), false, false);
             mailMessageService.sendEmail(mimeMessage);
 
         } catch (Exception e) {

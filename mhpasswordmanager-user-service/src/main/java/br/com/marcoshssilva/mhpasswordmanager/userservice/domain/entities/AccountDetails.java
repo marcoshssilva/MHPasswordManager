@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -27,6 +28,12 @@ public class AccountDetails implements Serializable {
     @Column(name = "lastname", length = 32, nullable = false)
     private String lastName;
 
+    @Column(name = "verified")
+    private Boolean verified;
+
+    @Column(name = "verified_at", columnDefinition = "TIMESTAMP")
+    private Date verifiedAt;
+
     @Column(name = "imageurl")
     private String imageUrl;
 
@@ -34,11 +41,11 @@ public class AccountDetails implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof AccountDetails that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(imageUrl, that.imageUrl);
+        return Objects.equals(id, that.id) && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName) && Objects.equals(verified, that.verified) && Objects.equals(verifiedAt, that.verifiedAt) && Objects.equals(imageUrl, that.imageUrl);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, imageUrl);
+        return Objects.hash(id, firstName, lastName, verified, verifiedAt, imageUrl);
     }
 }

@@ -38,7 +38,7 @@ public class QueueSendConfirmationRegisteredUserListener {
             HashMap<String, Object> map = new HashMap<>();
             map.put("registration", registeredUserMailMessage);
             String mailMessage = htmlTemplateEngineService.prepareHtmlMailMessage("confirm-user-registration", map);
-            MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(registeredUserMailMessage.getEmail(), DEFAULT_TITLE, mailMessage, true);
+            MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(registeredUserMailMessage.getEmail(), DEFAULT_TITLE, mailMessage, true, false);
 
             mailMessageService.sendEmail(mimeMessage);
 

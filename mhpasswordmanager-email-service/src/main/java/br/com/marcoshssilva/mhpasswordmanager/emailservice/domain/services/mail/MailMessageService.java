@@ -5,5 +5,5 @@ import javax.mail.internet.MimeMessage;
 
 public interface MailMessageService {
     void sendEmail(MimeMessage message);
-    MimeMessage prepareMimeMessage(String destination, String subject, String body, Boolean isHtml) throws MessagingException;
+    MimeMessage prepareMimeMessage(String destination, String subject, String body, Boolean isHtml, Boolean isMultipart) throws MessagingException;
 }

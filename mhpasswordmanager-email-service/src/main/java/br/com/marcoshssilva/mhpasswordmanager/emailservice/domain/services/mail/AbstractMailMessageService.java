@@ -19,9 +19,9 @@ public abstract class AbstractMailMessageService implements MailMessageService {
     protected final JavaMailSender javaMailSender;
 
     @Override
-    public MimeMessage prepareMimeMessage(String destination, String subject, String body, Boolean isHtml) throws MessagingException {
+    public MimeMessage prepareMimeMessage(String destination, String subject, String body, Boolean isHtml, Boolean isMultipart) throws MessagingException {
         MimeMessage mm = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mm, true);
+        MimeMessageHelper helper = new MimeMessageHelper(mm, isMultipart);
 
         helper.setTo(destination);
         helper.setFrom(sender);

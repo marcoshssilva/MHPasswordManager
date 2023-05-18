@@ -2,6 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountDetailsTests {
@@ -42,6 +44,8 @@ class AccountDetailsTests {
 
     @Test
     void testGetterAndSetter() {
+        Date now = new Date(System.currentTimeMillis());
+
         AccountDetailsPK pk1 = new AccountDetailsPK("mary_lane", "marylane@email.com");
         AccountDetailsPK pk2 = new AccountDetailsPK("john_doe", "johndoe@email.com");
 
@@ -50,6 +54,8 @@ class AccountDetailsTests {
         accountDetails.setFirstName("John");
         accountDetails.setLastName("Doe");
         accountDetails.setImageUrl("https://example.com/avatar.png");
+        accountDetails.setVerified(true);
+        accountDetails.setVerifiedAt(now);
 
         assertEquals(pk1, accountDetails.getId());
         assertEquals("John", accountDetails.getFirstName());
@@ -60,10 +66,12 @@ class AccountDetailsTests {
         accountDetails.setFirstName("Jane");
         accountDetails.setLastName("Doe");
         accountDetails.setImageUrl(null);
+        accountDetails.setVerifiedAt(null);
 
         assertEquals(pk2, accountDetails.getId());
         assertEquals("Jane", accountDetails.getFirstName());
         assertEquals("Doe", accountDetails.getLastName());
         assertNull(accountDetails.getImageUrl());
+        assertNull(accountDetails.getVerifiedAt());
     }
 }
