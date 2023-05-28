@@ -3,26 +3,13 @@ server:
   servlet:
     context-path: /emails
 spring:
+  profiles:
+    default: local
   application:
     name: email-service
   config:
     import:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
-  mail:
-    host: smtp.server.example
-    username: you-user@example.com
-    password: your-pass
-    properties:
-      mail.transport.protocol: msa
-      mail.smtp.port: 587
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
-      mail.smtp.starttls.required: true
-  rabbitmq:
-    host: localhost
-    virtual-host: vhost-password-manager
-    username: email-service-pm
-    password: email-service-pm-P@ss
 eureka:
   client:
     service-url:
@@ -43,6 +30,16 @@ spring:
       resource-server:
         jwt:
           issuer-uri: http://mhpasswordmanager.test.fake.com
+  mail:
+    host: test.fake.com
+    username: no-reply@test.fake.com
+    password: P@ssW0r7
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.port: 25
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
   session:
     store-type: none
 eureka:
