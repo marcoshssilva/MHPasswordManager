@@ -9,7 +9,7 @@ spring:
     import:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
   profiles:
-    default: local,use-actuator,config-springdoc
+    default: local,config-springdoc
 eureka:
   client:
     service-url:
