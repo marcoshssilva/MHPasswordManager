@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/mongo:latest .
+docker build -t mhpasswordmanager/rabbit:latest .

@@ -1,0 +1,94 @@
+{
+  "rabbit_version": "3.10.23",
+  "rabbitmq_version": "3.10.23",
+  "product_name": "RabbitMQ",
+  "product_version": "3.10.23",
+  "users": [
+    {
+      "name": "authorization-server-pm",
+      "password_hash": "kW/A1K2FH8wNygj0hBLGQM2XE0dyka4np8sihs95vW/2aKAp",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [],
+      "limits": {}
+    },
+    {
+      "name": "email-service-pm",
+      "password_hash": "25L1Mgnp10tRvbyQ5GR6/0C+t9RZ8aT0FPmXfH87B+qIOQiQ",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [],
+      "limits": {}
+    },
+    {
+      "name": "guest",
+      "password_hash": "CT6ev3pBpW7hy2FZSKMlDT2nHabsOMnPK8Jct+uWPS9QE7v/",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    }
+  ],
+  "vhosts": [
+    {
+      "name": "vhost-password-manager"
+    },
+    {
+      "name": "/"
+    }
+  ],
+  "permissions": [
+    {
+      "user": "email-service-pm",
+      "vhost": "vhost-password-manager",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "guest",
+      "vhost": "vhost-password-manager",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "authorization-server-pm",
+      "vhost": "vhost-password-manager",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    }
+  ],
+  "topic_permissions": [],
+  "parameters": [],
+  "policies": [],
+  "queues": [
+    {
+      "name": "email.send-confirmation-registered-user",
+      "vhost": "vhost-password-manager",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
+      "name": "email.send-simple-email",
+      "vhost": "vhost-password-manager",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    }
+  ],
+  "exchanges": [],
+  "bindings": []
+}
