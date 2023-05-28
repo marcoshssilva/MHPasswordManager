@@ -1,8 +1,3 @@
-spring:
-  config:
-    activate:
-      on-profile: config-springdoc
-
 springdoc:
   show-actuator: true # list actuator endpoints into Swagger
   show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
@@ -11,12 +6,6 @@ springdoc:
       client-id: MHPasswordManager
       client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
       use-basic-authentication-with-access-code-grant: on
-
----
-spring:
-  config:
-    activate:
-      on-profile: enable-actuator
 
 management:
   endpoint:
@@ -27,6 +16,11 @@ management:
           show-details: ALWAYS
           include:
             - db
+        redis-connection:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - redis
     shutdown:
       enabled: false
   endpoints:
@@ -36,7 +30,6 @@ management:
           - health
           - metrics
           - info
-
 ---
 spring:
   config:
@@ -76,7 +69,6 @@ spring:
       resource-server:
         jwt:
           issuer-uri: http://localhost:12010
-
 ---
 spring:
   config:

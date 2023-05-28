@@ -1,13 +1,11 @@
----
-spring:
-  config:
-    activate:
-      on-profile: default
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://localhost:12010
+springdoc:
+  show-actuator: true # list actuator endpoints into Swagger
+  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
+  swagger-ui:
+    oauth:
+      client-id: MHPasswordManager
+      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
 
 management:
   endpoint:
@@ -20,3 +18,53 @@ management:
           - 'health'
           - 'info'
           - 'metrics'
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://localhost:12010
+  rabbitmq:
+    host: 127.0.0.1
+    virtual-host: vhost-password-manager
+    username: email-service-pm
+    password: email-service-pm-P@ss
+  mail:
+    host: marcoshssilva.com.br
+    username: no-reply@marcoshssilva.com.br
+    password: gZE8CtxVY#
+    properties:
+      mail.transport.protocol: msa
+      mail.smtp.auth: true
+      mail.smtp.port: 587
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://host.docker.internal:12010
+  rabbitmq:
+    host: host.docker.internal
+    virtual-host: vhost-password-manager
+    username: email-service-pm
+    password: email-service-pm-P@ss
+  mail:
+    host: fake.mail.com.br
+    username: no-reply@fake.mail.com.br
+    password: F4k3P@ss
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.auth: true
+      mail.smtp.port: 25
+      mail.smtp.starttls.enable: true
+      mail.smtp.starttls.required: true

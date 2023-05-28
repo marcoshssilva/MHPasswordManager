@@ -1,3 +1,12 @@
+springdoc:
+  show-actuator: true # list actuator endpoints into Swagger
+  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
+  swagger-ui:
+    oauth:
+      client-id: MHPasswordManager
+      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      use-basic-authentication-with-access-code-grant: on
+
 management:
   endpoint:
     shutdown:
