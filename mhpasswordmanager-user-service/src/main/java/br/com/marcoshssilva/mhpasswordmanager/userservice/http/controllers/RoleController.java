@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Account Roles")
 @RequiredArgsConstructor
 public class RoleController {
-    @PreAuthorize("hasAuthority('SCOPE_user:canRead')")
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
     @GetMapping("/all")
     public ResponseEntity<DefaultUserRoles[]> getAllRoles() {
         return ResponseEntity.ok(DefaultUserRoles.values());

@@ -22,10 +22,7 @@ import org.springframework.context.annotation.Configuration;
                                 scopes = {
                                         @OAuthScope(name = "openid", description = "Can use openid connect"),
                                         @OAuthScope(name = "profile", description = "Can read your own profile"),
-                                        @OAuthScope(name = "email", description = "Can do login using email"),
-                                        @OAuthScope(name = "user:canSelfRead", description = "Can read your own Account Data"),
-                                        @OAuthScope(name = "user:canSelfWrite", description = "Can update your own Account Data"),
-                                        @OAuthScope(name = "user:canSelfDelete", description = "Can delete your own Account Data")
+                                        @OAuthScope(name = "email", description = "Can do login using email")
                                 }))
         )
 })
