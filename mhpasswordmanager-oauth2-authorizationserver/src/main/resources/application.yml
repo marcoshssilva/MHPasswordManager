@@ -4,7 +4,7 @@ spring:
   application:
     name: authorization-server
   profiles:
-    default: local,enable-actuator,config-springdoc,issuer-local
+    default: local
   mvc:
     static-path-pattern: /content/**
   config:
@@ -26,6 +26,17 @@ springdoc:
     oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
     csrf:
       enabled: true # enable csrf in swagger-ui requests
+---
+spring:
+  config:
+    activate:
+      on-profile: embedded-database
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  flyway:
+    enabled: false
 ---
 spring:
   config:
