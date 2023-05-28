@@ -122,7 +122,10 @@ pipeline {
                     sh "docker build -t ${project}-arm64/redis:${version} ."
                 }
                 dir("${env.WORKSPACE}/mongo"){
-                    echo "NOTHING TO COMPILE YET."
+                    sh "docker build -t ${project}-arm64/mongo:${version}"
+                }
+                dir("${env.WORKSPACE}/rabbitmq"){
+                    sh "docker build -t ${project}-arm64/rabbitmq:${version}"
                 }
                 script {
                     try {
