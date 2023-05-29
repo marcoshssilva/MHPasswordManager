@@ -32,6 +32,12 @@
     max-width: 100vw !important;
 }
 
+.panel-forgot-password {
+    background: white;
+    width: 640px !important;
+    max-width: 100vw !important;
+}
+
 .login-title {
     display: block;
     text-align: center;
@@ -81,6 +87,6 @@ a:hover {
     width: 100vw !important;
 }
 
-.panel-register > .btn-close {
+.panel-register > .btn-close, .panel-forgot-password > .btn-close {
     font-size: 24px;
 }

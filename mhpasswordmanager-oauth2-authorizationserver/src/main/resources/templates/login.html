@@ -3,174 +3,253 @@
 <html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Authorization</title>
-  <!-- styles -->
-  <link rel="stylesheet" href="/content/css/bootstrap/bootstrap.min.css" />
-  <link rel="stylesheet" href="/content/css/animate/animate.min.css" />
-  <link rel="stylesheet" href="/content/css/login.css" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Authorization</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="/content/css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/content/css/animate/animate.min.css"/>
+    <link rel="stylesheet" href="/content/css/login.css"/>
 </head>
 
 <body>
 
 <main class="panel-window w-100">
-  <div class="panel-login animate__animated animate__fadeInDown">
-    <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formLogin">
-      <div class="logo-field"></div>
+    <div class="panel-login animate__animated animate__fadeInDown">
+        <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formLogin">
+            <div class="logo-field"></div>
 
-      <div class="title-field">
-        <span class="login-title h2">Bem-vindo</span>
-      </div>
+            <div class="title-field">
+                <span class="login-title h2">Bem-vindo</span>
+            </div>
 
-      <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
-        Credenciais inválidas.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+            <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                Credenciais inválidas.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
-      <div th:if="${param.logout}" class="alert alert-warning alert-dismissible fade show" role="alert">
-        Você está deslogado.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
+            <div th:if="${param.logout}" class="alert alert-warning alert-dismissible fade show" role="alert">
+                Você está deslogado.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
-      <div class="email-field form-floating">
-        <input type="text" th:name="username" id="email-input" required class="form-control" />
-        <label for="email-input">Usuário de Acesso</label>
-      </div>
+            <div class="email-field form-floating">
+                <input type="text" th:name="username" id="email-input" required class="form-control"/>
+                <label for="email-input">Usuário de Acesso</label>
+            </div>
 
-      <div class="password-field form-floating">
-        <input type="password" th:name="password" id="password-input" required minlength="8" class="form-control" />
-        <label for="password-input">Senha</label>
-      </div>
+            <div class="password-field form-floating">
+                <input type="password" th:name="password" id="password-input" required minlength="8"
+                       class="form-control"/>
+                <label for="password-input">Senha</label>
+            </div>
 
-      <div class="login-group-buttons-field">
-        <a data-bs-toggle="offcanvas" href="#offcanvas-forgot-password" role="button"
-          aria-controls="offcanvasExample">
-          Esqueci a senha?
-        </a>
-        <button type="submit" class="btn btn-primary">Logar-se</button>
-      </div>
+            <div class="login-group-buttons-field">
+                <a data-bs-toggle="offcanvas" href="#offcanvas-forgot-password" role="button"
+                   aria-controls="offcanvasExample">
+                    Esqueci a senha?
+                </a>
+                <button type="submit" class="btn btn-primary">Logar-se</button>
+            </div>
 
-      <hr />
+            <hr/>
 
-      <div class="sign-up-field py-4">
-        <p class="text-center p-0 m-0">Não possui uma conta?</p>
-        <p class="text-center p-0 m-0">
-          <a data-bs-toggle="offcanvas" href="#offcanvas-register" role="button"
-            aria-controls="offcanvasExample">Criar conta</a>
+            <div class="sign-up-field py-4">
+                <p class="text-center p-0 m-0">Não possui uma conta?</p>
+                <p class="text-center p-0 m-0">
+                    <a data-bs-toggle="offcanvas" href="#offcanvas-register" role="button"
+                       aria-controls="offcanvasExample">Criar conta</a>
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <div class="terms-field">
+        <p class="mb-2 text-muted d-flex justify-content-around">
+            <a href="#" target="_blank" rel="noopener noreferrer">Licença</a>
+
+            <a href="#" target="_blank" rel="noopener noreferrer" class="mx-3">Termos de Uso</a>
+
+            <a href="#" target="_blank" rel="noopener noreferrer">Sobre Nós</a>
         </p>
-      </div>
-    </form>
-  </div>
-
-  <div class="terms-field">
-    <p class="mb-2 text-muted d-flex justify-content-around">
-      <a href="#" target="_blank" rel="noopener noreferrer">Licença</a>
-
-      <a href="#" target="_blank" rel="noopener noreferrer" class="mx-3">Termos de Uso</a>
-
-      <a href="#" target="_blank" rel="noopener noreferrer">Sobre Nós</a>
-    </p>
-    <span class="d-block mb-2 text-muted text-center">
+        <span class="d-block mb-2 text-muted text-center">
       &copy; 2022–2023
     </span>
-  </div>
+    </div>
 </main>
 
 <section class="offcanvas offcanvas-start" tabindex="-1" id="offcanvas-register" aria-labelledby="panelRegisterLabel">
-  <div class="offcanvas-body p-0 m-0 row">
-    <div class="panel-register col-fixed p-5 shadow-lg" style="z-index: 10;">
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      <h1 class="display-5 mt-3 mb-4">Registre sua conta</h1>
-      <h5>Criar conta</h5>
-      <p style="text-align: justify">
-        Aqui você pode criar sua conta neste website. Sites membros podem
-        inscrever atualizações semanais via email, onde serão identificados
-        unicamente quando comentados, e poderão haver outras funções
-        especiais.
-      </p>
+    <div class="offcanvas-body p-0 m-0 row">
+        <div class="panel-register col-fixed p-5 shadow-lg" style="z-index: 10;">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <h1 class="display-5 mt-3 mb-4">Registre sua conta</h1>
+            <h5>Criar conta</h5>
+            <p style="text-align: justify">
+                Aqui você pode criar sua conta neste website. Sites membros podem
+                inscrever atualizações semanais via email, onde serão identificados
+                unicamente quando comentados, e poderão haver outras funções
+                especiais.
+            </p>
 
-      <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formRegistration">
-        <h5 class="my-3">Seu nome</h5>
-        <div class="row">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Nome" aria-label="Nome" required
-              th:name="firstName" />
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Sobrenome" aria-label="Sobrenome" required
-              th:name="lastName" />
-          </div>
+            <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formRegistration">
+                <h5 class="my-3">Seu nome</h5>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Nome" aria-label="Nome" required
+                               th:name="firstName"/>
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Sobrenome" aria-label="Sobrenome" required
+                               th:name="lastName"/>
+                    </div>
+                </div>
+
+                <h5 class="my-3">Usuário de Acesso</h5>
+                <div class="row">
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="john.doe" aria-label="john.doe" required
+                               th:name="username" minlength="8"/>
+                    </div>
+                </div>
+
+                <h5 class="my-3">Email</h5>
+                <div class="row">
+                    <div class="col">
+                        <input type="email" class="form-control" placeholder="seu@.com.br" aria-label="seu@.com.br"
+                               required
+                               th:name="email" minlength="8"/>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <div class="col">
+                        <label for="password" class="h5">Sua senha</label>
+                        <input id="password" type="password" minlength="8" class="form-control" placeholder="s3cr#t"
+                               aria-label="s3cr#t"
+                               th:name="password" required/>
+                    </div>
+                    <div class="col">
+                        <label for="confirmationPassword" class="h5">Cofirmar</label>
+                        <input id="confirmationPassword" type="password" minlength="8" class="form-control"
+                               placeholder="s3cr#t"
+                               aria-label="s3cr#t"
+                               th:name="confirmationPassword" required/>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <div class="col">
+                        <label>
+                            <input type="checkbox" required th:name="acceptTerms"/>
+                            Eu concordo com os
+                            <a href="#" target="_blank" rel="noopener noreferrer">Termos de serviço</a>
+                            e
+                            <a href="#" target="_blank" rel="noopener noreferrer">Politica de privacidade</a>
+                            deste aplicativo.
+                        </label>
+                    </div>
+                </div>
+
+                <div class="row my-3">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">
+                            Completar o cadastro
+                        </button>
+                    </div>
+                </div>
+            </form>
+
         </div>
 
-        <h5 class="my-3">Usuário de Acesso</h5>
-        <div class="row">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="john.doe" aria-label="john.doe" required
-              th:name="username" minlength="8" />
-          </div>
-        </div>
-
-        <h5 class="my-3">Email</h5>
-        <div class="row">
-          <div class="col">
-            <input type="email" class="form-control" placeholder="seu@.com.br" aria-label="seu@.com.br" required
-              th:name="email" minlength="8" />
-          </div>
-        </div>
-
-        <div class="row my-3">
-          <div class="col">
-            <label for="password" class="h5">Sua senha</label>
-            <input id="password" type="password" minlength="8" class="form-control" placeholder="s3cr#t" aria-label="s3cr#t"
-              th:name="password" required />
-          </div>
-          <div class="col">
-            <label for="confirmationPassword" class="h5">Cofirmar</label>
-            <input id="confirmationPassword" type="password" minlength="8" class="form-control" placeholder="s3cr#t" aria-label="s3cr#t"
-              th:name="confirmationPassword" required />
-          </div>
-        </div>
-
-        <div class="row my-3">
-          <div class="col">
-            <label>
-              <input type="checkbox" required th:name="acceptTerms"/>
-              Eu concordo com os
-              <a href="#" target="_blank" rel="noopener noreferrer">Termos de serviço</a>
-              e
-              <a href="#" target="_blank" rel="noopener noreferrer">Politica de privacidade</a>
-              deste aplicativo.
-            </label>
-          </div>
-        </div>
-
-        <div class="row my-3">
-          <div class="col">
-            <button type="submit" class="btn btn-primary">
-              Completar o cadastro
-            </button>
-          </div>
-        </div>
-      </form>
-
-      <p class="fw-bold my-3" style="text-align: justify">
-        Após criar sua conta, um email único sera enviado para seu email com
-        os dados preenchidos de acordo com o endereço de email fornecido
-        abaixo.
-      </p>
+        <div class="col bg-light bg-gradient" style="z-index:9;"></div>
     </div>
-
-    <div class="col bg-light bg-gradient" style="z-index:9;"></div>
-  </div>
 </section>
 
 <section class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-forgot-password"
-  aria-labelledby="panelForgotPasswordLabel">
-  <div class="offcanvas-body">
-    <div class="container"></div>
-  </div>
+         aria-labelledby="panelForgotPasswordLabel">
+    <div class="offcanvas-body p-0 m-0 row">
+
+        <div class="d-none d-md-block col bg-light bg-gradient" style="z-index:9;">
+        </div>
+
+        <div class="panel-forgot-password col-fixed p-5 shadow-lg" style="z-index: 10;">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <h1 class="display-5 mt-3 mb-4">Esqueci minha senha</h1>
+            <h5>Redefinir senha</h5>
+            <p style="text-align: justify">
+                Para redefinir sua senha, informe o usuário ou email cadastrado na sua conta e lhe
+                enviaremos um link com as instruções necessárias para que você possa recuperar sua conta
+                de forma segura.
+            </p>
+
+            <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formForgotPasswordStep1">
+                <div class="row my-4">
+                    <div class="col input-group">
+                        <input id="credentials-forgot-password" type="text" minlength="8" class="form-control"
+                               placeholder="informe seu usuario/email aqui..."
+                               aria-label="informe seu usuario/email aqui..." th:name="identification" required/>
+                        <button type="submit" class="btn btn-primary">
+                            Próximo
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <hr>
+
+            <div class="row mt-1 mb-3">
+                <p class="py-0 my-0" id="block-skip-step2">
+                    Já possui um código de recuperação?&nbsp;
+                    <a type="button" id="btnSkipToStep2" class="btn-link">Clique aqui.</a>
+                </p>
+
+                <form th:action="@{/login}" method="post" class="d-none needs-validation" novalidate
+                      id="formForgotPasswordStep2">
+                    <p class="lead">
+                        Confirme seu código recebido por e-mail e digite sua nova senha.
+                    </p>
+
+                    <div class="row my-3">
+                        <div class="col">
+                            <label for="codeStep2" class="h5">Seu código de confirmação:</label>
+                            <input id="codeStep2" type="text" minlength="8" class="form-control"
+                                   placeholder="000-000-000" aria-label="000-000-000"
+                                   th:name="code" required/>
+                        </div>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col">
+                            <label for="passwordStep2" class="h5">Sua senha:</label>
+                            <input id="passwordStep2" type="password" minlength="8" class="form-control"
+                                   placeholder="Your New Password" aria-label="Your New Password"
+                                   th:name="password" required/>
+                        </div>
+                    </div>
+
+                    <div class="row my-3"></div>
+                    <div class="col">
+                        <label for="passwordConfirmStep2" class="h5">Repita sua senha:</label>
+                        <input id="passwordConfirmStep2" type="password" minlength="8" class="form-control"
+                               placeholder="Your New Password" aria-label="Your New Password"
+                               th:name="passwordConfirm" required/>
+                    </div>
+
+                    <div class="row my-3">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary">
+                                Completar o cadastro
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+    </div>
+
 </section>
 
 <section id="notifications" style="z-index: 7000;" class="toast-container position-fixed top-0 end-0 p-5"></section>
@@ -180,6 +259,7 @@
 <script src="/content/js/notifications.js"></script>
 <script src="/content/js/formRegister.js"></script>
 <script src="/content/js/formLogin.js"></script>
+<script src="/content/js/formForgotPassword.js"></script>
 
 </body>
 
