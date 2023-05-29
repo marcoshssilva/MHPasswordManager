@@ -122,10 +122,10 @@ pipeline {
                     sh "docker build -t ${project}-arm64/redis:${version} ."
                 }
                 dir("${env.WORKSPACE}/mongo"){
-                    sh "docker build -t ${project}-arm64/mongo:${version}"
+                    sh "docker build -t ${project}-arm64/mongo:${version} ."
                 }
                 dir("${env.WORKSPACE}/rabbitmq"){
-                    sh "docker build -t ${project}-arm64/rabbitmq:${version}"
+                    sh "docker build -t ${project}-arm64/rabbitmq:${version} ."
                 }
                 script {
                     try {
