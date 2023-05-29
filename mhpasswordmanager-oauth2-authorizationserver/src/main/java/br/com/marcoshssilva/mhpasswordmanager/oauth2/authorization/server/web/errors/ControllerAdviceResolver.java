@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ControllerAdviceResolver {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<HttpJsonResponse<?>> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseEntity<HttpJsonResponse<Object>> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException exception, HttpServletRequest req, HttpServletResponse res) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(HttpJsonResponse.builder()
                         .status(StatusTypeEnum.ERROR)
@@ -26,7 +26,7 @@ public class ControllerAdviceResolver {
     }
 
     @ExceptionHandler(CannotRegisterUserException.class)
-    public ResponseEntity<HttpJsonResponse<?>> cannorRegisterUserExceptionHandler(CannotRegisterUserException exception, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseEntity<HttpJsonResponse<Object>> cannorRegisterUserExceptionHandler(CannotRegisterUserException exception, HttpServletRequest req, HttpServletResponse res) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(HttpJsonResponse.builder()
                         .status(StatusTypeEnum.ERROR)
