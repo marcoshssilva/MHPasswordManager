@@ -22,7 +22,7 @@ public class SecurityConfig {
 
     private final String[] GET_METHOD_ONLY_PUBLIC = new String[]{"/forgotPassword", "/", "/verify/**"};
 
-    private final String[] POST_METHOD_ONLY_PUBLIC = new String[]{"/api/account/register"};
+    private final String[] POST_METHOD_ONLY_PUBLIC = new String[]{"/api/account/register", "/api/account/forgot/step1", "/api/account/forgot/step2"};
 
     @Order(1)
     @Bean

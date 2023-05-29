@@ -2,6 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.r
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.StatusTypeEnum;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserResetPasswordStep1Data;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserResetPasswordStep2Data;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.responses.HttpJsonResponse;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserRegistrationData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.UserService;
@@ -24,9 +26,21 @@ public class AccountRegisterController {
     private final UserService userService;
 
     @PostMapping(value = "/register")
-    public HttpJsonResponse<?> registerAccount(@Valid @RequestBody UserRegistrationData userRegistrationData) {
+    public HttpJsonResponse<Object> registerAccount(@Valid @RequestBody UserRegistrationData userRegistrationData) {
         userService.registerNewUser(userRegistrationData, UserRolesEnum.USER);
         return HttpJsonResponse.builder().message("User registered with success").status(StatusTypeEnum.SUCCESS)
+                .build();
+    }
+
+    @PostMapping(value = "/forgot/step1")
+    public HttpJsonResponse<Object> recoverAccountStep1(@Valid @RequestBody UserResetPasswordStep1Data data) {
+        return HttpJsonResponse.builder().message("Message has been send to your box. Check your email.").status(StatusTypeEnum.SUCCESS)
+                .build();
+    }
+
+    @PostMapping(value = "/forgot/step2")
+    public HttpJsonResponse<Object> recoverAccountStep2(@Valid @RequestBody UserResetPasswordStep2Data data) {
+        return HttpJsonResponse.builder().message("Message has been send to your box. Check your email.").status(StatusTypeEnum.SUCCESS)
                 .build();
     }
 }
