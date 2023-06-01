@@ -11,6 +11,18 @@ if [ $# -eq 1 ]; then
   docker tag mhpasswordmanager/postgres:latest mhpasswordmanager/postgres:"$1"
 fi
 
+echo 'mhpasswordmanager-mongo-db...'
+docker build -t mhpasswordmanager/mongo:latest ../mongo
+if [ $# -eq 1 ]; then
+  docker tag mhpasswordmanager/mongo:latest mhpasswordmanager/mongo:"$1"
+fi
+
+echo 'mhpasswordmanager-rabbit-mq...'
+docker build -t mhpasswordmanager/rabbit:latest ../rabbitmq
+if [ $# -eq 1 ]; then
+  docker tag mhpasswordmanager/rabbit:latest mhpasswordmanager/rabbit:"$1"
+fi
+
 echo 'mhpasswordmanager-service-registry...'
 docker build -t mhpasswordmanager/service-registry:latest ../mhpasswordmanager-service-registry
 if [ $# -eq 1 ]; then

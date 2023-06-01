@@ -9,7 +9,7 @@ services:
     networks:
       - net-mhpasswordmanager
     ports:
-      - "8888:8888"
+      - "12888:8888"
   eureka-service-discovery:
     image: mhpasswordmanager/service-registry:latest
     container_name: 'eureka-server'
@@ -19,7 +19,7 @@ services:
     networks:
       - net-mhpasswordmanager
     ports:
-      - "8761:8761"
+      - "12761:8761"
   oauth2-authorization-server:
     container_name: 'authorization-server'
     image: mhpasswordmanager/oauth2-authorization-server:latest
@@ -31,6 +31,7 @@ services:
       - eureka-service-discovery
       - postgres-db
       - config-services
+      - rabbitmq
     networks:
       - net-mhpasswordmanager
     ports:
@@ -77,6 +78,17 @@ services:
       - net-mhpasswordmanager
     ports:
       - "12012:12012"
+  email-service:
+    image: mhpasswordmanager/user-service:latest
+    container_name: 'user-service-api'
+    restart: on-failure
+    env_file:
+      - configs-composable/EMAIL-SERVICE.env
+    depends_on:
+      - eureka-service-discovery
+      - config-services
+      - redis-store
+      - rabbitmq
   postgres-db:
     image: mhpasswordmanager/postgres:latest
     container_name: 'postgres-db'
@@ -101,9 +113,39 @@ services:
       - data-mhpasswordmanager-redis:/data
     networks:
       - net-mhpasswordmanager
+  mongo-db:
+    image: mhpasswordmanager/mongo:latest
+    container_name: 'mongo-db'
+    restart: on-failure
+    env_file:
+      - configs-composable/MONGO-DB.env
+    networks:
+      - net-mhpasswordmanager
+    volumes:
+      - data-mhpasswordmanager-mongo-db:/data/db
+    ports:
+      - "12717:27017"
+  rabbitmq:
+    image: mhpasswordmanager/rabbit:latest
+    container_name: 'rabbit-broker'
+    env_file:
+      - configs-composable/RABBITMQ.env
+    networks:
+      - net-mhpasswordmanager
+    volumes:
+      - data-mhpasswordmanager-rabbitmq-logs:/var/lib/rabbitmq
+      - data-mhpasswordmanager-rabbitmq-logs:/var/log/rabbitmq
+    ports:
+      - "12672:5672"
+      - "12673:15672"
+      - "12674:25672"
+      - "12692:15692"
 networks:
   net-mhpasswordmanager:
     driver: bridge
 volumes:
   data-mhpasswordmanager-postgres-db:
   data-mhpasswordmanager-redis:
+  data-mhpasswordmanager-mongo-db:
+  data-mhpasswordmanager-rabbitmq-logs:
+  data-mhpasswordmanager-rabbitmq-data:

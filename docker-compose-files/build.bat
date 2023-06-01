@@ -10,6 +10,18 @@ if "%~1"=="" (
     docker tag mhpasswordmanager/postgres:latest mhpasswordmanager/postgres:%1
 )
 
+echo 'mhpasswordmanager-rabbit-mq...'
+docker build -t mhpasswordmanager/rabbit:latest ../rabbitmq
+if "%~1"=="" (
+    docker tag mhpasswordmanager/rabbit:latest mhpasswordmanager/rabbit:%1
+)
+
+echo 'mhpasswordmanager-mongo-db...'
+docker build -t mhpasswordmanager/mongo:latest ../mongo
+if "%~1"=="" (
+    docker tag mhpasswordmanager/mongo:latest mhpasswordmanager/mongo:%1
+)
+
 echo 'mhpasswordmanager-service-registry...'
 docker build -t mhpasswordmanager/service-registry:latest ../mhpasswordmanager-service-registry
 if "%~1"=="" (
