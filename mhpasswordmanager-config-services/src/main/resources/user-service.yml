@@ -73,7 +73,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: docker
+      on-profile: docker0
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://postgres-db:5432/db_users

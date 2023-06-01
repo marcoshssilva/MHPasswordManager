@@ -167,7 +167,7 @@ authorization:
 spring:
   config:
     activate:
-      on-profile: docker
+      on-profile: docker0
   h2:
     console:
       enabled: true

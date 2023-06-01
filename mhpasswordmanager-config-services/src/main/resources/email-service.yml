@@ -34,20 +34,20 @@ spring:
     username: email-service-pm
     password: email-service-pm-P@ss
   mail:
-    host: marcoshssilva.com.br
-    username: no-reply@marcoshssilva.com.br
-    password: gZE8CtxVY#
+    host: fake.mail.com.br
+    username: no-reply@fake.mail.com.br
+    password: F4k3P@ss
     properties:
-      mail.transport.protocol: msa
+      mail.transport.protocol: smtp
       mail.smtp.auth: true
-      mail.smtp.port: 587
+      mail.smtp.port: 25
       mail.smtp.starttls.enable: true
       mail.smtp.starttls.required: true
 ---
 spring:
   config:
     activate:
-      on-profile: docker
+      on-profile: docker0
   security:
     oauth2:
       resource-server:
