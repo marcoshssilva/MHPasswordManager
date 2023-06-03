@@ -125,15 +125,19 @@ pipeline {
             steps{
                 dir("${env.WORKSPACE}/postgres"){
                     sh "docker build -t ${project}-arm64/postgres:${version} ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/postgres", tag: "${version}"
                 }
                 dir("${env.WORKSPACE}/redis"){
                     sh "docker build -t ${project}-arm64/redis:${version} ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/redis", tag: "${version}"
                 }
                 dir("${env.WORKSPACE}/mongo"){
                     sh "docker build -t ${project}-arm64/mongo:${version} ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/mongo", tag: "${version}"
                 }
                 dir("${env.WORKSPACE}/rabbitmq"){
                     sh "docker build -t ${project}-arm64/rabbitmq:${version} ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/rabbitmq", tag: "${version}"
                 }
                 script {
                     try {
@@ -142,26 +146,6 @@ pipeline {
                         echo "OK. Always return error."
                     }
                 }
-            }
-        }
-
-        stage('Docker - Pull images in Docker Registry') {
-            steps{
-                sh "echo ${DOCKER_NEXUS3_CREDENTIALS_PSW} | docker login 127.0.0.1:18079 --username ${DOCKER_NEXUS3_CREDENTIALS_USR} --password-stdin"
-
-                sh "docker tag ${project}-arm64/postgres:${version} 127.0.0.1:18079/${project}-arm64/postgres:${version}"
-                sh "docker push 127.0.0.1:18079/${project}-arm64/postgres:${version}"
-
-                sh "docker tag ${project}-arm64/redis:${version} 127.0.0.1:18079/${project}-arm64/redis:${version}"
-                sh "docker push 127.0.0.1:18079/${project}-arm64/redis:${version}"
-
-                sh "docker tag ${project}-arm64/mongo:${version} 127.0.0.1:18079/${project}-arm64/mongo:${version}"
-                sh "docker push 127.0.0.1:18079/${project}-arm64/mongo:${version}"
-
-                sh "docker tag ${project}-arm64/rabbitmq:${version} 127.0.0.1:18079/${project}-arm64/rabbitmq:${version}"
-                sh "docker push 127.0.0.1:18079/${project}-arm64/rabbitmq:${version}"
-            
-                sh "docker logout 127.0.0.1:18079"    
             }
         }
     }
