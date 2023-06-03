@@ -9,6 +9,27 @@ pipeline {
         maven 'maven-default'
     }
     stages {
+        stage('Build Services - Postgres, Redis, RabbitMQ, Mongo...') {
+            steps{
+                dir("${env.WORKSPACE}/postgres"){
+                    sh "docker build -t ${project}-arm64/postgres:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/postgres","${version}"
+                }
+                dir("${env.WORKSPACE}/redis"){
+                    sh "docker build -t ${project}-arm64/redis:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/redis","${version}"
+                }
+                dir("${env.WORKSPACE}/mongo"){
+                    sh "docker build -t ${project}-arm64/mongo:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/mongo","${version}"
+                }
+                dir("${env.WORKSPACE}/rabbitmq"){
+                    sh "docker build -t ${project}-arm64/rabbitmq:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/rabbitmq","${version}"
+                }
+            }
+        }
+
         stage('Eureka Server - Compile, Tests and Deploy') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
@@ -74,7 +95,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/password-service:${version} -f ./DockerfileJenkins ."
-                    deployImageInPrivateRegistry image: "${project}-arm64/password-service", tag: "${version}"
+                    deployImageInPrivateRegistry "${project}-arm64/password-service", "${version}"
                 }
             }
         }
@@ -121,24 +142,8 @@ pipeline {
             }
         }
 
-        stage('Docker - Build and Cleaning images') {
+        stage('Docker - Cleaning images') {
             steps{
-                dir("${env.WORKSPACE}/postgres"){
-                    sh "docker build -t ${project}-arm64/postgres:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/postgres","${version}"
-                }
-                dir("${env.WORKSPACE}/redis"){
-                    sh "docker build -t ${project}-arm64/redis:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/redis","${version}"
-                }
-                dir("${env.WORKSPACE}/mongo"){
-                    sh "docker build -t ${project}-arm64/mongo:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/mongo","${version}"
-                }
-                dir("${env.WORKSPACE}/rabbitmq"){
-                    sh "docker build -t ${project}-arm64/rabbitmq:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/rabbitmq","${version}"
-                }
                 script {
                     try {
                         sh "docker rmi --force \$(docker images -f dangling=true)"
