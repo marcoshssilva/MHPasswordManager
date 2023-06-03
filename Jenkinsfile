@@ -143,7 +143,17 @@ pipeline {
         stage('Docker - Pull images in Docker Registry') {
             steps{
                 sh "echo ${DOCKER_NEXUS3_CREDENTIALS_PSW} | docker login 127.0.0.1:18079 --username ${DOCKER_NEXUS3_CREDENTIALS_USR} --password-stdin"
-                sh "docker tag ${project}-arm64/postgres:${version} nexus.apps.marcoshssilva.com.br:5000/${project}-arm64/postgres:${version}"
+
+                sh "docker tag ${project}-arm64/postgres:${version} 127.0.0.1:18079/${project}-arm64/postgres:${version}"
+                sh "docker tag ${project}-arm64/redis:${version} 127.0.0.1:18079/${project}-arm64/redis:${version}"
+                sh "docker tag ${project}-arm64/mongo:${version} 127.0.0.1:18079/${project}-arm64/mongo:${version}"
+                sh "docker tag ${project}-arm64/rabbitmq:${version} 127.0.0.1:18079/${project}-arm64/rabbitmq:${version}"
+
+                sh "docker pull 127.0.0.1:18079/${project}-arm64/postgres:${version}"
+                sh "docker pull 127.0.0.1:18079/${project}-arm64/redis:${version}"
+                sh "docker pull 127.0.0.1:18079/${project}-arm64/mongo:${version}"
+                sh "docker pull 127.0.0.1:18079/${project}-arm64/rabbitmq:${version}"
+
                 sh "docker logout 127.0.0.1:18079"
             }
         }
