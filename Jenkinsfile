@@ -5,9 +5,6 @@ pipeline {
     agent {
         label 'master'
     }
-    environment {
-        DOCKER_NEXUS3_CREDENTIALS = credentials('docker-registry-nexus3')
-    }
     tools {
         maven 'maven-default'
     }
@@ -21,6 +18,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/service-registry:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/service-registry", tag: "${version}"
                 }
             }
         }
@@ -34,6 +32,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/api-gateway:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/api-gateway", tag: "${version}"
                 }
             }
         }
@@ -47,6 +46,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/oauth2-authorization-server:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/oauth2-authorization-server", tag: "${version}"
                 }
             }
         }
@@ -60,6 +60,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/user-service:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/user-service", tag: "${version}"
                 }
             }
         }
@@ -73,6 +74,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/password-service:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/password-service", tag: "${version}"
                 }
             }
         }
@@ -86,6 +88,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/config-services:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/config-services", tag: "${version}"
                 }
             }
         }
@@ -99,6 +102,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/file-service:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/file-service", tag: "${version}"
                 }
             }
         }
@@ -112,6 +116,7 @@ pipeline {
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                     sh "docker build -t ${project}-arm64/email-service:${version} -f ./DockerfileJenkins ."
+                    deployImageInPrivateRegistry image: "${project}-arm64/service-registry", tag: "${version}"
                 }
             }
         }
