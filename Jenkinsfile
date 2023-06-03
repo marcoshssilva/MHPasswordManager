@@ -142,10 +142,9 @@ pipeline {
 
         stage('Docker - Pull images in Docker Registry') {
             steps{
-                sh "echo ${DOCKER_NEXUS3_CREDENTIALS_PSW} | docker login -u ${DOCKER_NEXUS3_CREDENTIALS_USR} nexus.apps.marcoshssilva.com.br:5000 --password-stdin"
+                sh "echo ${DOCKER_NEXUS3_CREDENTIALS_PSW} | docker login 127.0.0.1:18079 --username ${DOCKER_NEXUS3_CREDENTIALS_USR} --password-stdin"
                 sh "docker tag ${project}-arm64/postgres:${version} nexus.apps.marcoshssilva.com.br:5000/${project}-arm64/postgres:${version}"
-                sh "docker pull nexus.apps.marcoshssilva.com.br:5000/${project}-arm64/postgres:${version}"
-                sh "docker logout nexus.apps.marcoshssilva.com.br:5000"
+                sh "docker logout 127.0.0.1:18079"
             }
         }
     }
