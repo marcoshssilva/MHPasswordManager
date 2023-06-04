@@ -16,9 +16,11 @@ pipeline {
                 checkout scm
 
                 // maven cycle
-                sh "mvn clean test install"
-                runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
-                sh "mvn deploy -Dmaven.test.skip=true"
+                dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
+                    sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
+                    sh "mvn deploy -Dmaven.test.skip=true"
+                }
             }
         }
         stage('Generating Docker images and push at Nexus Docker Registry') {
