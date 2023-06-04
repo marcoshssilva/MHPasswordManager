@@ -9,12 +9,9 @@ pipeline {
     stages {
         stage('Eureka Server - Compile, Tests and Deploy') {
             agent{
-                label 'node1-ubuntu-amd64'
+                label 'node-master-arm64'
             }
             steps{
-                 // checkout branch
-                checkout scm
-
                 // maven cycle
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
                     sh "mvn clean test install"
