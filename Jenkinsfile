@@ -7,7 +7,7 @@ pipeline {
         maven 'maven-default'
     }
     stages {
-        stage('Generating docker images in arch ARM64 and push at Nexus') {
+        stage('Generating docker images in arch ARM64 and push at Nexus Docker Registry') {
             agent{
                 label 'master'
             }
@@ -38,7 +38,7 @@ pipeline {
             }
         }
 
-        stage('Generating docker images in arch AMD64 and push at Nexus') {
+        stage('Generating docker images in arch AMD64 and push at Nexus Docker Registry') {
             agent{
                 label 'node1-ubuntu-amd64'
             }
