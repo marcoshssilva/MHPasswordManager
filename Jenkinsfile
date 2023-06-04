@@ -40,7 +40,7 @@ pipeline {
 
                             // build image for mhpasswordmanager/service-discovery
                             dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
-                                sh "docker build -t ${project}-arm64/service-registry:${version} -f ./DockerfileJenkins ."
+                                sh "docker build -t ${project}-arm64/service-registry:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/service-registry", "${version}"
                                 sh "docker rmi ${project}-arm64/service-registry:${version}"
                             }
@@ -92,7 +92,7 @@ pipeline {
 
                             // build image for mhpasswordmanager/service-discovery
                             dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
-                                sh "docker build -t ${project}/service-registry:${version} -f ./DockerfileJenkins ."
+                                sh "docker build -t ${project}/service-registry:${version} -f ./DockerfileJenkinsAmd64 ."
                                 deployImageInPrivateRegistry "${project}/service-registry", "${version}"
                                 sh "docker rmi ${project}/service-registry:${version}"
                             }
