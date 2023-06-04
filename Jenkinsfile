@@ -12,6 +12,10 @@ pipeline {
                 label 'node1-ubuntu-amd64'
             }
             steps{
+                 // checkout branch
+                checkout scm
+
+                // maven cycle
                 sh "mvn clean test install"
                 runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
                 sh "mvn deploy -Dmaven.test.skip=true"
