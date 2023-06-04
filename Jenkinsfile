@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Generating docker images in arch ARM64 and push at Nexus') {
             agent{
-                label 'mestre'
+                label 'master'
             }
             steps{
                 // checkout branch
@@ -37,7 +37,7 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Generating docker images in arch AMD64 and push at Nexus') {
             agent{
                 label 'node1-ubuntu-amd64'
