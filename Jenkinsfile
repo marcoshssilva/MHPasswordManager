@@ -20,13 +20,23 @@ pipeline {
                 }
             }
         }
+
+        stage('Stash compiled files') {
+            agent{
+                label 'node-master-arm64'
+            }
+            steps {
+                stash(name: 'stashedData')
+            }
+        }
+
         stage('Generating Docker images and push at Nexus Docker Registry') {
             steps{
                 parallel(
                     'ARCH-LINUX-ARM64': {
                         node('node-master-arm64') {
-                             // checkout branch
-                            checkout scm
+                            // get stashed data
+                            unstash(name: 'stashedData')
 
                             // build image for postgres
                             dir("${env.WORKSPACE}/postgres"){
@@ -70,8 +80,8 @@ pipeline {
                     },
                     'ARCH-LINUX-AMD64': {
                         node('node1-ubuntu-amd64') {
-                            // checkout branch
-                            checkout scm
+                            // get stashed data
+                            unstash(name: 'stashedData')
 
                             // build image for postgres
                             dir("${env.WORKSPACE}/postgres"){
