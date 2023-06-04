@@ -150,49 +150,49 @@ pipeline {
 
                             // build image for mhpasswordmanager/config-services
                             dir("${env.WORKSPACE}/mhpasswordmanager-config-services"){
-                                sh "docker build -t ${project}-arm64/config-services:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/config-services:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/config-services", "${version}"
                                 sh "docker rmi ${project}-arm64/config-services:${version}"
                             }
 
                             // build image for mhpasswordmanager/api-gateway
                             dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway"){
-                                sh "docker build -t ${project}-arm64/api-gateway:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/api-gateway:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/api-gateway", "${version}"
                                 sh "docker rmi ${project}-arm64/api-gateway:${version}"
                             }
 
                             // build image for mhpasswordmanager/user-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-user-service"){
-                                sh "docker build -t ${project}-arm64/user-service:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/user-service:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/user-service", "${version}"
                                 sh "docker rmi ${project}-arm64/user-service:${version}"
                             }
 
                             // build image for mhpasswordmanager/oauth2-authorization-server
                             dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver"){
-                                sh "docker build -t ${project}-arm64/oauth2-authorization-server:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/oauth2-authorization-server:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/oauth2-authorization-server", "${version}"
                                 sh "docker rmi ${project}-arm64/oauth2-authorization-server:${version}"
                             }
 
                             // build image for mhpasswordmanager/password-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
-                                sh "docker build -t ${project}-arm64/password-service:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/password-service:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/password-service", "${version}"
                                 sh "docker rmi ${project}-arm64/password-service:${version}"
                             }
 
                             // build image for mhpasswordmanager/file-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-file-service"){
-                                sh "docker build -t ${project}-arm64/file-service:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/file-service:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/file-service", "${version}"
                                 sh "docker rmi ${project}-arm64/file-service:${version}"
                             }
 
                             // build image for mhpasswordmanager/email-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-email-service"){
-                                sh "docker build -t ${project}-arm64/email-service:${version} -f ./DockerfileJenkinsAmd64 ."
+                                sh "docker build -t ${project}-arm64/email-service:${version} -f ./DockerfileJenkinsArm64 ."
                                 deployImageInPrivateRegistry "${project}-arm64/email-service", "${version}"
                                 sh "docker rmi ${project}-arm64/email-service:${version}"
                             }
