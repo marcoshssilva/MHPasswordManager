@@ -7,6 +7,16 @@ pipeline {
         maven 'maven-default'
     }
     stages {
+        stage('Eureka Server - Compile, Tests and Deploy') {
+            agent{
+                label 'node1-ubuntu-amd64'
+            }
+            steps{
+                sh "mvn clean test install"
+                runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
+                sh "mvn deploy -Dmaven.test.skip=true"
+            }
+        }
         stage('Generating Docker images and push at Nexus Docker Registry') {
             steps{
                 parallel(
