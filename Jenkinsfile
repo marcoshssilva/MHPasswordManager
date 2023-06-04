@@ -38,6 +38,13 @@ pipeline {
                             // get stashed data
                             unstash(name: 'stashedData')
 
+                            // build image for mhpasswordmanager/service-discovery
+                            dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
+                                sh "docker build -t ${project}-arm64/service-registry:${version} -f ./DockerfileJenkins ."
+                                deployImageInPrivateRegistry "${project}-arm64/service-registry", "${version}"
+                                sh "docker rmi ${project}-arm64/service-registry:${version}"
+                            }
+
                             // build image for postgres
                             dir("${env.WORKSPACE}/postgres"){
                                 sh "docker build -t ${project}-arm64/postgres:${version} ."
@@ -82,6 +89,13 @@ pipeline {
                         node('node1-ubuntu-amd64') {
                             // get stashed data
                             unstash(name: 'stashedData')
+
+                            // build image for mhpasswordmanager/service-discovery
+                            dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
+                                sh "docker build -t ${project}/service-registry:${version} -f ./DockerfileJenkins ."
+                                deployImageInPrivateRegistry "${project}/service-registry", "${version}"
+                                sh "docker rmi ${project}/service-registry:${version}"
+                            }
 
                             // build image for postgres
                             dir("${env.WORKSPACE}/postgres"){
