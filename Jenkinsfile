@@ -7,6 +7,37 @@ pipeline {
         maven 'maven-default'
     }
     stages {
+        stage('Generating docker images in arch ARM64 and push at Nexus') {
+            agent{
+                label 'mestre'
+            }
+            steps{
+                // checkout branch
+                checkout scm
+
+                dir("${env.WORKSPACE}/postgres"){
+                    sh "docker build -t ${project}-arm64/postgres:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/postgres","${version}"
+                    sh "docker rmi ${project}-arm64/postgres:${version}"
+                }
+                dir("${env.WORKSPACE}/redis"){
+                    sh "docker build -t ${project}-arm64/redis:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/redis","${version}"
+                    sh "docker rmi ${project}-arm64/redis:${version}"
+                }
+                dir("${env.WORKSPACE}/mongo"){
+                    sh "docker build -t ${project}-arm64/mongo:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/mongo","${version}"
+                    sh "docker rmi ${project}-arm64/mongo:${version}"
+                }
+                dir("${env.WORKSPACE}/rabbitmq"){
+                    sh "docker build -t ${project}-arm64/rabbitmq:${version} ."
+                    deployImageInPrivateRegistry "${project}-arm64/rabbitmq","${version}"
+                    sh "docker rmi ${project}-arm64/rabbitmq:${version}"
+                }
+            }
+        }
+        
         stage('Generating docker images in arch AMD64 and push at Nexus') {
             agent{
                 label 'node1-ubuntu-amd64'
@@ -41,37 +72,6 @@ pipeline {
                     sh "docker build -t ${project}/rabbitmq:${version} ."
                     deployImageInPrivateRegistry "${project}/rabbitmq","${version}"
                     sh "docker rmi ${project}/rabbitmq:${version}"
-                }
-            }
-        }
-
-        stage('Generating docker images in arch ARM64 and push at Nexus') {
-            agent{
-                label 'mestre'
-            }
-            steps{
-                // checkout branch
-                checkout scm
-
-                dir("${env.WORKSPACE}/postgres"){
-                    sh "docker build -t ${project}-arm64/postgres:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/postgres","${version}"
-                    sh "docker rmi ${project}-arm64/postgres:${version}"
-                }
-                dir("${env.WORKSPACE}/redis"){
-                    sh "docker build -t ${project}-arm64/redis:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/redis","${version}"
-                    sh "docker rmi ${project}-arm64/redis:${version}"
-                }
-                dir("${env.WORKSPACE}/mongo"){
-                    sh "docker build -t ${project}-arm64/mongo:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/mongo","${version}"
-                    sh "docker rmi ${project}-arm64/mongo:${version}"
-                }
-                dir("${env.WORKSPACE}/rabbitmq"){
-                    sh "docker build -t ${project}-arm64/rabbitmq:${version} ."
-                    deployImageInPrivateRegistry "${project}-arm64/rabbitmq","${version}"
-                    sh "docker rmi ${project}-arm64/rabbitmq:${version}"
                 }
             }
         }
