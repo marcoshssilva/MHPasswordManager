@@ -1,4 +1,4 @@
-def NodeRunAMD64 = 'node1-ubuntu-amd64'
+def NodeRunAMD64 = 'node1-slave-ubuntu-amd64'
 def NodeRunARM64 = 'node-master-arm64'
 def NodeRunMaven = 'node-master-arm64'
 
