@@ -245,84 +245,84 @@ pipeline {
                             // build image for mhpasswordmanager/service-discovery
                             dir("${env.WORKSPACE}/mhpasswordmanager-service-registry"){
                                 sh "docker build -t ${project}/service-registry:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/service-registry", "${version}"
+                                deployImageInPrivateRegistry "${project}/service-registry", "${version}", true
                                 sh "docker rmi ${project}/service-registry:${version}"
                             }
 
                             // build image for mhpasswordmanager/config-services
                             dir("${env.WORKSPACE}/mhpasswordmanager-config-services"){
                                 sh "docker build -t ${project}/config-services:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/config-services", "${version}"
+                                deployImageInPrivateRegistry "${project}/config-services", "${version}", true
                                 sh "docker rmi ${project}/config-services:${version}"
                             }
 
                             // build image for mhpasswordmanager/api-gateway
                             dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway"){
                                 sh "docker build -t ${project}/api-gateway:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/api-gateway", "${version}"
+                                deployImageInPrivateRegistry "${project}/api-gateway", "${version}", true
                                 sh "docker rmi ${project}/api-gateway:${version}"
                             }
 
                             // build image for mhpasswordmanager/user-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-user-service"){
                                 sh "docker build -t ${project}/user-service:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/user-service", "${version}"
+                                deployImageInPrivateRegistry "${project}/user-service", "${version}", true
                                 sh "docker rmi ${project}/user-service:${version}"
                             }
 
                             // build image for mhpasswordmanager/oauth2-authorization-server
                             dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver"){
                                 sh "docker build -t ${project}/oauth2-authorization-server:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/oauth2-authorization-server", "${version}"
+                                deployImageInPrivateRegistry "${project}/oauth2-authorization-server", "${version}", true
                                 sh "docker rmi ${project}/oauth2-authorization-server:${version}"
                             }
 
                             // build image for mhpasswordmanager/password-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-password-service"){
                                 sh "docker build -t ${project}/password-service:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/password-service", "${version}"
+                                deployImageInPrivateRegistry "${project}/password-service", "${version}", true
                                 sh "docker rmi ${project}/password-service:${version}"
                             }
 
                             // build image for mhpasswordmanager/file-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-file-service"){
                                 sh "docker build -t ${project}/file-service:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/file-service", "${version}"
+                                deployImageInPrivateRegistry "${project}/file-service", "${version}", true
                                 sh "docker rmi ${project}/file-service:${version}"
                             }
 
                             // build image for mhpasswordmanager/email-service
                             dir("${env.WORKSPACE}/mhpasswordmanager-email-service"){
                                 sh "docker build -t ${project}/email-service:${version} -f ./DockerfileJenkinsAmd64 ."
-                                deployImageInPrivateRegistry "${project}/email-service", "${version}"
+                                deployImageInPrivateRegistry "${project}/email-service", "${version}", true
                                 sh "docker rmi ${project}/email-service:${version}"
                             }
 
                             // build image for postgres
                             dir("${env.WORKSPACE}/postgres"){
                                 sh "docker build -t ${project}/postgres:${version} ."
-                                deployImageInPrivateRegistry "${project}/postgres","${version}"
+                                deployImageInPrivateRegistry "${project}/postgres","${version}", true
                                 sh "docker rmi ${project}/postgres:${version}"
                             }
 
                             // build image for redis
                             dir("${env.WORKSPACE}/redis"){
                                 sh "docker build -t ${project}/redis:${version} ."
-                                deployImageInPrivateRegistry "${project}/redis","${version}"
+                                deployImageInPrivateRegistry "${project}/redis","${version}", true
                                 sh "docker rmi ${project}/redis:${version}"
                             }
 
                             // build image for mongo-db
                             dir("${env.WORKSPACE}/mongo"){
                                 sh "docker build -t ${project}/mongo:${version} ."
-                                deployImageInPrivateRegistry "${project}/mongo","${version}"
+                                deployImageInPrivateRegistry "${project}/mongo","${version}", true
                                 sh "docker rmi ${project}/mongo:${version}"
                             }
 
                             // build image for rabbitmq
                             dir("${env.WORKSPACE}/rabbitmq"){
                                 sh "docker build -t ${project}/rabbitmq:${version} ."
-                                deployImageInPrivateRegistry "${project}/rabbitmq","${version}"
+                                deployImageInPrivateRegistry "${project}/rabbitmq","${version}", true
                                 sh "docker rmi ${project}/rabbitmq:${version}"
                             }
 
