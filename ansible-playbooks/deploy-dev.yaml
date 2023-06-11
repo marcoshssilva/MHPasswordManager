@@ -15,16 +15,10 @@
     - name: Downloading new deploy configs
       get_url:
         url: 'https://nexus.apps.marcoshssilva.com.br/repository/raw-data/mypass-dev-cloud-dns-ph/docker/config-mypass-dev-cloud-dns-ph.zip'
-        dest: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
+        dest: /tmp/config-mypass-dev-cloud-dns-ph.zip
         headers:
           Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
-    - name: Give permissions to file
-      ansible.builtin.file:
-        path: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
-        owner: ubuntu
-        group: ubuntu
-        mode: '0777'
     - name: Unzip downloaded files
       ansible.builtin.unarchive:
-        src: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
+        src: /tmp/config-mypass-dev-cloud-dns-ph.zip
         dest: /home/ubuntu/config-mypass-dev/
