@@ -1,7 +1,6 @@
 ---
 - name: Deploy DEV-ENVIRONMENT in server
   hosts: server-3.marcoshssilva.com.br
-  become: true
   tasks:
     - name: Ping my host
       ansible.builtin.ping:
@@ -19,7 +18,4 @@
           Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
 
     - name: Unzip downloaded files
-      ansible.builtin.unarchive:
-        src: /tmp/config-mypass-dev-cloud-dns-ph.zip
-        dest: /home/ubuntu/config-mypass-dev
-        remote_src: false
+      command: sudo unzip /tmp/config-mypass-dev-cloud-dns-ph.zip -d /home/ubuntu/config-mypass-dev
