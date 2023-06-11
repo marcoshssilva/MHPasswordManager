@@ -8,18 +8,18 @@
 
     - name: Delete remaining file from old deploy
       ansible.builtin.file:
-        path: /tmp/configs-mypass.zip
+        path: /tmp/config-mypass-dev-cloud-dns-ph.zip
         state: absent
 
     - name: Downloading new deploy configs
       get_url:
         url: 'https://nexus.apps.marcoshssilva.com.br/repository/raw-data/mypass-dev-cloud-dns-ph/docker/config-mypass-dev-cloud-dns-ph.zip'
-        dest: /tmp/configs-mypass.zip
+        dest: /tmp/config-mypass-dev-cloud-dns-ph.zip
         headers:
           Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
 
     - name: Unzip downloaded files
       ansible.builtin.unarchive:
-        src: /tmp/configs-mypass.zip
-        dest: /home/ubuntu/config-mypass-dev/
+        src: /tmp/config-mypass-dev-cloud-dns-ph.zip
+        dest: /home/ubuntu/config-mypass-dev
         remote_src: false
