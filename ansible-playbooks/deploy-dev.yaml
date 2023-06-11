@@ -22,7 +22,6 @@
     - name: Unzip downloaded files and starting services
       changed_when: true
       ansible.builtin.shell: |
-        mkdir /home/ubuntu/my-pass-dev-environment/config-mypass-dev
         cd /tmp
         unzip -o config-mypass-dev-cloud-dns-ph.zip -d /home/ubuntu/my-pass-dev/config-mypass-dev
         cd /home/ubuntu/my-pass-dev/config-mypass-dev
