@@ -344,12 +344,12 @@ pipeline {
 
         stage('Deploy dev-environment in SERVER') {
             agent any
-            environment {
-                NEXUS3TOKEN = credentials('raw-data-user')
-            }
             steps {
                 dir("${env.WORKSPACE}/ansible-playbooks") {
-                    runAnsiblePlaybook('deploy-dev.yaml', 'NEXUS3_PASSWORD=$NEXUS3TOKEN')
+                    withCredentials([usernamePassword(credentialsId: 'raw-data-user', usernameVariable: 'NEXUS3_USER', passwordVariable: 'NEXUS3_PASS')])
+                        {
+                            runAnsiblePlaybook('deploy-dev.yaml', 'NEXUS3_PASSWORD=$NEXUS3PASS')
+                        }
                 }
             }
         }
