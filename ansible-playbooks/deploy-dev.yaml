@@ -23,7 +23,7 @@
         path: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
         owner: ubuntu
         group: ubuntu
-        mode: '0755'
+        mode: '0777'
     - name: Unzip downloaded files
       ansible.builtin.unarchive:
         src: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
