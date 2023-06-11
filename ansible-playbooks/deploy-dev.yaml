@@ -4,9 +4,21 @@
   tasks:
     - name: Ping my host
       ansible.builtin.ping:
-    - name: Downloading docker-compose-files
+    - name: Delete remaining file from old deploy
+      ansible.builtin.file:
+        path: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
+        state: absent
+    - name: Delete remaining directory from old deploy
+      ansible.builtin.file:
+        path: /home/ubuntu/config-mypass-dev
+        state: absent
+    - name: Downloading new deploy configs
       get_url:
         url: 'https://nexus.apps.marcoshssilva.com.br/repository/raw-data/mypass-dev-cloud-dns-ph/docker/config-mypass-dev-cloud-dns-ph.zip'
         dest: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
         headers:
           Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
+    - name: Unzip downloaded files
+      ansible.builtin.unarchive:
+        src: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
+        dest: /home/ubuntu/config-mypass-dev
