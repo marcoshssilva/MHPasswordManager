@@ -1,9 +1,8 @@
 ---
 - name: Deploy DEV-ENVIRONMENT in server
   hosts: server-3.marcoshssilva.com.br
-  become: yes
+  become: true
   tasks:
-
     - name: Ping my host
       ansible.builtin.ping:
 
