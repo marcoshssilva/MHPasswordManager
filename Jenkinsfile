@@ -348,7 +348,7 @@ pipeline {
                 dir("${env.WORKSPACE}/ansible-playbooks") {
                     withCredentials([usernamePassword(credentialsId: 'raw-data-user', usernameVariable: 'NEXUS3_USER', passwordVariable: 'NEXUS3_PASS')])
                         {
-                            runAnsiblePlaybook('deploy-dev.yaml', 'NEXUS3_PASSWORD=$NEXUS3PASS')
+                            runAnsiblePlaybook('deploy-dev.yaml', 'NEXUS3_PASSWORD=$NEXUS3_PASS')
                         }
                 }
             }
