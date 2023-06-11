@@ -345,7 +345,7 @@ pipeline {
         stage('Deploy dev-environment in SERVER') {
             agent any
             steps {
-                dir("${env.WORKSPACE}/ansible-deploy-dev-environment") {
+                dir("${env.WORKSPACE}/ansible-playbooks") {
                     runAnsiblePlaybook('deploy-dev.yaml')
                 }
             }
