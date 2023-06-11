@@ -4,18 +4,28 @@
   tasks:
     - name: Ping my host
       ansible.builtin.ping:
-
     - name: Delete remaining file from old deploy
       ansible.builtin.file:
         path: /tmp/config-mypass-dev-cloud-dns-ph.zip
         state: absent
-
     - name: Downloading new deploy configs
       get_url:
         url: 'https://nexus.apps.marcoshssilva.com.br/repository/raw-data/mypass-dev-cloud-dns-ph/docker/config-mypass-dev-cloud-dns-ph.zip'
         dest: /tmp/config-mypass-dev-cloud-dns-ph.zip
         headers:
           Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
-
-    - name: Unzip downloaded files
-      command: sudo unzip /tmp/config-mypass-dev-cloud-dns-ph.zip -d /home/ubuntu/config-mypass-dev
+    - name: Move folder old data to new directory with date
+      changed_when: true
+      ansible.builtin.shell: mv /home/ubuntu/my-pass-dev/config-mypass-dev /home/ubuntu/my-pass-dev/config-mypass-dev-$(date +%Y%m%d-%H%M%S)
+      args:
+        executable: /bin/bash
+    - name: Unzip downloaded files and starting services
+      changed_when: true
+      ansible.builtin.shell: |
+        cd /tmp
+        unzip -o config-mypass-dev-cloud-dns-ph.zip -d /home/ubuntu/my-pass-dev-environment/config-mypass-dev
+        cd /home/ubuntu/my-pass-dev-environment/config-mypass-dev
+        sh shutdown
+        sh startup
+      args:
+        executable: /bin/bash
