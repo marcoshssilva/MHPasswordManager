@@ -22,3 +22,4 @@
       ansible.builtin.unarchive:
         src: /tmp/configs-mypass.zip
         dest: /home/ubuntu/config-mypass-dev/
+        remote_src: false
