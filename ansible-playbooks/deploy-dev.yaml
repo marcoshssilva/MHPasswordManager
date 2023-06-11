@@ -10,7 +10,7 @@
         state: absent
     - name: Delete remaining directory from old deploy
       ansible.builtin.file:
-        path: /home/ubuntu/config-mypass-dev
+        path: /home/ubuntu/config-mypass-dev/
         state: absent
     - name: Downloading new deploy configs
       get_url:
@@ -27,4 +27,4 @@
     - name: Unzip downloaded files
       ansible.builtin.unarchive:
         src: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
-        dest: /home/ubuntu/config-mypass-dev
+        dest: /home/ubuntu/config-mypass-dev/
