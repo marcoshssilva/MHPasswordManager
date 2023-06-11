@@ -4,6 +4,14 @@
   tasks:
     - name: Ping my host
       ansible.builtin.ping:
+    - name: Install packages
+      ansible.builtin.apt:
+        pkg:
+          - zip
+          - unzip
+          - tar
+        state: present
+        become: true
     - name: Delete remaining file from old deploy
       ansible.builtin.file:
         path: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
