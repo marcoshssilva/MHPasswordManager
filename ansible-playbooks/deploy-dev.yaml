@@ -6,11 +6,7 @@
       ansible.builtin.ping:
     - name: Delete remaining file from old deploy
       ansible.builtin.file:
-        path: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
-        state: absent
-    - name: Delete remaining directory from old deploy
-      ansible.builtin.file:
-        path: /home/ubuntu/config-mypass-dev/
+        path: /tmp/config-mypass-dev-cloud-dns-ph.zip
         state: absent
     - name: Downloading new deploy configs
       get_url:
