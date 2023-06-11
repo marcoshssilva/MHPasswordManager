@@ -1,9 +1,12 @@
 ---
-- name: Testing connection
+- name: Deploy DEV-ENVIRONMENT in server
   hosts: server-3.marcoshssilva.com.br
   tasks:
-    - name: Ping my hosts
+    - name: Ping my host
       ansible.builtin.ping:
-    - name: Print message
-      ansible.builtin.debug:
-        msg: Hello world
+    - name: Downloading docker-compose-files
+      get_url:
+        url: 'https://nexus.apps.marcoshssilva.com.br/repository/raw-data/mypass-dev-cloud-dns-ph/docker/config-mypass-dev-cloud-dns-ph.zip'
+        dest: /home/ubuntu/config-mypass-dev-cloud-dns-ph.zip
+        headers:
+          Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
