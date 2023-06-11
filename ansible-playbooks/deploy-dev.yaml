@@ -2,19 +2,23 @@
 - name: Deploy DEV-ENVIRONMENT in server
   hosts: server-3.marcoshssilva.com.br
   tasks:
+
     - name: Ping my host
       ansible.builtin.ping:
+
     - name: Delete remaining file from old deploy
       ansible.builtin.file:
-        path: /tmp/config-mypass-dev-cloud-dns-ph.zip
+        path: /tmp/configs-mypass.zip
         state: absent
+
     - name: Downloading new deploy configs
       get_url:
         url: 'https://nexus.apps.marcoshssilva.com.br/repository/raw-data/mypass-dev-cloud-dns-ph/docker/config-mypass-dev-cloud-dns-ph.zip'
-        dest: /tmp/config-mypass-dev-cloud-dns-ph.zip
+        dest: /tmp/configs-mypass.zip
         headers:
           Authorization: 'Basic {{ NEXUS3_PASSWORD }}'
+
     - name: Unzip downloaded files
       ansible.builtin.unarchive:
-        src: /tmp/config-mypass-dev-cloud-dns-ph.zip
+        src: /tmp/configs-mypass.zip
         dest: /home/ubuntu/config-mypass-dev/
