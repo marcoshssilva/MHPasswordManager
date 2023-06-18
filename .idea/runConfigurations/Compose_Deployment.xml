@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Run PROJECT-COMPOSE" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envFilePath" value="" />
@@ -14,7 +14,7 @@
             <option value="redis-store" />
           </list>
         </option>
-        <option name="sourceFilePath" value="docker-compose-files/docker-compose.yml" />
+        <option name="sourceFilePath" value="docker/docker-compose.yml" />
       </settings>
     </deployment>
     <method v="2" />
