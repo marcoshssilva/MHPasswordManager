@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/MHPasswordManager.iml" filepath="$PROJECT_DIR$/.idea/MHPasswordManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/docker/docker.iml" filepath="$PROJECT_DIR$/docker/docker.iml" />
       <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-password-service/mhpasswordmanager.passwordservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-password-service/mhpasswordmanager.passwordservice.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-pwa-client/mhpasswordmanager.pwa.client.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-pwa-client/mhpasswordmanager.pwa.client.iml" />
       <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-user-service/mhpasswordmanager.userservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-user-service/mhpasswordmanager.userservice.iml" />
     </modules>
   </component>

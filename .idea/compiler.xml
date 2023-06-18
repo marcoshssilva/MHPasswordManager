@@ -19,26 +19,16 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="capacitor" target="11" />
-      <module name="MHPasswordManager-Flyway-Database-Migrations" target="11" />
-      <module name="mhpasswordmanager-frontend-client" target="11" />
-      <module name="mhpasswordmanager.flyway.database.migrations.tool" target="17" />
-      <module name="mhpasswordmanager.frontend.client" target="11" />
-      <module name="mhpasswordmanager.pwa-client" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="MHPasswordManager-Flyway-Database-Migrations" options="-parameters" />
-      <module name="mhpasswordmanager-frontend-client" options="-parameters" />
       <module name="mhpasswordmanager.api.gateway" options="-parameters" />
       <module name="mhpasswordmanager.configservices" options="-parameters" />
       <module name="mhpasswordmanager.emailservice" options="-parameters" />
       <module name="mhpasswordmanager.fileservice" options="-parameters" />
-      <module name="mhpasswordmanager.flyway.database.migrations.tool" options="-parameters" />
-      <module name="mhpasswordmanager.frontend.client" options="-parameters" />
       <module name="mhpasswordmanager.oauth2.authorization.server" options="-parameters" />
       <module name="mhpasswordmanager.passwordservice" options="-parameters" />
-      <module name="mhpasswordmanager.pwa-client" options="-parameters" />
       <module name="mhpasswordmanager.service.registry" options="-parameters" />
       <module name="mhpasswordmanager.userservice" options="-parameters" />
     </option>
