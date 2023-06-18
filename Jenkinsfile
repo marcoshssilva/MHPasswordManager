@@ -1,8 +1,7 @@
 pipeline {
-    agent none
+    agent any
     stages {
         stage('Eureka Server - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
                     // maven cycle
@@ -12,7 +11,6 @@ pipeline {
         }
 
         stage('Config-Services - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
                     // maven cycle
@@ -22,7 +20,6 @@ pipeline {
         }
 
         stage('API-Gateway - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
                     // maven cycle
@@ -32,7 +29,6 @@ pipeline {
         }
 
         stage('OAuth2-Authorization-Server - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
                     // maven cycle
@@ -42,7 +38,6 @@ pipeline {
         }
 
         stage('User-Service - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
                     // maven cycle
@@ -52,7 +47,6 @@ pipeline {
         }
 
         stage('Password-Service - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
                     // maven cycle
@@ -62,7 +56,6 @@ pipeline {
         }
 
         stage('File-Service - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
                     // maven cycle
@@ -72,7 +65,6 @@ pipeline {
         }
 
         stage('Email-Service - Compile, Tests and Deploy') {
-            agent any
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
                     // maven cycle
