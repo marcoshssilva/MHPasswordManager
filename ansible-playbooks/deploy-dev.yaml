@@ -1,6 +1,6 @@
 ---
 - name: Deploy DEV-ENVIRONMENT in server
-  hosts: server-3.marcoshssilva.com.br
+  hosts: example.of.host
   tasks:
     - name: Ping my host
       ansible.builtin.ping:
