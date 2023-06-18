@@ -6,6 +6,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -15,6 +16,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -24,6 +26,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -33,6 +36,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -42,6 +46,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -51,6 +56,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -60,6 +66,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
@@ -69,6 +76,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
