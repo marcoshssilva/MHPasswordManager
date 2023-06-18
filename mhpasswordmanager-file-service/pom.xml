@@ -134,12 +134,12 @@
 		<repository>
 			<id>nexus-deploy</id>
 			<name>nexus-release</name>
-			<url>https://nexus.apps.marcoshssilva.com.br/repository/maven-releases/</url>
+			<url>https://app-nx.marcoshssilva.com.br/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-deploy</id>
 			<name>nexus-snapshot</name>
-			<url>https://nexus.apps.marcoshssilva.com.br/repository/maven-snapshots/</url>
+			<url>https://app-nx.marcoshssilva.com.br/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -171,7 +171,7 @@
 				</executions>
 				<configuration>
 					<serverId>nexus-deploy</serverId>
-					<nexusUrl>https://nexus.apps.marcoshssilva.com.br/</nexusUrl>
+					<nexusUrl>https://app-nx.marcoshssilva.com.br/</nexusUrl>
 					<skipStaging>true</skipStaging>
 				</configuration>
 			</plugin>
@@ -215,7 +215,7 @@
 		<repository>
 			<id>nexus-deploy</id>
 			<name>Nexus Repository Maven Public</name>
-			<url>https://nexus.apps.marcoshssilva.com.br/repository/maven-public/</url>
+			<url>https://app-nx.marcoshssilva.com.br/repository/maven-public/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -229,7 +229,7 @@
 		<pluginRepository>
 			<id>nexus-deploy</id>
 			<name>Nexus Repository Maven Public</name>
-			<url>https://nexus.apps.marcoshssilva.com.br/repository/maven-public/</url>
+			<url>https://app-nx.marcoshssilva.com.br/repository/maven-public/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
