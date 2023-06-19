@@ -6,6 +6,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -16,6 +17,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -26,6 +28,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -36,6 +39,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -46,6 +50,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -56,6 +61,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -66,6 +72,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
@@ -76,6 +83,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
                     // maven cycle
                     sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
                     sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
