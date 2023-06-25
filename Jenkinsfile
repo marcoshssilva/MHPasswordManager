@@ -1,6 +1,12 @@
 def projectName = 'mhpassword-manager'
 def projectFolders = ['mhpasswordmanager-service-registry', 'mhpasswordmanager-config-services', 'mhpasswordmanager-api-gateway', 'mhpasswordmanager-oauth2-authorizationserver', 'mhpasswordmanager-user-service', 'mhpasswordmanager-password-service', 'mhpasswordmanager-email-service', 'mhpasswordmanager-file-service']
 
+def deployArtifactWithMaven(String dir) {
+    dir("${env.WORKSPACE}/${dir}") {
+        sh "mvn deploy -Dmaven.test.skip=true"
+    }
+}
+
 pipeline {
     agent any
     stages {
@@ -142,13 +148,7 @@ pipeline {
 
         stage('Deploy artifacts in Nexus Registry') {
             steps {
-                projectFolders.each {
-                    project -> {
-                        dir("${env.WORKSPACE}/${project}") {
-                            sh "mvn deploy -Dmaven.test.skip=true"
-                        }
-                    }
-                }
+                projectFolders.each { project -> { deployArtifactWithMaven(project) } }
             }
         }
 
