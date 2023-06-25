@@ -142,9 +142,11 @@ pipeline {
 
         stage('Deploy artifacts in Nexus Registry') {
             steps {
-                for (project in projectFolders) {
-                    dir("${env.WORKSPACE}/${project}") {
-                        sh "mvn deploy -Dmaven.test.skip=true"
+                projectFolders.each {
+                    project -> {
+                        dir("${env.WORKSPACE}/${project}") {
+                            sh "mvn deploy -Dmaven.test.skip=true"
+                        }
                     }
                 }
             }
