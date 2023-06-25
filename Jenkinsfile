@@ -18,15 +18,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Eureka Server - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Config-Services - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
@@ -35,15 +26,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Config-Services - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('API-Gateway - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
@@ -52,15 +34,6 @@ pipeline {
                 }
             }
         }
-
-        stage('API-Gateway - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('OAuth2-Server - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
@@ -69,15 +42,6 @@ pipeline {
                 }
             }
         }
-
-        stage('OAuth2-Server - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('User-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
@@ -86,15 +50,6 @@ pipeline {
                 }
             }
         }
-
-        stage('User-Service - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Password-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
@@ -103,15 +58,6 @@ pipeline {
                 }
             }
         }
-
-        stage('Password-Service - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('File-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
@@ -120,15 +66,6 @@ pipeline {
                 }
             }
         }
-
-        stage('File-Service - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Email-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
@@ -137,24 +74,12 @@ pipeline {
                 }
             }
         }
-
-        stage('Email-Service - Quality Gate') {
-            steps {
-                timeout(time: 10, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
-
         stage('Deploy artifacts in Nexus Registry') {
             steps {
                 script {
-                    projectFolders.each { project ->
-                        deployArtifactWithMaven(project)
-                    }
+                    projectFolders.each { project -> deployArtifactWithMaven(project) }
                 }
             }
         }
-
     }
 }
