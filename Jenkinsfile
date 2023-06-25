@@ -90,9 +90,6 @@ pipeline {
             }
         }
         stage('Create Docker images for Mongo, Postgres, RabbitMQ and Redis') {
-            agent {
-                label 'amd64'
-            }
             steps {
                 // build image for postgres
                 dir("${env.WORKSPACE}/postgres"){
