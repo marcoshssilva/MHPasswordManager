@@ -90,34 +90,82 @@ pipeline {
                 }
             }
         }
-        stage('Create Docker images for Mongo, Postgres, RabbitMQ and Redis') {
+
+        stage('Create Docker x86/64 images for Mongo, Postgres, RabbitMQ and Redis') {
+            agent{
+                label 'amd64'
+            }
             steps {
                 // build image for postgres
                 dir("${env.WORKSPACE}/postgres"){
-                    sh "docker build -t ${projectName}/postgres:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    sh "docker build -t ${projectName}/postgres:${projectVersion} ."
                     deployImageInPrivateRegistry "${projectName}/postgres","${projectVersion}", true
                     sh "docker rmi ${projectName}/postgres:${projectVersion}"
                 }
 
                 // build image for redis
                 dir("${env.WORKSPACE}/redis"){
-                    sh "docker build -t ${projectName}/redis:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    sh "docker build -t ${projectName}/redis:${projectVersion} ."
                     deployImageInPrivateRegistry "${projectName}/redis","${projectVersion}", true
                     sh "docker rmi ${projectName}/redis:${projectVersion}"
                 }
 
                 // build image for mongo-db
                 dir("${env.WORKSPACE}/mongo"){
-                    sh "docker build -t ${projectName}/mongo:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    sh "docker build -t ${projectName}/mongo:${projectVersion} ."
                     deployImageInPrivateRegistry "${projectName}/mongo","${projectVersion}", true
                     sh "docker rmi ${projectName}/mongo:${projectVersion}"
                 }
 
                 // build image for rabbitmq
                 dir("${env.WORKSPACE}/rabbitmq"){
-                    sh "docker build -t ${projectName}/rabbitmq:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    sh "docker build -t ${projectName}/rabbitmq:${projectVersion} ."
                     deployImageInPrivateRegistry "${projectName}/rabbitmq","${projectVersion}", true
                     sh "docker rmi ${projectName}/rabbitmq:${projectVersion}"
+                }
+
+                script {
+                    // cleaning docker dangling images
+                    try {
+                        sh "docker rmi --force \$(docker images -f dangling=true)"
+                    } catch(err) {
+                        echo "OK. Should have error."
+                    }
+                }
+            }
+        }
+
+        stage('Create Docker arm64/v8 images for Mongo, Postgres, RabbitMQ and Redis') {
+            agent{
+                label 'arm64'
+            }
+            steps {
+                // build image for postgres
+                dir("${env.WORKSPACE}/postgres"){
+                    sh "docker build -t arm64-${projectName}/postgres:${projectVersion} ."
+                    deployImageInPrivateRegistry "arm64-${projectName}/postgres","${projectVersion}", true
+                    sh "docker rmi arm64-${projectName}/postgres:${projectVersion}"
+                }
+
+                // build image for redis
+                dir("${env.WORKSPACE}/redis"){
+                    sh "docker build -t arm64-${projectName}/redis:${projectVersion} ."
+                    deployImageInPrivateRegistry "arm64-${projectName}/redis","${projectVersion}", true
+                    sh "docker rmi arm64-${projectName}/redis:${projectVersion}"
+                }
+
+                // build image for mongo-db
+                dir("${env.WORKSPACE}/mongo"){
+                    sh "docker build -t arm64-${projectName}/mongo:${projectVersion} ."
+                    deployImageInPrivateRegistry "arm64-${projectName}/mongo","${projectVersion}", true
+                    sh "docker rmi arm64-${projectName}/mongo:${projectVersion}"
+                }
+
+                // build image for rabbitmq
+                dir("${env.WORKSPACE}/rabbitmq"){
+                    sh "docker build -t arm64-${projectName}/rabbitmq:${projectVersion} ."
+                    deployImageInPrivateRegistry "arm64-${projectName}/rabbitmq","${projectVersion}", true
+                    sh "docker rmi arm64-${projectName}/rabbitmq:${projectVersion}"
                 }
 
                 script {
