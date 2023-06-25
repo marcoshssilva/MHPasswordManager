@@ -89,5 +89,48 @@ pipeline {
                 }
             }
         }
+        stage('Create Docker images for Mongo, Postgres, RabbitMQ and Redis') {
+            agent {
+                label 'amd64'
+            }
+            steps {
+                // build image for postgres
+                dir("${env.WORKSPACE}/postgres"){
+                    sh "docker build -t ${project}/postgres:${version} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${project}/postgres","${version}", true
+                    sh "docker rmi ${project}/postgres:${version}"
+                }
+
+                // build image for redis
+                dir("${env.WORKSPACE}/redis"){
+                    sh "docker build -t ${project}/redis:${version} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${project}/redis","${version}", true
+                    sh "docker rmi ${project}/redis:${version}"
+                }
+
+                // build image for mongo-db
+                dir("${env.WORKSPACE}/mongo"){
+                    sh "docker build -t ${project}/mongo:${version} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${project}/mongo","${version}", true
+                    sh "docker rmi ${project}/mongo:${version}"
+                }
+
+                // build image for rabbitmq
+                dir("${env.WORKSPACE}/rabbitmq"){
+                    sh "docker build -t ${project}/rabbitmq:${version} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${project}/rabbitmq","${version}", true
+                    sh "docker rmi ${project}/rabbitmq:${version}"
+                }
+
+                script {
+                    // cleaning docker dangling images
+                    try {
+                        sh "docker rmi --force \$(docker images -f dangling=true)"
+                    } catch(err) {
+                        echo "OK. Always return error."
+                    }
+                }
+            }
+        }
     }
 }
