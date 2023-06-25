@@ -1,4 +1,5 @@
-def projectName = 'mhpassword-manager'
+def projectName    = 'mhpassword-manager'
+def projectVersion = '1.0.0-SNAPSHOT'
 def projectFolders = ['mhpasswordmanager-service-registry', 'mhpasswordmanager-config-services', 'mhpasswordmanager-api-gateway', 'mhpasswordmanager-oauth2-authorizationserver', 'mhpasswordmanager-user-service', 'mhpasswordmanager-password-service', 'mhpasswordmanager-email-service', 'mhpasswordmanager-file-service']
 
 def deployArtifactWithMaven(String dir) {
@@ -93,30 +94,30 @@ pipeline {
             steps {
                 // build image for postgres
                 dir("${env.WORKSPACE}/postgres"){
-                    sh "docker build -t ${project}/postgres:${version} --platform=linux/arm64,linux/amd64 ."
-                    deployImageInPrivateRegistry "${project}/postgres","${version}", true
-                    sh "docker rmi ${project}/postgres:${version}"
+                    sh "docker build -t ${projectName}/postgres:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${projectName}/postgres","${projectVersion}", true
+                    sh "docker rmi ${projectName}/postgres:${projectVersion}"
                 }
 
                 // build image for redis
                 dir("${env.WORKSPACE}/redis"){
-                    sh "docker build -t ${project}/redis:${version} --platform=linux/arm64,linux/amd64 ."
-                    deployImageInPrivateRegistry "${project}/redis","${version}", true
-                    sh "docker rmi ${project}/redis:${version}"
+                    sh "docker build -t ${projectName}/redis:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${projectName}/redis","${projectVersion}", true
+                    sh "docker rmi ${projectName}/redis:${projectVersion}"
                 }
 
                 // build image for mongo-db
                 dir("${env.WORKSPACE}/mongo"){
-                    sh "docker build -t ${project}/mongo:${version} --platform=linux/arm64,linux/amd64 ."
-                    deployImageInPrivateRegistry "${project}/mongo","${version}", true
-                    sh "docker rmi ${project}/mongo:${version}"
+                    sh "docker build -t ${projectName}/mongo:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${projectName}/mongo","${projectVersion}", true
+                    sh "docker rmi ${projectName}/mongo:${projectVersion}"
                 }
 
                 // build image for rabbitmq
                 dir("${env.WORKSPACE}/rabbitmq"){
-                    sh "docker build -t ${project}/rabbitmq:${version} --platform=linux/arm64,linux/amd64 ."
-                    deployImageInPrivateRegistry "${project}/rabbitmq","${version}", true
-                    sh "docker rmi ${project}/rabbitmq:${version}"
+                    sh "docker build -t ${projectName}/rabbitmq:${projectVersion} --platform=linux/arm64,linux/amd64 ."
+                    deployImageInPrivateRegistry "${projectName}/rabbitmq","${projectVersion}", true
+                    sh "docker rmi ${projectName}/rabbitmq:${projectVersion}"
                 }
 
                 script {
