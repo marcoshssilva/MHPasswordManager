@@ -148,7 +148,11 @@ pipeline {
 
         stage('Deploy artifacts in Nexus Registry') {
             steps {
-                projectFolders.each { project -> { deployArtifactWithMaven(project) } }
+                script {
+                    projectFolders.each { project ->
+                        deployArtifactWithMaven(project)
+                    }
+                }
             }
         }
 
