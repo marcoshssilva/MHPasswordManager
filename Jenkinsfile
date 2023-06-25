@@ -1,92 +1,154 @@
+def projectName = 'mhpassword-manager'
+def projectFolders = ['mhpasswordmanager-service-registry', 'mhpasswordmanager-config-services', 'mhpasswordmanager-api-gateway', 'mhpasswordmanager-oauth2-authorizationserver', 'mhpasswordmanager-user-service', 'mhpasswordmanager-password-service', 'mhpasswordmanager-email-service', 'mhpasswordmanager-file-service']
+
 pipeline {
     agent any
     stages {
-        stage('Eureka Server - Compile, Tests and Deploy') {
+        stage('Eureka Server - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('Config-Services - Compile, Tests and Deploy') {
+        stage('Eureka Server - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Config-Services - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('API-Gateway - Compile, Tests and Deploy') {
+        stage('Config-Services - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('API-Gateway - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('OAuth2-Authorization-Server - Compile, Tests and Deploy') {
+        stage('API-Gateway - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('OAuth2-Server - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('User-Service - Compile, Tests and Deploy') {
+        stage('OAuth2-Server - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('User-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('Password-Service - Compile, Tests and Deploy') {
+        stage('User-Service - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Password-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('File-Service - Compile, Tests and Deploy') {
+        stage('Password-Service - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('File-Service - Compile and Tests') {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
-                    // maven cycle
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
-                    sh "mvn deploy -Dmaven.test.skip=true"
                 }
             }
         }
 
-        stage('Email-Service - Compile, Tests and Deploy') {
+        stage('File-Service - Quality Gate') {
             steps {
-                dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
-                    // maven cycle
-                    sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
-                    sh "mvn deploy -Dmaven.test.skip=true"
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
                 }
             }
         }
+
+        stage('Email-Service - Compile and Tests') {
+            steps {
+                dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
+                    sh "mvn clean test install"
+                    runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
+                }
+            }
+        }
+
+        stage('Email-Service - Quality Gate') {
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
+        stage('Deploy artifacts in Nexus Registry') {
+            steps {
+                for (project in projectFolders) {
+                    dir("${env.WORKSPACE}/${project}") {
+                        sh "mvn deploy -Dmaven.test.skip=true"
+                    }
+                }
+            }
+        }
+
     }
 }
