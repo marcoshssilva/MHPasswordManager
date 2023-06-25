@@ -77,7 +77,7 @@ pipeline {
         stage('Deploy artifacts in Nexus Registry') {
             steps {
                 script {
-                    dir("${env.WORKSPACE}/${dir}") {
+                    dir("${env.WORKSPACE}") {
                         projectFolders.each { project -> deployArtifactWithMaven(project) }
                     }
                 }
