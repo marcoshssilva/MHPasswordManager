@@ -127,7 +127,7 @@ pipeline {
                     try {
                         sh "docker rmi --force \$(docker images -f dangling=true)"
                     } catch(err) {
-                        echo "OK. Always return error."
+                        echo "OK. Should have error."
                     }
                 }
             }
