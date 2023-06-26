@@ -6,14 +6,14 @@ def deployArtifactWithMaven(String dir) {
     sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true && cd .."
 }
 
-def deployImagesArm64(String dir, String projName, String projVersion, String path) {
-    sh "cd ${dir} && docker build -t arm64-${projName}/${dir}:${projVersion} ${path}/${dir}/DockerfileJenkinsAmd64 && cd .."
+def deployImagesArm64(String dir, String projName, String projVersion) {
+    sh "cd ${dir} && docker build -t arm64-${projName}/${dir}:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
     deployImageInPrivateRegistry "arm64-${projName}/${dir}", "${projVersion}", true
     sh "docker rmi arm64-${projName}/${dir}:${projVersion}"
 }
 
-def deployImagesX64(String dir, String projName, String projVersion, String path) {
-    sh "cd ${dir} && docker build -t ${projName}/${dir}:${projVersion} ${path}/${dir}/DockerfileJenkinsArm64 && cd .."
+def deployImagesX64(String dir, String projName, String projVersion) {
+    sh "cd ${dir} && docker build -t ${projName}/${dir}:${projVersion} ./DockerfileJenkinsArm64 && cd .."
     deployImageInPrivateRegistry "${projName}/${dir}", "${projVersion}", true
     sh "docker rmi ${projName}/${dir}:${projVersion}"
 }
@@ -197,7 +197,7 @@ pipeline {
                 script {
                     dir("${env.WORKSPACE}") {
                         unstash name: 'MHPasswordManager'
-                        projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion, env.WORKSPACE) }
+                        projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion) }
                     }
                 }
             }
@@ -211,7 +211,7 @@ pipeline {
                 script {
                     dir("${env.WORKSPACE}") {
                         unstash name: 'MHPasswordManager'
-                        projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion, env.WORKSPACE) }
+                        projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion) }
                     }
                 }
             }
