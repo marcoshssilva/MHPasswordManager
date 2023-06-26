@@ -7,14 +7,14 @@ def deployArtifactWithMaven(String dir) {
 }
 
 def deployImagesArm64(String dir) {
-    unstash(name: dir)
+    unstash(name: "${dir}")
     sh "cd ${dir} && docker build -t arm64-${projectName}/redis:${projectVersion} ./DockerfileJenkinsAmd64 && cd .."
     deployImageInPrivateRegistry "arm64-${projectName}/service-registry", "${projectVersion}", true
     sh "docker rmi arm64-${projectName}/service-registry:${projectVersion}"
 }
 
 def deployImagesX64(String dir) {
-    unstash(name: dir)
+    unstash(name: "${dir}")
     sh "cd ${dir} && docker build -t ${projectName}/redis:${projectVersion} ./DockerfileJenkinsArm64 && cd .."
     deployImageInPrivateRegistry "${projectName}/service-registry", "${projectVersion}", true
     sh "docker rmi ${projectName}/service-registry:${projectVersion}"
