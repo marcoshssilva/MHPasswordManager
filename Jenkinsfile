@@ -7,15 +7,15 @@ def deployArtifactWithMaven(String dir) {
 }
 
 def deployImagesArm64(String dir, String projName, String projVersion) {
-    sh "cd ${dir} && docker build -t arm64-${projName}/${dir}:${projVersion} ./DockerfileJenkinsArm64 && cd .."
-    deployImageInPrivateRegistry "arm64-${projName}/${dir}", "${projVersion}", true
-    sh "docker rmi arm64-${projName}/${dir}:${projVersion}"
+    sh "cd ${dir} && docker build -t arm64-${dir}:${projVersion} ./DockerfileJenkinsArm64 && cd .."
+    deployImageInPrivateRegistry "arm64-${dir}", "${projVersion}", true
+    sh "docker rmi arm64-${dir}:${projVersion}"
 }
 
 def deployImagesX64(String dir, String projName, String projVersion) {
-    sh "cd ${dir} && docker build -t ${projName}/${dir}:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
-    deployImageInPrivateRegistry "${projName}/${dir}", "${projVersion}", true
-    sh "docker rmi ${projName}/${dir}:${projVersion}"
+    sh "cd ${dir} && docker build -t ${dir}:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
+    deployImageInPrivateRegistry "${dir}", "${projVersion}", true
+    sh "docker rmi ${dir}:${projVersion}"
 }
 
 pipeline {
@@ -202,8 +202,8 @@ pipeline {
         }
 
         stage('Create Docker images arm64/v8 to artifacts') {
-            agent{
-                label 'amd64'
+            agent {
+                label 'arm64'
             }
             steps {
                 script {
