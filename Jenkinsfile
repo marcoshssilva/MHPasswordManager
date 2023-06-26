@@ -6,6 +6,18 @@ def deployArtifactWithMaven(String dir) {
     sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true && cd .."
 }
 
+def deployImagesArm64(String dir) {
+    sh "cd ${dir} && docker build -t arm64-${projectName}/redis:${projectVersion} ./DockerfileJenkinsAmd64 && cd .."
+    deployImageInPrivateRegistry "arm64-${projectName}/service-registry", "${projectVersion}", true
+    sh "docker rmi arm64-${projectName}/service-registry:${projectVersion}"
+}
+
+def deployImagesX64(String dir) {
+    sh "cd ${dir} && docker build -t ${projectName}/redis:${projectVersion} ./DockerfileJenkinsArm64 && cd .."
+    deployImageInPrivateRegistry "${projectName}/service-registry", "${projectVersion}", true
+    sh "docker rmi ${projectName}/service-registry:${projectVersion}"
+}
+
 pipeline {
     agent any
     stages {
@@ -174,6 +186,32 @@ pipeline {
                         sh "docker rmi --force \$(docker images -f dangling=true)"
                     } catch(err) {
                         echo "OK. Should have error."
+                    }
+                }
+            }
+        }
+
+        stage('Create Docker images x86/64 to artifacts') {
+            agent{
+                label 'amd64'
+            }
+            steps {
+                script {
+                    dir("${env.WORKSPACE}") {
+                        projectFolders.each { project -> deployImagesX64(project) }
+                    }
+                }
+            }
+        }
+
+        stage('Create Docker images arm64/v8 to artifacts') {
+            agent{
+                label 'amd64'
+            }
+            steps {
+                script {
+                    dir("${env.WORKSPACE}") {
+                        projectFolders.each { project -> deployImagesArm64(project) }
                     }
                 }
             }
