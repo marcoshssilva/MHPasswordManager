@@ -7,12 +7,14 @@ def deployArtifactWithMaven(String dir) {
 }
 
 def deployImagesArm64(String dir) {
+    unstash(name: dir)
     sh "cd ${dir} && docker build -t arm64-${projectName}/redis:${projectVersion} ./DockerfileJenkinsAmd64 && cd .."
     deployImageInPrivateRegistry "arm64-${projectName}/service-registry", "${projectVersion}", true
     sh "docker rmi arm64-${projectName}/service-registry:${projectVersion}"
 }
 
 def deployImagesX64(String dir) {
+    unstash(name: dir)
     sh "cd ${dir} && docker build -t ${projectName}/redis:${projectVersion} ./DockerfileJenkinsArm64 && cd .."
     deployImageInPrivateRegistry "${projectName}/service-registry", "${projectVersion}", true
     sh "docker rmi ${projectName}/service-registry:${projectVersion}"
@@ -26,7 +28,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-Service-Discovery"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-service-registry"
                 }
             }
         }
@@ -35,7 +37,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-ConfigServices"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-config-services"
                 }
             }
         }
@@ -44,7 +46,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-API-Gateway"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-api-gateway"
                 }
             }
         }
@@ -53,7 +55,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-OAuth2-Authorization-Server"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-oauth2-authorizationserver"
                 }
             }
         }
@@ -62,7 +64,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-UserService"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-user-service"
                 }
             }
         }
@@ -71,7 +73,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-PasswordService"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-password-service"
                 }
             }
         }
@@ -80,7 +82,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-FileService"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-file-service"
                 }
             }
         }
@@ -89,7 +91,7 @@ pipeline {
                 dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
                     sh "mvn clean test install"
                     runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
-                    stash includes: "target/*.jar", name: "MHPasswordManager-EmailService"
+                    stash includes: "target/*.jar", name: "mhpasswordmanager-email-service"
                 }
             }
         }
