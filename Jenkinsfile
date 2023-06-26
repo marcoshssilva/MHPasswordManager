@@ -6,18 +6,18 @@ def deployArtifactWithMaven(String dir) {
     sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true && cd .."
 }
 
-def deployImagesArm64(String dir) {
+def deployImagesArm64(String dir, String projName, String projVersion) {
     unstash(name: "${dir}")
-    sh "cd ${dir} && docker build -t arm64-${projectName}/redis:${projectVersion} ./DockerfileJenkinsAmd64 && cd .."
-    deployImageInPrivateRegistry "arm64-${projectName}/service-registry", "${projectVersion}", true
-    sh "docker rmi arm64-${projectName}/service-registry:${projectVersion}"
+    sh "cd ${dir} && docker build -t arm64-${projName}/redis:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
+    deployImageInPrivateRegistry "arm64-${projName}/service-registry", "${projVersion}", true
+    sh "docker rmi arm64-${projName}/service-registry:${projVersion}"
 }
 
-def deployImagesX64(String dir) {
+def deployImagesX64(String dir, String projName, String projVersion) {
     unstash(name: "${dir}")
-    sh "cd ${dir} && docker build -t ${projectName}/redis:${projectVersion} ./DockerfileJenkinsArm64 && cd .."
-    deployImageInPrivateRegistry "${projectName}/service-registry", "${projectVersion}", true
-    sh "docker rmi ${projectName}/service-registry:${projectVersion}"
+    sh "cd ${dir} && docker build -t ${projName}/redis:${projVersion} ./DockerfileJenkinsArm64 && cd .."
+    deployImageInPrivateRegistry "${projName}/service-registry", "${projVersion}", true
+    sh "docker rmi ${projName}/service-registry:${projVersion}"
 }
 
 pipeline {
@@ -200,7 +200,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        projectFolders.each { project -> deployImagesX64(project) }
+                        projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion) }
                     }
                 }
             }
@@ -213,7 +213,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        projectFolders.each { project -> deployImagesArm64(project) }
+                        projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion) }
                     }
                 }
             }
