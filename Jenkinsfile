@@ -13,7 +13,7 @@ def deployImagesArm64(String dir, String projName, String projVersion, String pa
     sh "docker rmi arm64-${projName}/${dir}:${projVersion}"
 }
 
-def deployImagesX64(String dir, String projName, String projVersion) {
+def deployImagesX64(String dir, String projName, String projVersion, String path) {
     unstash(name: "${dir}")
     sh "cd ${dir} && docker build -t ${projName}/${dir}:${projVersion} ${path}/${dir}/DockerfileJenkinsArm64 && cd .."
     deployImageInPrivateRegistry "${projName}/${dir}", "${projVersion}", true
