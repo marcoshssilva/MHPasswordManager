@@ -7,13 +7,13 @@ def deployArtifactWithMaven(String dir) {
 }
 
 def deployImagesArm64(String dir, String projName, String projVersion) {
-    sh "cd ${dir} && docker build -t arm64-${projName}/${dir}:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
+    sh "cd ${dir} && docker build -t arm64-${projName}/${dir}:${projVersion} ./DockerfileJenkinsArm64 && cd .."
     deployImageInPrivateRegistry "arm64-${projName}/${dir}", "${projVersion}", true
     sh "docker rmi arm64-${projName}/${dir}:${projVersion}"
 }
 
 def deployImagesX64(String dir, String projName, String projVersion) {
-    sh "cd ${dir} && docker build -t ${projName}/${dir}:${projVersion} ./DockerfileJenkinsArm64 && cd .."
+    sh "cd ${dir} && docker build -t ${projName}/${dir}:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
     deployImageInPrivateRegistry "${projName}/${dir}", "${projVersion}", true
     sh "docker rmi ${projName}/${dir}:${projVersion}"
 }
@@ -195,10 +195,8 @@ pipeline {
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}") {
-                        unstash name: 'MHPasswordManager'
-                        projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion) }
-                    }
+                    unstash name: 'MHPasswordManager'
+                    projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion) }
                 }
             }
         }
@@ -209,10 +207,8 @@ pipeline {
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}") {
-                        unstash name: 'MHPasswordManager'
-                        projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion) }
-                    }
+                    unstash name: 'MHPasswordManager'
+                    projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion) }
                 }
             }
         }
