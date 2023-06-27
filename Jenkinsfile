@@ -7,15 +7,15 @@ def deployArtifactWithMaven(String dir) {
 }
 
 def deployImagesArm64(String dir, String projName, String projVersion) {
-    sh "docker build -t arm64-${dir}:${projVersion} -f ${dir}/DockerfileJenkinsArm64 ${dir}"
-    deployImageInPrivateRegistry "arm64-${dir}", "${projVersion}", true
-    sh "docker rmi arm64-${dir}:${projVersion}"
+    sh "docker build -t arm64-${projName}/${dir}:${projVersion} -f ${dir}/DockerfileJenkinsArm64 ${dir}"
+    deployImageInPrivateRegistry "arm64-${projName}/${dir}", "${projVersion}", true
+    sh "docker rmi arm64-${projName}/${dir}:${projVersion}"
 }
 
 def deployImagesX64(String dir, String projName, String projVersion) {
-    sh "docker build -t ${dir}:${projVersion} -f ${dir}/DockerfileJenkinsAmd64 ${dir}"
-    deployImageInPrivateRegistry "${dir}", "${projVersion}", true
-    sh "docker rmi ${dir}:${projVersion}"
+    sh "docker build -t ${projName}/${dir}:${projVersion} -f ${dir}/DockerfileJenkinsAmd64 ${dir}"
+    deployImageInPrivateRegistry "${projName}/${dir}", "${projVersion}", true
+    sh "docker rmi ${projName}/${dir}:${projVersion}"
 }
 
 def cleanImages() {
@@ -132,14 +132,7 @@ pipeline {
                     sh "docker rmi ${projectName}/rabbitmq:${projectVersion}"
                 }
 
-                script {
-                    // cleaning docker dangling images
-                    try {
-                        sh "docker rmi --force \$(docker images -f dangling=true)"
-                    } catch(err) {
-                        echo "OK. Should have error."
-                    }
-                }
+                cleanImages()
             }
         }
 
