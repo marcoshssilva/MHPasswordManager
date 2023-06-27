@@ -7,15 +7,19 @@ def deployArtifactWithMaven(String dir) {
 }
 
 def deployImagesArm64(String dir, String projName, String projVersion) {
-    sh "cd ${dir} && docker build -t arm64-${dir}:${projVersion} ./DockerfileJenkinsArm64 && cd .."
+    sh "docker build -t arm64-${dir}:${projVersion} -f ${dir}/DockerfileJenkinsArm64 ${dir}"
     deployImageInPrivateRegistry "arm64-${dir}", "${projVersion}", true
     sh "docker rmi arm64-${dir}:${projVersion}"
 }
 
 def deployImagesX64(String dir, String projName, String projVersion) {
-    sh "cd ${dir} && docker build -t ${dir}:${projVersion} ./DockerfileJenkinsAmd64 && cd .."
+    sh "docker build -t ${dir}:${projVersion} -f ${dir}/DockerfileJenkinsAmd64 ${dir}"
     deployImageInPrivateRegistry "${dir}", "${projVersion}", true
     sh "docker rmi ${dir}:${projVersion}"
+}
+
+def cleanImages() {
+    sh "echo 'Y' || docker system prune --all --volumes"
 }
 
 pipeline {
@@ -172,14 +176,7 @@ pipeline {
                     sh "docker rmi arm64-${projectName}/rabbitmq:${projectVersion}"
                 }
 
-                script {
-                    // cleaning docker dangling images
-                    try {
-                        sh "docker rmi --force \$(docker images -f dangling=true)"
-                    } catch(err) {
-                        echo "OK. Should have error."
-                    }
-                }
+                cleanImages()
             }
         }
 
@@ -197,6 +194,7 @@ pipeline {
                 script {
                     unstash name: 'MHPasswordManager'
                     projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion) }
+                    cleanImages()
                 }
             }
         }
@@ -209,6 +207,7 @@ pipeline {
                 script {
                     unstash name: 'MHPasswordManager'
                     projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion) }
+                    cleanImages()
                 }
             }
         }
