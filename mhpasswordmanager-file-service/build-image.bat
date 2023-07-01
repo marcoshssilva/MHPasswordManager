@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/file-service:latest .
+docker build -t mhpasswordmanager/file-service:dev .

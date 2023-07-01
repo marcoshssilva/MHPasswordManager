@@ -1,21 +1,43 @@
-def projectName    = 'mhpassword-manager'
-def projectVersion = '1.0.0-SNAPSHOT'
-def projectFolders = ['mhpasswordmanager-service-registry', 'mhpasswordmanager-config-services', 'mhpasswordmanager-api-gateway', 'mhpasswordmanager-oauth2-authorizationserver', 'mhpasswordmanager-user-service', 'mhpasswordmanager-password-service', 'mhpasswordmanager-email-service', 'mhpasswordmanager-file-service']
+/***
+ * <h2>Developed by Marcos Henrique de Santana</h2>
+ *
+ * This Jenkinsfile is only for backup. <br/>
+ * The real Jenkins pipeline is loaded directly inside Jenkins. <br/>
+ *
+ * <br/>
+ * <br/>
+ *
+ * Date: 29/Jun/2023
+ */
 
-def deployArtifactWithMaven(String dir) {
-    sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true && cd .."
+def projectVersion= '1.0.0-SNAPSHOT'
+
+def projectFolders = [
+        MHPasswordManager-Service-Discovery: 'mhpasswordmanager-service-registry',
+        MHPasswordManager-ConfigServices: 'mhpasswordmanager-config-services',
+        MHPasswordManager-API-Gateway: 'mhpasswordmanager-api-gateway',
+        MHPasswordManager-OAuth2-Authorization-Server: 'mhpasswordmanager-oauth2-authorizationserver',
+        MHPasswordManager-UserService: 'mhpasswordmanager-user-service',
+        MHPasswordManager-PasswordService: 'mhpasswordmanager-password-service',
+        MHPasswordManager-EmailService: 'mhpasswordmanager-email-service',
+        MHPasswordManager-FileService: 'mhpasswordmanager-file-service'
+]
+
+def deployArtifactWithMaven(String dir, String key) {
+    sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true"
+    runSonarQubeWithMavenPlugin key
+    sh "cd .."
 }
 
-def deployImagesArm64(String dir, String projName, String projVersion) {
-    sh "docker build -t arm64-${projName}/${dir}:${projVersion} -f ${dir}/DockerfileJenkinsArm64 ${dir}"
-    deployImageInPrivateRegistry "arm64-${projName}/${dir}", "${projVersion}", true
-    sh "docker rmi arm64-${projName}/${dir}:${projVersion}"
-}
-
-def deployImagesX64(String dir, String projName, String projVersion) {
-    sh "docker build -t ${projName}/${dir}:${projVersion} -f ${dir}/DockerfileJenkinsAmd64 ${dir}"
-    deployImageInPrivateRegistry "${projName}/${dir}", "${projVersion}", true
-    sh "docker rmi ${projName}/${dir}:${projVersion}"
+def deployImagesToNexusPrivate(String prefix, String tag) {
+    deployImageInPrivateRegistry "${prefix}/api-gateway","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/config-services","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/oauth2-server","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/eureka-server","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/user-service","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/password-service","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/email-service","${tag}", true
+    deployImageInPrivateRegistry "${prefix}/file-service","${tag}", true
 }
 
 def cleanImages() {
@@ -29,7 +51,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-service-registry") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-Service-Discovery'
                 }
             }
         }
@@ -37,7 +58,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-config-services") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-ConfigServices'
                 }
             }
         }
@@ -45,7 +65,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-api-gateway") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-API-Gateway'
                 }
             }
         }
@@ -53,7 +72,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-oauth2-authorizationserver") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-OAuth2-Authorization-Server'
                 }
             }
         }
@@ -61,7 +79,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-user-service") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-UserService'
                 }
             }
         }
@@ -69,7 +86,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-password-service") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-PasswordService'
                 }
             }
         }
@@ -77,7 +93,6 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-file-service") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-FileService'
                 }
             }
         }
@@ -85,23 +100,37 @@ pipeline {
             steps {
                 dir("${env.WORKSPACE}/mhpasswordmanager-email-service") {
                     sh "mvn clean test install"
-                    runSonarQubeWithMavenPlugin 'MHPasswordManager-EmailService'
                 }
             }
         }
-        stage('Deploy artifacts in Nexus Registry') {
+        stage('Deploy artifacts in Nexus Registry and Sonarqube') {
+            when {
+                branch 'main'
+            }
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        projectFolders.each { project -> deployArtifactWithMaven(project) }
+                        projectFolders.each { project -> deployArtifactWithMaven("$project.value" as String, "$project.key" as String) }
                     }
                 }
+            }
+        }
+
+        stage('Stash all data') {
+            when {
+                branch 'main'
+            }
+            steps {
+                stash name: 'MHPasswordManager'
             }
         }
 
         stage('Create Docker x86/64 images for Mongo, Postgres, RabbitMQ and Redis') {
             agent{
                 label 'amd64'
+            }
+            when {
+                branch 'main'
             }
             steps {
                 // build image for postgres
@@ -131,7 +160,6 @@ pipeline {
                     deployImageInPrivateRegistry "${projectName}/rabbitmq","${projectVersion}", true
                     sh "docker rmi ${projectName}/rabbitmq:${projectVersion}"
                 }
-
                 cleanImages()
             }
         }
@@ -139,6 +167,9 @@ pipeline {
         stage('Create Docker arm64/v8 images for Mongo, Postgres, RabbitMQ and Redis') {
             agent{
                 label 'arm64'
+            }
+            when {
+                branch 'main'
             }
             steps {
                 // build image for postgres
@@ -168,39 +199,59 @@ pipeline {
                     deployImageInPrivateRegistry "arm64-${projectName}/rabbitmq","${projectVersion}", true
                     sh "docker rmi arm64-${projectName}/rabbitmq:${projectVersion}"
                 }
-
                 cleanImages()
             }
         }
 
-        stage('Stash all data') {
-            steps {
-                stash name: 'MHPasswordManager'
-            }
-        }
-
-        stage('Create Docker images x86/64 to artifacts') {
+        stage('Create Docker images x86/64 and arm64/v8') {
             agent{
                 label 'amd64'
             }
+            when {
+                branch 'main'
+            }
             steps {
-                script {
-                    unstash name: 'MHPasswordManager'
-                    projectFolders.each { project -> deployImagesX64(project, projectName, projectVersion) }
-                    cleanImages()
-                }
+                parallel(
+                    'LINUX-X86/64': {
+                        node('amd64') {
+                            unstash name: 'MHPasswordManager'
+                            dir("${env.WORKSPACE}/docker/jenkins") {
+                                sh "chmod 0755 ./build-x86-64.sh"
+                                sh "./build-x86-64.sh ${projectVersion}"
+                            }
+                            deployImagesToNexusPrivate(projectName as String, projectVersion as String)
+                            cleanImages()
+                        }
+                    },
+                    'LINUX-ARM64/V8': {
+                        node('arm64') {
+                            unstash name: 'MHPasswordManager'
+                            dir("${env.WORKSPACE}/docker/jenkins") {
+                                sh "chmod 0755 ./build-arm64.sh"
+                                sh "./build-arm64.sh ${projectVersion}"
+                            }
+                            deployImagesToNexusPrivate("arm64-${projectName}" as String, projectVersion as String)
+                            cleanImages()
+                        }
+                    }
+                )
             }
         }
 
-        stage('Create Docker images arm64/v8 to artifacts') {
-            agent {
-                label 'arm64'
+        stage('Deploy in DEV environment') {
+            agent{
+                label 'ansible-control'
+            }
+            when {
+                branch 'main'
             }
             steps {
-                script {
-                    unstash name: 'MHPasswordManager'
-                    projectFolders.each { project -> deployImagesArm64(project, projectName, projectVersion) }
-                    cleanImages()
+                dir("${env.WORKSPACE}/ansible-playbooks") {
+//                    withCredentials([usernamePassword(credentialsId: 'ansible-get-raw', usernameVariable: 'NEXUS3_USER', passwordVariable: 'NEXUS3_PASS')])
+//                            {
+//                                //runAnsiblePlaybook('deploy-dev.yaml', 'NEXUS3_PASSWORD=$NEXUS3_PASS')
+//                            }
+                    echo "WILL RUNNING ON FUTURE"
                 }
             }
         }

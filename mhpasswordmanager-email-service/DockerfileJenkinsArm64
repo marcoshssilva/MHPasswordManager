@@ -1,5 +1,0 @@
-FROM arm64v8/eclipse-temurin:17.0.7_7-jre AS java
-COPY /target/mhpasswordmanager.emailservice-*.jar app.jar
-ENTRYPOINT java $JAVA_OPTS -jar app.jar
-
-EXPOSE 12013

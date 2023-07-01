@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/email-service:latest .
+docker build -t mhpasswordmanager/email-service:dev .

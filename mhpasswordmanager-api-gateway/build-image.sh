@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/api-gateway:latest .
+docker build -t mhpasswordmanager/api-gateway:dev .

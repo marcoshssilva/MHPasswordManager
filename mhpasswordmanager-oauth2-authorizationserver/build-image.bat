@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/oauth2-authorization-server:latest .
+docker build -t mhpasswordmanager/oauth2-server:dev .

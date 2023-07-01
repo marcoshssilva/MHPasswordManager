@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/service-registry:latest .
+docker build -t mhpasswordmanager/service-registry:dev .
