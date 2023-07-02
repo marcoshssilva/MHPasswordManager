@@ -109,9 +109,7 @@ pipeline {
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}") {
-                        projectFolders.each { project -> deployArtifactWithMaven("$project.value" as String, "$project.key" as String) }
-                    }
+                    projectFolders.each { project -> deployArtifactWithMaven("$project.value" as String, "$project.key" as String) }
                 }
             }
         }
