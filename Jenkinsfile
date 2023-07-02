@@ -10,6 +10,8 @@
  * Date: 29/Jun/2023
  */
 
+def projectName = 'MHPasswordManager'
+
 def projectVersion= '1.0.0-SNAPSHOT'
 
 def projectFolders = [
