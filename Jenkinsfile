@@ -13,21 +13,20 @@
 def projectVersion= '1.0.0-SNAPSHOT'
 
 def projectFolders = [
-        MHPasswordManager-Service-Discovery: 'mhpasswordmanager-service-registry',
-        MHPasswordManager-ConfigServices: 'mhpasswordmanager-config-services',
-        MHPasswordManager-API-Gateway: 'mhpasswordmanager-api-gateway',
-        MHPasswordManager-OAuth2-Authorization-Server: 'mhpasswordmanager-oauth2-authorizationserver',
-        MHPasswordManager-UserService: 'mhpasswordmanager-user-service',
-        MHPasswordManager-PasswordService: 'mhpasswordmanager-password-service',
-        MHPasswordManager-EmailService: 'mhpasswordmanager-email-service',
-        MHPasswordManager-FileService: 'mhpasswordmanager-file-service'
+        "MHPasswordManager-Service-Discovery": 'mhpasswordmanager-service-registry',
+        "MHPasswordManager-ConfigServices": 'mhpasswordmanager-config-services',
+        "MHPasswordManager-API-Gateway": 'mhpasswordmanager-api-gateway',
+        "MHPasswordManager-OAuth2-Authorization-Server": 'mhpasswordmanager-oauth2-authorizationserver',
+        "MHPasswordManager-UserService": 'mhpasswordmanager-user-service',
+        "MHPasswordManager-PasswordService": 'mhpasswordmanager-password-service',
+        "MHPasswordManager-EmailService": 'mhpasswordmanager-email-service',
+        "MHPasswordManager-FileService": 'mhpasswordmanager-file-service'
 ]
 
 def deployArtifactWithMaven(String dir, String key) {
-    dir("${dir}") {
-        sh "mvn deploy -Dmaven.test.skip=true"
-        runSonarQubeWithMavenPlugin key
-    }
+    sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true"
+    runSonarQubeWithMavenPlugin key
+    sh "cd .."
 }
 
 def deployImagesToNexusPrivate(String prefix, String tag) {
@@ -110,9 +109,7 @@ pipeline {
             }
             steps {
                 script {
-                    dir("${env.WORKSPACE}") {
-                        projectFolders.each { project -> deployArtifactWithMaven("${env.WORKSPACE}/$project.value" as String, "$project.key" as String) }
-                    }
+                    projectFolders.each { project -> deployArtifactWithMaven("$project.value" as String, "$project.key" as String) }
                 }
             }
         }
