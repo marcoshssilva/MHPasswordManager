@@ -24,9 +24,10 @@ def projectFolders = [
 ]
 
 def deployArtifactWithMaven(String dir, String key) {
-    sh "cd ${dir} && mvn deploy -Dmaven.test.skip=true"
-    runSonarQubeWithMavenPlugin key
-    sh "cd .."
+    dir("${dir}") {
+        sh "mvn deploy -Dmaven.test.skip=true"
+        runSonarQubeWithMavenPlugin key
+    }
 }
 
 def deployImagesToNexusPrivate(String prefix, String tag) {
@@ -110,7 +111,7 @@ pipeline {
             steps {
                 script {
                     dir("${env.WORKSPACE}") {
-                        projectFolders.each { project -> deployArtifactWithMaven("$project.value" as String, "$project.key" as String) }
+                        projectFolders.each { project -> deployArtifactWithMaven("${env.WORKSPACE}/$project.value" as String, "$project.key" as String) }
                     }
                 }
             }
