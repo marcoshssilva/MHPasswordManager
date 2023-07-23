@@ -11,7 +11,7 @@
 	"log_syslog_server": "/dev/log",
 	"retention_years": 0,
 	"smtpd_bind_address": ":25",
-	"smtpd_force_secure_conn": true,
+	"smtpd_force_secure_conn": false,
 	"smtpd_allowed_only": false,
 	"smtpd_auth": true,
 	"smtpd_user": "je7ls6pyin",

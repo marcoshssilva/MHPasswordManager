@@ -11,7 +11,7 @@
 	"log_syslog_server": "/dev/log",
 	"retention_years": 0,
 	"smtpd_bind_address": ":25",
-	"smtpd_force_secure_conn": true,
+	"smtpd_force_secure_conn": false,
 	"smtpd_allowed_only": false,
 	"smtpd_auth": true,
 	"smtpd_user": "je7ls6pyin",
@@ -19,5 +19,5 @@
 	"web_bind_address": ":8080",
 	"web_home_path": "",
 	"web_default_language": "en_US",
-	"cert_domain": "localhost.fake.mail"
+	"cert_domain": ""
 }
