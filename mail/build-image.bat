@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/spider-mail:latest .
+docker build -t mhpasswordmanager/mail-server:latest .
