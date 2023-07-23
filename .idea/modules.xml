@@ -3,9 +3,16 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/MHPasswordManager.iml" filepath="$PROJECT_DIR$/.idea/MHPasswordManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ansible-playbooks/ansible-playbooks.iml" filepath="$PROJECT_DIR$/ansible-playbooks/ansible-playbooks.iml" />
       <module fileurl="file://$PROJECT_DIR$/docker/docker.iml" filepath="$PROJECT_DIR$/docker/docker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mail/mail.iml" filepath="$PROJECT_DIR$/mail/mail.iml" />
       <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-password-service/mhpasswordmanager.passwordservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-password-service/mhpasswordmanager.passwordservice.iml" />
       <module fileurl="file://$PROJECT_DIR$/mhpasswordmanager-user-service/mhpasswordmanager.userservice.iml" filepath="$PROJECT_DIR$/mhpasswordmanager-user-service/mhpasswordmanager.userservice.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mongo/mongo.iml" filepath="$PROJECT_DIR$/mongo/mongo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/postgres/postgres.iml" filepath="$PROJECT_DIR$/postgres/postgres.iml" />
+      <module fileurl="file://$PROJECT_DIR$/postman/postman.iml" filepath="$PROJECT_DIR$/postman/postman.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rabbitmq/rabbitmq.iml" filepath="$PROJECT_DIR$/rabbitmq/rabbitmq.iml" />
+      <module fileurl="file://$PROJECT_DIR$/redis/redis.iml" filepath="$PROJECT_DIR$/redis/redis.iml" />
     </modules>
   </component>
 </project>

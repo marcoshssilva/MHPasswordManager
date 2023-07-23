@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Run Projects with Docker Compose" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envFilePath" value="" />
@@ -12,6 +12,11 @@
             <option value="password-service" />
             <option value="postgres-db" />
             <option value="redis-store" />
+            <option value="mail-server" />
+            <option value="config-services" />
+            <option value="email-service" />
+            <option value="mongo-db" />
+            <option value="rabbitmq" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker/docker-compose.yml" />
