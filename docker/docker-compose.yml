@@ -1,31 +1,31 @@
 version: '3.8'
 services:
   config-services:
-    image: mhpasswordmanager/config-services:latest
+    image: mhpasswordmanager/config-services:dev
     container_name: 'config-services'
     restart: on-failure
     env_file:
-      - configs-composable/CONFIG-SERVICES.env
+      - configs-local/CONFIG-SERVICES.env
     networks:
       - net-mhpasswordmanager
     ports:
       - "12888:8888"
   eureka-service-discovery:
-    image: mhpasswordmanager/service-registry:latest
+    image: mhpasswordmanager/service-registry:dev
     container_name: 'eureka-server'
     restart: on-failure
     env_file:
-      - configs-composable/SERVICE-REGISTRY.env
+      - configs-local/SERVICE-REGISTRY.env
     networks:
       - net-mhpasswordmanager
     ports:
       - "12761:8761"
   oauth2-authorization-server:
     container_name: 'authorization-server'
-    image: mhpasswordmanager/oauth2-authorization-server:latest
+    image: mhpasswordmanager/oauth2-authorization-server:dev
     restart: on-failure
     env_file:
-      - configs-composable/OAUTH2-AUTHORIZATION-SERVER.env
+      - configs-local/OAUTH2-AUTHORIZATION-SERVER.env
     depends_on:
       - redis-store
       - eureka-service-discovery
@@ -37,11 +37,11 @@ services:
     ports:
       - "12010:12010"
   api-gateway:
-    image: mhpasswordmanager/api-gateway:latest
+    image: mhpasswordmanager/api-gateway:dev
     container_name: 'api-gateway'
     restart: on-failure
     env_file:
-      - configs-composable/API-GATEWAY.env
+      - configs-local/API-GATEWAY.env
     depends_on:
       - eureka-service-discovery
     networks:
@@ -49,11 +49,11 @@ services:
     ports:
       - "12050:12050"
   user-service:
-    image: mhpasswordmanager/user-service:latest
+    image: mhpasswordmanager/user-service:dev
     container_name: 'user-service-api'
     restart: on-failure
     env_file:
-      - configs-composable/USER-SERVICE.env
+      - configs-local/USER-SERVICE.env
     depends_on:
       - eureka-service-discovery
       - postgres-db
@@ -64,11 +64,11 @@ services:
     ports:
       - "12011:12011"
   password-service:
-    image: mhpasswordmanager/password-service:latest
+    image: mhpasswordmanager/password-service:dev
     container_name: 'password-service-api'
     restart: on-failure
     env_file:
-      - configs-composable/PASSWORD-SERVICE.env
+      - configs-local/PASSWORD-SERVICE.env
     depends_on:
       - eureka-service-discovery
       - postgres-db
@@ -79,22 +79,22 @@ services:
     ports:
       - "12012:12012"
   email-service:
-    image: mhpasswordmanager/user-service:latest
+    image: mhpasswordmanager/user-service:dev
     container_name: 'user-service-api'
     restart: on-failure
     env_file:
-      - configs-composable/EMAIL-SERVICE.env
+      - configs-local/EMAIL-SERVICE.env
     depends_on:
       - eureka-service-discovery
       - config-services
       - redis-store
       - rabbitmq
   postgres-db:
-    image: mhpasswordmanager/postgres:latest
+    image: mhpasswordmanager/postgres:dev
     container_name: 'postgres-db'
     restart: on-failure
     env_file:
-      - configs-composable/POSTGRES-DB.env
+      - configs-local/POSTGRES-DB.env
     networks:
       - net-mhpasswordmanager
     ports:
@@ -102,10 +102,10 @@ services:
     volumes:
       - data-mhpasswordmanager-postgres-db:/var/lib/postgresql/data
   redis-store:
-    image: mhpasswordmanager/redis:latest
+    image: mhpasswordmanager/redis:dev
     container_name: 'redis-cache'
     env_file:
-      - configs-composable/REDIS-STORE.env
+      - configs-local/REDIS-STORE.env
     restart: on-failure
     ports:
       - '12379:6379'
@@ -114,11 +114,11 @@ services:
     networks:
       - net-mhpasswordmanager
   mongo-db:
-    image: mhpasswordmanager/mongo:latest
+    image: mhpasswordmanager/mongo:dev
     container_name: 'mongo-db'
     restart: on-failure
     env_file:
-      - configs-composable/MONGO-DB.env
+      - configs-local/MONGO-DB.env
     networks:
       - net-mhpasswordmanager
     volumes:
@@ -126,10 +126,10 @@ services:
     ports:
       - "12717:27017"
   rabbitmq:
-    image: mhpasswordmanager/rabbit:latest
+    image: mhpasswordmanager/rabbit:dev
     container_name: 'rabbit-broker'
     env_file:
-      - configs-composable/RABBITMQ.env
+      - configs-local/RABBITMQ.env
     networks:
       - net-mhpasswordmanager
     volumes:
@@ -140,6 +140,16 @@ services:
       - "12673:15672"
       - "12674:25672"
       - "12692:15692"
+  mail-server:
+    image: mhpasswordmanager/mail-server:dev
+    container_name: 'mail-server'
+    env_file:
+      - configs-local/MAIL-SERVER.env
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "12525:25"
+      - "12580:8080"
 networks:
   net-mhpasswordmanager:
     driver: bridge
