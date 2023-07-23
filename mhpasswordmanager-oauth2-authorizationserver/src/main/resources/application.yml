@@ -41,6 +41,47 @@ spring:
 spring:
   config:
     activate:
+      on-profile: local
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    users:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:12432/db_users'
+    auth:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:12432/db_auth'
+  flyway:
+    enabled: true
+    user: 'sa-authorization-server'
+    password: 'P@sswordAuthS3rv3r'
+    schemas:
+      - 'public'
+    url: jdbc:postgresql://localhost:12432/db_auth
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 12379
+  rabbitmq:
+    host: 127.0.0.1
+    port: 12672
+    virtual-host: vhost-password-manager
+    username: authorization-server-pm
+    password: authorization-server-pm-P@ss
+
+authorization:
+  issuer-uri: http://localhost:12010
+  success-logout-uri: http://localhost:8100
+---
+spring:
+  config:
+    activate:
       on-profile: test
   session:
     store-type: none

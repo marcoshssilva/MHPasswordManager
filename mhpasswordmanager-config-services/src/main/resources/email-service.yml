@@ -22,31 +22,6 @@ management:
 spring:
   config:
     activate:
-      on-profile: local
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://localhost:12010
-  rabbitmq:
-    host: 127.0.0.1
-    virtual-host: vhost-password-manager
-    username: email-service-pm
-    password: email-service-pm-P@ss
-  mail:
-    host: fake.mail.com.br
-    username: no-reply@fake.mail.com.br
-    password: F4k3P@ss
-    properties:
-      mail.transport.protocol: smtp
-      mail.smtp.auth: true
-      mail.smtp.port: 25
-      mail.smtp.starttls.enable: true
-      mail.smtp.starttls.required: true
----
-spring:
-  config:
-    activate:
       on-profile: docker0
   security:
     oauth2:
