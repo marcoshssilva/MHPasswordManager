@@ -1,29 +1,29 @@
 echo 'mhpasswordmanager-redis...'
-docker build -t mhpasswordmanager/redis:dev ../redis
+docker build -t mhpasswordmanager/redis:dev ./tools/redis
 if "%~1"=="" (
   docker tag mhpasswordmanager/redis:dev mhpasswordmanager/redis:%1
 )
 
 echo 'mhpasswordmanager-postgres-db...'
-docker build -t mhpasswordmanager/postgres:dev ../postgres
+docker build -t mhpasswordmanager/postgres:dev ./tools/postgres
 if "%~1"=="" (
     docker tag mhpasswordmanager/postgres:dev mhpasswordmanager/postgres:%1
 )
 
 echo 'mhpasswordmanager-rabbit-mq...'
-docker build -t mhpasswordmanager/rabbit:dev ../rabbitmq
+docker build -t mhpasswordmanager/rabbit:dev ./tools/rabbitmq
 if "%~1"=="" (
     docker tag mhpasswordmanager/rabbit:dev mhpasswordmanager/rabbit:%1
 )
 
 echo 'mhpasswordmanager-mongo-db...'
-docker build -t mhpasswordmanager/mongo:dev ../mongo
+docker build -t mhpasswordmanager/mongo:dev ./tools/mongo
 if "%~1"=="" (
     docker tag mhpasswordmanager/mongo:dev mhpasswordmanager/mongo:%1
 )
 
 echo 'mhpasswordmanager-mail...'
-docker build -t mhpasswordmanager/mail:dev ../mail
+docker build -t mhpasswordmanager/mail:dev ./tools/mail
 if "%~1"=="" (
     docker tag mhpasswordmanager/mail:dev mhpasswordmanager/mail:%1
 )
