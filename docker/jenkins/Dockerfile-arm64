@@ -1,4 +1,4 @@
-FROM arm64v8/eclipse-temurin:17.0.7_7-jre AS java
+FROM app-nx.marcoshssilva.com.br/eclipse-temurin:17-jre-focal AS java
 COPY /target/*.jar app.jar
 ENTRYPOINT java $JAVA_OPTS -jar app.jar
 
