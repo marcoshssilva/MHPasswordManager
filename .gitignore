@@ -38,6 +38,10 @@ build/
 ### VS Code ###
 .vscode/
 
+### Intellij
+.idea
+.run
+
 # Log file
 log.txt
 npm-debug.log*
