@@ -50,27 +50,27 @@ spring:
     users:
       username: 'sa-authorization-server'
       password: 'P@sswordAuthS3rv3r'
-      url: 'jdbc:postgresql://localhost:12432/db_users'
+      url: 'jdbc:postgresql://localhost:5432/db_users'
     auth:
       username: 'sa-authorization-server'
       password: 'P@sswordAuthS3rv3r'
-      url: 'jdbc:postgresql://localhost:12432/db_auth'
+      url: 'jdbc:postgresql://localhost:5432/db_auth'
   flyway:
     enabled: true
     user: 'sa-authorization-server'
     password: 'P@sswordAuthS3rv3r'
     schemas:
       - 'public'
-    url: jdbc:postgresql://localhost:12432/db_auth
+    url: jdbc:postgresql://localhost:5432/db_auth
   session:
     store-type: redis
   redis:
     host: 127.0.0.1
     password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
-    port: 12379
+    port: 6379
   rabbitmq:
     host: 127.0.0.1
-    port: 12672
+    port: 5672
     virtual-host: vhost-password-manager
     username: authorization-server-pm
     password: authorization-server-pm-P@ss
