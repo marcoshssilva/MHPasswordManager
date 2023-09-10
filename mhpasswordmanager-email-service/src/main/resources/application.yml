@@ -32,7 +32,7 @@ spring:
           issuer-uri: http://localhost:12010
   redis:
     host: 127.0.0.1
-    password: 'MHP@SSW0R3#20230401'
+    # password: 'MHP@SSW0R3#20230401'
     port: 6379
   rabbitmq:
     host: 127.0.0.1
@@ -50,6 +50,10 @@ spring:
       mail.smtp.port: 25
       mail.smtp.starttls.enable: false
       mail.smtp.starttls.required: false
+application:
+  email:
+    type: mail
+    default-sender: 'no-reply@localhost.fake.mail.com'
 ---
 spring:
   config:
@@ -78,3 +82,11 @@ eureka:
     prefer-ip-address: true
   client:
     enabled: false
+application:
+  email:
+    type: fake-mail
+    default-sender: 'no-reply@localhost.fake.mail.com'
+management:
+  health:
+    mail:
+      enabled: false

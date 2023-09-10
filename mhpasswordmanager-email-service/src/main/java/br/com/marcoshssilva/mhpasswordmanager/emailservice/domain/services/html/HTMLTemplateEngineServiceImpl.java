@@ -15,7 +15,7 @@ public class HTMLTemplateEngineServiceImpl implements HTMLTemplateEngineService 
     @Override
     public String prepareHtmlMailMessage(String templateName, Map<String, Object> variables) {
         Context context = new Context();
-        variables.forEach(context::setVariable);
+        context.setVariables(variables);
         return templateEngine.process(templateName, context);
     }
 
