@@ -18,6 +18,7 @@ management:
           - 'health'
           - 'info'
           - 'metrics'
+          - 'mail'
 ---
 spring:
   config:
@@ -34,9 +35,9 @@ spring:
     username: email-service-pm
     password: email-service-pm-P@ss
   mail:
-    host: fake.mail.com.br
-    username: no-reply@fake.mail.com.br
-    password: F4k3P@ss
+    host: host.docker.internal
+    # username: johndoe
+    # password: F4k3P@ss
     properties:
       mail.transport.protocol: smtp
       mail.smtp.auth: true
