@@ -140,16 +140,6 @@ services:
       - "12673:15672"
       - "12674:25672"
       - "12692:15692"
-  mail-server:
-    image: mhpasswordmanager/mail-server:dev
-    container_name: 'mail-server'
-    env_file:
-      - configs-local/MAIL-SERVER.env
-    networks:
-      - net-mhpasswordmanager
-    ports:
-      - "12525:25"
-      - "12580:8080"
 networks:
   net-mhpasswordmanager:
     driver: bridge

@@ -22,12 +22,6 @@ if "%~1"=="" (
     docker tag mhpasswordmanager/mongo:dev mhpasswordmanager/mongo:%1
 )
 
-echo 'mhpasswordmanager-mail...'
-docker build -t mhpasswordmanager/mail:dev ./tools/mail
-if "%~1"=="" (
-    docker tag mhpasswordmanager/mail:dev mhpasswordmanager/mail:%1
-)
-
 echo 'mhpasswordmanager-service-registry...'
 docker build -t mhpasswordmanager/service-registry:dev ../mhpasswordmanager-service-registry
 if "%~1"=="" (

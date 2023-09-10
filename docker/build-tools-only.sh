@@ -23,12 +23,6 @@ if [ $# -eq 1 ]; then
   docker tag mhpasswordmanager/rabbit:dev mhpasswordmanager/rabbit:"$1"
 fi
 
-echo 'mhpasswordmanager-mail...'
-docker build -t mhpasswordmanager/mail-server:dev ./tools/mail
-if [ $# -eq 1 ]; then
-    docker tag mhpasswordmanager/mail-server:dev mhpasswordmanager/mail-server:"$1"
-fi
-
 echo 'Cleaning images...'
 docker rmi --force $(docker images -f dangling=true)
 
