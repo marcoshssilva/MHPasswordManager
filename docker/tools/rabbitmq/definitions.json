@@ -71,6 +71,15 @@
   "policies": [],
   "queues": [
     {
+      "name": "email.send-recovery-code",
+      "vhost": "vhost-password-manager",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "classic"
+      }
+    },
+    {
       "name": "email.send-confirmation-registered-user",
       "vhost": "vhost-password-manager",
       "durable": true,
