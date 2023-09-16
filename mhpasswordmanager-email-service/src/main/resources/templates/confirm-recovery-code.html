@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-br">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:remove="all">Register Confirmation</title>
+</head>
+
+<body>
+
+<p> Olá, <strong th:text="${data.name}"></strong>! </p>
+
+<p> Recebemos seu pedido de recuperaçao de senha. Utilize o codigo abaixo para recuperar sua senha:</p>
+
+<p> Codigo: <b th:text="${data.code}"></b> </p>
+
+<p> Cumprimentos,<br />PasswordManager Team </p>
+
+</body>
+
+</html>

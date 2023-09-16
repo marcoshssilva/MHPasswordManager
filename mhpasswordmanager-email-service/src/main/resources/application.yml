@@ -60,6 +60,12 @@ application:
   email:
     type: mail
     default-sender: 'no-reply@localhost.fake.mail.com'
+logging:
+  level:
+    br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.listeners:
+      QueueSendConfirmationRegisteredUserListener: debug
+      QueueSendRecoveryCode: debug
+      QueueSendEmailListener: debug
 ---
 spring:
   config:
