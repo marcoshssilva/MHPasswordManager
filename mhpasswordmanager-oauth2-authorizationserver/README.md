@@ -18,10 +18,10 @@ this is an open-source project by me ([@marcoshssilva](https://github.com/marcos
 When in profiles: **in-memory-users** or **embedded-database**.
 This application register following users unless changed:
 
-| Username                             | Password          | Roles                               |
-|--------------------------------------|-------------------|-------------------------------------|
-| **admin@mhpasswordmanager.com**      | **P@ssword123**   | ROLE_USER, ROLE_ADMIN, ROLE_MASTER  |
-| **anonymous@mhpasswordmanager.com**  | **P@ssword123**   | ROLE_USER                           |
+| Username      | Password        | Roles                              |
+|---------------|-----------------|------------------------------------|
+| **admin**     | **P@ssword123** | ROLE_USER, ROLE_ADMIN, ROLE_MASTER |
+| **anonymous** | **P@ssword123** | ROLE_USER                          |
 
 ## Clients
 
