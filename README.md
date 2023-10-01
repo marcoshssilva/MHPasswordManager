@@ -2,8 +2,8 @@
 # IMPORTANT **Still in development**
 
 ## Repositories Project
-(source) https://github.com/marcoshssilva/MHPasswordManager
-(config) https://github.com/marcoshssilva/MHPasswordManager-Config-Development
+- (source) https://github.com/marcoshssilva/MHPasswordManager
+- (config-development) https://github.com/marcoshssilva/MHPasswordManager-Config-Development
 
 ---
 ## Java Configuration
