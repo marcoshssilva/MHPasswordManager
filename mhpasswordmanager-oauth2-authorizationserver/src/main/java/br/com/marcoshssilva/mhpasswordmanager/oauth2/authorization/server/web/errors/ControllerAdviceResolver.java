@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.errors;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.StatusTypeEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.FailSendEmailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.responses.HttpJsonResponse;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.CannotRegisterUserException;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,17 @@ public class ControllerAdviceResolver {
     }
 
     @ExceptionHandler(CannotRegisterUserException.class)
-    public ResponseEntity<HttpJsonResponse<Object>> cannorRegisterUserExceptionHandler(CannotRegisterUserException exception, HttpServletRequest req, HttpServletResponse res) {
+    public ResponseEntity<HttpJsonResponse<Object>> cannotRegisterUserExceptionHandler(CannotRegisterUserException exception, HttpServletRequest req, HttpServletResponse res) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(HttpJsonResponse.builder()
+                        .status(StatusTypeEnum.ERROR)
+                        .message(HttpStatus.BAD_GATEWAY.getReasonPhrase())
+                        .error(exception.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(FailSendEmailException.class)
+    public ResponseEntity<HttpJsonResponse<Object>> failSendEmailExceptionHandler(FailSendEmailException exception, HttpServletRequest req, HttpServletResponse res) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(HttpJsonResponse.builder()
                         .status(StatusTypeEnum.ERROR)

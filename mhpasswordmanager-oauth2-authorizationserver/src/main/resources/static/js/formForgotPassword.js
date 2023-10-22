@@ -4,6 +4,7 @@
     const formsStep1 = document.querySelectorAll('#formForgotPasswordStep1')
     const formsStep2 = document.querySelectorAll('#formForgotPasswordStep2')
     const btnBlockSkipStep2 = document.getElementById('block-skip-step2');
+    const baseHref = (document.getElementsByTagName('base')[0] || {href: window.location.origin + '/'}).href;
     const showBoxForStep2 = () => {
         formsStep2.forEach(form => {
             btnBlockSkipStep2.classList.add('d-none')
@@ -28,8 +29,7 @@
                 // getting XSRF-TOKEN
                 const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
                 // sending request to /api/account/forgot
-                const urlHost = window.location.origin
-                fetch(urlHost + "/api/account/forgot/step1", {
+                fetch(baseHref + "api/account/forgot/step1", {
                     method: 'POST',
                     mode: 'same-origin',
                     cache: 'no-cache',
@@ -66,8 +66,7 @@
                 // getting XSRF-TOKEN
                 const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
                 // sending request to /api/account/forgot
-                const urlHost = window.location.origin
-                fetch(urlHost + "/api/account/forgot/step2", {
+                fetch(baseHref + "api/account/forgot/step2", {
                     method: 'POST',
                     mode: 'same-origin',
                     cache: 'no-cache',

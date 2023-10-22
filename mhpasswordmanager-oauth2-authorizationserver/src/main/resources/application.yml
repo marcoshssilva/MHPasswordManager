@@ -1,5 +1,7 @@
 server:
   port: 12010
+  servlet:
+    context-path: /mypass-manager/auth/
 spring:
   application:
     name: authorization-server
@@ -76,8 +78,8 @@ spring:
     # password: authorization-server-pm-P@ss
 
 authorization:
-  issuer-uri: http://localhost:12010
-  success-logout-uri: http://localhost:8100
+  issuer-uri: http://localhost:12050/mypass-manager/oauth
+  success-logout-uri: http://localhost:12050
 ---
 spring:
   config:

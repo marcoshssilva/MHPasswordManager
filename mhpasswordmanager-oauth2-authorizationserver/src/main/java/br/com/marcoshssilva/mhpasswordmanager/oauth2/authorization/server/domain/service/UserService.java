@@ -1,6 +1,8 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.FailSendEmailException;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.models.RequestedBrowserParams;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserRegistrationData;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -19,6 +21,13 @@ public interface UserService {
      * @return True if exists
      */
     Boolean isUserExistsAccount(String email);
+
+    /**
+     * Generate code to reset password and send by email from requested registrated user
+     * @param email
+     * @throws FailSendEmailException
+     */
+    void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException;
 
     /**
      * Verify if current user is logged into application

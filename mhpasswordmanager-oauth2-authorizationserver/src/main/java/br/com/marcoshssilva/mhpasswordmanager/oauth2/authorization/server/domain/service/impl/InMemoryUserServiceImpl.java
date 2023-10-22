@@ -2,6 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domai
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.constants.UserRolesEnum;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.CannotRegisterUserException;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.exceptions.FailSendEmailException;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.models.RequestedBrowserParams;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.UserService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.web.data.models.UserRegistrationData;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,11 @@ public class InMemoryUserServiceImpl implements UserService {
     @Override
     public Boolean isUserExistsAccount(String username) {
         return userDetailsManager.userExists(username);
+    }
+
+    @Override
+    public void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
+        throw new FailSendEmailException("Not enabled yet.");
     }
 
 }

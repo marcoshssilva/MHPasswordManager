@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.config;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.configuration.AuthorizationConfigProperties;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.SendEmailService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.UserService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.impl.InMemoryUserServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2.authorization.server.domain.service.impl.JdbcUserServiceImpl;
@@ -20,17 +21,18 @@ import org.springframework.security.provisioning.UserDetailsManager;
 public class UserServiceConfig {
     private final RabbitTemplate rabbitTemplate;
     private final AuthorizationConfigProperties authorizationConfigProperties;
+    private final SendEmailService sendEmailService;
 
     @Bean
     @Profile("!embedded-database & !in-memory-users")
     public UserService inJdbcUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired @Qualifier("dbUsersJdbcTemplate") JdbcTemplate jdbcTemplate) {
-        return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate, rabbitTemplate, authorizationConfigProperties);
+        return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate, rabbitTemplate, authorizationConfigProperties, sendEmailService);
     }
 
     @Bean
     @Profile("embedded-database")
     public UserService inEmbeddedJdbcUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired @Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate) {
-        return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate, rabbitTemplate, authorizationConfigProperties);
+        return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate, rabbitTemplate, authorizationConfigProperties, sendEmailService);
     }
 
     @Bean

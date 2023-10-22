@@ -3,6 +3,7 @@
 
     // forms to validate
     const forms = document.querySelectorAll('#formRegistration')
+    const baseHref = (document.getElementsByTagName('base')[0] || {href: window.location.origin + '/'}).href;
 
     // execute validations
     Array.from(forms).forEach(form => {
@@ -24,8 +25,7 @@
                 // getting XSRF-TOKEN
                 const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
                 // sending request to /api/account/register
-                const urlHost = window.location.origin
-                fetch(urlHost + "/api/account/register", {
+                fetch(baseHref + "api/account/register", {
                     method: 'POST',
                     mode: 'same-origin',
                     cache: 'no-cache',
