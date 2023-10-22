@@ -23,19 +23,31 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
-            - Path=/users/**
+            - Path=/mypass-manager/users/**
+          filters:
+            - RewritePath=/mypass-manager/users/(?<segment>.*),/users/$\{segment}
         - id: password-service
           uri: lb://PASSWORD-SERVICE
           predicates:
-            - Path=/passwords/**
+            - Path=/mypass-manager/passwords/**
+          filters:
+            - RewritePath=/mypass-manager/passwords/(?<segment>.*),/passwords/$\{segment}
         - id: email-service
           uri: lb://EMAIL-SERVICE
           predicates:
-            - Path=/emails/**
+            - Path=/mypass-manager/emails/**
+          filters:
+            - RewritePath=/mypass-manager/emails/(?<segment>.*),/emails/$\{segment}
         - id: file-service
           uri: lb://FILE-SERVICE
           predicates:
-            - Path=/files/**
+            - Path=/mypass-manager/files/**
+          filters:
+            - RewritePath=/mypass-manager/files/(?<segment>.*),/files/$\{segment}
+        - id: default_route
+          uri: https://dev.marcoshssilva.com.br
+          predicates:
+            - Path=/**
 
 management:
   endpoint:
