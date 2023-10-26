@@ -59,7 +59,9 @@ spring:
 application:
   email:
     type: mail
-    default-sender: 'no-reply@localhost.fake.mail.com'
+    default-sender: ${APPLICATION_EMAIL_DEFAULT_SENDER:no-reply@@localhost.fake.mail.com}
+    enable-redirect-mail: ${APPLICATION_EMAIL_ENABLE_REDIRECT_MAIL:false}
+    address-redirect-mail: ${APPLICATION_EMAIL_ADDRESS_REDIRECT_MAIL:no-reply@localhost.fake.mail.com}
 logging:
   level:
     br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.listeners:
@@ -98,6 +100,8 @@ application:
   email:
     type: fake-mail
     default-sender: 'no-reply@localhost.fake.mail.com'
+    enable-redirect-mail: false
+    address-redirect-mail: 'no-reply@localhost.fake.mail.com'
 management:
   health:
     mail:
