@@ -3,18 +3,18 @@ set -e
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
 DO \$\$
 BEGIN
-IF NOT EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-authorization-server')
-THEN
+  IF NOT EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-authorization-server')
+  THEN
     CREATE ROLE "sa-authorization-server" WITH LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE INHERIT NOREPLICATION CONNECTION LIMIT -1 PASSWORD '$SA_AUTHORIZATION_SERVER_PASS';
-END IF;
-IF NOT EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-password-service')
-THEN
+  END IF;
+  IF NOT EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-password-service')
+  THEN
     CREATE ROLE "sa-password-service" WITH LOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION PASSWORD '$SA_PASSWORD_SERVICE_PASS';
-END IF;
-IF NOT EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-user-service')
-THEN
+  END IF;
+  IF NOT EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-user-service')
+  THEN
     CREATE ROLE "sa-user-service" WITH LOGIN NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION CONNECTION LIMIT -1 PASSWORD '$SA_USER_SERVICE_PASS';
-END IF;
+  END IF;
 END \$\$;
 EOSQL
 
@@ -41,14 +41,13 @@ else
 fi
 
 psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "db_users" <<-EOSQL
-
 DO \$\$
-BEGIN
-  IF EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-authorization-server')
-      GRANT CONNECT ON DATABASE db_users TO "sa-authorization-server";
-      GRANT USAGE ON SCHEMA public TO "sa-authorization-server";
-      GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO "sa-authorization-server";
-  END IF;
-END \$\$;
-
+  BEGIN
+    IF EXISTS(SELECT * FROM pg_user WHERE usename = 'sa-authorization-server')
+    THEN
+        GRANT CONNECT ON DATABASE db_users TO "sa-authorization-server";
+        GRANT USAGE ON SCHEMA public TO "sa-authorization-server";
+        GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO "sa-authorization-server";
+    END IF;
+  END \$\$;
 EOSQL
