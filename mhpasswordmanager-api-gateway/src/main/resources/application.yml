@@ -20,6 +20,12 @@ spring:
               - Content-type
               - Authorization
       routes:
+        - id: authorization-server
+          uri: lb://AUTHORIZATION-SERVER
+          predicates:
+            - Path=/mypass-manager/auth/**
+          filters:
+            - PreserveHostHeader
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
