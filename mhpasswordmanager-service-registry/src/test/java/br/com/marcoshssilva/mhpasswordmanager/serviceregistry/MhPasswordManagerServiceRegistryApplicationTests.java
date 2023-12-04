@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.service.registry;
+package br.com.marcoshssilva.mhpasswordmanager.serviceregistry;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

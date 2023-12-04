@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.service.registry;
+package br.com.marcoshssilva.mhpasswordmanager.serviceregistry;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.marcoshssilva</groupId>
-	<artifactId>mhpasswordmanager.service.registry</artifactId>
+	<artifactId>mhpasswordmanager.serviceregistry</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MHPasswordManagerServiceRegistry</name>
 	<description>Demo project for Spring Boot</description>
