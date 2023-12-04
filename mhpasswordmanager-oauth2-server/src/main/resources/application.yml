@@ -1,0 +1,100 @@
+server:
+  port: 12010
+  servlet:
+    context-path: /mypass-manager/auth/
+spring:
+  application:
+    name: authorization-server
+  profiles:
+#    default: local
+  mvc:
+    static-path-pattern: /content/**
+  config:
+    import:
+      - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://eureka:eureka@localhost:8761/eureka
+springdoc:
+  version: @project.version@
+  title: @project.name@
+  description: @project.description@
+  license-name: 'MIT'
+  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
+    csrf:
+      enabled: true # enable csrf in swagger-ui requests
+---
+spring:
+  config:
+    activate:
+      on-profile: embedded-database
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  flyway:
+    enabled: false
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  datasource:
+    users:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:5432/db_users'
+    auth:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://localhost:5432/db_auth'
+  flyway:
+    enabled: true
+    user: 'sa-authorization-server'
+    password: 'P@sswordAuthS3rv3r'
+    schemas:
+      - 'public'
+    url: jdbc:postgresql://localhost:5432/db_auth
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    # password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    # virtual-host: vhost-password-manager
+    # username: authorization-server-pm
+    # password: authorization-server-pm-P@ss
+
+authorization:
+  issuer-uri: http://localhost:12010${server.servlet.context-path}
+  success-logout-uri: http://localhost:12010${server.servlet.context-path}login
+---
+spring:
+  config:
+    activate:
+      on-profile: test
+  session:
+    store-type: none
+  flyway:
+    enabled: false
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    enabled: false
+authorization:
+  issuer-uri: http://localhost:12010
+  success-logout-uri: http://localhost:8100
