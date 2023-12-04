@@ -18,7 +18,7 @@ def projectFolders = [
         "MHPasswordManager-Service-Discovery": 'mhpasswordmanager-service-registry',
         "MHPasswordManager-ConfigServices": 'mhpasswordmanager-config-services',
         "MHPasswordManager-API-Gateway": 'mhpasswordmanager-api-gateway',
-        "MHPasswordManager-OAuth2-Authorization-Server": 'mhpasswordmanager-oauth2-authorizationserver',
+        "MHPasswordManager-OAuth2-Authorization-Server": 'mhpasswordmanager-oauth2-server',
         "MHPasswordManager-UserService": 'mhpasswordmanager-user-service',
         "MHPasswordManager-PasswordService": 'mhpasswordmanager-password-service',
         "MHPasswordManager-EmailService": 'mhpasswordmanager-email-service',
