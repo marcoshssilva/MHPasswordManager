@@ -16,7 +16,7 @@ spring:
       enabled: ${SPRING_CLOUD_CONFIG_ENABLED:false}
       server:
         git:
-          uri: ${SPRING_CLOUD_CONFIG_SERVER_URI:}
+          uri: ${SPRING_CLOUD_CONFIG_SERVER_URI:file:///home/marcos/IdeaProjects/MHPasswordManager-Config-Development}
           # optional, don't need if repo is public
           username: ${SPRING_CLOUD_CONFIG_SERVER_USERNAME:}
           # optional, don't need if repo is public
@@ -24,9 +24,9 @@ spring:
           # if true, always fetch branch 'master'
           try-master-branch: ${SPRING_CLOUD_CONFIG_SERVER_TRY_MASTER_BRANCH:false}
           # default branch to use
-          default-label: ${SPRING_CLOUD_CONFIG_SERVER_DEFAULT_LABEL:master}
+          default-label: ${SPRING_CLOUD_CONFIG_SERVER_DEFAULT_LABEL:main}
           # list of sub-folders from git project
-          search-paths: ${SPRING_CLOUD_CONFIG_SERVER_SEARCH_PATHS:*}
+          search-paths: ${SPRING_CLOUD_CONFIG_SERVER_SEARCH_PATHS:configs*}
 
 management:
   endpoint:
