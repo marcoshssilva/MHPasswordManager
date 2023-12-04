@@ -7,24 +7,10 @@
 
 ---
 ## Java Configuration
-
-**Java JDK** : Java-17-Temurin
-
-**Spring Boot version**: 2.7.11
-
-**Spring Cloud**: 2021.0.6
-
-**Group Id**: br.com.marcoshssilva
+This project uses JDK **java-17.0.8-oracle**, Spring Boot version **2.7.11**, Spring Cloud **2021.0.6**
 
 ---
-# Jenkins Pipeline
-
-Use this link to view [app-jk.marcoshssilva.com.br/job/mhpasswordmanager/job/mhpasswordmanager-microservices/](https://app-jk.marcoshssilva.com.br/job/mhpasswordmanager/job/mhpasswordmanager-microservices/)
-
----
-# SonarQube Analisys
-
-To login use **anonymous** user with password **anonymous** in [app-sq.marcoshssilva.com.br](https://app-sq.marcoshssilva.com.br)
+# SonarQube Analisys on branch MAIN
 
 | Project                             | Link                                                                                           |
 |-------------------------------------|------------------------------------------------------------------------------------------------|
@@ -55,3 +41,15 @@ Run:
 ````
 keytool -genkey -alias tomcat -storetype PKCS12 -keyalg RSA -keysize 2048 -keystore keystore.p12 -validity 3650
 ````
+
+## Get Certificate from Website
+
+Example of **127.0.0.1** with hostname **localhost.com.br**:
+```
+openssl s_client -connect 127.0.0.1:443 -servername localhost.com.br | openssl x509 > localhost.com.br.cert
+```
+
+## Add certificate to Java Cacerts
+```
+$JAVA_HOME/bin/keytool -import -trustcacerts -alias ALIAS_NAME -keystore $JAVA_HOME/lib/security/cacerts -file /PATH/TO/FILE.crt
+```
