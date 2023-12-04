@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.com.marcoshssilva</groupId>
-	<artifactId>mhpasswordmanager.api.gateway</artifactId>
+	<artifactId>mhpasswordmanager.apigateway</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MHPasswordManagerApiGateway</name>
 	<description>

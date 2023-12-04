@@ -31,25 +31,25 @@ spring:
           predicates:
             - Path=/mypass-manager/users/**
           filters:
-            - RewritePath=/mypass-manager/users/(?<segment>.*),/users/$\{segment}
+            - RewritePath=/mypass-manager/users/(?<segment>.*),/mypass-manager/users/$\{segment}
         - id: password-service
           uri: lb://PASSWORD-SERVICE
           predicates:
             - Path=/mypass-manager/passwords/**
           filters:
-            - RewritePath=/mypass-manager/passwords/(?<segment>.*),/passwords/$\{segment}
+            - RewritePath=/mypass-manager/passwords/(?<segment>.*),/mypass-manager/passwords/$\{segment}
         - id: email-service
           uri: lb://EMAIL-SERVICE
           predicates:
             - Path=/mypass-manager/emails/**
           filters:
-            - RewritePath=/mypass-manager/emails/(?<segment>.*),/emails/$\{segment}
+            - RewritePath=/mypass-manager/emails/(?<segment>.*),/mypass-manager/emails/$\{segment}
         - id: file-service
           uri: lb://FILE-SERVICE
           predicates:
             - Path=/mypass-manager/files/**
           filters:
-            - RewritePath=/mypass-manager/files/(?<segment>.*),/files/$\{segment}
+            - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
         - id: default_route
           uri: https://dev.marcoshssilva.com.br
           predicates:

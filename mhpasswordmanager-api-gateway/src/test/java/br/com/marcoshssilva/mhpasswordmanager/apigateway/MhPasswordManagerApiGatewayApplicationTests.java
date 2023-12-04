@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.api.gateway;
+package br.com.marcoshssilva.mhpasswordmanager.apigateway;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
