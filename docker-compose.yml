@@ -2,7 +2,6 @@ version: '3.8'
 services:
   config-services:
     image: mhpasswordmanager/config-services:dev
-    container_name: 'config-services'
     restart: on-failure
     env_file:
       - docker-envs/CONFIG-SERVICES.env
@@ -12,7 +11,6 @@ services:
       - "12888:8888"
   eureka-service-discovery:
     image: mhpasswordmanager/service-registry:dev
-    container_name: 'eureka-server'
     restart: on-failure
     env_file:
       - docker-envs/SERVICE-REGISTRY.env
@@ -21,7 +19,6 @@ services:
     ports:
       - "12761:8761"
   oauth2-server:
-    container_name: 'authorization-server'
     image: mhpasswordmanager/oauth2-server:dev
     restart: on-failure
     env_file:
@@ -38,7 +35,6 @@ services:
       - "12010:12010"
   api-gateway:
     image: mhpasswordmanager/api-gateway:dev
-    container_name: 'api-gateway'
     restart: on-failure
     env_file:
       - docker-envs/API-GATEWAY.env
@@ -50,7 +46,6 @@ services:
       - "12050:12050"
   user-service:
     image: mhpasswordmanager/user-service:dev
-    container_name: 'user-service-api'
     restart: on-failure
     env_file:
       - docker-envs/USER-SERVICE.env
@@ -65,7 +60,6 @@ services:
       - "12011:12011"
   password-service:
     image: mhpasswordmanager/password-service:dev
-    container_name: 'password-service-api'
     restart: on-failure
     env_file:
       - docker-envs/PASSWORD-SERVICE.env
@@ -79,8 +73,7 @@ services:
     ports:
       - "12012:12012"
   email-service:
-    image: mhpasswordmanager/user-service:dev
-    container_name: 'user-service-api'
+    image: mhpasswordmanager/email-service:dev
     restart: on-failure
     env_file:
       - docker-envs/EMAIL-SERVICE.env
@@ -91,7 +84,6 @@ services:
       - rabbitmq
   postgres-db:
     image: mhpasswordmanager/postgres:dev
-    container_name: 'postgres-db'
     restart: on-failure
     env_file:
       - docker-envs/POSTGRES-DB.env
@@ -103,7 +95,6 @@ services:
       - data-mhpasswordmanager-postgres-db:/var/lib/postgresql/data
   redis-store:
     image: mhpasswordmanager/redis:dev
-    container_name: 'redis-cache'
     env_file:
       - docker-envs/REDIS-STORE.env
     restart: on-failure
@@ -115,7 +106,6 @@ services:
       - net-mhpasswordmanager
   mongo-db:
     image: mhpasswordmanager/mongo:dev
-    container_name: 'mongo-db'
     restart: on-failure
     env_file:
       - docker-envs/MONGO-DB.env
@@ -127,7 +117,6 @@ services:
       - "12717:27017"
   rabbitmq:
     image: mhpasswordmanager/rabbit:dev
-    container_name: 'rabbit-broker'
     env_file:
       - docker-envs/RABBITMQ.env
     networks:
