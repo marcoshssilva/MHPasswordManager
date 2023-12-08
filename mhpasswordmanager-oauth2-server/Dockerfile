@@ -4,7 +4,7 @@ COPY . .
 RUN mvn clean install -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine AS java
-COPY --from=builder /build/target/mhpasswordmanager.oauth2.authorization.server-*.jar app.jar
+COPY --from=builder /build/target/mhpasswordmanager.oauth2server-*.jar app.jar
 ENTRYPOINT java $JAVA_OPTS -jar app.jar
 
 EXPOSE 12010
