@@ -1,6 +1,19 @@
 # MHPasswordManager
 # IMPORTANT **Still in development**
 
+## Run project with Docker Compose
+
+Follow steps:
+```
+git clone https://github.com/marcoshssilva/MHPasswordManager.git
+cd MHPasswordManager
+
+chmod +x build.sh
+chmod +x run.sh
+
+./build.sh && ./run.sh
+```
+
 ## Repositories Project
 - (source) https://github.com/marcoshssilva/MHPasswordManager
 - (config-development) https://github.com/marcoshssilva/MHPasswordManager-Config-Development
