@@ -8,7 +8,7 @@ COPY src /build/src
 RUN mvn install -DskipTests
 
 FROM eclipse-temurin:17-jre-alpine AS java
-COPY --from=builder /app/target/mhpasswordmanager.passwordservice-*.jar app.jar
+COPY --from=builder /build/target/mhpasswordmanager.passwordservice-*.jar app.jar
 ENTRYPOINT java $JAVA_OPTS -jar app.jar
 
 EXPOSE 12012
