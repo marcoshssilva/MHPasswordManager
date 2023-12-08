@@ -29,8 +29,8 @@ if [ $# -eq 1 ]; then
   docker tag mhpasswordmanager/service-registry:dev mhpasswordmanager/service-registry:"$1"
 fi
 
-echo 'mhpasswordmanager-oauth2-authorizationserver...'
-docker build -t mhpasswordmanager/oauth2-authorization-server:dev mhpasswordmanager-oauth2-server
+echo 'mhpasswordmanager-oauth2-server...'
+docker build -t mhpasswordmanager/oauth2-server:dev mhpasswordmanager-oauth2-server
 if [ $# -eq 1 ]; then
   docker tag mhpasswordmanager/oauth2-server:dev mhpasswordmanager/oauth2-server:"$1"
 fi
