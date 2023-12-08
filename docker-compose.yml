@@ -43,7 +43,7 @@ services:
     networks:
       - net-mhpasswordmanager
     ports:
-      - "12050:12050"
+      - "8080:8080"
   user-service:
     image: mhpasswordmanager/user-service:dev
     restart: on-failure
