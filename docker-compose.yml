@@ -5,7 +5,7 @@ services:
     container_name: 'config-services'
     restart: on-failure
     env_file:
-      - configs-local/CONFIG-SERVICES.env
+      - docker-envs/CONFIG-SERVICES.env
     networks:
       - net-mhpasswordmanager
     ports:
@@ -15,17 +15,17 @@ services:
     container_name: 'eureka-server'
     restart: on-failure
     env_file:
-      - configs-local/SERVICE-REGISTRY.env
+      - docker-envs/SERVICE-REGISTRY.env
     networks:
       - net-mhpasswordmanager
     ports:
       - "12761:8761"
-  oauth2-authorization-server:
+  oauth2-server:
     container_name: 'authorization-server'
-    image: mhpasswordmanager/oauth2-authorization-server:dev
+    image: mhpasswordmanager/oauth2-server:dev
     restart: on-failure
     env_file:
-      - configs-local/OAUTH2-AUTHORIZATION-SERVER.env
+      - docker-envs/OAUTH2-AUTHORIZATION-SERVER.env
     depends_on:
       - redis-store
       - eureka-service-discovery
@@ -41,7 +41,7 @@ services:
     container_name: 'api-gateway'
     restart: on-failure
     env_file:
-      - configs-local/API-GATEWAY.env
+      - docker-envs/API-GATEWAY.env
     depends_on:
       - eureka-service-discovery
     networks:
@@ -53,7 +53,7 @@ services:
     container_name: 'user-service-api'
     restart: on-failure
     env_file:
-      - configs-local/USER-SERVICE.env
+      - docker-envs/USER-SERVICE.env
     depends_on:
       - eureka-service-discovery
       - postgres-db
@@ -68,7 +68,7 @@ services:
     container_name: 'password-service-api'
     restart: on-failure
     env_file:
-      - configs-local/PASSWORD-SERVICE.env
+      - docker-envs/PASSWORD-SERVICE.env
     depends_on:
       - eureka-service-discovery
       - postgres-db
@@ -83,7 +83,7 @@ services:
     container_name: 'user-service-api'
     restart: on-failure
     env_file:
-      - configs-local/EMAIL-SERVICE.env
+      - docker-envs/EMAIL-SERVICE.env
     depends_on:
       - eureka-service-discovery
       - config-services
@@ -94,7 +94,7 @@ services:
     container_name: 'postgres-db'
     restart: on-failure
     env_file:
-      - configs-local/POSTGRES-DB.env
+      - docker-envs/POSTGRES-DB.env
     networks:
       - net-mhpasswordmanager
     ports:
@@ -105,7 +105,7 @@ services:
     image: mhpasswordmanager/redis:dev
     container_name: 'redis-cache'
     env_file:
-      - configs-local/REDIS-STORE.env
+      - docker-envs/REDIS-STORE.env
     restart: on-failure
     ports:
       - '12379:6379'
@@ -118,7 +118,7 @@ services:
     container_name: 'mongo-db'
     restart: on-failure
     env_file:
-      - configs-local/MONGO-DB.env
+      - docker-envs/MONGO-DB.env
     networks:
       - net-mhpasswordmanager
     volumes:
@@ -129,11 +129,11 @@ services:
     image: mhpasswordmanager/rabbit:dev
     container_name: 'rabbit-broker'
     env_file:
-      - configs-local/RABBITMQ.env
+      - docker-envs/RABBITMQ.env
     networks:
       - net-mhpasswordmanager
     volumes:
-      - data-mhpasswordmanager-rabbitmq-logs:/var/lib/rabbitmq
+      - data-mhpasswordmanager-rabbitmq-data:/var/lib/rabbitmq
       - data-mhpasswordmanager-rabbitmq-logs:/var/log/rabbitmq
     ports:
       - "12672:5672"

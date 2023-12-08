@@ -1,5 +1,0 @@
-FROM --platform=linux/arm64/v8 app-nx.marcoshssilva.com.br/eclipse-temurin:17.0.8.1_1-jre AS java
-COPY /target/*.jar app.jar
-ENTRYPOINT java $JAVA_OPTS -jar app.jar
-
-EXPOSE ${SERVICE_PORT}
