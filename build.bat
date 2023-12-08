@@ -29,7 +29,7 @@ if "%~1"=="" (
 )
 
 echo 'mhpasswordmanager-oauth2-authorizationserver...'
-docker build -t mhpasswordmanager/oauth2-authorization-server:dev ./mhpasswordmanager-oauth2-server
+docker build -t mhpasswordmanager/oauth2-server:dev ./mhpasswordmanager-oauth2-server
 if "%~1"=="" (
     docker tag mhpasswordmanager/oauth2-server:dev mhpasswordmanager/oauth2-server:%1
 )
