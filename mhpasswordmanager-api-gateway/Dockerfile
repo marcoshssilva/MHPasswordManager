@@ -1,4 +1,4 @@
-FROM maven:3.8.7-eclipse-temurin-17-alpine AS builder
+FROM maven:3.9.5-eclipse-temurin-8-focal AS builder
 WORKDIR /build
 
 COPY pom.xml /build/pom.xml
