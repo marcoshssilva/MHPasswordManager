@@ -1,4 +1,4 @@
-FROM rabbitmq:3.10.23-management-alpine
+FROM docker.io/rabbitmq:3.10.23-management-alpine
 
 COPY rabbitmq.conf /etc/rabbitmq
 COPY definitions.json /etc/rabbitmq

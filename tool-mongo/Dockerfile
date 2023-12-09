@@ -1,1 +1,1 @@
-FROM mongo:6.0.5
+FROM docker.io/mongo:6.0.5

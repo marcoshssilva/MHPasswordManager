@@ -1,4 +1,4 @@
-FROM redis:6.2-alpine
+FROM docker.io/redis:6.2-alpine
 # Create directory to use
 WORKDIR /startup
 # Copy the run.sh script into the container
