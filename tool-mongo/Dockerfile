@@ -1,1 +1,1 @@
-FROM docker.io/mongo:6.0.5
+FROM app-nx.marcoshssilva.com.br/mongo:6.0.5
