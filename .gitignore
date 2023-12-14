@@ -41,6 +41,7 @@ build/
 ### Intellij
 .idea
 .run
+*.iml
 
 # Log file
 log.txt
