@@ -1,5 +1,5 @@
 server:
-  port: 12050
+  port: 8080
 spring:
   application:
     name: 'gateway'
@@ -51,7 +51,7 @@ spring:
           filters:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
         - id: default_route
-          uri: https://dev.marcoshssilva.com.br
+          uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:https://dev.marcoshssilva.com.br}
           predicates:
             - Path=/**
 
