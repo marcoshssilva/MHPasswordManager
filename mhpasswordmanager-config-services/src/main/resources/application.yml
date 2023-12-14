@@ -16,7 +16,7 @@ spring:
       enabled: ${SPRING_CLOUD_CONFIG_ENABLED:false}
       server:
         git:
-          uri: ${SPRING_CLOUD_CONFIG_SERVER_URI:file:///home/marcos/IdeaProjects/MHPasswordManager-Config-Development}
+          uri: ${SPRING_CLOUD_CONFIG_SERVER_URI:https://github.com/marcoshssilva/MHPasswordManager-Config-Development.git}
           # optional, don't need if repo is public
           username: ${SPRING_CLOUD_CONFIG_SERVER_USERNAME:}
           # optional, don't need if repo is public
