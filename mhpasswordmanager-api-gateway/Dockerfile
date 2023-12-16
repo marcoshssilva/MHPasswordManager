@@ -5,7 +5,7 @@ COPY pom.xml /build/pom.xml
 RUN mvn dependency:go-offline
 
 COPY src /build/src
-RUN mvn install -DskipTests
+RUN mvn install
 
 FROM app-nx.marcoshssilva.com.br/eclipse-temurin:17-jre-focal AS java
 COPY --from=builder /build/target/mhpasswordmanager.apigateway-*.jar app.jar
