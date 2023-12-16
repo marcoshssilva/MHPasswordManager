@@ -60,7 +60,7 @@ application:
   email:
     type: mail
     default-sender: ${APPLICATION_EMAIL_DEFAULT_SENDER:no-reply@localhost.fake.mail.com}
-    enable-redirect-mail: ${APPLICATION_EMAIL_ENABLE_REDIRECT_MAIL:false}
+    enable-redirect-mail: ${APPLICATION_EMAIL_ENABLE_REDIRECT_MAIL:true}
     address-redirect-mail: ${APPLICATION_EMAIL_ADDRESS_REDIRECT_MAIL:no-reply@localhost.fake.mail.com}
 logging:
   level:
