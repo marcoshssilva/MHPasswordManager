@@ -32,24 +32,28 @@ spring:
             - Path=/mypass-manager/users/**
           filters:
             - RewritePath=/mypass-manager/users/(?<segment>.*),/mypass-manager/users/$\{segment}
+            - PreserveHostHeader
         - id: password-service
           uri: lb://PASSWORD-SERVICE
           predicates:
             - Path=/mypass-manager/passwords/**
           filters:
             - RewritePath=/mypass-manager/passwords/(?<segment>.*),/mypass-manager/passwords/$\{segment}
+            - PreserveHostHeader
         - id: email-service
           uri: lb://EMAIL-SERVICE
           predicates:
             - Path=/mypass-manager/emails/**
           filters:
             - RewritePath=/mypass-manager/emails/(?<segment>.*),/mypass-manager/emails/$\{segment}
+            - PreserveHostHeader
         - id: file-service
           uri: lb://FILE-SERVICE
           predicates:
             - Path=/mypass-manager/files/**
           filters:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
+            - PreserveHostHeader
         - id: default_route
           uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:https://dev.marcoshssilva.com.br}
           predicates:
