@@ -23,20 +23,6 @@ chmod +x run.sh
 This project uses JDK **java-17.0.8-oracle**, Spring Boot version **2.7.11**, Spring Cloud **2021.0.6**
 
 ---
-# SonarQube Analisys on branch MAIN
-
-| Project                             | Link                                                                                           |
-|-------------------------------------|------------------------------------------------------------------------------------------------|
-| mhpasswordmanager-oauth2-server     | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-OAuth2-Authorization-Server |
-| mhpasswordmanager-api-gateway       | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-API-Gateway                 |
-| mhpasswordmanager-config-services   | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-ConfigServices              |
-| mhpasswordmanager-service-discovery | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-Service-Discovery           |
-| mhpasswordmanager-user-service      | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-UserService                 |
-| mhpasswordmanager-password-service  | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-PasswordService             |
-| mhpasswordmanager-email-service     | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-EmailService                |
-| mhpasswordmanager-file-service      | https://app-sq.marcoshssilva.com.br/dashboard?id=MHPasswordManager-FileService                 |
-
----
 # Utilities
 ## How to generate private-key with PKCS8 and 2048 bits using OpenSSL
 ```
