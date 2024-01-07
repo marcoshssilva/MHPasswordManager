@@ -11,8 +11,8 @@ git clone https://github.com/marcoshssilva/MHPasswordManager.git \
 ```
 
 ## Repositories Project
-- (source) [https://github.com/marcoshssilva/MHPasswordManager](https://github.com/marcoshssilva/MHPasswordManager)
-- (config-localhost) [https://github.com/marcoshssilva/MHPasswordManager-Config-Development](https://github.com/marcoshssilva/MHPasswordManager-Config-Localhost)
+- (source) [marcoshssilva/MHPasswordManager](https://github.com/marcoshssilva/MHPasswordManager)
+- (config-localhost) [marcoshssilva/MHPasswordManager-Config-Localhost](https://github.com/marcoshssilva/MHPasswordManager-Config-Localhost)
 
 ---
 ## Java Configuration
