@@ -1,5 +1,4 @@
 # MHPasswordManager
-# IMPORTANT **Still in development**
 
 ## Run project with Docker Compose
 
