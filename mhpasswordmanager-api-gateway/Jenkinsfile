@@ -6,5 +6,5 @@ pipelineJavaWithPublicImage(
     'mhpasswordmanager-api-gateway', 
     true, 
     true, 
-    false, 
+    true, 
     'password-manager/api-gateway')
