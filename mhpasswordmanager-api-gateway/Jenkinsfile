@@ -2,7 +2,7 @@
 pipelineJavaWithPublicImage(
     'MHPasswordManagerApiGateway', 
     '17.0.8-oracle', 
-    '3.9.6'
+    '3.9.6', 
     'mhpasswordmanager-api-gateway', 
     false, 
     false, 
