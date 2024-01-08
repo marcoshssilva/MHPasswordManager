@@ -1,2 +1,2 @@
 @Library('java@main') _
-pipelineJavaWithPublicImage('MHPasswordManagerPasswordService', 'mhpasswordmanager-password-service', true, true, true, 'password-manager/password-service')
+pipelineJavaWithPublicImage('MHPasswordManagerPasswordService', '17.0.8-oracle', '3.9.6', 'mhpasswordmanager-password-service', true, true, true, 'password-manager/password-service')
