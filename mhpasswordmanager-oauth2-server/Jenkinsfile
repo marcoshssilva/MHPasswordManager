@@ -1,0 +1,2 @@
+@Library('java@main') _
+pipelineJavaWithPublicImage('MHPasswordManagerOAuth2Server', 'mhpasswordmanager-oauth2-server', true, true, true, 'password-manager/oauth2-server')

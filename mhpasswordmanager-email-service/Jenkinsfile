@@ -1,0 +1,2 @@
+@Library('java@main') _
+pipelineJavaWithPublicImage('MHPasswordManagerEmailService', 'mhpasswordmanager-email-service', true, true, true, 'password-manager/email-service')
