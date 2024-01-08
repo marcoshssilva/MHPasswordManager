@@ -1,0 +1,10 @@
+@Library('java@main') _
+pipelineJavaWithPublicImage(
+    'MHPasswordManagerApiGateway', 
+    '17.0.8-oracle', 
+    '3.9.6', 
+    'mhpasswordmanager-api-gateway', 
+    true, 
+    true, 
+    true, 
+    'password-manager/api-gateway')
