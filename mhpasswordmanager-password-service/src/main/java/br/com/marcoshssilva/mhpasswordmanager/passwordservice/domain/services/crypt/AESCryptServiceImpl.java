@@ -12,7 +12,7 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 public class AESCryptServiceImpl implements CryptService {
     public static final String ALGORITHM = "AES";
-    public static final String TRANSFORMATION = "AES/CBC/PKCS5Padding";
+    public static final String TRANSFORMATION = "AES/GCM/NoPadding";
 
     @Override
     public byte[] encrypt(byte[] payload, String secret) {
