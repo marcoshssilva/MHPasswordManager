@@ -47,11 +47,12 @@ public class JdbcUserServiceImpl implements UserService {
     public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) {
         final String errorMessageCannotUse = "Cannot use this username/email.";
         // check if email already used by another account
-        if (userDetailsManager.userExists(userRegistrationData.getUsername()))
+        if (userDetailsManager.userExists(userRegistrationData.getUsername())) {
             throw new CannotRegisterUserException(errorMessageCannotUse);
-        List<Map<String, Object>> query = jdbcTemplate.queryForList("SELECT * FROM users_details WHERE email = '" + userRegistrationData.getEmail() + "'");
+        }
+        List<Map<String, Object>> queryResult = jdbcTemplate.queryForList("SELECT * FROM users_details WHERE email = ?", userRegistrationData.getEmail());
 
-        if (!query.isEmpty()) {
+        if (!queryResult.isEmpty()) {
             throw new CannotRegisterUserException(errorMessageCannotUse);
         }
 
@@ -62,19 +63,13 @@ public class JdbcUserServiceImpl implements UserService {
                         .roles(role.name())
                         .build());
 
-        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname, verified) values(':1?',':2?',':3?',':4?','false')"
-                .replace(":1?", userRegistrationData.getUsername())
-                .replace(":2?", userRegistrationData.getEmail())
-                .replace(":3?", userRegistrationData.getFirstName())
-                .replace(":4?", userRegistrationData.getLastName());
+        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname, verified) values('?','?','?','?','?')";
 
         final String uuidRegistration = UUID.randomUUID().toString();
-        final String querySaveAccountVerifyCode = "INSERT INTO users_verify_codes(uuid_code, username) VALUES (':1?', ':2?')"
-                .replace(":1?", uuidRegistration)
-                .replace(":2?", userRegistrationData.getUsername());
+        final String querySaveAccountVerifyCode = "INSERT INTO users_verify_codes(uuid_code, username) VALUES ('?', '?')";
 
-        jdbcTemplate.execute(querySaveAccountDetails);
-        jdbcTemplate.execute(querySaveAccountVerifyCode);
+        jdbcTemplate.update(querySaveAccountDetails, userRegistrationData.getUsername(), userRegistrationData.getEmail(), userRegistrationData.getFirstName(), userRegistrationData.getLastName(), Boolean.FALSE);
+        jdbcTemplate.update(querySaveAccountVerifyCode, uuidRegistration, userRegistrationData.getUsername());
 
         String link = authorizationConfigProperties.getIssuerUri().concat("/verify/").concat(uuidRegistration);
 
