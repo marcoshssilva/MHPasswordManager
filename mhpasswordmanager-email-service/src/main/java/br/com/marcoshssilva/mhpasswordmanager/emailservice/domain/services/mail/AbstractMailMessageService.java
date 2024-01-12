@@ -32,7 +32,7 @@ public abstract class AbstractMailMessageService implements MailMessageService {
         helper.setSentDate(new Date());
         helper.setText(body, isHtml);
 
-        if (enableRedirectMail) {
+        if (Boolean.TRUE.equals(enableRedirectMail)) {
             helper.setTo(addressRedirectMail);
         } else {
             helper.setTo(destination);

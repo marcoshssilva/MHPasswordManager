@@ -1,15 +1,18 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.OAuthClient;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.OAuthUser;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.provisioning.UserDetailsManager;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
@@ -25,6 +28,7 @@ public class OAuth2ConfigStarterConfig {
     private final OAuth2ConfigStarterPropertiesConfig.OAuth2ConfigStarterProperties oAuth2ConfigStarterProperties;
     private final RegisteredClientRepository registeredClientRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserDetailsManager userDetailsManager;
 
     @PostConstruct
     public void init() {
@@ -42,6 +46,16 @@ public class OAuth2ConfigStarterConfig {
 
         });
 
+        List<OAuthUser> users = oAuth2ConfigStarterProperties.getUsers();
+        users.forEach(user -> userDetailsManager.createUser(
+                User.builder()
+                    .username(user.getUsername())
+                    .password(user.getPassword())
+                    .roles(user.getRoles().toArray(new String[] {}))
+                    .accountExpired(!user.isAccountNonExpired())
+                    .accountLocked(!user.isAccountNonLocked())
+                    .credentialsExpired(!user.isCredentialsNonExpired())
+                    .build()));
     }
 
     private RegisteredClient.Builder registeredClientBuilder(OAuthClient client) {

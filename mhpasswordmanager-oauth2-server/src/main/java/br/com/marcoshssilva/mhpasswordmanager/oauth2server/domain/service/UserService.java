@@ -36,5 +36,5 @@ public interface UserService {
      */
     default Boolean isAuthenticated()  {
         return SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
-    };
+    }
 }

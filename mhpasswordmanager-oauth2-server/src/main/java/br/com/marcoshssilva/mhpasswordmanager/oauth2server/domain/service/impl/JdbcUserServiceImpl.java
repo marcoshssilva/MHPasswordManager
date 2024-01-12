@@ -31,9 +31,9 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class JdbcUserServiceImpl implements UserService {
-    public static final String qrySearchIfUsernameOrEmailExists = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ? OR ud.username = ?";
-    public static final String qrySaveRecoveryCodeGeneratedForUser = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
-    public static final String qryGetCountRecoveryCodesActiveForUser = "SELECT count(code) FROM users_recovery_password_code WHERE username = ? AND completed = false AND expires_at > ?";
+    public static final String QUERY_SEARCHIFUSERNAMEOREMAILEXISTS = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ? OR ud.username = ?";
+    public static final String QUERY_SAVERECOVERYCODEGENERATEDFORUSER = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public static final String QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER = "SELECT count(code) FROM users_recovery_password_code WHERE username = ? AND completed = false AND expires_at > ?";
 
     private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
@@ -47,11 +47,12 @@ public class JdbcUserServiceImpl implements UserService {
     public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) {
         final String errorMessageCannotUse = "Cannot use this username/email.";
         // check if email already used by another account
-        if (userDetailsManager.userExists(userRegistrationData.getUsername()))
+        if (userDetailsManager.userExists(userRegistrationData.getUsername())) {
             throw new CannotRegisterUserException(errorMessageCannotUse);
-        List<Map<String, Object>> query = jdbcTemplate.queryForList("SELECT * FROM users_details WHERE email = '" + userRegistrationData.getEmail() + "'");
+        }
+        List<Map<String, Object>> queryResult = jdbcTemplate.queryForList("SELECT * FROM users_details WHERE email = ?", userRegistrationData.getEmail());
 
-        if (!query.isEmpty()) {
+        if (!queryResult.isEmpty()) {
             throw new CannotRegisterUserException(errorMessageCannotUse);
         }
 
@@ -62,19 +63,13 @@ public class JdbcUserServiceImpl implements UserService {
                         .roles(role.name())
                         .build());
 
-        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname, verified) values(':1?',':2?',':3?',':4?','false')"
-                .replace(":1?", userRegistrationData.getUsername())
-                .replace(":2?", userRegistrationData.getEmail())
-                .replace(":3?", userRegistrationData.getFirstName())
-                .replace(":4?", userRegistrationData.getLastName());
+        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname, verified) values('?','?','?','?','?')";
 
         final String uuidRegistration = UUID.randomUUID().toString();
-        final String querySaveAccountVerifyCode = "INSERT INTO users_verify_codes(uuid_code, username) VALUES (':1?', ':2?')"
-                .replace(":1?", uuidRegistration)
-                .replace(":2?", userRegistrationData.getUsername());
+        final String querySaveAccountVerifyCode = "INSERT INTO users_verify_codes(uuid_code, username) VALUES ('?', '?')";
 
-        jdbcTemplate.execute(querySaveAccountDetails);
-        jdbcTemplate.execute(querySaveAccountVerifyCode);
+        jdbcTemplate.update(querySaveAccountDetails, userRegistrationData.getUsername(), userRegistrationData.getEmail(), userRegistrationData.getFirstName(), userRegistrationData.getLastName(), Boolean.FALSE);
+        jdbcTemplate.update(querySaveAccountVerifyCode, uuidRegistration, userRegistrationData.getUsername());
 
         String link = authorizationConfigProperties.getIssuerUri().concat("/verify/").concat(uuidRegistration);
 
@@ -95,7 +90,7 @@ public class JdbcUserServiceImpl implements UserService {
 
     public RegisteredUserData getUserByUsernameOrEmail(String username, String email) {
         try {
-            return jdbcTemplate.queryForObject(qrySearchIfUsernameOrEmailExists, new RegisteredUserDataMapper(), email, username);
+            return jdbcTemplate.queryForObject(QUERY_SEARCHIFUSERNAMEOREMAILEXISTS, new RegisteredUserDataMapper(), email, username);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -126,13 +121,13 @@ public class JdbcUserServiceImpl implements UserService {
     }
 
     private void saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
-        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(qryGetCountRecoveryCodesActiveForUser, Integer.class, client.getUsername(), LocalDateTime.now());
+        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now());
 
         log.info("Qtd: {}", qtdOpenCodesToRecoveryPassword);
 
         if (qtdOpenCodesToRecoveryPassword > 2) {
             throw new FailSendEmailException("Cannot send email, user has to many recovery codes active. Please, check your email.");
         }
-        this.jdbcTemplate.update(qrySaveRecoveryCodeGeneratedForUser, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(), LocalDateTime.now().plusHours(3L), Boolean.FALSE);
+        this.jdbcTemplate.update(QUERY_SAVERECOVERYCODEGENERATEDFORUSER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(), LocalDateTime.now().plusHours(3L), Boolean.FALSE);
     }
 }

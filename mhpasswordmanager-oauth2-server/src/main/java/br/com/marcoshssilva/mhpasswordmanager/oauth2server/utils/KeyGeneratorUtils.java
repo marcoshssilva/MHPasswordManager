@@ -2,7 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.utils;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
-import java.util.Arrays;
+import java.security.SecureRandom;
 import java.util.Random;
 
 public final class KeyGeneratorUtils {
@@ -13,7 +13,7 @@ public final class KeyGeneratorUtils {
 
     public static Random getRandom() {
         if (random == null) {
-            random = new Random();
+            random = new SecureRandom();
         }
         return random;
     }
@@ -39,6 +39,6 @@ public final class KeyGeneratorUtils {
             value = value.concat(String.valueOf(random.nextInt(10)));
         }
 
-        return value.replaceAll("([0-9]{3})([0-9]{3})([0-9]{3})", "$1-$2-$3");
+        return value.replaceAll("(\\d{3})(\\d{3})(\\d{3})", "$1-$2-$3");
     }
 }
