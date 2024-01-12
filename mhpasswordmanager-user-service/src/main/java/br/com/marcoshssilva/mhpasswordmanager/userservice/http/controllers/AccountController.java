@@ -62,7 +62,7 @@ public class AccountController {
     public ResponseEntity<Void> updateAccountPassword(@PathVariable String email, @RequestBody AccountUpdatePasswordRequestData data)
             throws ElementNotFoundException {
 
-        if (accountService.matchPasswordFromUsername(email, data.getOldPassword())) {
+        if (Boolean.TRUE.equals(accountService.matchPasswordFromUsername(email, data.getOldPassword()))) {
             accountService
                     .updatePasswordByUsername(email, data.getNewPassword());
 
