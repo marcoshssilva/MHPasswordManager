@@ -39,6 +39,6 @@ public final class KeyGeneratorUtils {
             value = value.concat(String.valueOf(random.nextInt(10)));
         }
 
-        return value.replaceAll("([0-9]{3})([0-9]{3})([0-9]{3})", "$1-$2-$3");
+        return value.replaceAll("(\\d{3})(\\d{3})(\\d{3})", "$1-$2-$3");
     }
 }
