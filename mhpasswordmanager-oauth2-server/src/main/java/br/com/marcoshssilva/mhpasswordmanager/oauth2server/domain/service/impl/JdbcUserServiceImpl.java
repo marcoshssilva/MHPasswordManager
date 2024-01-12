@@ -31,9 +31,9 @@ import java.util.UUID;
 @Slf4j
 @RequiredArgsConstructor
 public class JdbcUserServiceImpl implements UserService {
-    public static final String qrySearchIfUsernameOrEmailExists = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ? OR ud.username = ?";
-    public static final String qrySaveRecoveryCodeGeneratedForUser = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
-    public static final String qryGetCountRecoveryCodesActiveForUser = "SELECT count(code) FROM users_recovery_password_code WHERE username = ? AND completed = false AND expires_at > ?";
+    public static final String QUERY_SEARCHIFUSERNAMEOREMAILEXISTS = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ? OR ud.username = ?";
+    public static final String QUERY_SAVERECOVERYCODEGENERATEDFORUSER = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public static final String QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER = "SELECT count(code) FROM users_recovery_password_code WHERE username = ? AND completed = false AND expires_at > ?";
 
     private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
@@ -90,7 +90,7 @@ public class JdbcUserServiceImpl implements UserService {
 
     public RegisteredUserData getUserByUsernameOrEmail(String username, String email) {
         try {
-            return jdbcTemplate.queryForObject(qrySearchIfUsernameOrEmailExists, new RegisteredUserDataMapper(), email, username);
+            return jdbcTemplate.queryForObject(QUERY_SEARCHIFUSERNAMEOREMAILEXISTS, new RegisteredUserDataMapper(), email, username);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
@@ -121,13 +121,13 @@ public class JdbcUserServiceImpl implements UserService {
     }
 
     private void saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
-        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(qryGetCountRecoveryCodesActiveForUser, Integer.class, client.getUsername(), LocalDateTime.now());
+        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now());
 
         log.info("Qtd: {}", qtdOpenCodesToRecoveryPassword);
 
         if (qtdOpenCodesToRecoveryPassword > 2) {
             throw new FailSendEmailException("Cannot send email, user has to many recovery codes active. Please, check your email.");
         }
-        this.jdbcTemplate.update(qrySaveRecoveryCodeGeneratedForUser, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(), LocalDateTime.now().plusHours(3L), Boolean.FALSE);
+        this.jdbcTemplate.update(QUERY_SAVERECOVERYCODEGENERATEDFORUSER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(), LocalDateTime.now().plusHours(3L), Boolean.FALSE);
     }
 }
