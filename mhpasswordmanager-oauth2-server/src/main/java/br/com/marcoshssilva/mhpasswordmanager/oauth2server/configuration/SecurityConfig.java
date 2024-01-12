@@ -18,11 +18,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     private final AuthorizationConfigProperties authorizationConfigProperties;
 
-    private final String[] PUBLIC_ROUTES = new String[]{"/h2/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/content/**", "/actuator/**"};
+    public final String[] publicRoutes = new String[]{"/h2/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/content/**", "/actuator/**"};
 
-    private final String[] GET_METHOD_ONLY_PUBLIC = new String[]{"/verify/**"};
+    private final String[] getMethodOnlyPublic = new String[]{"/verify/**"};
 
-    private final String[] POST_METHOD_ONLY_PUBLIC = new String[]{"/api/account/register", "/api/account/forgot/step1", "/api/account/forgot/step2"};
+    private final String[] postMethodOnlyPublic = new String[]{"/api/account/register", "/api/account/forgot/step1", "/api/account/forgot/step2"};
 
     @Order(1)
     @Bean
@@ -32,13 +32,13 @@ public class SecurityConfig {
         // allow frame options only to sameOrigin -> fix /h2
         http.headers().frameOptions().sameOrigin();
         // config security routes
-        http.authorizeHttpRequests((authorize) -> authorize
+        http.authorizeHttpRequests(authorize -> authorize
                 // register public routes
-                .antMatchers(PUBLIC_ROUTES).permitAll()
+                .antMatchers(publicRoutes).permitAll()
                 // register as public access only when GET method
-                .antMatchers(HttpMethod.GET, GET_METHOD_ONLY_PUBLIC).permitAll()
+                .antMatchers(HttpMethod.GET, getMethodOnlyPublic).permitAll()
                 // register as public access only when POST method
-                .antMatchers(HttpMethod.POST, POST_METHOD_ONLY_PUBLIC).permitAll()
+                .antMatchers(HttpMethod.POST, postMethodOnlyPublic).permitAll()
                 // any other requests for authenticated
                 .anyRequest().authenticated()
         );
