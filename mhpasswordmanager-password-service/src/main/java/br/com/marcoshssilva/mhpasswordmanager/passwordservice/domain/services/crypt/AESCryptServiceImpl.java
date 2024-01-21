@@ -43,11 +43,6 @@ public class AESCryptServiceImpl implements CryptService {
         }
     }
 
-    private byte[] getFirst16Bytes(String key) throws NoSuchAlgorithmException {
-        byte[] hash = getSHA256Hash(key);
-        return Arrays.copyOf(hash, 16); // return the first 16 bytes as the IV
-    }
-
     private byte[] getSHA256Hash(String key) throws NoSuchAlgorithmException {
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         return digest.digest(key.getBytes());
