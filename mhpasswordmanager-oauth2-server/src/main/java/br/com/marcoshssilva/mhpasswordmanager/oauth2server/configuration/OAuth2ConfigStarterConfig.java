@@ -47,15 +47,23 @@ public class OAuth2ConfigStarterConfig {
         });
 
         List<OAuthUser> users = oAuth2ConfigStarterProperties.getUsers();
-        users.forEach(user -> userDetailsManager.createUser(
-                User.builder()
-                    .username(user.getUsername())
-                    .password(user.getPassword())
-                    .roles(user.getRoles().toArray(new String[] {}))
-                    .accountExpired(!user.isAccountNonExpired())
-                    .accountLocked(!user.isAccountNonLocked())
-                    .credentialsExpired(!user.isCredentialsNonExpired())
-                    .build()));
+        users.forEach(user -> {
+            if (!userDetailsManager.userExists(user.getUsername())) {
+                userDetailsManager.createUser(
+                        User.builder()
+                            .username(user.getUsername())
+                            .password(user.getPassword())
+                            .roles(user.getRoles().toArray(new String[] {}))
+                            .accountExpired(!user.isAccountNonExpired())
+                            .accountLocked(!user.isAccountNonLocked())
+                            .credentialsExpired(!user.isCredentialsNonExpired())
+                            .build());
+                LOG.info("Request to create new user {} is ACCEPTED with roles={}", user.getUsername(), user.getRoles());
+            } else {
+                LOG.info("Request to create new user {} is REJECTED, because is already exists.", user.getUsername());
+            }
+
+        });
     }
 
     private RegisteredClient.Builder registeredClientBuilder(OAuthClient client) {
