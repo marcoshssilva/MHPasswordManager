@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.c
 import lombok.RequiredArgsConstructor;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
@@ -13,13 +14,16 @@ import java.util.Arrays;
 public class AESCryptServiceImpl implements CryptService {
     public static final String ALGORITHM = "AES";
     public static final String TRANSFORMATION = "AES/GCM/NoPadding";
+    public static final int GCM_IV_LENGTH = 12;
+    public static final int GCM_TAG_LENGTH = 16;
 
     @Override
     public byte[] encrypt(byte[] payload, String secret) {
         try {
             SecretKeySpec key = new SecretKeySpec(getSHA256Hash(secret), ALGORITHM);
             Cipher encrypt = Cipher.getInstance(TRANSFORMATION, "SunJCE");
-            encrypt.init(Cipher.ENCRYPT_MODE, key, new IvParameterSpec(getFirst16Bytes(secret)));
+            GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, new byte[GCM_IV_LENGTH]);
+            encrypt.init(Cipher.ENCRYPT_MODE, key, gcmParameterSpec);
             return encrypt.doFinal(payload);
         } catch (Exception e) {
             throw new EncryptionException("Encryption failed", e);
@@ -31,7 +35,8 @@ public class AESCryptServiceImpl implements CryptService {
         try {
             SecretKeySpec key = new SecretKeySpec(getSHA256Hash(secret), ALGORITHM);
             Cipher decrypt = Cipher.getInstance(TRANSFORMATION, "SunJCE");
-            decrypt.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(getFirst16Bytes(secret)));
+            GCMParameterSpec gcmParameterSpec = new GCMParameterSpec(GCM_TAG_LENGTH * 8, new byte[GCM_IV_LENGTH]);
+            decrypt.init(Cipher.DECRYPT_MODE, key, gcmParameterSpec);
             return decrypt.doFinal(payload);
         } catch (Exception e) {
             throw new DecryptionException("Decryption failed", e);
