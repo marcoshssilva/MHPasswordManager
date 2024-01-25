@@ -9,6 +9,9 @@ services:
       - net-mhpasswordmanager
     ports:
       - "8888:8888"
+    profiles:
+      - apps
+      - all
   eureka-service-discovery:
     image: mhpasswordmanager/service-registry:dev
     restart: on-failure
@@ -18,6 +21,9 @@ services:
       - net-mhpasswordmanager
     ports:
       - "8761:8761"
+    profiles:
+      - apps
+      - all
   oauth2-server:
     image: mhpasswordmanager/oauth2-server:dev
     restart: on-failure
@@ -33,6 +39,9 @@ services:
       - net-mhpasswordmanager
     ports:
       - "12010:12010"
+    profiles:
+      - apps
+      - all
   api-gateway:
     image: mhpasswordmanager/api-gateway:dev
     restart: on-failure
@@ -44,6 +53,9 @@ services:
       - net-mhpasswordmanager
     ports:
       - "8080:8080"
+    profiles:
+      - apps
+      - all
   user-service:
     image: mhpasswordmanager/user-service:dev
     restart: on-failure
@@ -58,6 +70,9 @@ services:
       - net-mhpasswordmanager
     ports:
       - "12011:12011"
+    profiles:
+      - apps
+      - all
   password-service:
     image: mhpasswordmanager/password-service:dev
     restart: on-failure
@@ -72,6 +87,9 @@ services:
       - net-mhpasswordmanager
     ports:
       - "12012:12012"
+    profiles:
+      - apps
+      - all
   email-service:
     image: mhpasswordmanager/email-service:dev
     restart: on-failure
@@ -82,6 +100,9 @@ services:
       - config-services
       - redis-store
       - rabbitmq
+    profiles:
+      - apps
+      - all
   postgres-db:
     image: mhpasswordmanager/postgres:dev
     restart: on-failure
@@ -93,6 +114,9 @@ services:
       - "5432:5432"
     volumes:
       - data-mhpasswordmanager-postgres-db:/var/lib/postgresql/data
+    profiles:
+      - tools
+      - all
   redis-store:
     image: mhpasswordmanager/redis:dev
     env_file:
@@ -104,6 +128,9 @@ services:
       - data-mhpasswordmanager-redis:/data
     networks:
       - net-mhpasswordmanager
+    profiles:
+      - tools
+      - all
   mongo-db:
     image: mhpasswordmanager/mongo:dev
     restart: on-failure
@@ -115,6 +142,9 @@ services:
       - data-mhpasswordmanager-mongo-db:/data/db
     ports:
       - "27017:27017"
+    profiles:
+      - tools
+      - all
   rabbitmq:
     image: mhpasswordmanager/rabbit:dev
     env_file:
@@ -129,6 +159,9 @@ services:
       - "15672:15672"
       - "25672:25672"
       - "15692:15692"
+    profiles:
+      - tools
+      - all
 networks:
   net-mhpasswordmanager:
     driver: bridge
