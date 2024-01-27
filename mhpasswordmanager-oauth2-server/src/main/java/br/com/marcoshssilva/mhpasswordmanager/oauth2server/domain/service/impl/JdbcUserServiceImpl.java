@@ -63,10 +63,10 @@ public class JdbcUserServiceImpl implements UserService {
                         .roles(role.name())
                         .build());
 
-        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname, verified) values('?','?','?','?','?')";
+        final String querySaveAccountDetails = "INSERT INTO users_details(username, email, firstname, lastname, verified) values(?, ?, ?, ?, ?)";
 
         final String uuidRegistration = UUID.randomUUID().toString();
-        final String querySaveAccountVerifyCode = "INSERT INTO users_verify_codes(uuid_code, username) VALUES ('?', '?')";
+        final String querySaveAccountVerifyCode = "INSERT INTO users_verify_codes(uuid_code, username) VALUES (?, ?)";
 
         jdbcTemplate.update(querySaveAccountDetails, userRegistrationData.getUsername(), userRegistrationData.getEmail(), userRegistrationData.getFirstName(), userRegistrationData.getLastName(), Boolean.FALSE);
         jdbcTemplate.update(querySaveAccountVerifyCode, uuidRegistration, userRegistrationData.getUsername());

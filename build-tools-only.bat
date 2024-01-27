@@ -22,6 +22,12 @@ if "%~1"=="" (
     docker tag mhpasswordmanager/mongo:dev mhpasswordmanager/mongo:%1
 )
 
+echo 'mhpasswordmanager-mail-server...'
+docker build -t mhpasswordmanager/mail-server:dev ./tool-mail
+if "%~1"=="" (
+    docker tag mhpasswordmanager/mail-server:dev mhpasswordmanager/mail-server:%1
+)
+
 echo 'Cleaning images...'
 docker rmi --force $(docker images -f dangling=true)
 

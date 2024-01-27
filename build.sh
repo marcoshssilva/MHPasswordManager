@@ -17,6 +17,12 @@ if [ $# -eq 1 ]; then
   docker tag mhpasswordmanager/mongo:dev mhpasswordmanager/mongo:"$1"
 fi
 
+echo 'mhpasswordmanager-mail-server...'
+docker build -t mhpasswordmanager/mail-server:dev tool-mail
+if [ $# -eq 1 ]; then
+  docker tag mhpasswordmanager/mail-server:dev mhpasswordmanager/mail-server:"$1"
+fi
+
 echo 'mhpasswordmanager-rabbit-mq...'
 docker build -t mhpasswordmanager/rabbit:dev tool-rabbitmq
 if [ $# -eq 1 ]; then
