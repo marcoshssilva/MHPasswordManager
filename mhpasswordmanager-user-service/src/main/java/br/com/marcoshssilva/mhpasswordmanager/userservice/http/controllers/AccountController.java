@@ -1,5 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.http.controllers;
 
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.exceptions.AlreadyExistsInDatabaseException;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.exceptions.ElementNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountDataToUpdateModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountRegistrationModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
@@ -43,14 +45,14 @@ public class AccountController {
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') || (#email == authentication.principal.subject)")
     @GetMapping("{email}/data")
     public ResponseEntity<AccountResponseData> getDetailsFromAccount(@PathVariable String email)
-            throws Exception {
+            throws ElementNotFoundException {
         return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByUsername(email))
                                 );
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#email == authentication.principal.subject)")
     @PutMapping("{email}/updateData")
-    public ResponseEntity<Void> updateDataFromAccount(@PathVariable String email, @RequestBody AccountUpdateRequestData data) throws Exception {
+    public ResponseEntity<Void> updateDataFromAccount(@PathVariable String email, @RequestBody AccountUpdateRequestData data) throws ElementNotFoundException {
         accountService.updateAccountDetailsByUsername(email, new AccountDataToUpdateModel(data.getFirstName(), data.getLastName()));
         return ResponseEntity.ok().build();
     }
@@ -58,9 +60,9 @@ public class AccountController {
     @PreAuthorize("#email == authentication.principal.subject")
     @PutMapping("{email}/updatePassword")
     public ResponseEntity<Void> updateAccountPassword(@PathVariable String email, @RequestBody AccountUpdatePasswordRequestData data)
-            throws Exception {
+            throws ElementNotFoundException {
 
-        if (accountService.matchPasswordFromUsername(email, data.getOldPassword())) {
+        if (Boolean.TRUE.equals(accountService.matchPasswordFromUsername(email, data.getOldPassword()))) {
             accountService
                     .updatePasswordByUsername(email, data.getNewPassword());
 
@@ -75,22 +77,21 @@ public class AccountController {
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
     @PutMapping("{email}/updateEnabled")
     public ResponseEntity<Void> enableAccount(@PathVariable String email, @RequestBody AccountUpdateEnabledRequestData data)
-            throws Exception {
+            throws ElementNotFoundException {
         accountService.updateAccountHasEnabledByUsername(email, data.getEnabled());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#email == authentication.principal.subject)")
     @PostMapping("{email}/uploadImageFromAccountProfile")
-    public ResponseEntity<Void> updateImageFromAccountProfile(@PathVariable String email, @RequestParam(name = "file") MultipartFile image)
-            throws Exception {
+    public ResponseEntity<Void> updateImageFromAccountProfile(@PathVariable String email, @RequestParam(name = "file") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
     @PostMapping("/create")
     public ResponseEntity<Void> createNewAccount(@RequestBody AccountCreateRequestData data)
-            throws Exception {
+            throws AlreadyExistsInDatabaseException {
         accountService.register(new AccountRegistrationModel(data.getEmail(), data.getUsername(), data.getPassword(), Boolean.TRUE, data.getRoles(), data.getFirstName(), data.getLastName()));
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -98,7 +99,7 @@ public class AccountController {
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
     @PostMapping("{email}/resetPassword")
     public ResponseEntity<Void> resetAccountPassword(@PathVariable String email, @RequestBody AccountResetPasswordRequestData data)
-            throws Exception {
+            throws ElementNotFoundException {
         accountService.updatePasswordByUsername(email, data.getNewPassword());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
@@ -106,7 +107,7 @@ public class AccountController {
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#email == authentication.principal.subject)")
     @DeleteMapping("{email}/delete")
     public ResponseEntity<Void> deleteAccount(@PathVariable String email)
-            throws Exception {
+            throws ElementNotFoundException {
         this.accountService.deleteAccountByUsername(email);
         return ResponseEntity.status(HttpStatus.OK).build();
     }

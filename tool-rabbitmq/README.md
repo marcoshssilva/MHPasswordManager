@@ -19,3 +19,4 @@ this is an open-source project by me ([@marcoshssilva](https://github.com/marcos
 |------------------------|-----------------------------------------|---------|------------|---------|
 | vhost-password-manager | email.send-confirmation-registered-user | Classic | False      | True    |
 | vhost-password-manager | email.send-simple-email                 | Classic | False      | True    |
+| vhost-password-manager | email.send-recovery-code                | Classic | False      | True    |

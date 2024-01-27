@@ -1,13 +1,15 @@
 server:
   port: 12014
   servlet:
-    context-path: /files
+    context-path: /mypass-manager/files
 spring:
   application:
     name: file-service
   config:
     import:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
+#  profiles:
+#    default: local
 eureka:
   client:
     service-url:
@@ -18,6 +20,41 @@ springdoc:
   description: @project.description@
   license-name: 'MIT'
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  data:
+    mongodb:
+      host: 127.0.0.1
+      username: 'sa-files-service'
+      password: 'P@sswordFil3s'
+      database: 'db_files'
+      authentication-database: 'admin'
+      authentication-mechanism: 'SCRAM-SHA-1'
+  session:
+    store-type: redis
+  redis:
+    host: 127.0.0.1
+    # password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    port: 6379
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      fail-on-empty-beans: false
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://127.0.0.1:8080/mypass-manager/auth/
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/files/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
+    csrf:
+      enabled: false
 ---
 spring:
   config:

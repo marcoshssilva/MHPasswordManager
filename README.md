@@ -16,4 +16,4 @@ git clone https://github.com/marcoshssilva/MHPasswordManager.git \
 
 ---
 ## Java Configuration
-This project uses JDK **java-17.0.8-oracle**, Spring Boot version **2.7.11**, Spring Cloud **2021.0.6**
+This project uses JDK **java-17.0.9-oracle**, Spring Boot version **2.7.18**, Spring Cloud **2021.0.6**

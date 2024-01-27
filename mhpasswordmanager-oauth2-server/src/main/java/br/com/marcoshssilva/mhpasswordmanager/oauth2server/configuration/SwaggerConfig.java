@@ -10,21 +10,20 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@SecuritySchemes({
-        @SecurityScheme(name = "Bearer Authorization", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT"),
-        @SecurityScheme(name = "OAuth2 Authorization Code Flow",
-                type = SecuritySchemeType.OAUTH2,
-                flows = @OAuthFlows(
-                        authorizationCode = @OAuthFlow(
-                                authorizationUrl = "${springdoc.swagger-ui.oauth2-authorization-url}",
-                                tokenUrl = "${springdoc.swagger-ui.oauth2-token-url}",
-                                scopes = {
-                                        @OAuthScope(name = "openid", description = "Can use openid connect"),
-                                        @OAuthScope(name = "profile", description = "Can read your own profile"),
-                                        @OAuthScope(name = "email", description = "Can do login using email")
-                                }))
-        )
-})
+
+@SecurityScheme(name = "Bearer Authorization", type = SecuritySchemeType.HTTP, scheme = "Bearer", bearerFormat = "JWT")
+@SecurityScheme(name = "OAuth2 Authorization Code Flow",
+        type = SecuritySchemeType.OAUTH2,
+        flows = @OAuthFlows(
+                authorizationCode = @OAuthFlow(
+                        authorizationUrl = "${springdoc.swagger-ui.oauth2-authorization-url}",
+                        tokenUrl = "${springdoc.swagger-ui.oauth2-token-url}",
+                        scopes = {
+                                @OAuthScope(name = "openid", description = "Can use openid connect"),
+                                @OAuthScope(name = "profile", description = "Can read your own profile"),
+                                @OAuthScope(name = "email", description = "Can do login using email")
+                        }))
+)
 @OpenAPIDefinition
 @Configuration
 public class SwaggerConfig {
