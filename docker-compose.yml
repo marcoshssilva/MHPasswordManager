@@ -100,6 +100,7 @@ services:
       - config-services
       - redis-store
       - rabbitmq
+      - mailserver
     profiles:
       - apps
       - all
@@ -159,6 +160,18 @@ services:
       - "15672:15672"
       - "25672:25672"
       - "15692:15692"
+    profiles:
+      - tools
+      - all
+  mailserver:
+    image: mhpasswordmanager/mail-server:dev
+    env_file:
+      - docker-envs/MAILSERVER.env
+    networks:
+      - net-mhpasswordmanager
+    ports:
+      - "1025:1025"
+      - "1080:1080"
     profiles:
       - tools
       - all
