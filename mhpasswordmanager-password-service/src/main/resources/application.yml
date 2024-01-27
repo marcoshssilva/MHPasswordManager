@@ -58,7 +58,7 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          issuer-uri: http://localhost:12010
+          issuer-uri: http://127.0.0.1:8080/mypass-manager/auth/
 springdoc:
   swagger-ui:
     oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect}
