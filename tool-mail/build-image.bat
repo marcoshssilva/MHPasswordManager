@@ -1,1 +1,1 @@
-docker build -t mhpasswordmanager/tool-mailserver:latest .
+docker build -t mhpasswordmanager/mail-server:latest .
