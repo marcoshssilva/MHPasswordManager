@@ -104,6 +104,21 @@ services:
     profiles:
       - apps
       - all
+  file-service:
+    image: mhpasswordmanager/file-service:dev
+    restart: on-failure
+    env_file:
+      - docker-envs/FILE-SERVICE.env
+    ports:
+      - "12014:12014"
+    depends_on:
+      - eureka-service-discovery
+      - config-services
+      - redis-store
+      - mongo-db
+    profiles:
+      - apps
+      - all
   postgres-db:
     image: mhpasswordmanager/postgres:dev
     restart: on-failure
