@@ -1,10 +1,10 @@
 server:
   port: 12013
   servlet:
-    context-path: /emails
+    context-path: /mypass-manager/emails
 spring:
-  profiles:
-    default: local
+#  profiles:
+#    default: local
   application:
     name: email-service
   config:
@@ -20,12 +20,6 @@ springdoc:
   description: @project.description@
   license-name: 'MIT'
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
-  swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12050/emails/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
-    csrf:
-      enabled: false
 ---
 spring:
   config:
@@ -43,9 +37,9 @@ spring:
   rabbitmq:
     host: 127.0.0.1
     port: 5672
-    # virtual-host: vhost-password-manager
-    # username: email-service-pm
-    # password: email-service-pm-P@ss
+    virtual-host: vhost-password-manager
+    username: email-service-pm
+    password: email-service-pm-P@ss
   mail:
     host: localhost
     # username: je7ls6pyin
@@ -68,6 +62,13 @@ logging:
       QueueSendConfirmationRegisteredUserListener: debug
       QueueSendRecoveryCode: debug
       QueueSendEmailListener: debug
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/emails/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
+    csrf:
+      enabled: false
 ---
 spring:
   config:
