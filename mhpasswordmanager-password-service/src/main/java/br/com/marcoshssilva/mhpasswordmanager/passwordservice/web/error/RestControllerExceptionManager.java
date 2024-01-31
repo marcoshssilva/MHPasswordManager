@@ -5,7 +5,6 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.cr
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationAlreadyExistsException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.HttpErrorResponse;
 
@@ -56,14 +55,6 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(KeyEncodedErrorConverterException.class)
     public ResponseEntity<HttpErrorResponse> keyEncodedErrorConverterExceptionResolver(KeyEncodedErrorConverterException e, HttpServletRequest req) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
-                        .build());
-    }
-
-    @ExceptionHandler(UserRegistrationAlreadyExistsException.class)
-    public ResponseEntity<HttpErrorResponse> userRegistrationAlreadyExistsException(UserRegistrationAlreadyExistsException e, HttpServletRequest req){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
