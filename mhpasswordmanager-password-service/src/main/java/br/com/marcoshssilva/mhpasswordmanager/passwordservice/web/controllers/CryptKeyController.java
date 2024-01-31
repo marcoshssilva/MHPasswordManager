@@ -1,7 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.CryptKeyRequest;

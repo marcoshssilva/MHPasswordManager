@@ -5,7 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.cr
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.HttpErrorResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

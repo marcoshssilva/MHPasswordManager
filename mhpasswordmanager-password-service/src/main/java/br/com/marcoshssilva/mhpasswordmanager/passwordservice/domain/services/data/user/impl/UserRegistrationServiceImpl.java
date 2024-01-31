@@ -1,8 +1,10 @@
-package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user;
+package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserBucket;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserBucketRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
 import org.springframework.stereotype.Service;
 
