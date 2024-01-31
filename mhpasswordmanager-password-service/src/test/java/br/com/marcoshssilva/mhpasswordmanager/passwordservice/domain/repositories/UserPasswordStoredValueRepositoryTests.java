@@ -38,6 +38,13 @@ class UserPasswordStoredValueRepositoryTests {
         // save user registration
         UserBucket userRegistration = userBucketRepository.save(UserBucket.builder()
                 .id(userRegistrationUid.toString())
+                .name("Testing")
+                .description("Some description to store")
+                .ownerName("anonymous.user")
+                .encodedPublicKey("a1a1a1a1a1a1a1a1a1a1a1a1a1a1a")
+                .encryptedPrivateKeyWithPassword("a1a1a1a1a1a1a1a1aa1a1a1a1a1a1a1")
+                .createdAt(new Date())
+                .lastUpdate(new Date())
                 .build());
 
         // save user password key
