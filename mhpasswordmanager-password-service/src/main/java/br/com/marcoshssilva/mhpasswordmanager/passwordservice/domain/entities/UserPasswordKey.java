@@ -20,7 +20,7 @@ import java.util.Objects;
 @Builder
 public class UserPasswordKey implements Serializable {
     @Serial
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
