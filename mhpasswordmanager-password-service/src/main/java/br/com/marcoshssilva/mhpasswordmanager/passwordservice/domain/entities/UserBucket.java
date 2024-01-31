@@ -48,16 +48,26 @@ public class UserBucket implements Serializable {
     @Column(name = "last_update", nullable = false, columnDefinition = "TIMESTAMP")
     private Date lastUpdate;
 
+    @Column(name = "owner_name", nullable = false)
+    private String ownerName;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserBucket that = (UserBucket) o;
-        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(description, that.description) && Objects.equals(encodedPublicKey, that.encodedPublicKey) && Objects.equals(encryptedPrivateKeyWithPassword, that.encryptedPrivateKeyWithPassword) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && Objects.equals(description, that.description)
+                && Objects.equals(encodedPublicKey, that.encodedPublicKey)
+                && Objects.equals(encryptedPrivateKeyWithPassword, that.encryptedPrivateKeyWithPassword)
+                && Objects.equals(createdAt, that.createdAt)
+                && Objects.equals(lastUpdate, that.lastUpdate)
+                && Objects.equals(ownerName, that.ownerName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, encodedPublicKey, encryptedPrivateKeyWithPassword, createdAt, lastUpdate);
+        return Objects.hash(id, name, description, encodedPublicKey, encryptedPrivateKeyWithPassword, createdAt, lastUpdate, ownerName);
     }
 }
