@@ -95,7 +95,7 @@ public class CryptKeyController {
     public ResponseEntity<String> encryptDataInRsaAndConvertAsBase64(@AuthenticationPrincipal Jwt token, @RequestBody CryptKeyRequest payload) throws UserRegistrationNotFoundException {
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(token.getSubject());
 
-        String publicKey = userRegistration.getPublicKey();
+        String publicKey = "Mii6B"; //userRegistration.getPublicKey();
         byte[] encrypted = cryptRsaService.encrypt(decoder.decode(payload.getBase64Data()), publicKey);
         String encodeToString = encoder.encodeToString(encrypted);
 
@@ -106,7 +106,7 @@ public class CryptKeyController {
 
         UserRegisteredModel userRegistration = userRegistrationService.getUserRegistration(userRegistrationEmail);
         String key = "encrypted-default";
-        String privKeyBase64 = userRegistration.getKeys().get(key);
+        String privKeyBase64 = "Mii6B"; //userRegistration.getKeys().get(key);
 
         byte[] decodedPrivateKey = decoder.decode(privKeyBase64.getBytes());
         byte[] decryptedPrivateKeyEncoded = cryptAesService.decrypt(decodedPrivateKey, secret);

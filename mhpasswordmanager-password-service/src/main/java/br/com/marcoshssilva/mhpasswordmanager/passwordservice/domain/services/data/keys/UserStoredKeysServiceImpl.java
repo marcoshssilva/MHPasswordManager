@@ -69,7 +69,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
         try {
             byte[] bytes = objectMapper.writeValueAsBytes(decodedPassword);
-            byte[] encrypted = cryptService.encrypt(bytes, userRegistration.getPublicKey());
+            byte[] encrypted =  new byte[] { 127, 16, 32 }; //cryptService.encrypt(bytes, userRegistration.getPublicKey());
             String base64 = cryptService.convertByteToBase64(encrypted);
 
             keyStored.setData(base64);
@@ -98,7 +98,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
         try {
             byte[] bytes = objectMapper.writeValueAsBytes(decodedPassword);
-            byte[] encrypted = cryptService.encrypt(bytes, userRegistration.getPublicKey());
+            byte[] encrypted =  new byte[] { 127, 16, 32 }; //cryptService.encrypt(bytes, userRegistration.getPublicKey());
             String base64 = cryptService.convertByteToBase64(encrypted);
 
             keyStored.setData(base64);
@@ -168,7 +168,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
         var builder = KeyStorePayloadEncodedDto.builder();
 
         try {
-            byte[] encrypted = cryptService.encrypt(payload, userRegistration.getPublicKey());
+            byte[] encrypted =  new byte[] { 127, 16, 32 }; //cryptService.encrypt(bytes, userRegistration.getPublicKey());
             String base64 = cryptService.convertByteToBase64(encrypted);
 
             UserPasswordStoredValue keyStored = new UserPasswordStoredValue();
