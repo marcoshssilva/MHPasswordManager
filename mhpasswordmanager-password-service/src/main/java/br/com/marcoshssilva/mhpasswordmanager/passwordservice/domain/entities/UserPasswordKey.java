@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,15 +19,16 @@ import java.util.Objects;
 @Table(name = "users_keys")
 @Builder
 public class UserPasswordKey implements Serializable {
-    public static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_registration_id", nullable = false)
-    private UserRegistration userRegistration;
+    @JoinColumn(name = "user_bucket_id", nullable = false)
+    private UserBucket userBucket;
 
     @ElementCollection
     @CollectionTable(name = "users_key_tags")
@@ -52,11 +54,11 @@ public class UserPasswordKey implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof UserPasswordKey that)) return false;
-        return Objects.equals(id, that.id) && Objects.equals(userRegistration, that.userRegistration) && Objects.equals(tags, that.tags) && Objects.equals(description, that.description) && Objects.equals(type, that.type) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
+        return Objects.equals(id, that.id) && Objects.equals(userBucket, that.userBucket) && Objects.equals(tags, that.tags) && Objects.equals(description, that.description) && Objects.equals(type, that.type) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userRegistration, tags, description, type, createdAt, lastUpdate);
+        return Objects.hash(id, userBucket, tags, description, type, createdAt, lastUpdate);
     }
 }

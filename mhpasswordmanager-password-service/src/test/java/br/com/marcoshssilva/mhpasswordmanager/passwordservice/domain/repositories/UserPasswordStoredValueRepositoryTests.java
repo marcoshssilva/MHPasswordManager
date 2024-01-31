@@ -1,10 +1,9 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories;
 
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserBucket;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKey;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordKeyType;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserPasswordStoredValue;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserRegistration;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,7 +28,7 @@ class UserPasswordStoredValueRepositoryTests {
     @Autowired
     private UserPasswordKeyTypeRepository userPasswordKeyTypeRepository;
     @Autowired
-    private UserRegistrationRepository userRegistrationRepository;
+    private UserBucketRepository userBucketRepository;
 
     private UserPasswordKey userPasswordKey;
     private final UUID userRegistrationUid = UUID.randomUUID();
@@ -38,15 +36,14 @@ class UserPasswordStoredValueRepositoryTests {
     @BeforeEach
     public void setUp() {
         // save user registration
-        UserRegistration userRegistration = userRegistrationRepository.save(UserRegistration.builder()
+        UserBucket userRegistration = userBucketRepository.save(UserBucket.builder()
                 .id(userRegistrationUid.toString())
-                .email("test@example.com")
                 .build());
 
         // save user password key
         UserPasswordKeyType value = userPasswordKeyTypeRepository.save(UserPasswordKeyType.builder().id(1L).description("Test").build());
         userPasswordKey = userPasswordKeyRepository.save(UserPasswordKey.builder()
-                .userRegistration(userRegistration)
+                .userBucket(userRegistration)
                 .type(value)
                 .createdAt(new Date())
                 .lastUpdate(new Date())
