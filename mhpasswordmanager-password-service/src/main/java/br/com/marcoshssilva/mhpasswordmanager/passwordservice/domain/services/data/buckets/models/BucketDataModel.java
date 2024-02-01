@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.Us
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @lombok.NoArgsConstructor
@@ -19,18 +20,24 @@ public class BucketDataModel implements Serializable {
     private String bucketUuid;
     private String bucketName;
     private String bucketDescription;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastUpdate;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BucketDataModel that = (BucketDataModel) o;
-        return Objects.equals(bucketUuid, that.bucketUuid) && Objects.equals(bucketName, that.bucketName) && Objects.equals(bucketDescription, that.bucketDescription);
+        return Objects.equals(bucketUuid, that.bucketUuid)
+                && Objects.equals(bucketName, that.bucketName)
+                && Objects.equals(bucketDescription, that.bucketDescription)
+                && Objects.equals(createdAt, that.createdAt)
+                && Objects.equals(lastUpdate, that.lastUpdate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bucketUuid, bucketName, bucketDescription);
+        return Objects.hash(bucketUuid, bucketName, bucketDescription, createdAt, lastUpdate);
     }
 
     public static BucketDataModel fromEntity(UserBucket userBucket) {
@@ -38,6 +45,12 @@ public class BucketDataModel implements Serializable {
                 .bucketUuid(userBucket.getId())
                 .bucketName(userBucket.getName())
                 .bucketDescription(userBucket.getDescription())
+                .createdAt(
+                    LocalDateTime.from(userBucket.getCreatedAt().toInstant())
+                )
+                .lastUpdate(
+                    LocalDateTime.from(userBucket.getLastUpdate().toInstant())
+                )
                 .build();
     }
 }
