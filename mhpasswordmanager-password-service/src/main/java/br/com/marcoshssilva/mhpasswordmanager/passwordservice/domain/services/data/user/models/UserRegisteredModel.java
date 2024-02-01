@@ -19,7 +19,7 @@ public class UserRegisteredModel implements Serializable {
     private static final long serialVersionUID = 2L;
 
     private String ownerName;
-    private Set<BucketDataModel> buckets = Collections.emptySet();
+    private Set<String> buckets = Collections.emptySet();
 
     @Override
     public boolean equals(Object o) {

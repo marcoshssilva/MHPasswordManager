@@ -34,7 +34,7 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
         }
         return UserRegisteredModel.builder()
                 .ownerName(tokenSubject)
-                .buckets(allByOwnerName.stream().map(BucketDataModel::fromEntity).collect(Collectors.toSet()))
+                .buckets(allByOwnerName.stream().map(UserBucket::getId).collect(Collectors.toSet()))
                 .build();
     }
 
