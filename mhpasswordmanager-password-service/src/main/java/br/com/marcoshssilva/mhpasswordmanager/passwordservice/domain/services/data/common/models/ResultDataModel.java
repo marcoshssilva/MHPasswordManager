@@ -17,7 +17,7 @@ public record ResultDataModel<M>(M data, Boolean success, String message, Except
 
     @Override
     public Boolean hasError() {
-        return !success;
+        return Boolean.FALSE.equals(success);
     }
 
     @Override
