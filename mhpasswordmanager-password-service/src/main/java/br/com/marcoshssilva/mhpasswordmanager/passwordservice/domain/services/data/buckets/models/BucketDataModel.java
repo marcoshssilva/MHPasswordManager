@@ -4,7 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.Us
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Objects;
 
 @lombok.NoArgsConstructor
@@ -20,8 +20,8 @@ public class BucketDataModel implements Serializable {
     private String bucketUuid;
     private String bucketName;
     private String bucketDescription;
-    private LocalDateTime createdAt;
-    private LocalDateTime lastUpdate;
+    private Date createdAt;
+    private Date lastUpdate;
 
     @Override
     public boolean equals(Object o) {
@@ -45,12 +45,8 @@ public class BucketDataModel implements Serializable {
                 .bucketUuid(userBucket.getId())
                 .bucketName(userBucket.getName())
                 .bucketDescription(userBucket.getDescription())
-                .createdAt(
-                    LocalDateTime.from(userBucket.getCreatedAt().toInstant())
-                )
-                .lastUpdate(
-                    LocalDateTime.from(userBucket.getLastUpdate().toInstant())
-                )
+                .createdAt(userBucket.getCreatedAt())
+                .lastUpdate(userBucket.getLastUpdate())
                 .build();
     }
 }
