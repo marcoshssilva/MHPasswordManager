@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @lombok.Setter
 @lombok.NoArgsConstructor
 @lombok.ToString
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class PasswordBucketControllerBucketDataResponseBody {
 
     private String bucketUuid;
