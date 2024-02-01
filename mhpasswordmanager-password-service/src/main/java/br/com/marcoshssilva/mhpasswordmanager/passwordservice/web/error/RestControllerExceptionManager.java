@@ -7,6 +7,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.HttpErrorResponse;
 
@@ -89,6 +90,14 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(EncryptionException.class)
     public ResponseEntity<HttpErrorResponse> encryptionExceptionResolver(EncryptionException e, HttpServletRequest req) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                HttpErrorResponse.builder()
+                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .build());
+    }
+
+    @ExceptionHandler(UserAuthorizationCannotBeLoadedException.class)
+    public ResponseEntity<HttpErrorResponse> userAuthorizationCannotBeLoadedExceptionResolver(UserAuthorizationCannotBeLoadedException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
