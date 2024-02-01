@@ -19,11 +19,17 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.util.Base64;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserBucketServiceImpl implements UserBucketService {
+    public static final IResultDataFactory<BucketDataModel> factory = new ResultDataFactoryImpl<>();
     private final UserBucketRepository userBucketRepository;
     private final CryptService aesCryptService;
     private final CryptService rsaCryptService;
@@ -59,7 +65,35 @@ public class UserBucketServiceImpl implements UserBucketService {
 
     @Override
     public IResultData<BucketDataModel> createBucket(BucketNewDataModel bucketNewDataModel, UserAuthorizations userAuthorizations) throws BucketCannotBeCreatedException, UserRegistrationDeniedAccessException {
-        return null;
+        if (!Objects.equals(bucketNewDataModel.getUserOwner(), userAuthorizations.getUsername())) {
+            throw new UserRegistrationDeniedAccessException();
+        }
+
+        try {
+            KeyPairGenerator rsa = KeyPairGenerator.getInstance("RSA");
+            rsa.initialize(4096);
+            KeyPair keyPair = rsa.generateKeyPair();
+
+            String base64PublicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
+            byte[] encryptedPrivateKey = aesCryptService.encrypt(keyPair.getPrivate().getEncoded(), bucketNewDataModel.getBucketSecret());
+
+            UserBucket userBucket = new UserBucket();
+
+            userBucket.setId(UUID.randomUUID().toString());
+            userBucket.setName(bucketNewDataModel.getBucketName());
+            userBucket.setDescription(bucketNewDataModel.getBucketDescription());
+            userBucket.setOwnerName(userAuthorizations.getUsername());
+            userBucket.setCreatedAt(new Date());
+            userBucket.setLastUpdate(new Date());
+            userBucket.setEncryptedPrivateKeyWithPassword(Base64.getEncoder().encodeToString(encryptedPrivateKey));
+            userBucket.setEncodedPublicKey(base64PublicKey);
+
+            final UserBucket saved = userBucketRepository.save(userBucket);
+
+            return factory.success(BucketDataModel.fromEntity(saved), "CREATED");
+        } catch (Exception e) {
+            throw new BucketCannotBeCreatedException(e);
+        }
     }
 
     @Override
