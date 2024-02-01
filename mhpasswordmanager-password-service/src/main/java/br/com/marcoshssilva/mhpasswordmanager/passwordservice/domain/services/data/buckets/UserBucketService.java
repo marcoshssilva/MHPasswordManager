@@ -6,10 +6,12 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationDeniedAccessException;
 
 public interface UserBucketService {
-    IResultData<BucketDataModel> getBucketByUuid(String bucketUuid) throws BucketNotFoundException;
-    IResultData<BucketDataModel> createBucket(BucketNewDataModel bucketNewDataModel) throws BucketCannotBeCreatedException;
-    IResultData<BucketDataModel> updateBucket(String bucketUuid, BucketUpdateDataModel bucketUpdateDataModel) throws BucketNotFoundException;
-    IResultData<Boolean> deleteBucketByUuid(String bucketUuid) throws BucketNotFoundException;
+    IResultData<BucketDataModel> getBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) throws BucketNotFoundException, UserRegistrationDeniedAccessException;
+    IResultData<BucketDataModel> createBucket(BucketNewDataModel bucketNewDataModel, UserAuthorizations userAuthorizations) throws BucketCannotBeCreatedException, UserRegistrationDeniedAccessException;
+    IResultData<BucketDataModel> updateBucket(String bucketUuid, BucketUpdateDataModel bucketUpdateDataModel, UserAuthorizations userAuthorizations) throws BucketNotFoundException, UserRegistrationDeniedAccessException;
+    IResultData<Boolean> deleteBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) throws BucketNotFoundException, UserRegistrationDeniedAccessException;
 }
