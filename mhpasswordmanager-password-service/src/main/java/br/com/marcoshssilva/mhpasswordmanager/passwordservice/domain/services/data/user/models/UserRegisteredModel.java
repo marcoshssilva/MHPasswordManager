@@ -1,7 +1,5 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models;
 
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
-
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Collections;
