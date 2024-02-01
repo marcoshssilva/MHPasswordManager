@@ -33,7 +33,7 @@ public class PasswordBucketController {
         return ResponseEntity.internalServerError().build();
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<Page<PasswordBucketControllerBucketDataResponseBody>> getAllBuckets(@AuthenticationPrincipal Jwt token, @ParameterObject @PageableDefault(size = 500) Pageable pageable) {
         return ResponseEntity.internalServerError().build();
     }
