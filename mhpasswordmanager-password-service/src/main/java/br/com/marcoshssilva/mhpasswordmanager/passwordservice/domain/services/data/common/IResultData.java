@@ -2,7 +2,6 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 
 public interface IResultData<M> {
     M getData();
-    Boolean isReady();
     Boolean isOk();
     Boolean hasError();
     Boolean hasException();
