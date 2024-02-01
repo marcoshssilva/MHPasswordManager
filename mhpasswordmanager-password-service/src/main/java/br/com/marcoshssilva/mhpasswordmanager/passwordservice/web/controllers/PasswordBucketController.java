@@ -1,5 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.UserBucketService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerCreateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.PasswordBucketControllerBucketDataResponseBody;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "OAuth2 Authorization Code Flow")
 @SecurityRequirement(name = "Bearer Authorization")
 public class PasswordBucketController {
+    private final UserRegistrationService userRegistrationService;
+    private final UserBucketService userBucketService;
 
     @PostMapping("/create")
     public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> createBucket(@AuthenticationPrincipal Jwt token, @RequestBody PasswordBucketControllerCreateBucketRequestBody payload) {
