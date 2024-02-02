@@ -22,7 +22,7 @@ public record ResultDataModel<M>(M data, Boolean success, String message, Except
 
     @Override
     public Boolean hasException() {
-        return Objects.isNull(e);
+        return Objects.nonNull(e);
     }
 
     @Override
