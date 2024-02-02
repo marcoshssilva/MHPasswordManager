@@ -20,6 +20,8 @@ public class BucketDataModel implements Serializable {
     private String bucketUuid;
     private String bucketName;
     private String bucketDescription;
+    private String bucketPublicKey;
+    private String bucketPrivateKeyEncrypted;
     private Date createdAt;
     private Date lastUpdate;
 
@@ -32,12 +34,14 @@ public class BucketDataModel implements Serializable {
                 && Objects.equals(bucketName, that.bucketName)
                 && Objects.equals(bucketDescription, that.bucketDescription)
                 && Objects.equals(createdAt, that.createdAt)
-                && Objects.equals(lastUpdate, that.lastUpdate);
+                && Objects.equals(lastUpdate, that.lastUpdate)
+                && Objects.equals(bucketPublicKey, that.bucketPublicKey)
+                && Objects.equals(bucketPrivateKeyEncrypted, that.bucketPrivateKeyEncrypted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bucketUuid, bucketName, bucketDescription, createdAt, lastUpdate);
+        return Objects.hash(bucketUuid, bucketName, bucketDescription, createdAt, lastUpdate, bucketPublicKey, bucketPrivateKeyEncrypted);
     }
 
     public static BucketDataModel fromEntity(UserBucket userBucket) {
@@ -47,6 +51,8 @@ public class BucketDataModel implements Serializable {
                 .bucketDescription(userBucket.getDescription())
                 .createdAt(userBucket.getCreatedAt())
                 .lastUpdate(userBucket.getLastUpdate())
+                .bucketPrivateKeyEncrypted(userBucket.getEncryptedPrivateKeyWithPassword())
+                .bucketPublicKey(userBucket.getEncodedPublicKey())
                 .build();
     }
 }
