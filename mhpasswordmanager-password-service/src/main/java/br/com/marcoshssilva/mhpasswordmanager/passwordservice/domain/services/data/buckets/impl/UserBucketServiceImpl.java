@@ -43,7 +43,7 @@ public class UserBucketServiceImpl implements UserBucketService {
     }
 
     @Override
-    public IResultData<BucketDataModel> getBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) throws BucketNotFoundException, UserRegistrationDeniedAccessException {
+    public IResultData<BucketDataModel> getBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) {
         IResultDataFactory<BucketDataModel> factory = new ResultDataFactoryImpl<>();
         Optional<UserBucket> userBucket;
         try {
@@ -53,10 +53,10 @@ public class UserBucketServiceImpl implements UserBucketService {
         }
 
         if (userBucket.isEmpty()) {
-            throw new BucketNotFoundException();
+            return factory.exception(new BucketNotFoundException(), "Bucket not found");
         }
         if (!Objects.equals(userBucket.get().getOwnerName(), userAuthorizations.getUsername())) {
-            throw new UserRegistrationDeniedAccessException();
+            return factory.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
         }
 
         return factory.success(BucketDataModel.fromEntity(userBucket.get()), "SUCCESS");
@@ -64,9 +64,9 @@ public class UserBucketServiceImpl implements UserBucketService {
     }
 
     @Override
-    public IResultData<BucketDataModel> createBucket(BucketNewDataModel bucketNewDataModel, UserAuthorizations userAuthorizations) throws BucketCannotBeCreatedException, UserRegistrationDeniedAccessException {
+    public IResultData<BucketDataModel> createBucket(BucketNewDataModel bucketNewDataModel, UserAuthorizations userAuthorizations) {
         if (!Objects.equals(bucketNewDataModel.getUserOwner(), userAuthorizations.getUsername())) {
-            throw new UserRegistrationDeniedAccessException();
+            return factory.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
         }
 
         try {
@@ -92,17 +92,17 @@ public class UserBucketServiceImpl implements UserBucketService {
 
             return factory.success(BucketDataModel.fromEntity(saved), "CREATED");
         } catch (Exception e) {
-            throw new BucketCannotBeCreatedException(e);
+            return factory.exception(new BucketCannotBeCreatedException(e), "Bucket cannot be create because: " + e.getMessage());
         }
     }
 
     @Override
-    public IResultData<BucketDataModel> updateBucket(String bucketUuid, BucketUpdateDataModel bucketUpdateDataModel, UserAuthorizations userAuthorizations) throws BucketNotFoundException, UserRegistrationDeniedAccessException {
+    public IResultData<BucketDataModel> updateBucket(String bucketUuid, BucketUpdateDataModel bucketUpdateDataModel, UserAuthorizations userAuthorizations) {
         return null;
     }
 
     @Override
-    public IResultData<Boolean> deleteBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) throws BucketNotFoundException, UserRegistrationDeniedAccessException {
+    public IResultData<Boolean> deleteBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) {
         return null;
     }
 }
