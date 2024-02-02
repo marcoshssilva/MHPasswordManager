@@ -18,6 +18,8 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationDeniedAccessException;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.security.KeyPair;
@@ -59,6 +61,11 @@ public class UserBucketServiceImpl implements UserBucketService {
             return factoryBucketDataModel.exception(e, e.getMessage());
         }
 
+    }
+
+    @Override
+    public IResultData<Page<BucketDataModel>> getBucketsByUserAuthorizations(UserAuthorizations userAuthorizations, PageRequest pageRequest) {
+        return null;
     }
 
     @Override
