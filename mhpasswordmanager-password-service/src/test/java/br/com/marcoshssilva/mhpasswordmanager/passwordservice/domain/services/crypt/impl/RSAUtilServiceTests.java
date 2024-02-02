@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt;
+package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.impl;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -108,7 +108,7 @@ Certificate:
             """;
 
     @Autowired
-    RSAUtilService rsaUtilService;
+    RSAUtilServiceImpl rsaUtilService;
 
     @DisplayName("Test if can generate PrivateKey instance from PKCS8 encoded key")
     @Test

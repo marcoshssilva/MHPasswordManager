@@ -3,8 +3,8 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordStoredValueRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.RSACryptServiceImpl;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.RSAUtilService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.impl.RSACryptServiceImpl;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.impl.RSAUtilServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultDataFactory;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.impl.ResultDataFactoryImpl;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 @lombok.RequiredArgsConstructor
 @lombok.extern.slf4j.Slf4j
 public class UserStoredKeysServiceImpl implements UserStoredKeysService {
-    private final CryptService cryptService = new RSACryptServiceImpl(new RSAUtilService());
+    private final CryptService cryptService = new RSACryptServiceImpl(new RSAUtilServiceImpl());
 
     private final UserPasswordKeyRepository userPasswordKeyRepository;
     private final UserPasswordStoredValueRepository userPasswordStoredValueRepository;

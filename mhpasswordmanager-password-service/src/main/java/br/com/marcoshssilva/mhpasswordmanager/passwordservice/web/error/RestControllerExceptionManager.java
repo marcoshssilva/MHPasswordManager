@@ -1,7 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.error;
 
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.DecryptionException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.EncryptionException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.exceptions.DecryptionException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.exceptions.EncryptionException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketCannotBeCreatedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyNotFoundException;
