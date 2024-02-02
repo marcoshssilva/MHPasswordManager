@@ -32,6 +32,7 @@ import java.util.UUID;
 
 @Service
 public class UserBucketServiceImpl implements UserBucketService {
+    public static final IResultDataFactory<Page<BucketDataModel>> factoryPageBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<BucketDataModel> factoryBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Boolean> factoryBoolean = new ResultDataFactoryImpl<>();
 
@@ -65,7 +66,12 @@ public class UserBucketServiceImpl implements UserBucketService {
 
     @Override
     public IResultData<Page<BucketDataModel>> getBucketsByUserAuthorizations(UserAuthorizations userAuthorizations, Pageable pageRequest) {
-        return null;
+        try {
+            final Page<UserBucket> page = userBucketRepository.findAllByOwnerName(userAuthorizations.getUsername(), pageRequest);
+            return factoryPageBucketDataModel.success(page.map(BucketDataModel::fromEntity), "SUCCESS");
+        } catch (Exception e) {
+            return factoryPageBucketDataModel.exception(e, "Cannot fetch buckets, because: " + e.getMessage());
+        }
     }
 
     @Override
