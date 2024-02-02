@@ -3,9 +3,10 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities.UserBucket;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserBucketRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.RSAUtilService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.UserBucketService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketCannotBeCreatedException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketCannotBeDeletedException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketCannotBeUpdatedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
@@ -29,52 +30,50 @@ import java.util.UUID;
 
 @Service
 public class UserBucketServiceImpl implements UserBucketService {
-    public static final IResultDataFactory<BucketDataModel> factory = new ResultDataFactoryImpl<>();
-    private final UserBucketRepository userBucketRepository;
-    private final CryptService aesCryptService;
-    private final CryptService rsaCryptService;
-    private final RSAUtilService rsaUtilService;
+    public static final IResultDataFactory<BucketDataModel> factoryBucketDataModel = new ResultDataFactoryImpl<>();
+    public static final IResultDataFactory<Boolean> factoryBoolean = new ResultDataFactoryImpl<>();
 
-    public UserBucketServiceImpl(UserBucketRepository userBucketRepository, @Qualifier("aesCryptService") CryptService aesCryptService, @Qualifier("rsaCryptService") CryptService rsaCryptService, RSAUtilService rsaUtilService) {
+    private final UserBucketRepository userBucketRepository;
+    private final CryptService cryptService;
+
+    public UserBucketServiceImpl(UserBucketRepository userBucketRepository, @Qualifier("aesCryptService") CryptService cryptService) {
         this.userBucketRepository = userBucketRepository;
-        this.aesCryptService = aesCryptService;
-        this.rsaCryptService = rsaCryptService;
-        this.rsaUtilService = rsaUtilService;
+        this.cryptService = cryptService;
     }
 
     @Override
     public IResultData<BucketDataModel> getBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) {
-        Optional<UserBucket> userBucket;
         try {
-            userBucket = userBucketRepository.findById(bucketUuid);
+            Optional<UserBucket> userBucket = userBucketRepository.findById(bucketUuid);
+            // case not exists
+            if (userBucket.isEmpty()) {
+                return factoryBucketDataModel.exception(new BucketNotFoundException(), "Bucket not found");
+            }
+            // case is from another user
+            if (!Objects.equals(userBucket.get().getOwnerName(), userAuthorizations.getUsername())) {
+                return factoryBucketDataModel.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
+            }
+
+            return factoryBucketDataModel.success(BucketDataModel.fromEntity(userBucket.get()), "SUCCESS");
         } catch (Exception e) {
-            return factory.exception(e, e.getMessage());
+            return factoryBucketDataModel.exception(e, e.getMessage());
         }
-
-        if (userBucket.isEmpty()) {
-            return factory.exception(new BucketNotFoundException(), "Bucket not found");
-        }
-        if (!Objects.equals(userBucket.get().getOwnerName(), userAuthorizations.getUsername())) {
-            return factory.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
-        }
-
-        return factory.success(BucketDataModel.fromEntity(userBucket.get()), "SUCCESS");
 
     }
 
     @Override
     public IResultData<BucketDataModel> createBucket(BucketNewDataModel bucketNewDataModel, UserAuthorizations userAuthorizations) {
-        if (!Objects.equals(bucketNewDataModel.getUserOwner(), userAuthorizations.getUsername())) {
-            return factory.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
-        }
-
         try {
+            if (!Objects.equals(bucketNewDataModel.getUserOwner(), userAuthorizations.getUsername())) {
+                return factoryBucketDataModel.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
+            }
+
             KeyPairGenerator rsa = KeyPairGenerator.getInstance("RSA");
             rsa.initialize(4096);
             KeyPair keyPair = rsa.generateKeyPair();
 
             String base64PublicKey = Base64.getEncoder().encodeToString(keyPair.getPublic().getEncoded());
-            byte[] encryptedPrivateKey = aesCryptService.encrypt(keyPair.getPrivate().getEncoded(), bucketNewDataModel.getBucketSecret());
+            byte[] encryptedPrivateKey = cryptService.encrypt(keyPair.getPrivate().getEncoded(), bucketNewDataModel.getBucketSecret());
 
             UserBucket userBucket = new UserBucket();
 
@@ -89,19 +88,54 @@ public class UserBucketServiceImpl implements UserBucketService {
 
             final UserBucket saved = userBucketRepository.save(userBucket);
 
-            return factory.success(BucketDataModel.fromEntity(saved), "CREATED");
+            return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), "CREATED");
         } catch (Exception e) {
-            return factory.exception(new BucketCannotBeCreatedException(e), "Bucket cannot be create because: " + e.getMessage());
+            return factoryBucketDataModel.exception(new BucketCannotBeCreatedException(e), "Bucket cannot be create because: " + e.getMessage());
         }
     }
 
     @Override
     public IResultData<BucketDataModel> updateBucket(String bucketUuid, BucketUpdateDataModel bucketUpdateDataModel, UserAuthorizations userAuthorizations) {
-        return null;
+        try {
+            Optional<UserBucket> userBucket = userBucketRepository.findById(bucketUuid);
+            // case not exists
+            if (userBucket.isEmpty()) {
+                return factoryBucketDataModel.exception(new BucketNotFoundException(), "Bucket not found");
+            }
+            // case is from another user
+            final UserBucket bucket = userBucket.get();
+            if (!Objects.equals(bucket.getOwnerName(), userAuthorizations.getUsername())) {
+                return factoryBucketDataModel.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
+            }
+
+            bucket.setName(bucketUpdateDataModel.getBucketName());
+            bucket.setDescription(bucketUpdateDataModel.getBucketDescription());
+            bucket.setLastUpdate(new Date());
+
+            final UserBucket saved = userBucketRepository.save(bucket);
+            return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), "UPDATED");
+        } catch (Exception e) {
+            return factoryBucketDataModel.exception(new BucketCannotBeUpdatedException(e), "Bucket cannot be updated because: " + e.getMessage());
+        }
     }
 
     @Override
     public IResultData<Boolean> deleteBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) {
-        return null;
+        try {
+            Optional<UserBucket> userBucket = userBucketRepository.findById(bucketUuid);
+            // case not exists
+            if (userBucket.isEmpty()) {
+                return factoryBoolean.exception(new BucketNotFoundException(), "Bucket not found");
+            }
+            // case is from another user
+            final UserBucket bucket = userBucket.get();
+            if (!Objects.equals(bucket.getOwnerName(), userAuthorizations.getUsername())) {
+                return factoryBoolean.exception(new UserRegistrationDeniedAccessException(), "Denied access to User");
+            }
+            userBucketRepository.delete(bucket);
+            return factoryBoolean.success(Boolean.TRUE, "DELETED");
+        } catch (Exception e) {
+            return factoryBoolean.exception(new BucketCannotBeDeletedException(e), "Bucket cannot be deleted because: " + e.getMessage());
+        }
     }
 }
