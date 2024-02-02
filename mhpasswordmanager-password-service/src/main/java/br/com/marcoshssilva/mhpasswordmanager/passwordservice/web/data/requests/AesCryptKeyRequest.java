@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -14,8 +15,9 @@ import java.util.Objects;
 @Setter
 @NoArgsConstructor
 @ToString
-public class CryptKeyRequest implements Serializable {
-    public static final long serialVersionUID = 1L;
+public class AesCryptKeyRequest implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @NotBlank
     private String base64Data;
@@ -26,7 +28,7 @@ public class CryptKeyRequest implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof CryptKeyRequest that)) return false;
+        if (!(o instanceof AesCryptKeyRequest that)) return false;
         return Objects.equals(base64Data, that.base64Data) && Objects.equals(secret, that.secret);
     }
 
