@@ -109,6 +109,10 @@ public class PasswordBucketController {
         if (Boolean.TRUE.equals(result.hasException())) {
             throw result.getException();
         }
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(PasswordBucketControllerBucketDataResponseBody.builder()
+                .bucketUuid(result.getData().getBucketUuid()).bucketName(result.getData().getBucketName())
+                .bucketDescription(result.getData().getBucketDescription()).lastUpdate(result.getData().getLastUpdate()).createdAt(result.getData().getCreatedAt())
+                .build());
     }
 }
