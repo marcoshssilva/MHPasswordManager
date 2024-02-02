@@ -3,8 +3,6 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.d
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositories.UserPasswordStoredValueRepository;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.CryptService;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.impl.RSACryptServiceImpl;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.impl.RSAUtilServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultDataFactory;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.impl.ResultDataFactoryImpl;
@@ -17,14 +15,12 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service
-@lombok.RequiredArgsConstructor
-@lombok.extern.slf4j.Slf4j
 public class UserStoredKeysServiceImpl implements UserStoredKeysService {
-    private final CryptService cryptService = new RSACryptServiceImpl(new RSAUtilServiceImpl());
-
+    private final CryptService cryptService;
     private final UserPasswordKeyRepository userPasswordKeyRepository;
     private final UserPasswordStoredValueRepository userPasswordStoredValueRepository;
     private final UserRegistrationService userRegistrationService;
@@ -32,6 +28,14 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
     public static final IResultDataFactory<KeyStorePayloadEncodedDto> KEY_STORE_PAYLOAD_ENCODED_DTO_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Void> VOID_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
+
+    public UserStoredKeysServiceImpl(@Qualifier("rsaCryptService") CryptService cryptService, UserPasswordKeyRepository userPasswordKeyRepository, UserPasswordStoredValueRepository userPasswordStoredValueRepository, UserRegistrationService userRegistrationService, ObjectMapper objectMapper) {
+        this.cryptService = cryptService;
+        this.userPasswordKeyRepository = userPasswordKeyRepository;
+        this.userPasswordStoredValueRepository = userPasswordStoredValueRepository;
+        this.userRegistrationService = userRegistrationService;
+        this.objectMapper = objectMapper;
+    }
 
     @Override
     public IResultData<KeyStorePayloadEncodedDto> createPasswordStoredKey(UserAuthorizations authorization, String bucketUuid, Long keyId, AbstractPasswordStoredValueDecodedDto decodedPassword) {
