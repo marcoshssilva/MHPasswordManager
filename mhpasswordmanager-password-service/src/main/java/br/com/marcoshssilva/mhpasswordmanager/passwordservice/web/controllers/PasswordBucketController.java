@@ -43,16 +43,18 @@ public class PasswordBucketController {
     private final UserBucketService userBucketService;
 
     @PostMapping("/create")
-    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> createBucket(@AuthenticationPrincipal Jwt token, @RequestBody PasswordBucketControllerCreateBucketRequestBody payload) throws UserAuthorizationCannotBeLoadedException, UserRegistrationDeniedAccessException, BucketCannotBeCreatedException {
+    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> createBucket(@AuthenticationPrincipal Jwt token, @RequestBody PasswordBucketControllerCreateBucketRequestBody payload) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<BucketDataModel> result = userBucketService.createBucket(
                 BucketNewDataModel.builder()
-                        .bucketName(payload.getBucketName())
-                        .bucketSecret(payload.getBucketSecret())
-                        .bucketDescription(payload.getBucketDescription())
-                        .userOwner(userAuthorizations.getUsername())
-                        .build(),
+                        .bucketName(payload.getBucketName()).bucketSecret(payload.getBucketSecret()).bucketDescription(payload.getBucketDescription())
+                        .userOwner(userAuthorizations.getUsername()).build(),
                 userAuthorizations);
+
+        if (Boolean.TRUE.equals(result.hasException())) {
+            throw result.getException();
+        }
+
         return ResponseEntity.ok(PasswordBucketControllerBucketDataResponseBody
                 .builder()
                 .bucketUuid(result.getData().getBucketUuid())
@@ -69,22 +71,30 @@ public class PasswordBucketController {
     }
 
     @GetMapping("/{bucketUuid}")
-    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> getBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws UserAuthorizationCannotBeLoadedException, BucketNotFoundException, UserRegistrationDeniedAccessException {
+    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> getBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         IResultData<BucketDataModel> result = userBucketService.getBucketByUuid(bucketUuid, userAuthorizations);
 
-        return ResponseEntity.ok(PasswordBucketControllerBucketDataResponseBody
-                .builder()
-                .bucketUuid(result.getData().getBucketUuid())
-                .bucketName(result.getData().getBucketName())
-                .bucketDescription(result.getData().getBucketDescription())
-                .lastUpdate(result.getData().getLastUpdate())
-                .createdAt(result.getData().getCreatedAt())
-                .build());
+        if (Boolean.TRUE.equals(result.hasException())) {
+            throw result.getException();
+        }
+
+        final PasswordBucketControllerBucketDataResponseBody body = PasswordBucketControllerBucketDataResponseBody.builder().bucketUuid(result.getData().getBucketUuid())
+                .bucketName(result.getData().getBucketName()).bucketDescription(result.getData().getBucketDescription())
+                .lastUpdate(result.getData().getLastUpdate()).createdAt(result.getData().getCreatedAt())
+                .build();
+
+        return ResponseEntity.ok(body);
     }
 
     @DeleteMapping("/{bucketUuid}")
-    public ResponseEntity<Void> deleteBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) {
-        return ResponseEntity.internalServerError().build();
+    public ResponseEntity<Void> deleteBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws Exception {
+        UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
+        IResultData<Boolean> result = userBucketService.deleteBucketByUuid(bucketUuid, userAuthorizations);
+
+        if (Boolean.TRUE.equals(result.hasException())) {
+            throw result.getException();
+        }
+        return ResponseEntity.ok().build();
     }
 }
