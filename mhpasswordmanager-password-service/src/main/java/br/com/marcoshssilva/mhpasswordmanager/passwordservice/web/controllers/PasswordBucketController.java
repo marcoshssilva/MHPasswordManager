@@ -65,8 +65,19 @@ public class PasswordBucketController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<PasswordBucketControllerBucketDataResponseBody>> getAllBuckets(@AuthenticationPrincipal Jwt token, @ParameterObject @PageableDefault(size = 500) Pageable pageable) {
-        return ResponseEntity.internalServerError().build();
+    public ResponseEntity<Page<PasswordBucketControllerBucketDataResponseBody>> getAllBuckets(@AuthenticationPrincipal Jwt token, @ParameterObject @PageableDefault(size = 500) Pageable pageable) throws Exception {
+        UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
+        final IResultData<Page<BucketDataModel>> result = userBucketService.getBucketsByUserAuthorizations(userAuthorizations, pageable);
+
+        if (Boolean.TRUE.equals(result.hasException())) {
+            throw result.getException();
+        }
+
+        final Page<PasswordBucketControllerBucketDataResponseBody> body = result.getData().map(item -> PasswordBucketControllerBucketDataResponseBody.builder()
+                .bucketUuid(item.getBucketUuid()).bucketName(item.getBucketName()).bucketDescription(item.getBucketDescription()).createdAt(item.getCreatedAt()).lastUpdate(item.getLastUpdate())
+                .build());
+
+        return ResponseEntity.ok(body);
     }
 
     @GetMapping("/{bucketUuid}")
