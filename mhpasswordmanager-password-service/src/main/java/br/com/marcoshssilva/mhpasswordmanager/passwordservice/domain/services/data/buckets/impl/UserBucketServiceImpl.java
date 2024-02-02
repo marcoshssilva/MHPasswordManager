@@ -44,7 +44,6 @@ public class UserBucketServiceImpl implements UserBucketService {
 
     @Override
     public IResultData<BucketDataModel> getBucketByUuid(String bucketUuid, UserAuthorizations userAuthorizations) {
-        IResultDataFactory<BucketDataModel> factory = new ResultDataFactoryImpl<>();
         Optional<UserBucket> userBucket;
         try {
             userBucket = userBucketRepository.findById(bucketUuid);
