@@ -37,7 +37,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SecurityRequirement(name = "Bearer Authorization")
 
 @lombok.RequiredArgsConstructor
-public class PasswordBucketController {
+public class BucketController {
     private final UserRegistrationService userRegistrationService;
     private final UserBucketService userBucketService;
 
