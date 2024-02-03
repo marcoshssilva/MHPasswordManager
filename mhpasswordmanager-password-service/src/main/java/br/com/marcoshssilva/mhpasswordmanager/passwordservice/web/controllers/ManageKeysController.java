@@ -62,6 +62,7 @@ public class ManageKeysController {
         final IResultData<BucketDataModel> bucket = userBucketService.getBucketByUuid(uuid, authorizations);
         bucket.throwErrorIfExists();
 
+        payload.setKeyId(null);
         payload.setOwnerId(uuid);
         final IResultData<KeyPayloadEncodedDto> keyPayloadEncodedDtoIResultData = userKeysService.transformAsKeyPayloadEncodedDto(payload, bucket.getData().getBucketPublicKey());
         keyPayloadEncodedDtoIResultData.throwErrorIfExists();

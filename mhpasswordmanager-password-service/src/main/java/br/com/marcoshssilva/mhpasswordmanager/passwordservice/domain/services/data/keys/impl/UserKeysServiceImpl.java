@@ -68,7 +68,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             if (Boolean.TRUE.equals(bucket.hasError())) {
                 return Boolean.TRUE.equals(bucket.hasException()) ? KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.exception(bucket.getException(), bucket.getMessage()) : KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.error(bucket.getMessage());
             }
-            Optional<UserPasswordKey> key = this.userPasswordKeyRepository.findFirstByIdAndAndUserBucketUuid(keyId, bucketUuid);
+            Optional<UserPasswordKey> key = this.userPasswordKeyRepository.findByBucketUuidAndId(bucketUuid, keyId);
             if (key.isEmpty()) {
                 return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.exception(new KeyNotFoundException("Key not found."), "Key not found");
             }
@@ -86,6 +86,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             Set<UserPasswordStoredValue> storedValues = this.userPasswordStoredValueRepository.findAllByKeyId(key.get());
             builder.encodedKeys(storedValues.stream()
                     .map(this::keyStoreFromEntity)
+                    .map(IResultData::getData)
                     .distinct()
                     .toArray(KeyStorePayloadEncodedDto[]::new));
 

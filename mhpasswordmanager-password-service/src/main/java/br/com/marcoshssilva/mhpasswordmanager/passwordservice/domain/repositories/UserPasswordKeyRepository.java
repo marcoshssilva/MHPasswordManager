@@ -17,8 +17,5 @@ public interface UserPasswordKeyRepository extends JpaRepository<UserPasswordKey
     Optional<UserPasswordKey> findByBucketUuidAndId(String bucketUuid, Long id);
 
     @Query(value = "SELECT obj FROM UserPasswordKey obj WHERE obj.userBucket.id = ?1")
-    Page<UserPasswordKey> findAllByUserRegistrationId(String userRegistrationId, Pageable page);
-
-    @Query(value = "SELECT obj FROM UserPasswordKey obj WHERE obj.userBucket.id = ?1")
     Page<UserPasswordKey> findAllByBucketUuid(String bucketUuid, Pageable pageable);
 }

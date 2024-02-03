@@ -37,7 +37,7 @@ public abstract class AbstractKeyPayloadDecodedDto implements Serializable {
     public static final long serialVersionUID = 1L;
 
     @JsonProperty(value = "key_id")
-    private long keyId;
+    private Long keyId;
 
     @JsonProperty(value = "owner_id")
     private String ownerId;
