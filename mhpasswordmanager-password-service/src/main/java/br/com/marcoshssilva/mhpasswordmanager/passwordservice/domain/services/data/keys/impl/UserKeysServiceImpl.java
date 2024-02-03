@@ -113,7 +113,7 @@ public class UserKeysServiceImpl implements UserKeysService {
                         .lastUpdate(k.getLastUpdate())
                         .tags(k.getTags().toArray(new String[0]))
                         .type(PasswordKeyTypesEnum.fromId(k.getType().getId().intValue()))
-                        .encodedKeys(storedValues.stream().map(this::keyStoreFromEntity).distinct().toArray(KeyStorePayloadEncodedDto[]::new))
+                        .encodedKeys(storedValues.stream().map(this::keyStoreFromEntity).map(IResultData::getData).distinct().toArray(KeyStorePayloadEncodedDto[]::new))
                         .build();
             });
 
