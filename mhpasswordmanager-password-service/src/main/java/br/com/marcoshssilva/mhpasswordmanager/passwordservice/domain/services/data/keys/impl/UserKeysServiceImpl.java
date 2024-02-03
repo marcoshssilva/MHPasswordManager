@@ -61,6 +61,8 @@ public class UserKeysServiceImpl implements UserKeysService {
     public static final IResultDataFactory<KeyStorePayloadEncodedDto> KEY_STORE_PAYLOAD_ENCODED_DTO_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Void> VOID_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
 
+    public static final String STRING_MSG_SUCCESS = "OK";
+
     @Override
     public IResultData<KeyPayloadEncodedDto> getEncodedKeyFromBucket(UserAuthorizations authorization, String bucketUuid, Long keyId) {
         try {
@@ -90,7 +92,7 @@ public class UserKeysServiceImpl implements UserKeysService {
                     .distinct()
                     .toArray(KeyStorePayloadEncodedDto[]::new));
 
-            return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(builder.build(), "SUCCESS");
+            return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(builder.build(), STRING_MSG_SUCCESS);
         } catch (Exception e) {
             return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.exception(e, e.getMessage());
         }
@@ -118,7 +120,7 @@ public class UserKeysServiceImpl implements UserKeysService {
                         .build();
             });
 
-            return PAGE_I_RESULT_DATA_FACTORY.success(keyPayloadEncodedDtos, "SUCCESS");
+            return PAGE_I_RESULT_DATA_FACTORY.success(keyPayloadEncodedDtos, STRING_MSG_SUCCESS);
         } catch (Exception e) {
             return PAGE_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
         }
@@ -128,7 +130,7 @@ public class UserKeysServiceImpl implements UserKeysService {
     public IResultData<KeyStorePayloadEncodedDto> keyStoreFromEntity(UserPasswordStoredValue entity) {
         try {
             final KeyStorePayloadEncodedDto build = KeyStorePayloadEncodedDto.builder().id(entity.getId()).data(entity.getData()).lastUpdate(entity.getLastUpdate()).createdAt(entity.getCreatedAt()).build();
-            return KEY_STORE_PAYLOAD_ENCODED_DTO_I_RESULT_DATA_FACTORY.success(build, "SUCCESS");
+            return KEY_STORE_PAYLOAD_ENCODED_DTO_I_RESULT_DATA_FACTORY.success(build, STRING_MSG_SUCCESS);
         } catch (Exception e) {
             return KEY_STORE_PAYLOAD_ENCODED_DTO_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
         }
@@ -165,9 +167,8 @@ public class UserKeysServiceImpl implements UserKeysService {
 
             return getEncodedKeyFromBucket(authorization, data.getOwnerId(), data.getId());
         } catch (Exception e) {
-            return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.exception(
-                    new KeyRegistrationErrorException("Key cannot be saved, cause: " + e.getMessage(), e),
-                    "Key cannot be saved, cause: " + e.getMessage());
+            final String message = "Key cannot be saved, cause: " + e.getMessage();
+            return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.exception(new KeyRegistrationErrorException(message, e), message);
         }
     }
 
@@ -184,21 +185,21 @@ public class UserKeysServiceImpl implements UserKeysService {
     @Override
     public IResultData<KeyPayloadEncodedDto> transformAsKeyPayloadEncodedDto(AbstractKeyPayloadDecodedDto data, String secretToEncrypt) {
         try {
-            if (data instanceof ApplicationPayloadDecodedDto) {
-                final KeyPayloadEncodedDto convert = applicationKeyToEncodedConverter.convert((ApplicationPayloadDecodedDto) data, secretToEncrypt);
-                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, "SUCCESS");
-            } else if (data instanceof BankCardPayloadDecodedDto) {
-                final KeyPayloadEncodedDto convert = bankCardKeyToEncodedConverter.convert((BankCardPayloadDecodedDto) data, secretToEncrypt);
-                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, "SUCCESS");
-            } else if (data instanceof EmailPayloadDecodedDto) {
-                final KeyPayloadEncodedDto convert = emailKeyToEncodedConverter.convert((EmailPayloadDecodedDto) data, secretToEncrypt);
-                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, "SUCCESS");
-            } else if (data instanceof SocialMediaPayloadDecodedDto) {
-                final KeyPayloadEncodedDto convert = socialMediaKeyToEncodedConverter.convert((SocialMediaPayloadDecodedDto) data, secretToEncrypt);
-                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, "SUCCESS");
-            } else if (data instanceof WebsitePayloadDecodedDto) {
-                final KeyPayloadEncodedDto convert = websiteKeyDecodedToEncodedConverter.convert((WebsitePayloadDecodedDto) data, secretToEncrypt);
-                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, "SUCCESS");
+            if (data instanceof ApplicationPayloadDecodedDto application) {
+                final KeyPayloadEncodedDto convert = applicationKeyToEncodedConverter.convert(application, secretToEncrypt);
+                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, STRING_MSG_SUCCESS);
+            } else if (data instanceof BankCardPayloadDecodedDto bankCard) {
+                final KeyPayloadEncodedDto convert = bankCardKeyToEncodedConverter.convert(bankCard, secretToEncrypt);
+                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, STRING_MSG_SUCCESS);
+            } else if (data instanceof EmailPayloadDecodedDto email) {
+                final KeyPayloadEncodedDto convert = emailKeyToEncodedConverter.convert(email, secretToEncrypt);
+                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, STRING_MSG_SUCCESS);
+            } else if (data instanceof SocialMediaPayloadDecodedDto socialMedia) {
+                final KeyPayloadEncodedDto convert = socialMediaKeyToEncodedConverter.convert(socialMedia, secretToEncrypt);
+                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, STRING_MSG_SUCCESS);
+            } else if (data instanceof WebsitePayloadDecodedDto website) {
+                final KeyPayloadEncodedDto convert = websiteKeyDecodedToEncodedConverter.convert(website, secretToEncrypt);
+                return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.success(convert, STRING_MSG_SUCCESS);
             } else {
                 throw new KeyEncodedErrorConverterException("Unknown type of instance");
             }
@@ -219,7 +220,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             Arrays.stream(resultData.getData().getEncodedKeys()).forEach(keyStored -> userPasswordStoredValueRepository.deleteById(keyStored.getId()));
             // delete key
             userPasswordKeyRepository.deleteById(resultData.getData().getId());
-            return VOID_I_RESULT_DATA_FACTORY.success(Void.class.getDeclaredConstructor().newInstance(), "SUCCESS");
+            return VOID_I_RESULT_DATA_FACTORY.success(Void.class.getDeclaredConstructor().newInstance(), STRING_MSG_SUCCESS);
         } catch (Exception e) {
             return VOID_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
         }
