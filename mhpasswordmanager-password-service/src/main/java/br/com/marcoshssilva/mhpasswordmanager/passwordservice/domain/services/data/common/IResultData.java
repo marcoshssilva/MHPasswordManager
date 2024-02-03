@@ -7,4 +7,5 @@ public interface IResultData<M> {
     Boolean hasException();
     String getMessage();
     Exception getException();
+    void throwErrorIfExists() throws Exception;
 }
