@@ -3,7 +3,9 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class UserPasswordKeyTypeTests {
 
@@ -59,8 +61,8 @@ class UserPasswordKeyTypeTests {
         assertEquals(keyType1, keyType2);
         assertNotEquals(keyType1, keyType3);
         assertNotEquals(keyType2, keyType3);
-        assertNotEquals(keyType1, null);
-        assertNotEquals(keyType1, "not a key type");
+        assertNotEquals(null, keyType1);
+        assertNotEquals("not a key type", keyType1);
     }
 
     @DisplayName("Test toString()")
@@ -73,7 +75,7 @@ class UserPasswordKeyTypeTests {
 
     @DisplayName("Test getters and setters individual")
     @Test
-    public void testGettersAndSetters() {
+    void testGettersAndSetters() {
         UserPasswordKeyType keyType = new UserPasswordKeyType();
         Long id = 1L;
         String description = "Test description";
