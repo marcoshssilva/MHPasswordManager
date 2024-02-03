@@ -21,6 +21,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,6 +43,7 @@ public class BucketController {
     private final UserBucketService userBucketService;
 
     @PostMapping("/create")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> createBucket(@AuthenticationPrincipal Jwt token, @RequestBody PasswordBucketControllerCreateBucketRequestBody payload) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<BucketDataModel> result = userBucketService.createBucket(
@@ -49,10 +51,7 @@ public class BucketController {
                         .bucketName(payload.getBucketName()).bucketSecret(payload.getBucketSecret()).bucketDescription(payload.getBucketDescription())
                         .userOwner(userAuthorizations.getUsername()).build(),
                 userAuthorizations);
-
-        if (Boolean.TRUE.equals(result.hasException())) {
-            throw result.getException();
-        }
+        result.throwErrorIfExists();
 
         return ResponseEntity.ok(PasswordBucketControllerBucketDataResponseBody
                 .builder()
@@ -65,13 +64,11 @@ public class BucketController {
     }
 
     @GetMapping()
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Page<PasswordBucketControllerBucketDataResponseBody>> getAllBuckets(@AuthenticationPrincipal Jwt token, @ParameterObject @PageableDefault(size = 500) Pageable pageable) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<Page<BucketDataModel>> result = userBucketService.getBucketsByUserAuthorizations(userAuthorizations, pageable);
-
-        if (Boolean.TRUE.equals(result.hasException())) {
-            throw result.getException();
-        }
+        result.throwErrorIfExists();
 
         final Page<PasswordBucketControllerBucketDataResponseBody> body = result.getData().map(item -> PasswordBucketControllerBucketDataResponseBody.builder()
                 .bucketUuid(item.getBucketUuid()).bucketName(item.getBucketName()).bucketDescription(item.getBucketDescription()).createdAt(item.getCreatedAt()).lastUpdate(item.getLastUpdate())
@@ -81,13 +78,11 @@ public class BucketController {
     }
 
     @GetMapping("/{bucketUuid}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> getBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         IResultData<BucketDataModel> result = userBucketService.getBucketByUuid(bucketUuid, userAuthorizations);
-
-        if (Boolean.TRUE.equals(result.hasException())) {
-            throw result.getException();
-        }
+        result.throwErrorIfExists();
 
         final PasswordBucketControllerBucketDataResponseBody body = PasswordBucketControllerBucketDataResponseBody.builder().bucketUuid(result.getData().getBucketUuid())
                 .bucketName(result.getData().getBucketName()).bucketDescription(result.getData().getBucketDescription())
@@ -98,17 +93,16 @@ public class BucketController {
     }
 
     @DeleteMapping("/{bucketUuid}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<Void> deleteBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         IResultData<Boolean> result = userBucketService.deleteBucketByUuid(bucketUuid, userAuthorizations);
-
-        if (Boolean.TRUE.equals(result.hasException())) {
-            throw result.getException();
-        }
+        result.throwErrorIfExists();
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{bucketUuid}")
+    @Transactional(rollbackFor = Exception.class)
     public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> updateBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid, @RequestBody PasswordBucketControllerUpdateBucketRequestBody payload) throws Exception {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<BucketDataModel> result = userBucketService.updateBucket(
@@ -117,13 +111,8 @@ public class BucketController {
                         .bucketName(payload.getBucketName()).bucketDescription(payload.getBucketDescription())
                         .build(),
                 userAuthorizations);
-        if (Boolean.TRUE.equals(result.hasException())) {
-            throw result.getException();
-        }
-
-        return ResponseEntity.ok(PasswordBucketControllerBucketDataResponseBody.builder()
-                .bucketUuid(result.getData().getBucketUuid()).bucketName(result.getData().getBucketName())
-                .bucketDescription(result.getData().getBucketDescription()).lastUpdate(result.getData().getLastUpdate()).createdAt(result.getData().getCreatedAt())
+        result.throwErrorIfExists();
+        return ResponseEntity.ok(PasswordBucketControllerBucketDataResponseBody.builder().bucketUuid(result.getData().getBucketUuid()).bucketName(result.getData().getBucketName()).bucketDescription(result.getData().getBucketDescription()).lastUpdate(result.getData().getLastUpdate()).createdAt(result.getData().getCreatedAt())
                 .build());
     }
 }
