@@ -1,5 +1,6 @@
-package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters;
+package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys;
 
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyEncodedErrorConverterException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractKeyPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
 

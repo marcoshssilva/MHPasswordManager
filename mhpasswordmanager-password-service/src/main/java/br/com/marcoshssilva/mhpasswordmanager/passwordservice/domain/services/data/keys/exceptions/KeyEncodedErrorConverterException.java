@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters;
+package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions;
 
 public class KeyEncodedErrorConverterException extends Exception {
     public KeyEncodedErrorConverterException() {
