@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.entities;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 class UserBucketTests {
+    @DisplayName("Test equals methods")
     @Test
     void testEquals() {
         UserBucket userBucket1 = new UserBucket("id1", "name", "description", "publicKey", "privateKey", new Date(), new Date(), "owner");
@@ -19,6 +21,7 @@ class UserBucketTests {
         assertNotEquals(userBucket1, userBucket3);
     }
 
+    @DisplayName("Test hashCode methods")
     @Test
     void testHashCode() {
         UserBucket userBucket1 = new UserBucket("id1", "name", "description", "publicKey", "privateKey", new Date(), new Date(), "owner");
@@ -27,6 +30,7 @@ class UserBucketTests {
         assertEquals(userBucket1.hashCode(), userBucket2.hashCode());
     }
 
+    @DisplayName("Test getters and setters")
     @Test
     void testGettersAndSetters() {
         UserBucket userBucket = new UserBucket();
