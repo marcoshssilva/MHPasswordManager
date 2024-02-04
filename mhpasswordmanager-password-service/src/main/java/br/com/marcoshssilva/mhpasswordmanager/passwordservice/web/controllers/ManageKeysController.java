@@ -87,7 +87,7 @@ public class ManageKeysController {
         keyPayloadEncodedDtoIResultData.getData().setId(id);
         keyPayloadEncodedDtoIResultData.getData().setOwnerId(uuid);
 
-        final IResultData<KeyPayloadEncodedDto> savedResultData = userKeysService.saveKeyPayloadEncodedDto(authorizations, keyPayloadEncodedDtoIResultData.getData());
+        final IResultData<KeyPayloadEncodedDto> savedResultData = userKeysService.updateKeyPayloadEncodedDto(authorizations, keyPayloadEncodedDtoIResultData.getData());
         savedResultData.throwErrorIfExists();
 
         return ResponseEntity.ok(savedResultData.getData());

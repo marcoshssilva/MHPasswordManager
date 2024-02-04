@@ -23,19 +23,9 @@ public class BankCardKeyToEncodedConverter extends AbstractKeyDecodedToEncodedCo
     public KeyPayloadEncodedDto convert(BankCardPayloadDecodedDto data, String key) throws KeyEncodedErrorConverterException {
         try {
             var builder = super.prepareConvert(data);
-            Map<String, Object> dataDecrypted = new HashMap<>();
-
-            dataDecrypted.put("brand", data.getBrand());
-            dataDecrypted.put("cardNumber", data.getCardNumber());
-            dataDecrypted.put("validity", data.getValidity());
-            dataDecrypted.put("cvv", data.getCvv());
-            dataDecrypted.put("identification_owner", data.getIdentificationOwner());
-            dataDecrypted.put("full_name_owner", data.getFullNameOwner());
-            dataDecrypted.put("type", DefaultTypesStoredValuesEnum.BANK_CARD.getValue());
-
-            String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
-
-            KeyStorePayloadEncodedDto payloadEncodedDto = KeyStorePayloadEncodedDto.builder()
+            final Map<String, Object> dataDecrypted = getDataDecrypted(data);
+            final String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
+            final KeyStorePayloadEncodedDto payloadEncodedDto = KeyStorePayloadEncodedDto.builder()
                     .id(data.getId())
                     .lastUpdate(data.getLastUpdate())
                     .createdAt(data.getCreatedAt())
@@ -50,5 +40,18 @@ public class BankCardKeyToEncodedConverter extends AbstractKeyDecodedToEncodedCo
         } catch (Exception e) {
             throw new KeyEncodedErrorConverterException(e.getMessage(), e);
         }
+    }
+
+    private static Map<String, Object> getDataDecrypted(BankCardPayloadDecodedDto data) {
+        Map<String, Object> dataDecrypted = new HashMap<>();
+
+        dataDecrypted.put("brand", data.getBrand());
+        dataDecrypted.put("cardNumber", data.getCardNumber());
+        dataDecrypted.put("validity", data.getValidity());
+        dataDecrypted.put("cvv", data.getCvv());
+        dataDecrypted.put("identification_owner", data.getIdentificationOwner());
+        dataDecrypted.put("full_name_owner", data.getFullNameOwner());
+        dataDecrypted.put("type", DefaultTypesStoredValuesEnum.BANK_CARD.getValue());
+        return dataDecrypted;
     }
 }

@@ -250,6 +250,8 @@ public class UserKeysServiceImpl implements UserKeysService {
                 if (find.isPresent()) {
                     key.getEncodedKeys()[i].setData(find.get().getData());
                     key.getEncodedKeys()[i].setLastUpdate(new Date());
+                } else {
+                    key.getEncodedKeys()[i].setId(null);
                 }
             }
 

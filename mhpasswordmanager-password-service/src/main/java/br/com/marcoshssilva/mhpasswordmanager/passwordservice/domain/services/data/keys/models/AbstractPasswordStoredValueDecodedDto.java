@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @JsonSubTypes({
@@ -28,7 +29,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @SuperBuilder
 public abstract class AbstractPasswordStoredValueDecodedDto implements Serializable {
-    public static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty(required = true)
     private String password;

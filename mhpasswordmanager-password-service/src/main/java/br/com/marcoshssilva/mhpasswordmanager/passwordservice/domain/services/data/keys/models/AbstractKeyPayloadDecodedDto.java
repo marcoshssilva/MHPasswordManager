@@ -1,20 +1,21 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models;
 
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.enums.PasswordKeyTypesEnum;
-
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.application.ApplicationPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.bank.BankCardPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.email.EmailPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.social.SocialMediaPayloadDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.website.WebsitePayloadDecodedDto;
 
-import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.SuperBuilder;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -29,17 +30,19 @@ import java.util.Date;
         @JsonSubTypes.Type(value = SocialMediaPayloadDecodedDto.class, name = "social-media"),
         @JsonSubTypes.Type(value = WebsitePayloadDecodedDto.class, name = "website"),
 })
-@Getter
-@Setter
-@NoArgsConstructor
-@SuperBuilder
+@lombok.Getter
+@lombok.Setter
+@lombok.NoArgsConstructor
+@lombok.experimental.SuperBuilder
 public abstract class AbstractKeyPayloadDecodedDto implements Serializable {
-    public static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @JsonProperty(value = "key_id")
     private Long keyId;
 
     @JsonProperty(value = "owner_id")
+    @Schema(hidden = true)
     private String ownerId;
 
     @JsonProperty(required = true)
@@ -50,10 +53,12 @@ public abstract class AbstractKeyPayloadDecodedDto implements Serializable {
 
     @JsonProperty(value = "last_update")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    @Schema(hidden = true)
     private Date lastUpdate;
 
     @JsonProperty(value = "created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
+    @Schema(hidden = true)
     private Date createdAt;
 
     @JsonIgnore
