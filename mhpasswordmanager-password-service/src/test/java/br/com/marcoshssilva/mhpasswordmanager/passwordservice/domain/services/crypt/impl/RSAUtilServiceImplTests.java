@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @ActiveProfiles("test")
-class RSAUtilServiceTests {
+class RSAUtilServiceImplTests {
     static final String encodedKeyPKCS8 =
             "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDD0RTu/rB1wVTm" +
             "niIyzabiDDQvNG+47iSUg/VT/OkQQaCi6F1SurbV1xwTtkvOzqzvyMcOGhX8JUx9" +
