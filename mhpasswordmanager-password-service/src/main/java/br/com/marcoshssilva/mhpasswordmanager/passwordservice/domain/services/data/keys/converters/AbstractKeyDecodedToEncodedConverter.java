@@ -7,13 +7,13 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractPasswordStoredValueDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.AbstractSecurityQuestionStoredValueDecodedDto;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.KeyPayloadEncodedDto;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
-@RequiredArgsConstructor
+@lombok.RequiredArgsConstructor
 public abstract class AbstractKeyDecodedToEncodedConverter<T extends AbstractKeyPayloadDecodedDto> implements IKeyDecodedToEncodedConverter<T> {
     private final ObjectMapper objectMapper;
     private final CryptService cryptService;
@@ -36,22 +36,22 @@ public abstract class AbstractKeyDecodedToEncodedConverter<T extends AbstractKey
     }
 
     protected String encryptAndEncodeAsBase64(Map<String, Object> json, String key) throws JsonProcessingException {
-        byte[] bytes = objectMapper.writeValueAsBytes(json);
-        byte[] bytesEncrypted  = cryptService.encrypt(bytes, key);
+        byte[] bytes = getObjectMapper().writeValueAsBytes(json);
+        byte[] bytesEncrypted  = getCryptService().encrypt(bytes, key);
 
         return cryptService.convertByteToBase64(bytesEncrypted);
     }
 
     protected String encryptAndEncodeAsBase64(AbstractPasswordStoredValueDecodedDto data, String key) throws JsonProcessingException {
-        byte[] bytes = objectMapper.writeValueAsBytes(data);
-        byte[] bytesEncrypted  = cryptService.encrypt(bytes, key);
+        byte[] bytes = getObjectMapper().writeValueAsBytes(data);
+        byte[] bytesEncrypted  = getCryptService().encrypt(bytes, key);
 
         return cryptService.convertByteToBase64(bytesEncrypted);
     }
 
     protected String encryptAndEncodeAsBase64(AbstractSecurityQuestionStoredValueDecodedDto data, String key) throws JsonProcessingException {
-        byte[] bytes = objectMapper.writeValueAsBytes(data);
-        byte[] bytesEncrypted  = cryptService.encrypt(bytes, key);
+        byte[] bytes = getObjectMapper().writeValueAsBytes(data);
+        byte[] bytesEncrypted  = getCryptService().encrypt(bytes, key);
 
         return cryptService.convertByteToBase64(bytesEncrypted);
     }
