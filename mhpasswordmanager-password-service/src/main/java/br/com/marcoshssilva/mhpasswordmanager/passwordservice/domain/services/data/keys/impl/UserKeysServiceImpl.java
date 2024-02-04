@@ -148,7 +148,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             entity.setLastUpdate(new Date());
             entity.setType(UserPasswordKeyType.builder().id(data.getType().getId().longValue()).build());
 
-            if (Objects.equals(entity.getId(), null)) {
+            if (Objects.isNull(entity.getId())) {
                 entity.setCreatedAt(new Date());
             }
             UserPasswordKey userPasswordKey = userPasswordKeyRepository.save(entity);
