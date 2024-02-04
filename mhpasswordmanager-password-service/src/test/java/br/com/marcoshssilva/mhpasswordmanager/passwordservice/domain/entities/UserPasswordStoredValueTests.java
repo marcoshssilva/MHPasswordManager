@@ -65,20 +65,20 @@ class UserPasswordStoredValueTests {
                 .build();
 
         // Reflexive
-        assertTrue(value1.equals(value1));
+        assertEquals(value1, value1);
 
         // Symmetric
-        assertTrue(value1.equals(value2));
-        assertTrue(value2.equals(value1));
+        assertEquals(value1, value2);
+        assertEquals(value2, value1);
 
         // Transitive
-        assertFalse(value2.equals(value3));
-        assertFalse(value1.equals(value3));
+        assertNotEquals(value2, value3);
+        assertNotEquals(value1, value3);
 
         // Not equal
-        assertFalse(value1.equals(null));
-        assertFalse(value1.equals("value1"));
-        assertFalse(value1.equals(value2.hashCode()));
+        assertNotEquals(null, value1);
+        assertNotEquals("value1", value1);
+        assertNotEquals(value1, value2.hashCode());
     }
 
     @DisplayName("Test hashCode method")
@@ -125,7 +125,7 @@ class UserPasswordStoredValueTests {
                 .lastUpdate(date)
                 .build();
 
-        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userRegistration=null, tags=[], description=null, type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", date.toString(), date.toString());
+        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userBucket=null, tags=[], description=null, type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", date, date);
         String actual = value.toString();
 
         assertEquals(expected, actual);

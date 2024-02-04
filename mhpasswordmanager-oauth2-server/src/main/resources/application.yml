@@ -73,9 +73,9 @@ spring:
   rabbitmq:
     host: 127.0.0.1
     port: 5672
-    # virtual-host: vhost-password-manager
-    # username: authorization-server-pm
-    # password: authorization-server-pm-P@ss
+    virtual-host: vhost-password-manager
+    username: authorization-server-pm
+    password: authorization-server-pm-P@ss
 
 authorization:
   issuer-uri: http://localhost:12010${server.servlet.context-path}

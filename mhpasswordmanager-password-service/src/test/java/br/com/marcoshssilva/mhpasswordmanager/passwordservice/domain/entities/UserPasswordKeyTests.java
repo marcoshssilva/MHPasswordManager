@@ -15,24 +15,24 @@ class UserPasswordKeyTests {
     @DisplayName("Test hashCode and equals methods")
     @Test
     void testEqualsAndHashCode() {
-        UserRegistration userRegistration1 = UserRegistration.builder().id("123").build();
-        UserRegistration userRegistration2 = UserRegistration.builder().id("456").build();
+        UserBucket userRegistration1 = UserBucket.builder().id("123").build();
+        UserBucket userRegistration2 = UserBucket.builder().id("456").build();
 
         UserPasswordKey key1 = UserPasswordKey.builder()
                 .id(1L)
-                .userRegistration(userRegistration1)
+                .userBucket(userRegistration1)
                 .type(UserPasswordKeyType.builder().id(PasswordKeyTypesEnum.APPLICATION.getId().longValue()).build())
                 .build();
 
         UserPasswordKey key2 = UserPasswordKey.builder()
                 .id(1L)
-                .userRegistration(userRegistration1)
+                .userBucket(userRegistration1)
                 .type(UserPasswordKeyType.builder().id(PasswordKeyTypesEnum.APPLICATION.getId().longValue()).build())
                 .build();
 
         UserPasswordKey key3 = UserPasswordKey.builder()
                 .id(2L)
-                .userRegistration(userRegistration2)
+                .userBucket(userRegistration2)
                 .type(UserPasswordKeyType.builder().id(PasswordKeyTypesEnum.BANK_CARD.getId().longValue()).build())
                 .build();
 
@@ -52,21 +52,11 @@ class UserPasswordKeyTests {
     @Test
     void testGettersAndSetters() {
         Long id = 1L;
-        UserRegistration userRegistration = new UserRegistration();
+        UserBucket userRegistration = new UserBucket();
         userRegistration.setId("123");
-        userRegistration.setEmail("teste@teste.com.br");
         userRegistration.setEncodedPublicKey("12345678910");
         userRegistration.setEncryptedPrivateKeyWithPassword("12345678910");
-        userRegistration.setEncryptedPrivateKey0("12345678910");
-        userRegistration.setEncryptedPrivateKey1("12345678910");
-        userRegistration.setEncryptedPrivateKey2("12345678910");
-        userRegistration.setEncryptedPrivateKey3("12345678910");
-        userRegistration.setEncryptedPrivateKey4("12345678910");
-        userRegistration.setEncryptedPrivateKey5("12345678910");
-        userRegistration.setEncryptedPrivateKey6("12345678910");
-        userRegistration.setEncryptedPrivateKey7("12345678910");
-        userRegistration.setEncryptedPrivateKey8("12345678910");
-        userRegistration.setEncryptedPrivateKey9("12345678910");
+
         PasswordKeyTypesEnum type = PasswordKeyTypesEnum.SOCIAL_MEDIA;
         Date createdAt = new Date();
         Date lastUpdate = new Date();
@@ -76,14 +66,14 @@ class UserPasswordKeyTests {
 
         UserPasswordKey userPasswordKey = new UserPasswordKey();
         userPasswordKey.setId(id);
-        userPasswordKey.setUserRegistration(userRegistration);
+        userPasswordKey.setUserBucket(userRegistration);
         userPasswordKey.setType(UserPasswordKeyType.builder().id(type.getId().longValue()).build());
         userPasswordKey.setCreatedAt(createdAt);
         userPasswordKey.setLastUpdate(lastUpdate);
         userPasswordKey.setTags(tags);
 
         assertEquals(id, userPasswordKey.getId());
-        assertEquals(userRegistration, userPasswordKey.getUserRegistration());
+        assertEquals(userRegistration, userPasswordKey.getUserBucket());
         assertEquals(UserPasswordKeyType.builder().id(type.getId().longValue()).build(), userPasswordKey.getType());
         assertEquals(createdAt, userPasswordKey.getCreatedAt());
         assertEquals(lastUpdate, userPasswordKey.getLastUpdate());

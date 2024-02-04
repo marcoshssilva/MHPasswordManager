@@ -1,9 +1,11 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user;
 
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.NewUserRegisteredModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 public interface UserRegistrationService {
-    NewUserRegisteredModel createUserRegistration(String email, String vaultKey) throws UserRegistrationException, UserRegistrationAlreadyExistsException;
     UserRegisteredModel getUserRegistration(String email) throws UserRegistrationNotFoundException;
+    UserAuthorizations getUserAuthorizations(Jwt jwt) throws UserAuthorizationCannotBeLoadedException;
 }

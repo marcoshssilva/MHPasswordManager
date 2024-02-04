@@ -1,51 +1,34 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.Set;
 
-@NoArgsConstructor
-@Getter
-@Setter
-@AllArgsConstructor
-@Builder
+@lombok.NoArgsConstructor
+@lombok.Getter
+@lombok.Setter
+@lombok.AllArgsConstructor
+@lombok.Builder
+@lombok.ToString
 public class UserRegisteredModel implements Serializable {
-    public static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 2L;
 
-    private String uuid;
-    private String publicKey;
-    private Map<String, String> keys;
-    private String keyAlg;
-    @JsonProperty(value = "created_at")
-    private Date createdAt;
-    @JsonProperty(value = "last_update")
-    private Date lastUpdate;
+    private String ownerName;
+    private Set<String> buckets = Collections.emptySet();
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof UserRegisteredModel that)) return false;
-        return Objects.equals(uuid, that.uuid) && Objects.equals(publicKey, that.publicKey) && Objects.equals(keys, that.keys) && Objects.equals(keyAlg, that.keyAlg) && Objects.equals(createdAt, that.createdAt) && Objects.equals(lastUpdate, that.lastUpdate);
+        if (o == null || getClass() != o.getClass()) return false;
+        UserRegisteredModel that = (UserRegisteredModel) o;
+        return Objects.equals(ownerName, that.ownerName) && Objects.equals(buckets, that.buckets);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, publicKey, keys, keyAlg, createdAt, lastUpdate);
-    }
-    @Override
-    public String
-    toString() {
-        return "UserRegisteredModel{" +
-                "uuid='" + uuid + '\'' +
-                ", publicKey='" + publicKey + '\'' +
-                ", keys=" + keys +
-                ", keyAlg='" + keyAlg + '\'' +
-                ", createdAt=" + createdAt +
-                ", lastUpdate=" + lastUpdate +
-                '}';
+        return Objects.hash(ownerName, buckets);
     }
 }
