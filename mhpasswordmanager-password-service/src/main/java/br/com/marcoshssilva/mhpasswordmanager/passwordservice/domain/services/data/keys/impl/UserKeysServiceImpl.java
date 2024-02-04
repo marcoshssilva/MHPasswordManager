@@ -165,7 +165,7 @@ public class UserKeysServiceImpl implements UserKeysService {
                     userPasswordStoredValueRepository.save(userPasswordStoredValue);
                 });
 
-            return getEncodedKeyFromBucket(authorization, data.getOwnerId(), data.getId());
+            return getEncodedKeyFromBucket(authorization, userPasswordKey.getUserBucket().getId(), userPasswordKey.getId());
         } catch (Exception e) {
             final String message = "Key cannot be saved, cause: " + e.getMessage();
             return KEY_PAYLOAD_ENCODED_DTO_I_RESULT_DATA.exception(new KeyRegistrationErrorException(message, e), message);
