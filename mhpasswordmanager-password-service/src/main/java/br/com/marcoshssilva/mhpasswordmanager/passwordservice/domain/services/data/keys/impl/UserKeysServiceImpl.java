@@ -155,7 +155,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             Arrays.stream(data.getEncodedKeys())
                 .forEach(key -> {
                     UserPasswordStoredValue userPasswordStoredValue = key.toEntity();
-                    if (Objects.equals(userPasswordStoredValue.getId(), null)) {
+                    if (Objects.isNull(userPasswordStoredValue.getId())) {
                         userPasswordStoredValue.setCreatedAt(new Date());
                     }
 
