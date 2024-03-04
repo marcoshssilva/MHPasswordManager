@@ -161,12 +161,12 @@
 		<repository>
 			<id>app-nx-marcoshssilva</id>
 			<name>nexus-release</name>
-			<url>https://app-nx.marcoshssilva.com.br/repository/maven-releases/</url>
+			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>app-nx-marcoshssilva</id>
 			<name>nexus-snapshot</name>
-			<url>https://app-nx.marcoshssilva.com.br/repository/maven-snapshots/</url>
+			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -198,7 +198,7 @@
 				</executions>
 				<configuration>
 					<serverId>app-nx-marcoshssilva</serverId>
-					<nexusUrl>https://app-nx.marcoshssilva.com.br/</nexusUrl>
+					<nexusUrl>https://mirror-nx.marcoshssilva.com.br/</nexusUrl>
 					<skipStaging>true</skipStaging>
 				</configuration>
 			</plugin>
@@ -242,7 +242,7 @@
 		<repository>
 			<id>app-nx-marcoshssilva</id>
 			<name>Nexus Repository Maven Public</name>
-			<url>https://app-nx.marcoshssilva.com.br/repository/maven-public/</url>
+			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-public/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
@@ -256,7 +256,7 @@
 		<pluginRepository>
 			<id>app-nx-marcoshssilva</id>
 			<name>Nexus Repository Maven Public</name>
-			<url>https://app-nx.marcoshssilva.com.br/repository/maven-public/</url>
+			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-public/</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>
