@@ -3,6 +3,7 @@ folders=("mhpasswordmanager-api-gateway" "mhpasswordmanager-config-services" "mh
 
 for folder in "${folders[@]}"; do
     cd "$folder" || continue
+    
     git init
     git branch -M develop
     git remote remove origin
@@ -11,6 +12,9 @@ for folder in "${folders[@]}"; do
 
     git add .
     git commit -m "update project - $3"
+
+    git config pull.rebase true
+
     git pull origin develop
     git push -u origin develop
 
