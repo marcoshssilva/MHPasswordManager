@@ -3,20 +3,13 @@ folders=("mhpasswordmanager-api-gateway" "mhpasswordmanager-config-services" "mh
 
 for folder in "${folders[@]}"; do
     cd "$folder" || continue
-    
     git init
-    git branch -M develop
-    git remote remove origin
+    git branch -M main
     git remote add origin "https://$1:$2@app-gi.marcoshssilva.com.br/git/MHPasswordManager/$folder.git"
     git fetch origin
-
+    git pull origin main
     git add .
     git commit -m "update project - $3"
-
-    git config pull.rebase true
-
-    git pull origin develop
-    git push -u origin develop
-
+    git push -u origin main
     cd ..
 done
