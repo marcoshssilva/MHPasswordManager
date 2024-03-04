@@ -1,3 +1,2 @@
 @Library('java@main') _
-pipelineJavaWithPublicImage('MHPasswordManagerFileService', '17.0.8-oracle', '3.9.6', 'mhpasswordmanager-file-service', true, true, true, 'password-manager/file-service')
-
+pipelineUsingJava17AndMavenWithPublicDockerImage('password-manager/file-service')

@@ -1,2 +1,2 @@
 @Library('java@main') _
-pipelineJavaWithPublicImage('MHPasswordManagerOAuth2Server', '17.0.8-oracle', '3.9.6', 'mhpasswordmanager-oauth2-server', true, true, true, 'password-manager/oauth2-server')
+pipelineUsingJava17AndMavenWithPublicDockerImage('password-manager/oauth2-server')

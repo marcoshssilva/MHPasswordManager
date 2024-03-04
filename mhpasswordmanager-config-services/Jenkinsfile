@@ -1,2 +1,2 @@
 @Library('java@main') _
-pipelineJavaWithPublicImage('MHPasswordManagerConfigServices', '17.0.8-oracle', '3.9.6', 'mhpasswordmanager-config-services', true, true, true, 'password-manager/config-services')
+pipelineUsingJava17AndMavenWithPublicDockerImage('password-manager/config-services')
