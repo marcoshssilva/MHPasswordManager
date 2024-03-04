@@ -1,12 +1,14 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.error;
 
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.DecryptionException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.EncryptionException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyNotFoundException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.KeyRegistrationErrorException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.converters.KeyEncodedErrorConverterException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationAlreadyExistsException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.exceptions.DecryptionException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.exceptions.EncryptionException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketCannotBeCreatedException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyRegistrationErrorException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyEncodedErrorConverterException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.HttpErrorResponse;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,6 +40,14 @@ public class RestControllerExceptionManager {
                         .build());
     }
 
+    @ExceptionHandler(BucketNotFoundException.class)
+    public ResponseEntity<HttpErrorResponse> bucketNotFoundExceptionResolver(BucketNotFoundException e, HttpServletRequest req) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                HttpErrorResponse.builder()
+                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .build());
+    }
+
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<HttpErrorResponse> jsonProcessingExceptionResolver(JsonProcessingException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
@@ -62,8 +72,8 @@ public class RestControllerExceptionManager {
                         .build());
     }
 
-    @ExceptionHandler(UserRegistrationAlreadyExistsException.class)
-    public ResponseEntity<HttpErrorResponse> userRegistrationAlreadyExistsException(UserRegistrationAlreadyExistsException e, HttpServletRequest req){
+    @ExceptionHandler(BucketCannotBeCreatedException.class)
+    public ResponseEntity<HttpErrorResponse> bucketCannotBeCreatedExceptionResolver(BucketCannotBeCreatedException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
@@ -80,6 +90,14 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(EncryptionException.class)
     public ResponseEntity<HttpErrorResponse> encryptionExceptionResolver(EncryptionException e, HttpServletRequest req) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                HttpErrorResponse.builder()
+                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .build());
+    }
+
+    @ExceptionHandler(UserAuthorizationCannotBeLoadedException.class)
+    public ResponseEntity<HttpErrorResponse> userAuthorizationCannotBeLoadedExceptionResolver(UserAuthorizationCannotBeLoadedException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())

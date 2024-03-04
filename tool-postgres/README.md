@@ -1,6 +1,8 @@
 # MHPasswordManager-Postgres
 this is an open-source project by me ([@marcoshssilva](https://github.com/marcoshssilva))
 
+Sample image based on [Postgres](https://hub.docker.com/_/postgres)
+
 ---
 ## Databases and Users
 

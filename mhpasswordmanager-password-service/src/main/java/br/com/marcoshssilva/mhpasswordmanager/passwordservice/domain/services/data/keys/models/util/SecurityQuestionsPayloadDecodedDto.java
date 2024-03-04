@@ -1,29 +1,34 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.models.util;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import io.swagger.v3.oas.annotations.media.Schema;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@Getter
-@Setter
+@lombok.AllArgsConstructor
+@lombok.NoArgsConstructor
+@lombok.Builder
+@lombok.Getter
+@lombok.Setter
 public class SecurityQuestionsPayloadDecodedDto implements Serializable {
-    public static final long serialVersionUID = 1L;
-
+    @Serial
+    private static final long serialVersionUID = 1L;
     private Long id;
+
     @JsonProperty(required = true)
     private String question;
 
     @JsonProperty(required = true, value = "expected_value")
     private String expectedValue;
 
+    @Schema(hidden = true)
     @JsonProperty(value = "created_at")
     private Date createdAt;
+
+    @Schema(hidden = true)
     @JsonProperty(value = "update_last")
     private Date updateLast;
 

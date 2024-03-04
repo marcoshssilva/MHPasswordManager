@@ -1,23 +1,21 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities;
 
-import lombok.*;
-
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.OneToOne;
-import javax.persistence.PrimaryKeyJoinColumn;
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
-@ToString
+@lombok.Getter
+@lombok.Setter
+@lombok.AllArgsConstructor
+@lombok.NoArgsConstructor
+@lombok.Builder
+@lombok.ToString
 @Embeddable
 public class AccountDetailsPK implements Serializable {
-    public static final long serialVersionUID = 1L;
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Column(name = "username", nullable = false)
     private String username;
