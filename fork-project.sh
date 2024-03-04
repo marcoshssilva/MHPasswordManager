@@ -5,11 +5,14 @@ for folder in "${folders[@]}"; do
     cd "$folder" || continue
     git init
     git branch -M develop
-    git add .
-    git commit -m "update project - $3"
+    git remote remove origin
     git remote add origin "https://$1:$2@app-gi.marcoshssilva.com.br/git/MHPasswordManager/$folder.git"
     git fetch origin
     git pull origin develop
+
+    git add .
+    git commit -m "update project - $3"
     git push -u origin develop
+
     cd ..
 done
