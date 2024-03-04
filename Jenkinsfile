@@ -1,0 +1,2 @@
+@Library('forks') _
+pipelineForkMhPasswordManagerToPrivateRepository()
