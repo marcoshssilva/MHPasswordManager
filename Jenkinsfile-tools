@@ -1,0 +1,11 @@
+@Library('docker') _
+pipelineMultifolderDocker(
+    'password-manager'
+    ['linux/arm64/v8', 'linux/amd64'],
+    [
+        'tool-mail',
+        'tool-mongo',
+        'tool-postgres',
+        'tool-rabbitmq',
+        'tool-redis'
+    ])
