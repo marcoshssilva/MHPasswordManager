@@ -1,6 +1,6 @@
 @Library('docker') _
 pipelineMultifolderDocker(
-    'password-manager'
+    'password-manager',
     ['linux/arm64/v8', 'linux/amd64'],
     [
         'tool-mail',
