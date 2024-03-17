@@ -115,51 +115,8 @@
 		</dependencies>
 	</dependencyManagement>
 
-	<distributionManagement>
-		<repository>
-			<id>app-nx-marcoshssilva</id>
-			<name>nexus-release</name>
-			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>app-nx-marcoshssilva</id>
-			<name>nexus-snapshot</name>
-			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
-
 	<build>
 		<plugins>
-			<!-- skip default maven deploy - fix deploy on nexus -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>${maven-deploy-plugin.version}</version>
-				<configuration>
-					<skip>true</skip>
-				</configuration>
-			</plugin>
-
-			<!-- plugin oficial to deploy on nexus -->
-			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.5.1</version>
-				<executions>
-					<execution>
-						<id>default-deploy</id>
-						<phase>deploy</phase>
-						<goals>
-							<goal>deploy</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<serverId>app-nx-marcoshssilva</serverId>
-					<nexusUrl>https://mirror-nx.marcoshssilva.com.br/</nexusUrl>
-					<skipStaging>true</skipStaging>
-				</configuration>
-			</plugin>
 			
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -216,33 +173,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<repositories>
-		<repository>
-			<id>app-nx-marcoshssilva</id>
-			<name>Nexus Repository Maven Public</name>
-			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-public/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>app-nx-marcoshssilva</id>
-			<name>Nexus Repository Maven Public</name>
-			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-public/</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</pluginRepository>
-	</pluginRepositories>
 
 </project>
