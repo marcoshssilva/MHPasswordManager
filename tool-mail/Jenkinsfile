@@ -1,2 +1,0 @@
-@Library('docker@main') _
-pipelineDockerWithPublicImage('password-manager/tool-mail')
