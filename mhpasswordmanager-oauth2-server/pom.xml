@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>br.com.marcoshssilva</groupId>
 	<artifactId>mhpasswordmanager.oauth2server</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>MHPasswordManagerOAuth2Server</name>
 	<description>
 		Authorization Server for auth users with OAUTH 2.0 protocol
