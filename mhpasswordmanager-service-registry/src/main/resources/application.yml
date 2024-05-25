@@ -26,12 +26,12 @@ logging:
         discovery: OFF
 management:
   endpoint:
+    health:
+      show-components: always
+      show-details: always
     shutdown:
       enabled: false
   endpoints:
     web:
       exposure:
-        include:
-          - 'health'
-          - 'info'
-          - 'metrics'
+        include: '*'
