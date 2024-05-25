@@ -30,16 +30,15 @@ spring:
 
 management:
   endpoint:
+    health:
+      show-components: always
+      show-details: always
     shutdown:
       enabled: false
   endpoints:
     web:
       exposure:
-        include:
-          - 'health'
-          - 'metrics'
-          - 'info'
-
+        include: '*'
 ---
 spring:
   config:
