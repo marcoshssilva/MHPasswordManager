@@ -55,7 +55,7 @@ spring:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
             - PreserveHostHeader
         - id: default_route
-          uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:https://dev.marcoshssilva.com.br}
+          uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:https://marcoshssilva.com.br}
           predicates:
             - Path=/**
 
@@ -64,12 +64,12 @@ management:
     shutdown:
       enabled: false
   endpoints:
+    health:
+      show-components: always
+      show-details: always
     web:
       exposure:
-        include:
-          - 'health'
-          - 'metrics'
-          - 'info'
+        include: '*'
 eureka:
   client:
     service-url:
