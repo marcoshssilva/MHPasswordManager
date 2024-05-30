@@ -49,18 +49,24 @@
                 <h2>Conta</h2>
                 <p>Realize alterações na sua conta ou atualize os seus dados.</p>
                 <ul class="icon-list ps-0">
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/mail'}">Alterar seu endereço de email</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/password'}">Alterar sua senha</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/image'}">Mudar a imagem de perfil</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/profile'}">Atualizar os dados pessoais da conta</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/authorizations'}">Gerenciar suas autorizações</a>
+                    </li>
                     <!--
-                    <li class="d-flex align-items-start mb-1"><a href="#">Alterar seu endereço de email</a></li>
-                    <li class="d-flex align-items-start mb-1"><a href="#">Alterar sua senha</a></li>
-                    <li class="d-flex align-items-start mb-1"><a href="#">Mudar a imagem de perfil</a></li>
-                    <li class="d-flex align-items-start mb-1"><a href="#">Atualizar os dados pessoais da conta</a></li>
-                    <li class="d-flex align-items-start mb-1"><a href="#">Gerenciar suas autorizações</a></li>
-                    -->
-                    <li class="text-muted d-flex align-items-start mb-1">Alterar seu endereço de email</li>
-                    <li class="text-muted d-flex align-items-start mb-1">Alterar sua senha</li>
-                    <li class="text-muted d-flex align-items-start mb-1">Mudar a imagem de perfil</li>
-                    <li class="text-muted d-flex align-items-start mb-1">Atualizar os dados pessoais da conta</li>
                     <li class="text-muted d-flex align-items-start mb-1">Gerenciar suas autorizações</li>
+                    -->
                 </ul>
             </div>
         </div>
