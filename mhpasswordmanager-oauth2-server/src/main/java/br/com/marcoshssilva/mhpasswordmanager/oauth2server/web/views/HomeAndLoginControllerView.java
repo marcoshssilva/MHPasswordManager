@@ -23,32 +23,40 @@ public class HomeAndLoginControllerView {
     private String baseHref;
 
     @GetMapping("/login")
-    public String loginPage(Model model) {
-        model.addAttribute("authorizationProperties", authorizationConfigProperties);
-        model.addAttribute("baseHref", baseHref);
+    public String loginPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        setupAtributes(model, userDetails);
         return "login";
+    }
+
+    @GetMapping("/update/{pageRequest}")
+    public String changePasswordPage(@PathVariable String pageRequest, Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        setupAtributes(model, userDetails);
+        return "update-".concat(pageRequest);
     }
 
     @GetMapping("/")
     public String indexPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        model.addAttribute("authorizationProperties", authorizationConfigProperties);
-        model.addAttribute("baseHref", baseHref);
-        model.addAttribute("userDetails", userDetails);
+        setupAtributes(model, userDetails);
         return "home";
     }
 
     @GetMapping("/verify/{code}")
-    public String verifyAccount(@PathVariable("code") String registrationCode, HttpServletRequest request, Model model) {
+    public String verifyAccount(@PathVariable("code") String registrationCode, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request, Model model) {
         log.info("{}", request.getRemoteAddr());
         log.info("{}", request.getRemoteUser());
         log.info("{}", registrationCode);
 
-        model.addAttribute("authorizationProperties", authorizationConfigProperties);
-        model.addAttribute("baseHref", baseHref);
+        setupAtributes(model, userDetails);
         request.getHeaderNames().asIterator()
                 .forEachRemaining(header -> log.info("{}: {}", header, request.getHeader(header)));
 
         return "verify-account";
+    }
+
+    private void setupAtributes(Model model, UserDetails userDetails) {
+        model.addAttribute("userDetails", userDetails);
+        model.addAttribute("authorizationProperties", authorizationConfigProperties);
+        model.addAttribute("baseHref", baseHref);
     }
 
 }
