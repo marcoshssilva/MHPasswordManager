@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<html lang="pt-br" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <base th:href="${baseHref}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PasswordManager Authorization - Change Mail</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="content/css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="content/css/animate/animate.min.css"/>
+</head>
+
+<body>
+
+<div class="col-lg-8 mx-auto p-4 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom justify-content-between">
+        <a th:href="${baseHref}" class="d-flex align-items-center text-dark text-decoration-none">
+            <span class="fs-5">
+                Olá,
+                <span th:text="${userDetails.username}"></span>!
+            </span>
+
+        </a>
+        <a class="btn btn-danger" th:href="${baseHref + 'logout'}">Sair</a>
+    </header>
+
+    <main class="container">
+        <h1>PasswordManager</h1>
+        <p class="fs-5 col-md-8">
+            Armazene suas credenciais de forma segura e confiável. Utilizamos as mais recentes tecnologias de criptografia para garantir que suas senhas e informações permaneçam completamente seguras.
+        </p>
+
+        <hr class="col-3 col-md-2 mb-5">
+
+        <div class="row g-5">
+            <div class="col-md-6">
+                <h2>Alterar seu endereço de email</h2>
+                <form id="formUpdateMail" action="">
+                    <div class="mb-3">
+                        <label for="inputUpdateMailActualPassword" class="form-label">Insira a senha da sua conta</label>
+                        <input type="password" class="form-control" id="inputUpdateMailActualPassword" name="actualPassword" placeholder="Digite a senha atual">
+                        <button type="reset" class="btn btn-link">Esqueceu sua senha?</button>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputUpdateMailNewMail" class="form-label">Seu novo endereço de email</label>
+                        <input type="password" class="form-control" id="inputUpdateMailNewMail" name="newMail>" placeholder="me@meuemail.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputUpdateMailConfirmNewMail" class="form-label">Confirme novamente seu novo endereço de email</label>
+                        <input type="password" class="form-control" id="inputUpdateMailConfirmNewMail" name="confirmNewMail" placeholder="me@meuemail.com">
+                    </div>
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">Confirmar</button>
+                        <button type="reset" class="btn btn-link">Limpar</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Conta</h2>
+                <p>Realize alterações na sua conta ou atualize os seus dados.</p>
+                <ul class="icon-list ps-0">
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/mail'}">Alterar seu endereço de email</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/password'}">Alterar sua senha</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/image'}">Mudar a imagem de perfil</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/profile'}">Atualizar os dados pessoais da conta</a>
+                    </li>
+                    <li class="d-flex align-items-start mb-1">
+                        <a th:href="${baseHref + 'update/authorizations'}">Gerenciar suas autorizações</a>
+                    </li>
+                    <!--
+                    <li class="text-muted d-flex align-items-start mb-1">Gerenciar suas autorizações</li>
+                    -->
+                </ul>
+            </div>
+        </div>
+    </main>
+    <footer class="pt-5 my-5 text-muted border-top">
+        <a target="_blank" href="https://github.com/marcoshssilva">SenhorDasEstrelas443</a> &middot; &copy; 2023-2024
+    </footer>
+</div>
+<section id="notifications" style="z-index: 7000;" class="toast-container position-fixed top-0 end-0 p-5"></section>
+<!-- scripts -->
+<script src="content/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="content/js/notifications.js"></script>
+
+</body>
