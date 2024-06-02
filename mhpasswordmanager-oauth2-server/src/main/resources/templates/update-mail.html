@@ -11,6 +11,7 @@
     <!-- styles -->
     <link rel="stylesheet" href="content/css/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="content/css/animate/animate.min.css"/>
+    <link rel="stylesheet" href="content/css/login.css"/>
 </head>
 
 <body>
@@ -42,7 +43,10 @@
                     <div class="mb-3">
                         <label for="inputUpdateMailActualPassword" class="form-label">Insira a senha da sua conta</label>
                         <input type="password" class="form-control" id="inputUpdateMailActualPassword" name="actualPassword" placeholder="Digite a senha atual">
-                        <button type="reset" class="btn btn-link">Esqueceu sua senha?</button>
+                        <a class="ms-3" data-bs-toggle="offcanvas" href="#offcanvas-forgot-password-minified" role="button"
+                           aria-controls="offcanvasForgotPassword">
+                            Esqueci a senha?
+                        </a>
                     </div>
                     <div class="mb-3">
                         <label for="inputUpdateMailNewMail" class="form-label">Seu novo endereço de email</label>
@@ -89,9 +93,82 @@
         <a target="_blank" href="https://github.com/marcoshssilva">SenhorDasEstrelas443</a> &middot; &copy; 2023-2024
     </footer>
 </div>
+<section class="offcanvas offcanvas-end" tabindex="-1" id="offcanvas-forgot-password-minified"
+         aria-labelledby="panelForgotPasswordLabel">
+    <div class="offcanvas-body p-0 m-0 row">
+        <div class="panel-forgot-password-minified col p-5 shadow-lg" style="z-index: 10;">
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <h1 class="display-5 mt-3 mb-4">Esqueci minha senha</h1>
+            <h5>Redefinir senha</h5>
+            <p style="text-align: justify">
+                Para redefinir sua senha, informe o usuário ou email cadastrado na sua conta e lhe
+                enviaremos um link com as instruções necessárias para que você possa recuperar sua conta
+                de forma segura.
+            </p>
+            <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formForgotPasswordStep1">
+                <div class="row my-4">
+                    <div class="col input-group">
+                        <input id="credentials-forgot-password" type="text" minlength="8" class="form-control"
+                               placeholder="informe seu usuario/email aqui..."
+                               aria-label="informe seu usuario/email aqui..." th:name="identification" required/>
+                        <button type="submit" class="btn btn-primary">
+                            Próximo
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div class="row mt-1 mb-3">
+                <p class="py-0 my-0" id="block-skip-step2">
+                    Já possui um código de recuperação?&nbsp;
+                    <a type="button" id="btnSkipToStep2" class="btn-link">Clique aqui.</a>
+                </p>
+                <form th:action="@{/login}" method="post" class="d-none needs-validation" novalidate
+                      id="formForgotPasswordStep2">
+                    <p class="lead">
+                        Confirme seu código recebido por e-mail e digite sua nova senha.
+                    </p>
+                    <div class="row my-3">
+                        <div class="col">
+                            <label for="codeStep2" class="h5">Seu código de confirmação:</label>
+                            <input id="codeStep2" type="text" minlength="8" class="form-control"
+                                   placeholder="000-000-000" aria-label="000-000-000"
+                                   th:name="code" required/>
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col">
+                            <label for="passwordStep2" class="h5">Sua senha:</label>
+                            <input id="passwordStep2" type="password" minlength="8" class="form-control"
+                                   placeholder="Your New Password" aria-label="Your New Password"
+                                   th:name="password" required/>
+                        </div>
+                    </div>
+                    <div class="row my-3"></div>
+                    <div class="col">
+                        <label for="passwordConfirmStep2" class="h5">Sua senha novamente:</label>
+                        <input id="passwordConfirmStep2" type="password" minlength="8" class="form-control"
+                               placeholder="Your New Password" aria-label="Your New Password"
+                               th:name="passwordConfirm" required/>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col">
+                            <button type="submit" class="btn btn-primary">
+                                Finalizar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 <section id="notifications" style="z-index: 7000;" class="toast-container position-fixed top-0 end-0 p-5"></section>
 <!-- scripts -->
 <script src="content/js/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="content/js/notifications.js"></script>
+<script src="content/js/formRegister.js"></script>
+<script src="content/js/formLogin.js"></script>
+<script src="content/js/formForgotPassword.js"></script>
 
 </body>
