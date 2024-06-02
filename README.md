@@ -3,7 +3,7 @@
 ## Run project with Docker Compose
 
 Follow steps:
-```
+```bash
 git clone https://github.com/marcoshssilva/MHPasswordManager.git \
   && cd MHPasswordManager \
   && chmod +x build.sh && ./build.sh \
@@ -14,14 +14,14 @@ git clone https://github.com/marcoshssilva/MHPasswordManager.git \
 Run:
 
 - Linux
-```
+```bash
 cd MHPasswordManager
 sh build-tools-only.sh
 sh run.tools.sh
 ```
 
 - Windows
-```
+```powershell
 cd MHPasswordManager
 call build-tools-only.bat
 call run.tools.bat
