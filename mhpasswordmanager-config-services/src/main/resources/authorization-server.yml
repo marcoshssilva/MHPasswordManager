@@ -37,7 +37,7 @@ oauth-config-starter:
   clients:
     - clientName: 'Registered client for PWA Client'
       clientId: MHPasswordManager
-      clientSecret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      clientSecret: b07968bd-8989-4f10-82c7-3e427e22c924
       authenticationMethod: CLIENT_SECRET_BASIC
       authenticationGrantTypes:
         - AUTHORIZATION_CODE
@@ -79,7 +79,7 @@ oauth-config-starter:
 
     - clientName: 'Registered client for Client Credentials'
       clientId: MHPasswordManager-GlobalAdmin
-      clientSecret: 8e18ee56-ab7c-4ed9-b192-ff4472e5c697
+      clientSecret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
       authenticationMethod: CLIENT_SECRET_BASIC
       authenticationGrantTypes:
         - CLIENT_CREDENTIALS
