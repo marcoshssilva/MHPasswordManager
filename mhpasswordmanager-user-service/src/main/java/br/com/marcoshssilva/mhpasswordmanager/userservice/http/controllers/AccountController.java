@@ -42,29 +42,29 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getAllUsers(pageable).map(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA));
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') || (#email == authentication.principal.subject)")
-    @GetMapping("{email}/data")
-    public ResponseEntity<AccountResponseData> getDetailsFromAccount(@PathVariable String email)
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') || (#username == authentication.principal.subject)")
+    @GetMapping("{username}/data")
+    public ResponseEntity<AccountResponseData> getDetailsFromAccount(@PathVariable String username)
             throws ElementNotFoundException {
-        return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByUsername(email))
+        return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByUsername(username))
                                 );
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#email == authentication.principal.subject)")
-    @PutMapping("{email}/updateData")
-    public ResponseEntity<Void> updateDataFromAccount(@PathVariable String email, @RequestBody AccountUpdateRequestData data) throws ElementNotFoundException {
-        accountService.updateAccountDetailsByUsername(email, new AccountDataToUpdateModel(data.getFirstName(), data.getLastName()));
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#username == authentication.principal.subject)")
+    @PutMapping("{username}/updateData")
+    public ResponseEntity<Void> updateDataFromAccount(@PathVariable String username, @RequestBody AccountUpdateRequestData data) throws ElementNotFoundException {
+        accountService.updateAccountDetailsByUsername(username, new AccountDataToUpdateModel(data.getFirstName(), data.getLastName()));
         return ResponseEntity.ok().build();
     }
 
-    @PreAuthorize("#email == authentication.principal.subject")
-    @PutMapping("{email}/updatePassword")
-    public ResponseEntity<Void> updateAccountPassword(@PathVariable String email, @RequestBody AccountUpdatePasswordRequestData data)
+    @PreAuthorize("#username == authentication.principal.subject")
+    @PutMapping("{username}/updatePassword")
+    public ResponseEntity<Void> updateAccountPassword(@PathVariable String username, @RequestBody AccountUpdatePasswordRequestData data)
             throws ElementNotFoundException {
 
-        if (Boolean.TRUE.equals(accountService.matchPasswordFromUsername(email, data.getOldPassword()))) {
+        if (Boolean.TRUE.equals(accountService.matchPasswordFromUsername(username, data.getOldPassword()))) {
             accountService
-                    .updatePasswordByUsername(email, data.getNewPassword());
+                    .updatePasswordByUsername(username, data.getNewPassword());
 
             return ResponseEntity.status(HttpStatus.OK)
                     .build();
@@ -75,16 +75,16 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
-    @PutMapping("{email}/updateEnabled")
-    public ResponseEntity<Void> enableAccount(@PathVariable String email, @RequestBody AccountUpdateEnabledRequestData data)
+    @PutMapping("{username}/updateEnabled")
+    public ResponseEntity<Void> enableAccount(@PathVariable String username, @RequestBody AccountUpdateEnabledRequestData data)
             throws ElementNotFoundException {
-        accountService.updateAccountHasEnabledByUsername(email, data.getEnabled());
+        accountService.updateAccountHasEnabledByUsername(username, data.getEnabled());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#email == authentication.principal.subject)")
-    @PostMapping("{email}/uploadImageFromAccountProfile")
-    public ResponseEntity<Void> updateImageFromAccountProfile(@PathVariable String email, @RequestParam(name = "file") MultipartFile image) {
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#username == authentication.principal.subject)")
+    @PostMapping("{username}/uploadImageFromAccountProfile")
+    public ResponseEntity<Void> updateImageFromAccountProfile(@PathVariable String username, @RequestParam(name = "file") MultipartFile image) {
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
     }
 
@@ -97,18 +97,18 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
-    @PostMapping("{email}/resetPassword")
-    public ResponseEntity<Void> resetAccountPassword(@PathVariable String email, @RequestBody AccountResetPasswordRequestData data)
+    @PostMapping("{username}/resetPassword")
+    public ResponseEntity<Void> resetAccountPassword(@PathVariable String username, @RequestBody AccountResetPasswordRequestData data)
             throws ElementNotFoundException {
-        accountService.updatePasswordByUsername(email, data.getNewPassword());
+        accountService.updatePasswordByUsername(username, data.getNewPassword());
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#email == authentication.principal.subject)")
-    @DeleteMapping("{email}/delete")
-    public ResponseEntity<Void> deleteAccount(@PathVariable String email)
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#username == authentication.principal.subject)")
+    @DeleteMapping("{username}/delete")
+    public ResponseEntity<Void> deleteAccount(@PathVariable String username)
             throws ElementNotFoundException {
-        this.accountService.deleteAccountByUsername(email);
+        this.accountService.deleteAccountByUsername(username);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
