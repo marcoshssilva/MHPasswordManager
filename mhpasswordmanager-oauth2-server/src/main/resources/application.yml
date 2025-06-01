@@ -68,7 +68,7 @@ spring:
     store-type: redis
   redis:
     host: 127.0.0.1
-    # password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
     port: 6379
   rabbitmq:
     host: 127.0.0.1
