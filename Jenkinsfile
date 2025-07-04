@@ -1,6 +1,6 @@
 @Library('java') _
 pipelineMultifolderProjectsJavaUsingMavenWithPublicDockerImage(
-    'password-manager',
+    'marcoshssilva/password-manager',
     'jdk-17',
     [
         'mhpasswordmanager-api-gateway',
