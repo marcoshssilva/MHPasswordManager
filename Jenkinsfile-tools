@@ -1,6 +1,6 @@
 @Library('docker') _
 pipelineMultifolderDocker(
-    'password-manager',
+    'marcoshssilva/password-manager',
     [
         'tool-mail',
         'tool-mongo',
