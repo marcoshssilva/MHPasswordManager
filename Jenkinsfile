@@ -11,4 +11,7 @@ pipelineMultifolderProjectsJavaUsingMavenWithPublicDockerImage(
         'mhpasswordmanager-password-service',
         'mhpasswordmanager-service-registry',
         'mhpasswordmanager-user-service',
-    ])
+    ],
+    true,
+    ['DOCKER_BUILDX_DOCKERFILE': 'Dockerfile.Jenkins']
+)
