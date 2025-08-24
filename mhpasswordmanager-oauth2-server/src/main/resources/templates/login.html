@@ -7,11 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <base th:href="${baseHref}">
-    <title>Authorization</title>
+    <title>PasswordManager Authorization</title>
     <!-- styles -->
     <link rel="stylesheet" href="content/css/bootstrap/bootstrap.min.css"/>
     <link rel="stylesheet" href="content/css/animate/animate.min.css"/>
-    <link rel="stylesheet" href="content/css/login.css"/>
+    <link rel="stylesheet" href="content/css/base-theme.css"/>
 </head>
 
 <body>
@@ -20,32 +20,26 @@
     <div class="panel-login animate__animated animate__fadeInDown">
         <form th:action="@{/login}" method="post" class="needs-validation" novalidate id="formLogin">
             <div class="logo-field"></div>
-
             <div class="title-field">
                 <span class="login-title h2">Bem-vindo</span>
             </div>
-
             <div th:if="${param.error}" class="alert alert-danger alert-dismissible fade show" role="alert">
                 Credenciais inválidas.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
             <div th:if="${param.logout}" class="alert alert-warning alert-dismissible fade show" role="alert">
                 Você está deslogado.
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-
             <div class="email-field form-floating">
                 <input type="text" th:name="username" id="email-input" required class="form-control"/>
                 <label for="email-input">Usuário de Acesso</label>
             </div>
-
             <div class="password-field form-floating">
                 <input type="password" th:name="password" id="password-input" required minlength="8"
                        class="form-control"/>
                 <label for="password-input">Senha</label>
             </div>
-
             <div class="login-group-buttons-field">
                 <a data-bs-toggle="offcanvas" href="#offcanvas-forgot-password" role="button"
                    aria-controls="offcanvasExample">
@@ -53,9 +47,7 @@
                 </a>
                 <button type="submit" class="btn btn-primary">Logar-se</button>
             </div>
-
             <hr/>
-
             <div class="sign-up-field py-4">
                 <p class="text-center p-0 m-0">Não possui uma conta?</p>
                 <p class="text-center p-0 m-0">
@@ -65,18 +57,17 @@
             </div>
         </form>
     </div>
-
     <div class="terms-field">
         <p class="mb-2 text-muted d-flex justify-content-around">
             <a href="#" target="_blank" rel="noopener noreferrer">Licença</a>
-
             <a href="#" target="_blank" rel="noopener noreferrer" class="mx-3">Termos de Uso</a>
-
             <a href="#" target="_blank" rel="noopener noreferrer">Sobre Nós</a>
         </p>
-        <span class="d-block mb-2 text-muted text-center">
-      &copy; 2022–2025
-    </span>
+        <p class="mb-2 text-muted d-flex justify-content-around">
+            <span>
+               <a rel="noopener noreferrer" target="_blank" href="https://github.com/marcoshssilva">marcoshssilva.dev</a>
+            </span>
+        </p>
     </div>
 </main>
 
