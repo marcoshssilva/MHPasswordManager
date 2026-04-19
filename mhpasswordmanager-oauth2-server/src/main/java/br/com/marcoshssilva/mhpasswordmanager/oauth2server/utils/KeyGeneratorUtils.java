@@ -6,23 +6,23 @@ import java.security.SecureRandom;
 import java.util.Random;
 
 public final class KeyGeneratorUtils {
-    private static Random random = null;
+    private static SecureRandom secureRandom = null;
 
     private KeyGeneratorUtils() {
     }
 
-    public static Random getRandom() {
-        if (random == null) {
-            random = new SecureRandom();
+    public static SecureRandom getSecureRandom() {
+        if (secureRandom == null) {
+            secureRandom = new SecureRandom();
         }
-        return random;
+        return secureRandom;
     }
 
     public static KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
             KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            keyPairGenerator.initialize(2048);
+            keyPairGenerator.initialize(2048, getSecureRandom());
             keyPair = keyPairGenerator.generateKeyPair();
         } catch (Exception ex) {
             throw new IllegalStateException(ex);
@@ -31,14 +31,16 @@ public final class KeyGeneratorUtils {
     }
 
     public static String generateRecoveryCodeToResetPassword() {
-        Random random = getRandom();
-        int numbers = 9;
-        String value = "";
+        SecureRandom random = getSecureRandom();
+        StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < numbers; i++) {
-            value = value.concat(String.valueOf(random.nextInt(10)));
+        for (int i = 0; i < 9; i++) {
+            sb.append(random.nextInt(10));
+            if (i == 2 || i == 5) {
+                sb.append("-");
+            }
         }
 
-        return value.replaceAll("(\\d{3})(\\d{3})(\\d{3})", "$1-$2-$3");
+        return sb.toString();
     }
 }
