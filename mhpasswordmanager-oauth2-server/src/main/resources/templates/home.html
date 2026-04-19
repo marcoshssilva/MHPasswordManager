@@ -17,7 +17,19 @@
 <body>
 
 <main class="panel-window w-100">
-    <div class="panel-home animate__animated animate__fadeInDown">
+    <div class="panel-home mb-2 px-3 py-2 rounded animate__animated animate__fadeInDown animate__delay-1s">
+        <div class="d-flex justify-content-between align-items-center">
+            <span class="navbar-text">
+                Olá, <strong th:if="${userDetails != null}" th:text="${#strings.capitalize(#strings.toLowerCase(userDetails.username))}">Usuário</strong>
+            </span>
+            <div class="d-flex">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" class="btn btn-danger btn-sm">Sair</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="panel-home mb-2 px-3 py-2 animate__animated animate__fadeInDown animate__delay-2s">
         <div class="logo-field"></div>
         <div class="title-field pb-3">
             <span class="h2">PasswordManager</span>
@@ -27,16 +39,15 @@
                     Bem-vindo ao PasswordManager, sua solução definitiva para gerenciamento seguro de senhas.
                 </span>
         </div>
+    </div>
+    <div class="panel-home mb-2 px-3 py-2 animate__animated animate__fadeInDown animate__delay-3s">
         <div class="pb-2">
+            <span class="h3">Aplicativos</span>
+            <div class="pb-2">
                 <span>
                     Gostaria de ser redirecionado para uma aplicação? Veja abaixo suas aplicações disponíveis.
                 </span>
-        </div>
-        <hr class="col-3 col-md-2 mb-5">
-        <div class="pb-2">
-                <span class="h3">
-                    Aplicativos
-                </span>
+            </div>
             <ul class="icon-list ps-0 pt-2">
                 <li class="text-muted d-flex align-items-start mb-1">
                     <a href="/mypass-manager/auth/swagger-ui.html">SwaggerUI - OAuth2Server</a>
@@ -68,13 +79,9 @@
                <a rel="noopener noreferrer" target="_blank" href="https://github.com/marcoshssilva">marcoshssilva.dev</a>
             </span>
         </p>
-        </span>
     </div>
 </main>
-
-
 <section id="notifications" style="z-index: 7000;" class="toast-container position-fixed top-0 end-0 p-5"></section>
-
 <!-- scripts -->
 <script src="content/js/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="content/js/notifications.js"></script>
