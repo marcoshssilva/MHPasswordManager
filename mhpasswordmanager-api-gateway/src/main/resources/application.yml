@@ -54,10 +54,12 @@ spring:
           filters:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
             - PreserveHostHeader
-#        - id: default_route
-#          uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:https://marcoshssilva.com.br}
-#          predicates:
-#            - Path=/**
+        - id: default_route
+          uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:http://localhost:8100}
+          filters:
+            - PreserveHostHeader
+          predicates:
+            - Path=/**
 
 management:
   endpoint:
@@ -72,8 +74,10 @@ management:
         include: '*'
 eureka:
   client:
-    service-url:
+    serviceUrl:
       defaultZone: http://eureka:eureka@localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
 ---
 spring:
   config:
