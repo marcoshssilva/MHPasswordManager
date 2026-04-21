@@ -32,3 +32,4 @@ You can start application following steps:
     ```
     docker compose -f ".\docker-compose.yml" --profile all up -d --build
     ```
+4. Open in browser **[127.0.0.1:8080/mypass-manager/auth](http://127.0.0.1:8080/mypass-manager/auth)**
