@@ -36,7 +36,6 @@ public class JwkKeyServiceImpl implements JwkKeyService {
                     .replace("-----END PUBLIC KEY-----", "");
 
             KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
-            log.info(base64PublicKey);
             X509EncodedKeySpec x509EncodedKeySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey));
             return kf.generatePublic(x509EncodedKeySpec);
 
