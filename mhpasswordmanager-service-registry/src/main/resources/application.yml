@@ -6,18 +6,21 @@ spring:
       name: ${SPRING_SECURITY_USERNAME:eureka}
       password: ${SPRING_SECURITY_PASSWORD:eureka}
 server:
+  port: 8761
   servlet:
     session:
       cookie:
         http-only: on
         same-site: strict
-  port: 8761
 eureka:
   client:
-    register-with-eureka: true
-    fetch-registry: true
+    enabled: true
+    fetch-registry: false
+    register-with-eureka: false
     service-url:
       defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:${server.port}/eureka
+  instance:
+    prefer-ip-address: true
 logging:
   level:
     com:

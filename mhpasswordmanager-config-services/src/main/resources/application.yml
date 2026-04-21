@@ -5,6 +5,8 @@ eureka:
     service-url:
       defaultZone: http://eureka:eureka@localhost:8761/eureka
     enabled: true
+  instance:
+    prefer-ip-address: true
 spring:
   application:
     name: config-server
@@ -27,7 +29,6 @@ spring:
           default-label: ${SPRING_CLOUD_CONFIG_SERVER_DEFAULT_LABEL:main}
           # list of sub-folders from git project
           search-paths: ${SPRING_CLOUD_CONFIG_SERVER_SEARCH_PATHS:configs*}
-
 management:
   endpoint:
     health:
