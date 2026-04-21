@@ -20,10 +20,10 @@ Only you can need is run services included in docker:
 
 - Redis will use hostname **localhost** from port 6379
 - Postgres will use hostname **localhost** from port 5432
-- OAuth2-Authorization Server use hostname **localhost** from port 12010
+- OAuth2-Authorization Server use hostname **localhost** from port 8080
 
 ### Profile *docker* assumes that you will run all apps via host.internal.docker, but remember:
 
-- Redis will use hostname **redis-store** from port 6379
+- Redis will use hostname **redis** from port 6379
 - Postgres will use hostname **postgres-db** from port 5432
-- OAuth2-Authorization Server use hostname **host.internal.docker** from port 12010
+- OAuth2-Authorization Server use hostname **host.internal.docker** from port 8080
