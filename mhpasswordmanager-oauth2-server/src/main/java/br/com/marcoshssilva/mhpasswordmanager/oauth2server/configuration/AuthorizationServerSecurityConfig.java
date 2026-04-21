@@ -45,7 +45,8 @@ public class AuthorizationServerSecurityConfig {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         // enable OpenId connect
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(Customizer.withDefaults());
-
+        // customize consent page
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).authorizationEndpoint(auth -> auth.consentPage("/oauth2/consent"));
         return http
                 // register path to login and when not logged in redirect to login page -> /login
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")))

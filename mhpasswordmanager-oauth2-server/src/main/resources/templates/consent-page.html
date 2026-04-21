@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base th:href="${baseHref}">
+    <title>Consent Required - PasswordManager</title>
+    <!-- styles -->
+    <link rel="stylesheet" href="content/css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="content/css/animate/animate.min.css"/>
+    <link rel="stylesheet" href="content/css/base-theme.css"/>
+    <style>
+        .consent-card {
+            max-width: 500px !important;
+            width: 100% !important;
+            padding: 2rem;
+            border-radius: 1rem;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .scope-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #eee;
+        }
+        .scope-item:last-child {
+            border-bottom: none;
+        }
+        .client-name {
+            color: #0d6efd;
+            font-weight: bold;
+        }
+        .user-badge {
+            background-color: #f8f9fa;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border: 1px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+<main class="panel-window w-100">
+    <div class="consent-card">
+        <div class="text-center mb-4">
+            <h2 class="fw-bold">Permissão de Acesso</h2>
+            <div class="user-badge">
+                <i class="bi bi-person-circle me-2"></i>
+                <span th:text="${principalName}">usuario@exemplo.com</span>
+            </div>
+        </div>
+        <p class="mb-4">
+            A aplicação <span class="client-name" th:text="${clientId}">Client Name</span> está solicitando acesso à sua conta.
+        </p>
+
+        <form method="post" th:action="@{/oauth2/authorize}">
+            <input type="hidden" name="client_id" th:value="${clientId}">
+            <input type="hidden" name="state" th:value="${state}">
+            <div class="mb-4">
+                <h6 class="fw-bold mb-3 text-uppercase small text-muted">Esta aplicação poderá:</h6>
+                <div class="border rounded shadow-sm">
+                    <div th:each="scope : ${scopes}" class="scope-item d-flex align-items-center">
+                        <div class="form-check d-flex align-items-start">
+                            <input class="form-check-input mt-1" type="checkbox" name="scope" th:value="${scope.name}" th:id="${scope.name}" checked>
+                            <div class="ms-3">
+                                <label class="form-check-label ms-2 fw-bold" th:for="${scope}" th:text="${scope.name}">scope.name</label>
+                                <br />
+                                <span class="scope-desc text-start" th:text="${scope.description}">Descrição do que este escopo permite fazer no sistema.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-3">
+                <button type="submit" class="btn btn-primary btn-lg fw-bold"   name="consent_action" value="approve">Autorizar</button>
+                <button type="submit" class="btn btn-outline-secondary btn-lg" name="consent_action" value="cancel">Cancelar</button>
+            </div>
+        </form>
+        <p class="text-muted small text-center mt-4">
+            Ao autorizar, você permite que esta aplicação utilize seus dados de acordo com os termos de serviço.
+        </p>
+    </div>
+    <footer class="terms-field">
+        <p class="mb-2 text-muted d-flex justify-content-around">
+            <a href="#" target="_blank" rel="noopener noreferrer">Licença</a>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="mx-3">Termos de Uso</a>
+            <a href="#" target="_blank" rel="noopener noreferrer">Sobre Nós</a>
+        </p>
+        <p class="mb-2 text-muted d-flex justify-content-around">
+            <span>
+               <a rel="noopener noreferrer" target="_blank" href="https://github.com/marcoshssilva">marcoshssilva.dev</a>
+            </span>
+        </p>
+    </footer>
+</main>
+
+<section id="notifications" style="z-index: 7000;" class="toast-container position-fixed top-0 end-0 p-5"></section>
+<!-- scripts -->
+<script src="content/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="content/js/notifications.js"></script>
+</body>
+</html>
