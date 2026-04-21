@@ -6,22 +6,17 @@ springdoc:
   swagger-ui:
     oauth:
       client-id: MHPasswordManager
-      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      client-secret: b07968bd-8989-4f10-82c7-3e427e22c924
       use-basic-authentication-with-access-code-grant: on
-
 management:
   endpoint:
     health:
       group:
-        jdbc-connection:
+        integrations:
           show-components: when_authorized
           show-details: when_authorized
           include:
             - db
-        redis-connection:
-          show-components: when_authorized
-          show-details: when_authorized
-          include:
             - redis
     shutdown:
       enabled: false
@@ -32,7 +27,6 @@ management:
           - 'health'
           - 'metrics'
           - 'info'
-
 oauth-config-starter:
   clients:
     - clientName: 'Registered client for PWA Client'
@@ -43,30 +37,17 @@ oauth-config-starter:
         - AUTHORIZATION_CODE
         - REFRESH_TOKEN
       redirectUris:
-        # Users-Service Api
-        - http://127.0.0.1:12050/users/swagger-ui/redirect
-        - http://127.0.0.1:12011/users/swagger-ui/redirect
-        # Passwords-Service Api
-        - http://127.0.0.1:12050/passwords/swagger-ui/redirect
-        - http://127.0.0.1:12012/passwords/swagger-ui/redirect
-        # Email-Service Api
-        - http://127.0.0.1:12050/emails/swagger-ui/redirect
-        - http://127.0.0.1:12013/emails/swagger-ui/redirect
-        # File-Service Api
-        - http://127.0.0.1:12050/files/swagger-ui/redirect
-        - http://127.0.0.1:12014/files/swagger-ui/redirect
-        # Authorization Server
-        - http://127.0.0.1:12010/swagger-ui/redirect
-        # WebApp Ionic
-        - http://127.0.0.1:8100/authorize
-        - http://127.0.0.1:4200/authorize
+        - http://127.0.0.1:8080/mypass-manager/auth/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/emails/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/files/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/users/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/client/authorize
         - http://127.0.0.1:8080/authorize
-        - http://127.0.0.1/authorize
-        # Tests and Postman
+        - http://127.0.0.1:8100/authorize
         - https://oauth.pstmn.io/v1/callback
         - https://oidcdebugger.com/debug
       scopes:
-        - 'openid'
         - 'profile'
         - 'email'
       tokenSettings:
@@ -111,15 +92,21 @@ spring:
   session:
     store-type: redis
   redis:
-    host: redis-store
-    password: '' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
+    host: redis
+    password: 'MHP@SSW0R3#20230401'
     port: 6379
   rabbitmq:
-    host: host.docker.internal
+    host: rabbitmq
     virtual-host: vhost-password-manager
     username: authorization-server-pm
     password: authorization-server-pm-P@ss
-
+springdoc:
+  swagger-ui:
+    oauth2-authorization-url: http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize
+    oauth2-token-url: http://127.0.0.1:8080/mypass-manager/auth/oauth2/token
+    oauth2-redirect-url: http://127.0.0.1:8080/mypass-manager/auth/swagger-ui/redirect
+    csrf:
+      enabled: true
 authorization:
-  issuer-uri: http://host.docker.internal:12010
-  success-logout-uri: http://host.docker.internal:8100
+  issuer-uri: http://host.docker.internal:8080/mypass-manager/auth/
+  success-logout-uri: http://host.docker.internal:8080/mypass-manager/auth/

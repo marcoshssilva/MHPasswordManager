@@ -2,11 +2,11 @@
 pipelineMultifolderDocker(
     'marcoshssilva/password-manager',
     [
-        'tool-mail',
-        'tool-mongo',
-        'tool-postgres',
-        'tool-rabbitmq',
-        'tool-redis'
+        'etc/docker/tool-mail',
+        'etc/docker/tool-mongo',
+        'etc/tool-postgres',
+        'etc/tool-rabbitmq',
+        'etc/tool-redis'
     ],
     'dkjnkpub.starlord443.dev',
     'nexus-user',

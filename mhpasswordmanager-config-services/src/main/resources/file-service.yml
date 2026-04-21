@@ -4,11 +4,18 @@ springdoc:
   swagger-ui:
     oauth:
       client-id: MHPasswordManager
-      client-secret: fd04f93e-5e4d-4f16-98ae-9247f68d8619
+      client-secret: b07968bd-8989-4f10-82c7-3e427e22c924
       use-basic-authentication-with-access-code-grant: on
-
 management:
   endpoint:
+    health:
+      group:
+        integrations:
+          show-components: when_authorized
+          show-details: when_authorized
+          include:
+            - redis
+            - mongo
     shutdown:
       enabled: false
   endpoints:
@@ -18,3 +25,58 @@ management:
           - 'health'
           - 'info'
           - 'metrics'
+---
+spring:
+  config:
+    activate:
+      on-profile: docker0
+  session:
+    store-type: redis
+  redis:
+    host: redis
+    password: 'MHP@SSW0R3#20230401'
+    port: 6379
+  data:
+    mongodb:
+      host: mongo
+      username: 'sa-files-service'
+      password: 'P@sswordFil3s'
+      database: 'db_files'
+      authentication-database: 'admin'
+      authentication-mechanism: 'SCRAM-SHA-1'
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      fail-on-empty-beans: false
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://host.docker.internal:8080/mypass-manager/auth/
+management:
+  endpoint:
+    health:
+      group:
+        database:
+          show-components: always
+          show-details: always
+          include:
+            - redis
+            - ping
+            - mongo
+    shutdown:
+      enabled: false
+  endpoints:
+    web:
+      exposure:
+        include:
+          - 'health'
+          - 'metrics'
+          - 'info'
+springdoc:
+  swagger-ui:
+    oauth2-authorization-url: http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize
+    oauth2-token-url: http://127.0.0.1:8080/mypass-manager/auth/oauth2/token
+    oauth2-redirect-url: http://127.0.0.1:8080/mypass-manager/files/swagger-ui/redirect
+    csrf:
+      enabled: false

@@ -1,201 +1,292 @@
-#version: '3.8'
 services:
-  config-services:
-    image: mhpasswordmanager/config-services:dev
+  config:
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-config-services
     env_file:
-      - docker-envs/CONFIG-SERVICES.env
+      - etc/env/CONFIG-SERVICES.env
+    depends_on:
+      eureka:
+        condition: service_healthy
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "8888:8888"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8888/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - apps
       - all
-  eureka-service-discovery:
-    image: mhpasswordmanager/service-registry:dev
+  eureka:
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-service-registry
     env_file:
-      - docker-envs/SERVICE-REGISTRY.env
+      - etc/env/SERVICE-REGISTRY.env
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "8761:8761"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8761/actuator/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - apps
       - all
   oauth2-server:
-    image: mhpasswordmanager/oauth2-server:dev
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-oauth2-server
     env_file:
-      - docker-envs/OAUTH2-AUTHORIZATION-SERVER.env
+      - etc/env/OAUTH2-AUTHORIZATION-SERVER.env
     depends_on:
-      - redis-store
-      - eureka-service-discovery
-      - postgres-db
-      - config-services
-      - rabbitmq
+      redis:
+        condition: service_healthy
+      eureka:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "12010:12010"
     profiles:
       - apps
       - all
-  api-gateway:
-    image: mhpasswordmanager/api-gateway:dev
+  gateway:
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-api-gateway
     env_file:
-      - docker-envs/API-GATEWAY.env
+      - etc/env/API-GATEWAY.env
     depends_on:
-      - eureka-service-discovery
+      eureka:
+        condition: service_healthy
+      user-service:
+        condition: service_healthy
+      password-service:
+        condition: service_healthy
+      email-service:
+        condition: service_healthy
+      file-service:
+        condition: service_healthy
+      oauth2-server:
+        condition: service_healthy
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "8080:8080"
     profiles:
       - apps
       - all
   user-service:
-    image: mhpasswordmanager/user-service:dev
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-user-service
     env_file:
-      - docker-envs/USER-SERVICE.env
+      - etc/env/USER-SERVICE.env
     depends_on:
-      - eureka-service-discovery
-      - postgres-db
-      - config-services
-      - redis-store
+      eureka:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "12011:12011"
     profiles:
       - apps
       - all
   password-service:
-    image: mhpasswordmanager/password-service:dev
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-password-service
     env_file:
-      - docker-envs/PASSWORD-SERVICE.env
+      - etc/env/PASSWORD-SERVICE.env
     depends_on:
-      - eureka-service-discovery
-      - postgres-db
-      - config-services
-      - redis-store
+      eureka:
+        condition: service_healthy
+      postgres-db:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "12012:12012"
     profiles:
       - apps
       - all
   email-service:
-    image: mhpasswordmanager/email-service:dev
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-email-service
     env_file:
-      - docker-envs/EMAIL-SERVICE.env
+      - etc/env/EMAIL-SERVICE.env
+    networks:
+      - net
     depends_on:
-      - eureka-service-discovery
-      - config-services
-      - redis-store
-      - rabbitmq
-      - mailserver
+      eureka:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      mailserver:
+        condition: service_healthy
     profiles:
       - apps
       - all
   file-service:
-    image: mhpasswordmanager/file-service:dev
     restart: on-failure
+    build:
+      context: ./mhpasswordmanager-file-service
     env_file:
-      - docker-envs/FILE-SERVICE.env
+      - etc/env/FILE-SERVICE.env
     ports:
       - "12014:12014"
+    networks:
+      - net
     depends_on:
-      - eureka-service-discovery
-      - config-services
-      - redis-store
-      - mongo-db
+      eureka:
+        condition: service_healthy
+      config:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
     profiles:
       - apps
       - all
   postgres-db:
-    image: mhpasswordmanager/postgres:dev
     restart: on-failure
+    build:
+      context: ./etc/docker/tool-postgres
     env_file:
-      - docker-envs/POSTGRES-DB.env
+      - etc/env/POSTGRES-DB.env
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "5432:5432"
     volumes:
-      - data-mhpasswordmanager-postgres-db:/var/lib/postgresql/data
+      - data-postgres-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - tools
       - all
-  redis-store:
-    image: mhpasswordmanager/redis:dev
+  redis:
     env_file:
-      - docker-envs/REDIS-STORE.env
+      - etc/env/REDIS-STORE.env
     restart: on-failure
+    build:
+      context: ./etc/docker/tool-redis
     ports:
       - '6379:6379'
     volumes:
-      - data-mhpasswordmanager-redis:/data
+      - data-redis:/data
     networks:
-      - net-mhpasswordmanager
+      - net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - tools
       - all
-  mongo-db:
-    image: mhpasswordmanager/mongo:dev
+  mongo:
     restart: on-failure
+    build:
+      context: ./etc/docker/tool-mongo
     env_file:
-      - docker-envs/MONGO-DB.env
+      - etc/env/MONGO-DB.env
     networks:
-      - net-mhpasswordmanager
+      - net
     volumes:
-      - data-mhpasswordmanager-mongo-db:/data/db
+      - data-mongo-db:/data/db
     ports:
       - "27017:27017"
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand({ping:1})'"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - tools
       - all
   rabbitmq:
-    image: mhpasswordmanager/rabbit:dev
+    restart: on-failure
+    build:
+      context: ./etc/docker/tool-rabbitmq
     env_file:
-      - docker-envs/RABBITMQ.env
+      - etc/env/RABBITMQ.env
     networks:
-      - net-mhpasswordmanager
+      - net
     volumes:
-      - data-mhpasswordmanager-rabbitmq-data:/var/lib/rabbitmq
-      - data-mhpasswordmanager-rabbitmq-logs:/var/log/rabbitmq
+      - data-rabbitmq-data:/var/lib/rabbitmq
+      - data-rabbitmq-logs:/var/log/rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
       - "25672:25672"
       - "15692:15692"
+    healthcheck:
+      test: ["CMD-SHELL", "rabbitmq-diagnostics -q check_running"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - tools
       - all
   mailserver:
-    image: mhpasswordmanager/mail-server:dev
+    restart: on-failure
+    build:
+      context: ./etc/docker/tool-mail
     env_file:
-      - docker-envs/MAILSERVER.env
+      - etc/env/MAILSERVER.env
     networks:
-      - net-mhpasswordmanager
+      - net
     ports:
       - "1025:1025"
       - "1080:1080"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:1080 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     profiles:
       - tools
       - all
 networks:
-  net-mhpasswordmanager:
+  net:
     driver: bridge
 volumes:
-  data-mhpasswordmanager-postgres-db:
-  data-mhpasswordmanager-redis:
-  data-mhpasswordmanager-mongo-db:
-  data-mhpasswordmanager-rabbitmq-logs:
-  data-mhpasswordmanager-rabbitmq-data:
+  data-postgres-db:
+  data-redis:
+  data-mongo-db:
+  data-rabbitmq-logs:
+  data-rabbitmq-data:

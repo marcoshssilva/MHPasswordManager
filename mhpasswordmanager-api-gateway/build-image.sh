@@ -1,1 +1,0 @@
-docker build -t mhpasswordmanager/api-gateway:dev .

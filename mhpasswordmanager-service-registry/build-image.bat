@@ -1,1 +1,0 @@
-docker build -t mhpasswordmanager/service-registry:dev .
