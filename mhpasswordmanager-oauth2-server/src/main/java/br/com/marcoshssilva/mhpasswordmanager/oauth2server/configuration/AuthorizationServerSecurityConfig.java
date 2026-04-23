@@ -1,6 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JwkKeyService;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JkwKeySelectorDispatcher;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
@@ -92,8 +92,8 @@ public class AuthorizationServerSecurityConfig {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(JwkKeyService jwkKeyService) {
-        return (jwkSelector, securityContext) -> jwkSelector.select(new JWKSet(jwkKeyService.getRSAKey()));
+    public JWKSource<SecurityContext> jwkSource(JkwKeySelectorDispatcher jkwKeySelectorDispatcher) {
+        return (jwkSelector, securityContext) -> jwkSelector.select(new JWKSet(jkwKeySelectorDispatcher.getRSAKey()));
     }
 
     @Bean
