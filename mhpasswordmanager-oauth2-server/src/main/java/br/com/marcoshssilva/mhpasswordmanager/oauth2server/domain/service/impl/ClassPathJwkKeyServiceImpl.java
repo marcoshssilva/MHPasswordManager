@@ -51,7 +51,7 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
 
     @Override
     public void selectJwkKey(UUID uuid) throws JwkLoaderFailException {
-        throw new JwkLoaderFailException("JwkKey cannot be changed if is using ClassPath", new IllegalArgumentException("JwkKey cannot be changed if is using ClassPath"));
+        throw new JwkLoaderFailException("Jwk key cannot be changed if is using classpath method.");
     }
 
     @Override

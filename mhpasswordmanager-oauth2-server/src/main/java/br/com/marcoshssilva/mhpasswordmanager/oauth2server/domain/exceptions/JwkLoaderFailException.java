@@ -4,4 +4,8 @@ public class JwkLoaderFailException extends RuntimeException {
     public JwkLoaderFailException(String message, Throwable cause) {
         super(message, cause);
     }
+
+    public JwkLoaderFailException(String message) {
+        super(message);
+    }
 }
