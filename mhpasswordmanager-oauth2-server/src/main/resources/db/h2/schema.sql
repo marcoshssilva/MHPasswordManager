@@ -48,3 +48,15 @@ CREATE TABLE users_details
         ON DELETE RESTRICT
         ON UPDATE CASCADE
 );
+
+CREATE TABLE oauth2_jwk_keys
+(
+    uuid               varchar(36) NOT NULL,
+    algorithm          varchar(10) NOT NULL DEFAULT 'RSA',
+    base64_private_key text        NOT NULL,
+    base64_public_key  text        NOT NULL,
+    created_at         timestamp   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at         timestamp,
+    active             boolean     NOT NULL DEFAULT false,
+    PRIMARY KEY (uuid)
+);
