@@ -7,10 +7,7 @@ import java.util.Random;
 
 public final class KeyGeneratorUtils {
     private static SecureRandom secureRandom = null;
-
-    private KeyGeneratorUtils() {
-    }
-
+    private KeyGeneratorUtils() {}
     public static SecureRandom getSecureRandom() {
         if (secureRandom == null) {
             secureRandom = new SecureRandom();
