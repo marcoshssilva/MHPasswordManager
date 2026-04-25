@@ -22,6 +22,8 @@ public class SecurityConfig {
 
     private final String[] postMethodOnlyPublic = new String[]{"/api/account/register", "/api/account/forgot/step1", "/api/account/forgot/step2"};
 
+    private final String[] enabledOnlyToAdmin = new String[] { "/api/jwk-management/**" };
+
     @Order(1)
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -37,6 +39,8 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.GET, getMethodOnlyPublic).permitAll()
                 // register as public access only when POST method
                 .antMatchers(HttpMethod.POST, postMethodOnlyPublic).permitAll()
+                // only to role ADMIN or MASTER
+                .antMatchers(enabledOnlyToAdmin).hasAnyRole("ADMIN", "MASTER")
                 // any other requests for authenticated
                 .anyRequest().authenticated()
         );

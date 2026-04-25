@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/jwk-management")
+@RequestMapping("/api/jwk-management")
 @RequiredArgsConstructor
 @Tag(name = "JWK Management")
 public class JwkManagementController {
