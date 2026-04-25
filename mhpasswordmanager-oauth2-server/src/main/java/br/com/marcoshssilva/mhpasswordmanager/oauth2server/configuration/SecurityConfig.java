@@ -45,7 +45,7 @@ public class SecurityConfig {
                 // don't need to add in PUBLIC ROUTES because this method make it from default
                 .formLogin(login -> login.loginPage("/login").permitAll())
                 .logout(logout -> logout
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
+                        .logoutUrl("/logout")
                         .logoutSuccessUrl(this.authorizationConfigProperties.getSuccessLogoutUri())
                         .permitAll())
                 .build();
