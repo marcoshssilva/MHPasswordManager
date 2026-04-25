@@ -52,7 +52,7 @@ public class OAuth2ConfigStarterConfig {
                 userDetailsManager.createUser(
                         User.builder()
                             .username(user.getUsername())
-                            .password(user.getPassword())
+                            .password(passwordEncoder.encode(user.getPassword()))
                             .roles(user.getRoles().toArray(new String[] {}))
                             .accountExpired(!user.isAccountNonExpired())
                             .accountLocked(!user.isAccountNonLocked())
