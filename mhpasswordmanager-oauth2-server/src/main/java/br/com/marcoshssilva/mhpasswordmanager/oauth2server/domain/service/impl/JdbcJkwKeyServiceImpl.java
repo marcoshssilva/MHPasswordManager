@@ -5,6 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.JwkKeyD
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JkwKeySelectorDispatcher;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JwkKeyService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.mappers.JwkKeyDataMapper;
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.RSAKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -65,7 +66,7 @@ public class JdbcJkwKeyServiceImpl implements JwkKeyService, JkwKeySelectorDispa
     }
 
     @Override
-    public RSAKey getRSAKey() throws JwkLoaderFailException {
+    public JWK getKey() throws JwkLoaderFailException {
         try {
             JwkKeyData jwkKeyData = getActiveJwkKey();
             return new RSAKey.Builder((RSAPublicKey) decodePublicKey(jwkKeyData)).privateKey(decodePrivateKey(jwkKeyData)).keyID(jwkKeyData.getUuid()).build();

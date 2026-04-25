@@ -93,7 +93,7 @@ public class AuthorizationServerSecurityConfig {
 
     @Bean
     public JWKSource<SecurityContext> jwkSource(JkwKeySelectorDispatcher jkwKeySelectorDispatcher) {
-        return (jwkSelector, securityContext) -> jwkSelector.select(new JWKSet(jkwKeySelectorDispatcher.getRSAKey()));
+        return (jwkSelector, securityContext) -> jwkSelector.select(new JWKSet(jkwKeySelectorDispatcher.getKey()));
     }
 
     @Bean

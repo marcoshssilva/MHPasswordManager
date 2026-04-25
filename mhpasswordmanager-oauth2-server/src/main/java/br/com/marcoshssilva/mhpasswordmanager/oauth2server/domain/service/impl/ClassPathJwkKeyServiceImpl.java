@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.Jwk
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JkwKeySelectorDispatcher;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JwkKeyService;
 
+import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.RSAKey;
 
 import lombok.RequiredArgsConstructor;
@@ -55,7 +56,7 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
     }
 
     @Override
-    public RSAKey getRSAKey() throws JwkLoaderFailException {
+    public JWK getKey() throws JwkLoaderFailException {
         return new RSAKey.Builder((RSAPublicKey) getPublicKey()).privateKey(getPrivateKey()).keyID(UUID).build();
     }
 }
