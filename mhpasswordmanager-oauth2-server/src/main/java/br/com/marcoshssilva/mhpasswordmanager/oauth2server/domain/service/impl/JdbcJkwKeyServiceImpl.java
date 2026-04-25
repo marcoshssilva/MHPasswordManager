@@ -2,55 +2,28 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.JwkLoaderFailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.JwkKeyData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JWKFactory;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JkwKeySelectorDispatcher;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JwkKeyService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.mappers.JwkKeyDataMapper;
 import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.RSAKey;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPublicKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
-import java.util.Base64;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @RequiredArgsConstructor
 public class JdbcJkwKeyServiceImpl implements JwkKeyService, JkwKeySelectorDispatcher {
     public static final String SELECT_JWK_KEY_QUERY                  = "SELECT base64_public_key, base64_private_key, uuid, algorithm, created_at, deleted_at, active FROM oauth2_jwk_keys WHERE active = true AND deleted_at IS NULL ORDER BY created_at DESC LIMIT 1";
-    public static final String ENABLE_BY_UUID_JWK_KEY_QUERY          = "UPDATE oauth2_jwk_keys SET true = false WHERE uuid = ? AND deleted_at IS NULL";
+    public static final String SELECT_BY_UUID_JWK_KEY_QUERY          = "SELECT base64_public_key, base64_private_key, uuid, algorithm, created_at, deleted_at, active FROM oauth2_jwk_keys WHERE uuid = ?";
+    public static final String SELECT_ALL_JWK_KEY_QUERY              = "SELECT base64_public_key, base64_private_key, uuid, algorithm, created_at, deleted_at, active FROM oauth2_jwk_keys WHERE deleted_at IS NULL ORDER BY created_at DESC";
+    public static final String ENABLE_BY_UUID_JWK_KEY_QUERY          = "UPDATE oauth2_jwk_keys SET active = true WHERE uuid = ? AND deleted_at IS NULL";
     public static final String DISABLE_ALL_NOT_DELETED_JWK_KEY_QUERY = "UPDATE oauth2_jwk_keys SET active = false WHERE deleted_at IS NULL";
+    public static final String DELETE_BY_UUID_JWK_KEY_QUERY          = "UPDATE oauth2_jwk_keys SET deleted_at = now(), active = false WHERE uuid = ? AND deleted_at IS NULL";
+    public static final String CREATE_JWK_KEY_QUERY                  = "INSERT INTO oauth2_jwk_keys (base64_public_key, base64_private_key, uuid, algorithm, created_at, active) VALUES (?, ?, ?, ?, ?, ?)";
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Override
-    public PublicKey getPublicKey() {
-        try {
-            JwkKeyData jwkKeyData = getActiveJwkKey();
-            KeyFactory kf = KeyFactory.getInstance(jwkKeyData.getAlgorithm());
-            return kf.generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(jwkKeyData.getPublicKey())));
-        } catch (Exception e) {
-            throw new JwkLoaderFailException(e.getMessage(), e);
-        }
-    }
-
-    @Override
-    public PrivateKey getPrivateKey() {
-        try {
-            JwkKeyData jwkKeyData = getActiveJwkKey();
-            KeyFactory kf = KeyFactory.getInstance(jwkKeyData.getAlgorithm());
-            return kf.generatePrivate(new X509EncodedKeySpec(Base64.getDecoder().decode(jwkKeyData.getPrivateKey())));
-        } catch (Exception e) {
-            throw new JwkLoaderFailException(e.getMessage(), e);
-        }
-    }
 
     @Override
     public void selectJwkKey(UUID uuid) throws JwkLoaderFailException {
@@ -66,23 +39,60 @@ public class JdbcJkwKeyServiceImpl implements JwkKeyService, JkwKeySelectorDispa
     }
 
     @Override
-    public JWK getKey() throws JwkLoaderFailException {
+    public void deleteJwkKey(UUID uuid) throws JwkLoaderFailException {
         try {
-            JwkKeyData jwkKeyData = getActiveJwkKey();
-            return new RSAKey.Builder((RSAPublicKey) decodePublicKey(jwkKeyData)).privateKey(decodePrivateKey(jwkKeyData)).keyID(jwkKeyData.getUuid()).build();
+            int rowsUpdated = this.jdbcTemplate.update(DELETE_BY_UUID_JWK_KEY_QUERY, uuid.toString());
+            if (rowsUpdated == 0) {
+                throw new IllegalArgumentException("JWK key not found in database with the provided uuid");
+            }
         } catch (Exception e) {
             throw new JwkLoaderFailException(e.getMessage(), e);
         }
     }
 
-    private PrivateKey decodePrivateKey(JwkKeyData jwkKeyData) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        KeyFactory kf = KeyFactory.getInstance(jwkKeyData.getAlgorithm());
-        return kf.generatePrivate(new PKCS8EncodedKeySpec(Base64.getDecoder().decode(jwkKeyData.getPrivateKey())));
+    @Override
+    public JwkKeyData createJwkKey(JwkKeyData jwkKeyData) throws JwkLoaderFailException {
+        try {
+            if (Objects.nonNull(getJwkKey(UUID.fromString(jwkKeyData.getUuid())))) {
+                throw new IllegalArgumentException("JWK key already exists in database with the provided uuid");
+            }
+            this.jdbcTemplate.update(CREATE_JWK_KEY_QUERY, jwkKeyData.getPublicKey(), jwkKeyData.getPrivateKey(), jwkKeyData.getUuid(), jwkKeyData.getAlgorithm(), jwkKeyData.getCreatedAt(), jwkKeyData.getActive());
+            return jwkKeyData;
+        } catch (Exception e) {
+            throw new JwkLoaderFailException(e.getMessage(), e);
+        }
     }
 
-    private PublicKey decodePublicKey(JwkKeyData jwkKeyData) throws NoSuchAlgorithmException, InvalidKeySpecException {
-        KeyFactory kf = KeyFactory.getInstance(jwkKeyData.getAlgorithm());
-        return kf.generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(jwkKeyData.getPublicKey())));
+    @Override
+    public JwkKeyData getJwkKey(UUID uuid) throws JwkLoaderFailException {
+        try {
+            return this.jdbcTemplate.queryForObject(SELECT_BY_UUID_JWK_KEY_QUERY, JwkKeyDataMapper.getInstance(), uuid.toString());
+        } catch (EmptyResultDataAccessException e) { // if result not exists
+            return null;
+        } catch (Exception e) {
+            throw new JwkLoaderFailException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Collection<JwkKeyData> getAllKeys() throws JwkLoaderFailException {
+        try {
+            return this.jdbcTemplate.query(SELECT_ALL_JWK_KEY_QUERY, JwkKeyDataMapper.getInstance());
+        } catch (EmptyResultDataAccessException e) { // if result not exists
+            return List.of();
+        } catch (Exception e) {
+            throw new JwkLoaderFailException(e.getMessage(), e);
+        }
+
+    }
+
+    @Override
+    public JWK getKey() throws JwkLoaderFailException {
+        try {
+            return JWKFactory.getBuilder().fromJwkKeyData(getActiveJwkKey());
+        } catch (Exception e) {
+            throw new JwkLoaderFailException(e.getMessage(), e);
+        }
     }
 
     private JwkKeyData getActiveJwkKey() {

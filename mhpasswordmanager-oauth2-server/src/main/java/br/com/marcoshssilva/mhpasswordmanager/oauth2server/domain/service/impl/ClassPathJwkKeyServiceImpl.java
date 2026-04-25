@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.JwkLoaderFailException;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.JwkKeyData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JkwKeySelectorDispatcher;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.JwkKeyService;
 
@@ -19,7 +20,10 @@ import java.security.PublicKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -28,7 +32,6 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
     private static final String ALGORITHM = "RSA";
     private static final String UUID = "0107f47a-2263-421c-81bb-10210c9c2e6d";
 
-    @Override
     public PublicKey getPublicKey() throws JwkLoaderFailException {
         try (InputStream resource  = new ClassPathResource("/public-key.pem").getInputStream()) {
             String base64PublicKey = new String(resource.readAllBytes()).replace("\n", "").replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "");
@@ -39,7 +42,6 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
         }
     }
 
-    @Override
     public PrivateKey getPrivateKey() throws JwkLoaderFailException {
         try (InputStream resource   = new ClassPathResource("/private-key.pem").getInputStream()) {
             String base64PrivateKey = new String(resource.readAllBytes()).replace("\n", "").replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "");
@@ -53,6 +55,36 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
     @Override
     public void selectJwkKey(UUID uuid) throws JwkLoaderFailException {
         throw new JwkLoaderFailException("Jwk key cannot be changed if is using classpath method.");
+    }
+
+    @Override
+    public void deleteJwkKey(UUID uuid) throws JwkLoaderFailException {
+        throw new JwkLoaderFailException("Jwk key cannot be deleted if is using classpath method.");
+    }
+
+    @Override
+    public JwkKeyData createJwkKey(JwkKeyData jwkKeyData) throws JwkLoaderFailException {
+        throw new JwkLoaderFailException("Jwk key cannot be created if is using classpath method.");
+    }
+
+    @Override
+    public JwkKeyData getJwkKey(UUID uuid) throws JwkLoaderFailException {
+        if (!UUID.equals(uuid.toString())) {
+            throw new JwkLoaderFailException("Jwk key not found for uuid: " + uuid);
+        }
+        return JwkKeyData.builder()
+                .uuid(UUID)
+                .publicKey(new String(getPublicKey().getEncoded()))
+                .privateKey(new String(getPrivateKey().getEncoded()))
+                .active(Boolean.TRUE)
+                .algorithm(getPublicKey().getAlgorithm())
+                .createdAt(LocalDateTime.of(2024, 6, 1, 0, 0))
+                .build();
+    }
+
+    @Override
+    public Collection<JwkKeyData> getAllKeys() throws JwkLoaderFailException {
+        return List.of(getJwkKey(java.util.UUID.fromString(UUID)));
     }
 
     @Override
