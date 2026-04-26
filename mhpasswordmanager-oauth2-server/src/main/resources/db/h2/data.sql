@@ -17,11 +17,11 @@ VALUES ('anonymous',
         'ROLE_USER');
 
 INSERT INTO users_details (username, firstName, lastName, imageUrl)
-VALUES ('admin@mhpasswordmanager.com',
+VALUES ('admin',
         'Default',
         'Administrator',
         null),
-       ('anonymous@mhpasswordmanager.com',
+       ('anonymous',
         'Anonymous',
         'User',
         null);
