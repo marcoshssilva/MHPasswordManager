@@ -1,17 +1,2 @@
 @Library('java') _
-pipelineMultifolderProjectsJavaUsingMavenWithPublicDockerImage(
-    'marcoshssilva/password-manager',
-    'jdk-17',
-    [
-        'mhpasswordmanager-api-gateway',
-        'mhpasswordmanager-config-services',
-        'mhpasswordmanager-email-service',
-        'mhpasswordmanager-file-service',
-        'mhpasswordmanager-oauth2-server',
-        'mhpasswordmanager-password-service',
-        'mhpasswordmanager-service-registry',
-        'mhpasswordmanager-user-service',
-    ],
-    true,
-    ['DOCKER_BUILDX_DOCKERFILE': 'Dockerfile.Jenkins']
-)
+pipelineSimpleMavenJavaProject('marcoshssilva/password-manager', 'jdk-17')
