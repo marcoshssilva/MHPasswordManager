@@ -1,0 +1,29 @@
+name: Java CI with Maven
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up JDK 17 Temurin
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: Start Docker
+      uses: docker-practice/actions-setup-docker@v1
+
+    - name: Make Maven Wrapper executable
+      run: chmod +x mvnw
+
+    - name: Run Tests with Testcontainers
+      run: ./mvnw clean verify
