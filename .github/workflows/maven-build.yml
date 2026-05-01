@@ -19,11 +19,11 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
-    - name: Start Docker
-      uses: docker-practice/actions-setup-docker@v1
+    - name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
     - name: Make Maven Wrapper executable
       run: chmod +x mvnw
 
     - name: Run Tests with Testcontainers
-      run: ./mvnw clean verify
+      run: ./mvnw verify package
