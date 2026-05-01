@@ -2,6 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.resources;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.StatusTypeEnum;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.BusinessRuleException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.FailSendEmailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models.UserResetPasswordStep1Data;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/account")
@@ -49,7 +51,8 @@ public class AccountRegisterController {
     }
 
     @PostMapping(value = "/forgot/step2")
-    public HttpJsonResponse<Object> recoverAccountStep2(@Valid @RequestBody UserResetPasswordStep2Data data) {
+    public HttpJsonResponse<Object> recoverAccountStep2(@Valid @RequestBody UserResetPasswordStep2Data data, HttpServletRequest request) throws BusinessRuleException {
+        userService.resetPasswordFromRecoveryPasswordCodeRequest(data.getCode(), data.getPassword(), RequestedBrowserParams.builder().ipAddress(request.getRemoteAddr()).userAgent(request.getHeader("user-agent")).build());
         return HttpJsonResponse.builder().message("Message has been send to your box. Check your email.").status(StatusTypeEnum.SUCCESS)
                 .build();
     }

@@ -81,9 +81,17 @@
                             "code": form.code.value,
                             "password": form.password.value
                         })
-                }).then(result => {
-                    createNotification('Resetado com sucesso!', "Sua senha foi redefinida com sucesso. Faça o login com sua nova credencial", "Now")
-                })
+                }).then(async response => {
+                    let body = await response.json();
+                    switch (body.status) {
+                        case "SUCCESS":
+                            createNotification('Resetado com sucesso!', "Sua senha foi redefinida com sucesso. Faça o login com sua nova credencial", "Now")
+                            break;
+                        default:
+                            if (body.errors && body.errors.length > 0) body.errors.forEach(err => createNotification("Registration error", err.defaultMessage, "Now"))
+                            if (body.error && body.error !== "") createNotification("Registration error", body.error, "Now")
+                    }
+                }, err => console.log(err));
             }
         }, false)
     })
