@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.errors;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.StatusTypeEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.BusinessRuleException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.FailSendEmailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.responses.HttpJsonResponse;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.CannotRegisterUserException;
@@ -40,6 +41,16 @@ public class ControllerAdviceResolver {
     public ResponseEntity<HttpJsonResponse<Object>> failSendEmailExceptionHandler(FailSendEmailException exception, HttpServletRequest req, HttpServletResponse res) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(HttpJsonResponse.builder()
+                        .status(StatusTypeEnum.ERROR)
+                        .message(HttpStatus.BAD_GATEWAY.getReasonPhrase())
+                        .error(exception.getMessage())
+                        .build());
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<HttpJsonResponse<Void>> businessRuleExceptionHandler(BusinessRuleException exception, HttpServletRequest req, HttpServletResponse res) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(HttpJsonResponse.<Void>builder()
                         .status(StatusTypeEnum.ERROR)
                         .message(HttpStatus.BAD_GATEWAY.getReasonPhrase())
                         .error(exception.getMessage())
