@@ -27,3 +27,21 @@ jobs:
 
     - name: Run Tests with Testcontainers
       run: ./mvnw verify package
+
+    - name: Run Docker Compose with profile all
+      run: docker compose --profile all up -d
+
+    - name: Verify Auth Service is up
+      run: |
+        echo "Waiting for services to be healthy..."
+        for i in {1..24}; do
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8080/mypass-manager/auth/login || echo "000")
+          if [ "$STATUS" -eq 200 ]; then
+            echo "Success: Status 200 OK"
+            exit 0
+          fi
+          echo "Attempt $i: Status $STATUS. Waiting 5s..."
+          sleep 5
+        done
+        echo "Error: Service did not return 200 OK after 2 minutes"
+        exit 1
