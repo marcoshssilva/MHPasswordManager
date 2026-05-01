@@ -35,6 +35,9 @@ public class JdbcUserServiceImpl implements UserService {
     public static final String QUERY_SAVERECOVERYCODEGENERATEDFORUSER = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
     public static final String QUERY_GETRECOVERYCODEGENERATEDFORUSER = "SELECT code, username, ip_client, user_agent_client, created_at, expires_at, completed FROM users_recovery_password_code WHERE code = ? AND ip_client = ? AND user_agent_client = ? AND completed = false AND expires_at > ? AND completed = false";
     public static final String QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER = "SELECT count(code) FROM users_recovery_password_code WHERE username = ? AND completed = false AND expires_at > ?";
+    private static final String QUERY_GETUSERNAMEBYUUIDCODE = "SELECT username FROM users_verify_codes WHERE uuid_code = ?";
+    private static final String QUERY_UPDATEUSERDETAILSVERIFIED = "UPDATE users_details SET verified = true, verified_at = current_timestamp WHERE username = ?";
+    private static final String QUERY_DELETEUSERVERIFYCODE = "DELETE FROM users_verify_codes WHERE uuid_code = ?";
 
     private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
@@ -134,6 +137,20 @@ public class JdbcUserServiceImpl implements UserService {
         int rowsUpdated = this.jdbcTemplate.update(QUERY_UPDATEUSERPASSWORD, passwordEncoder.encode(newPassword), username);
         if (rowsUpdated == 0) {
             throw new BusinessRuleException("Cannot reset password, user not found.");
+        }
+    }
+
+    @Override
+    public void verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) throws BusinessRuleException {
+        try {
+            String username = this.jdbcTemplate.queryForObject(QUERY_GETUSERNAMEBYUUIDCODE, String.class, uuidCode);
+            int rowsUpdated = this.jdbcTemplate.update(QUERY_UPDATEUSERDETAILSVERIFIED, username);
+            if (rowsUpdated == 0) {
+                throw new BusinessRuleException("Cannot verify user account, user details not found.");
+            }
+            this.jdbcTemplate.update(QUERY_DELETEUSERVERIFYCODE, uuidCode);
+        } catch (EmptyResultDataAccessException | BusinessRuleException e) {
+             throw new BusinessRuleException("Cannot verify user account, invalid or expired code.");
         }
     }
 

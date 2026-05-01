@@ -52,4 +52,9 @@ public class InMemoryUserServiceImpl implements UserService {
         throw new BusinessRuleException("Not enabled yet.");
     }
 
+    @Override
+    public void verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) throws BusinessRuleException {
+        throw new BusinessRuleException("Not enabled yet.");
+    }
+
 }

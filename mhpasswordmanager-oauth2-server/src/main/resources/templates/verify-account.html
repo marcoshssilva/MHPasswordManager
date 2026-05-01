@@ -1,20 +1,87 @@
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-<meta charset="UTF-8" />
-<title>Verify Account</title>
-<base th:href="${baseHref}">
-<!-- styles -->
-<link rel="stylesheet" href="/content/css/bootstrap/bootstrap.min.css" />
-<link rel="stylesheet" href="/content/css/animate/animate.min.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Conta Verificada - MH Password Manager</title>
+    <base th:href="${baseHref}">
+    <!-- styles -->
+    <link rel="stylesheet" href="content/css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="content/css/animate/animate.min.css"/>
+    <link rel="stylesheet" href="content/css/base-theme.css"/>
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .card-custom {
+            border-radius: 1.5rem;
+            max-width: 480px;
+            width: 100%;
+        }
+        .icon-circle {
+            width: 100px;
+            height: 100px;
+            background-color: #d1e7dd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        .success-icon {
+            width: 50px;
+            height: 50px;
+            color: #198754;
+        }
+        .btn-custom {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0.5rem 1rem rgba(25, 135, 84, 0.25) !important;
+        }
+    </style>
 </head>
 
-<body>
+<body class="d-flex align-items-center justify-content-center vh-100">
 
-<h1>Sua conta foi verificada com sucesso!</h1>
+<main class="container px-4">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5 d-flex justify-content-center">
+
+            <div class="card card-custom border-0 shadow-lg animate__animated animate__fadeInUp">
+                <div class="card-body p-5 text-center">
+                    <div class="animate__animated animate__bounceIn animate__delay-1s mb-4">
+                        <div class="icon-circle shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" class="bi bi-check-lg success-icon" viewBox="0 0 16 16">
+                                <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <h2 class="fw-bold text-dark mb-3">Tudo certo!</h2>
+
+                    <p class="text-secondary mb-4" style="line-height: 1.6;">
+                        Sua conta foi verificada com sucesso. Agradecemos por confirmar seu e-mail. Agora você pode desfrutar de todas as funcionalidades da sua conta com total segurança.
+                    </p>
+
+                    <a th:href="@{/login}" href="/login" class="btn btn-success btn-lg w-100 rounded-pill shadow-sm btn-custom mb-2">
+                        Acessar sua Conta
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
 <!-- scripts -->
-<script src="/content/js/bootstrap/bootstrap.bundle.min.js"></script>
-<script src="/content/js/notifications.js"></script>
+<script src="content/js/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="content/js/notifications.js"></script>
 
 </body>
 

@@ -42,6 +42,13 @@ public interface UserService {
     void resetUserPassword(String username, String newPassword) throws BusinessRuleException;
 
     /**
+     * Verify if user account is valid by email verification code
+     * @param uuidCode -> code from email
+     * @param browserParams -> browser params from request
+     */
+    void verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) throws BusinessRuleException;
+
+    /**
      * Verify if current user is logged into application
      *
      * @return True if is logged
