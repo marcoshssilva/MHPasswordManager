@@ -25,13 +25,10 @@ public class HomeAndLoginControllerView {
     @GetMapping("/login")
     public String loginPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         setupAtributes(model, userDetails);
+        if (userDetails != null) {
+            return "redirect:/";
+        }
         return "login";
-    }
-
-    @GetMapping("/update/{pageRequest}")
-    public String changePasswordPage(@PathVariable String pageRequest, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-        setupAtributes(model, userDetails);
-        return "update-".concat(pageRequest);
     }
 
     @GetMapping("/")
@@ -47,8 +44,7 @@ public class HomeAndLoginControllerView {
         log.info("{}", registrationCode);
 
         setupAtributes(model, userDetails);
-        request.getHeaderNames().asIterator()
-                .forEachRemaining(header -> log.info("{}: {}", header, request.getHeader(header)));
+        request.getHeaderNames().asIterator().forEachRemaining(header -> log.info("{}: {}", header, request.getHeader(header)));
 
         return "verify-account";
     }
