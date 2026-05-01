@@ -1,2 +1,2 @@
 @Library('java') _
-pipelineSimpleMavenJavaProject('marcoshssilva/password-manager', 'jdk-17')
+pipelineSimpleMavenJavaProject('marcoshssilva/password-manager', 'jdk-17', ['DEPLOY': 'MAVEN'])
