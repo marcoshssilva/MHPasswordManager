@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.BusinessRuleException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.FailSendEmailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models.UserRegistrationData;
@@ -28,6 +29,17 @@ public interface UserService {
      * @throws FailSendEmailException
      */
     void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException;
+
+    /**
+     * Reset password for user with email and code generated in last step
+     * @param code -> code generated in last step
+     * @param newPassword -> new password for user
+     * @param requestedBrowserParams -> browser params from request
+     * @throws BusinessRuleException
+     */
+    void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException;
+
+    void resetUserPassword(String username, String newPassword) throws BusinessRuleException;
 
     /**
      * Verify if current user is logged into application

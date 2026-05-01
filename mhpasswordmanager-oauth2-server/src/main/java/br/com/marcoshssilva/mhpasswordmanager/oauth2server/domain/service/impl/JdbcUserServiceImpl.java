@@ -2,14 +2,13 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration.AuthorizationConfigProperties;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.BusinessRuleException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.CannotRegisterUserException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.FailSendEmailException;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserData;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserKeyVerificationMailMessage;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserMailMessage;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.*;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.SendEmailService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserService;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.mappers.RecoveryPasswordCodeRequestMapper;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.mappers.RegisteredUserDataMapper;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.utils.KeyGeneratorUtils;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models.UserRegistrationData;
@@ -32,7 +31,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JdbcUserServiceImpl implements UserService {
     public static final String QUERY_SEARCHIFUSERNAMEOREMAILEXISTS = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ? OR ud.username = ?";
+    public static final String QUERY_UPDATEUSERPASSWORD = "UPDATE users u SET password = ? WHERE username = ?";
     public static final String QUERY_SAVERECOVERYCODEGENERATEDFORUSER = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    public static final String QUERY_GETRECOVERYCODEGENERATEDFORUSER = "SELECT code, username, ip_client, user_agent_client, created_at, expires_at, completed FROM users_recovery_password_code WHERE code = ? AND ip_client = ? AND user_agent_client = ? AND completed = false AND expires_at > ? AND completed = false";
     public static final String QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER = "SELECT count(code) FROM users_recovery_password_code WHERE username = ? AND completed = false AND expires_at > ?";
 
     private final UserDetailsManager userDetailsManager;
@@ -110,6 +111,30 @@ public class JdbcUserServiceImpl implements UserService {
         // save and send by mail-service queue
         saveCodeEmailRecoveryPassword(registeredUserData, code, requestedBrowserParams);
         sendCodeEmailRecoveryPassword(registeredUserData, code);
+    }
+
+    @Override
+    public void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
+        try {
+            RecoveryPasswordCodeRequest codeRequest = this.jdbcTemplate.queryForObject(QUERY_GETRECOVERYCODEGENERATEDFORUSER, RecoveryPasswordCodeRequestMapper.getInstance(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now());
+            if (codeRequest == null) {
+                throw new BusinessRuleException("Cannot reset password, codeRequest not found.");
+            }
+            if (codeRequest.getUsername() == null) {
+                throw new BusinessRuleException("Cannot reset password, username not found.");
+            }
+            this.resetUserPassword(codeRequest.getUsername(), newPassword);
+        } catch (Exception e) {
+            throw new BusinessRuleException("Cannot reset password, please try again later.");
+        }
+    }
+
+    @Override
+    public void resetUserPassword(String username, String newPassword) throws BusinessRuleException {
+        int rowsUpdated = this.jdbcTemplate.update(QUERY_UPDATEUSERPASSWORD, passwordEncoder.encode(newPassword), username);
+        if (rowsUpdated == 0) {
+            throw new BusinessRuleException("Cannot reset password, user not found.");
+        }
     }
 
     private void sendCodeEmailRecoveryPassword(RegisteredUserData client, String code) throws FailSendEmailException {

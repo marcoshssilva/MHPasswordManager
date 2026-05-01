@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.BusinessRuleException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.CannotRegisterUserException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.FailSendEmailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
@@ -8,6 +9,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserSe
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models.UserRegistrationData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
@@ -38,6 +40,16 @@ public class InMemoryUserServiceImpl implements UserService {
     @Override
     public void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
         throw new FailSendEmailException("Not enabled yet.");
+    }
+
+    @Override
+    public void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
+        throw new BusinessRuleException("Not enabled yet.");
+    }
+
+    @Override
+    public void resetUserPassword(String username, String newPassword) throws BusinessRuleException {
+        throw new BusinessRuleException("Not enabled yet.");
     }
 
 }
