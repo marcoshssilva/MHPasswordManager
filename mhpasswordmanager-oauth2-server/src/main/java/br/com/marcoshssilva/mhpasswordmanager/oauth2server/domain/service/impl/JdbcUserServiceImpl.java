@@ -164,6 +164,9 @@ public class JdbcUserServiceImpl implements UserService {
 
     private void saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
         Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now());
+        if (qtdOpenCodesToRecoveryPassword == null) {
+            throw new FailSendEmailException("Cannot send email, user has no recovery codes active. Please, check your email.");
+        }
         if (qtdOpenCodesToRecoveryPassword > 2) {
             throw new FailSendEmailException("Cannot send email, user has to many recovery codes active. Please, check your email.");
         }
