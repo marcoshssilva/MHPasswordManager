@@ -9,7 +9,6 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserSe
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models.UserRegistrationData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
