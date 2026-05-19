@@ -1,2 +1,2 @@
 web: java -jar mhpasswordmanager-api-gateway/target/mhpasswordmanager.apigateway-1.0.0-RC-SNAPSHOT.jar --server.port=$PORT
-eureka: java -jar mhpasswordmanager-service-registry/target/eureka-server-1.0.0-RC-SNAPSHOT.jar
+eureka: java -jar mhpasswordmanager-service-registry/target/mhpasswordmanager.serviceregistry-1.0.0-RC-SNAPSHOT.jar
