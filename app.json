@@ -1,0 +1,10 @@
+{
+  "name": "mhpasswordmanager",
+  "description": "MHPasswordManager",
+  "stack": "heroku-24",
+  "buildpacks": [
+    {
+      "url": "heroku/jvm"
+    }
+  ]
+}
