@@ -11,17 +11,22 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableWebSecurity
 public class BasicAuthenticationSecurity {
-    protected final String[] endpointsIgnoreCsrfAttack = new String[] { "/eureka/**" };
+    protected final String[] endpointsIgnoreCsrfAttack = new String[] { "/eureka", "/eureka/**" };
     protected final String[] endpointsIgnoreAuthentication = new String[] { "/actuator/**" };
+    protected final String[] endpointsNeedAuthentication = new String[] { "/eureka/**" };
 
     @Bean
     SecurityFilterChain basicAuthenticationSecurityFilterChainConfigurer(HttpSecurity http) throws Exception {
         return http
-                .csrf().ignoringAntMatchers(endpointsIgnoreCsrfAttack).and()
+                .csrf()
+                    .ignoringAntMatchers(endpointsIgnoreCsrfAttack)
+                .and()
                 .authorizeRequests()
-                .antMatchers(endpointsIgnoreAuthentication).permitAll()
-                .anyRequest().authenticated().and()
-                .httpBasic().and()
+                    .antMatchers(endpointsIgnoreAuthentication).permitAll()
+                    .antMatchers(endpointsNeedAuthentication).authenticated()
+                    .anyRequest().authenticated().and()
+                .httpBasic()
+                .and()
                 .build();
     }
 }
