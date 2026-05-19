@@ -116,22 +116,6 @@
 			<version>42.5.4</version>
 		</dependency>
 
-		<!-- sql server -->
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>mssql-jdbc</artifactId>
-			<scope>runtime</scope>
-			<version>12.2.0.jre11</version>
-		</dependency>
-
-		<!-- mysql -->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-			<version>8.0.32</version>
-		</dependency>
-
 		<!-- support for flyway -->
 		<dependency>
 			<groupId>org.flywaydb</groupId>
