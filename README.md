@@ -33,3 +33,37 @@ You can start application following steps:
     docker compose -f ".\docker-compose.yml" --profile all up -d --build
     ```
 4. Open in browser **[127.0.0.1:8080/mypass-manager/auth](http://127.0.0.1:8080/mypass-manager/auth)**
+
+---
+
+## Dokku
+
+First create app on server:
+
+```shell
+APP=password-manager
+NET=password-manager-network
+
+# Create app
+dokku apps:create $APP
+dokku config:set $APP EUREKA_CLIENT_SERVICEURL_DEFAULTZONE="http://eureka:eureka@password-manager.eureka.1:8761/eureka/" --no-restart
+dokku config:set $APP SPRING_PROFILES_ACTIVE="dokku" --no-restart
+# Create network
+dokku network:create $NET
+dokku network:set $APP initial-network $NET
+# Enable letsencrypt for app
+dokku letsencrypt:enable $APP
+```
+
+Deploy app using git:
+
+```shell
+APP=password-manager
+HOST=dev.marcosilva.dev
+# Clone project
+git clone https://github.com/marcoshssilva/MHPasswordManager.git
+cd MHPasswordManager
+# Deploy
+git remote add dokku dokku@$HOST:$APP
+git push dokku main
+```
