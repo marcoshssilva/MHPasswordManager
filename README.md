@@ -43,16 +43,21 @@ First create app on server:
 ```shell
 APP=password-manager
 NET=password-manager-network
+EUREKA_HOST=password-manager.eureka.1
+EUREKA_PORT=8761
+EUREKA_USER=eurekauser
+EUREKA_PASS=eurekapass
 
 # Create app
 dokku apps:create $APP
-dokku config:set $APP EUREKA_CLIENT_SERVICEURL_DEFAULTZONE="http://eureka:eureka@password-manager.eureka.1:8761/eureka/" --no-restart
-dokku config:set $APP SPRING_PROFILES_ACTIVE="dokku" --no-restart
+dokku config:set $APP "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://$EUREKA_USER:$EUREKA_PASS@$EUREKA_HOST:$EUREKA_PORT/eureka/" --no-restart
+dokku config:set $APP "SPRING_PROFILES_ACTIVE=dokku" --no-restart
 # Create network
 dokku network:create $NET
 dokku network:set $APP initial-network $NET
 # Enable letsencrypt for app
 dokku letsencrypt:enable $APP
+dokku ps:scale $APP web=1 eureka=1 configserver=1
 ```
 
 Deploy app using git:
