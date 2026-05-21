@@ -62,16 +62,19 @@ spring:
             - Path=/**
 
 management:
+  server:
+    port: ${MANAGEMENT_PORT:8081}
   endpoint:
     shutdown:
       enabled: false
-  endpoints:
     health:
       show-components: always
       show-details: always
+  endpoints:
+    jmx:
+      exposure.include: '*'
     web:
-      exposure:
-        include: '*'
+      exposure.include: '*'
 eureka:
   client:
     serviceUrl:
