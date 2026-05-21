@@ -15,6 +15,7 @@ spring:
     active: default # default for use remote git or specific directory to read git config
   cloud:
     config:
+      import: optional:configserver:http://localhost:8888/
       enabled: ${SPRING_CLOUD_CONFIG_ENABLED:false}
       server:
         git:
