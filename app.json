@@ -10,5 +10,16 @@
     "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE": {
       "value": "http://eureka:eureka@password-manager.eureka.1:8761/eureka/"
     }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    },
+    "eureka": {
+      "quantity": 1
+    },
+    "configserver": {
+      "quantity": 1
+    }
   }
 }
