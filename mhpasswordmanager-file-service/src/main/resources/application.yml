@@ -1,3 +1,4 @@
+gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:6a0fb275-b928-83e9-b42a-8f7020e95ec6}
 server:
   port: 12014
   servlet:
@@ -5,6 +6,11 @@ server:
 spring:
   application:
     name: file-service
+  cloud:
+    config:
+      headers:
+        X-Gateway-Auth: ${gateway.allowed.configserver.code:6a0fb275-b928-83e9-b42a-8f7020e95ec6}
+        X-Service-Name: ${spring.application.name}
   config:
     import:
       - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}

@@ -1,3 +1,4 @@
+gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
 server:
   port: 12010
   servlet:
@@ -5,6 +6,11 @@ server:
 spring:
   application:
     name: authorization-server
+  cloud:
+    config:
+      headers:
+        X-Gateway-Auth: ${gateway.allowed.configserver.code:changeit}
+        X-Service-Name: ${spring.application.name}
   profiles:
 #    default: local
   mvc:
