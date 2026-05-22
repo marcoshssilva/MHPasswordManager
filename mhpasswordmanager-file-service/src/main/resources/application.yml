@@ -4,18 +4,20 @@ server:
   servlet:
     context-path: /mypass-manager/files
 spring:
+  #  profiles:
+  #    default: local
   application:
     name: file-service
   cloud:
     config:
+      discovery:
+        enabled: true
+        service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
       headers:
-        X-Gateway-Auth: ${gateway.allowed.configserver.code:6a0fb275-b928-83e9-b42a-8f7020e95ec6}
+        X-Gateway-Auth: ${gateway.allowed.configserver.code:changeit}
         X-Service-Name: ${spring.application.name}
   config:
-    import:
-      - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
-#  profiles:
-#    default: local
+    import: "optional:configserver:"
 eureka:
   client:
     serviceUrl:

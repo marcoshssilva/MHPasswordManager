@@ -10,12 +10,14 @@ spring:
     name: email-service
   cloud:
     config:
+      discovery:
+        enabled: true
+        service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
       headers:
         X-Gateway-Auth: ${gateway.allowed.configserver.code:changeit}
         X-Service-Name: ${spring.application.name}
   config:
-    import:
-      - configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
+    import: "optional:configserver:"
 eureka:
   client:
     serviceUrl:
@@ -99,12 +101,12 @@ spring:
       mail.smtp.starttls.required: false
   session:
     store-type: none
-eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
-  client:
-    enabled: false
+#eureka:
+#  instance:
+#    hostname: localhost
+#    prefer-ip-address: true
+#  client:
+#    enabled: false
 application:
   email:
     type: fake-mail
