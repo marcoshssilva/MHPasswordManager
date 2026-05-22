@@ -41,17 +41,17 @@ You can start application following steps:
 First create app on server:
 
 ```shell
+# Dokku App and Network
 APP=password-manager
 NET=password-manager-network
 
-SPRING_PROFILE=dokku
+# Spring Profile
+SPRING_PROFILES_ACTIVE=dokku
 
 # Config server
-CONFIGSERVER_HOST=password-manager.configserver.1
-CONFIGSERVER_PORT=8888
-CONFIGSERVER_GIT_URI=https://your/repo.git
-CONFIGSERVER_USER=git-user
-CONFIGSERVER_PASS=git-token-or-password
+SPRING_CLOUD_CONFIG_SERVER_URI=https://your/repo.git
+SPRING_CLOUD_CONFIG_SERVER_USERNAME=git-user
+SPRING_CLOUD_CONFIG_SERVER_PASSWORD=git-token-or-password
 
 # Eureka
 EUREKA_HOST=password-manager.eureka.1
@@ -69,11 +69,10 @@ SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE=https://any.host.you.want.redirect.to.app.com
 # Create app and environment
 dokku apps:create $APP
 dokku config:set $APP "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://$EUREKA_USER:$EUREKA_PASS@$EUREKA_HOST:$EUREKA_PORT/eureka/" --no-restart
-dokku config:set $APP "SPRING_PROFILES_ACTIVE=$SPRING_PROFILE" --no-restart
-dokku config:set $APP "SPRING_CONFIG_SERVER_URI=http://$CONFIGSERVER_HOST" --no-restart
-dokku config:set $APP "SPRING_CONFIG_SERVER_USERNAME=$CONFIGSERVER_USER" --no-restart
-dokku config:set $APP "SPRING_CONFIG_SERVER_PASSWORD=$CONFIGSERVER_PASS" --no-restart
-dokku config:set $APP "SPRING_CLOUD_CONFIG_SERVER_URI=$CONFIGSERVER_GIT_URI" --no-restart
+dokku config:set $APP "SPRING_PROFILES_ACTIVE=$SPRING_PROFILES_ACTIVE" --no-restart
+dokku config:set $APP "SPRING_CLOUD_CONFIG_SERVER_USERNAME=$SPRING_CLOUD_CONFIG_SERVER_USERNAME" --no-restart
+dokku config:set $APP "SPRING_CLOUD_CONFIG_SERVER_PASSWORD=$SPRING_CLOUD_CONFIG_SERVER_PASSWORD" --no-restart
+dokku config:set $APP "SPRING_CLOUD_CONFIG_SERVER_URI=$SPRING_CLOUD_CONFIG_SERVER_URI" --no-restart
 dokku config:set $APP "SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE=$SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE" --no-restart
 dokku config:set $APP "GATEWAY_ALLOWED_CONFIGSERVER_CODE=$GATEWAY_ALLOWED_CONFIGSERVER_CODE" --no-restart
 dokku config:set $APP "GATEWAY_ALLOWED_CONFIGSERVER_HOSTS=$GATEWAY_ALLOWED_CONFIGSERVER_HOSTS" --no-restart
@@ -84,6 +83,7 @@ dokku network:create $NET
 dokku network:set $APP initial-network $NET
 # Enable letsencrypt for app
 dokku letsencrypt:enable $APP
+# Scale app and workers
 dokku ps:scale $APP web=1 eureka=1 configserver=1 user-api=1 password-api=1 oauth2-server=1 email-api=1 file-api=1 
 ```
 

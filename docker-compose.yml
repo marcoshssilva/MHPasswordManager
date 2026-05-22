@@ -10,8 +10,8 @@ services:
         condition: service_healthy
     networks:
       - net
-    ports:
-      - "8888:8888"
+#    ports:
+#      - "8888:8888"
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8888/actuator/health || exit 1"]
       interval: 10s
@@ -28,8 +28,8 @@ services:
       - etc/env/SERVICE-REGISTRY.env
     networks:
       - net
-    ports:
-      - "8761:8761"
+#    ports:
+#      - "8761:8761"
     healthcheck:
       test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8761/actuator/health || exit 1"]
       interval: 10s
@@ -59,8 +59,8 @@ services:
         condition: service_healthy
     networks:
       - net
-    ports:
-      - "12010:12010"
+#    ports:
+#      - "12010:12010"
     profiles:
       - apps
       - all
@@ -86,8 +86,8 @@ services:
     networks:
       - net
     ports:
-      - "8080:8080"
-      - "8081:8081"
+      - "${PORT:-8080}:8080"
+      - "${MANAGEMENT_PORT:-8081}:8081"
     profiles:
       - apps
       - all
@@ -108,8 +108,8 @@ services:
         condition: service_healthy
     networks:
       - net
-    ports:
-      - "12011:12011"
+#    ports:
+#      - "12011:12011"
     profiles:
       - apps
       - all
@@ -130,8 +130,8 @@ services:
         condition: service_healthy
     networks:
       - net
-    ports:
-      - "12012:12012"
+#    ports:
+#      - "12012:12012"
     profiles:
       - apps
       - all
@@ -143,6 +143,8 @@ services:
       - etc/env/EMAIL-SERVICE.env
     networks:
       - net
+#    ports:
+#      - "12013:12013"
     depends_on:
       eureka:
         condition: service_healthy
@@ -163,8 +165,8 @@ services:
       context: ./mhpasswordmanager-file-service
     env_file:
       - etc/env/FILE-SERVICE.env
-    ports:
-      - "12014:12014"
+#    ports:
+#      - "12014:12014"
     networks:
       - net
     depends_on:
