@@ -54,13 +54,31 @@ spring:
           filters:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
             - PreserveHostHeader
+        - id: eureka
+          uri: lb://EUREKA-SERVICE-REGISTRY
+          predicates:
+            - Path=/eureka/**
+            - Host=${GATEWAY_ALLOWED_EUREKA_HOSTS:localhost,127.0.0.1,host.docker.internal}
+            - Header=X-Gateway-Auth,${GATEWAY_ALLOWED_EUREKA_CODE:changeit}
+          filters:
+            - RewritePath=/eureka/(?<segment>.*),/eureka/$\{segment}
+            - PreserveHostHeader
+        - id: config-server
+          uri: lb://CONFIG-SERVER
+          predicates:
+            - Path=/config/**
+            - Host=${GATEWAY_ALLOWED_CONFIGSERVER_HOSTS:localhost,127.0.0.1,host.docker.internal}
+            - Header=X-Gateway-Auth,${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
+          filters:
+            - RewritePath=/config/(?<segment>.*),/$\{segment}
+            - PreserveHostHeader
         - id: default_route
-          uri: ${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:http://localhost:8100}
+          uri: no://op
           filters:
             - PreserveHostHeader
+            - RedirectTo=302,${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:http://localhost:8080/mypass-manager/auth/}
           predicates:
             - Path=/**
-
 management:
   server:
     port: ${MANAGEMENT_PORT:8081}
