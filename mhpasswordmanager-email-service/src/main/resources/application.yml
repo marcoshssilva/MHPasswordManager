@@ -15,7 +15,7 @@ spring:
         X-Service-Name: ${spring.application.name}
   config:
     import:
-      - optional:configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
+      - configserver:${SPRING_CONFIG_SERVER_URI:http://localhost:8888}
 eureka:
   client:
     serviceUrl:
