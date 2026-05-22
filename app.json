@@ -6,9 +6,6 @@
   "env": {
     "SPRING_PROFILES_ACTIVE": {
       "value": "dokku"
-    },
-    "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE": {
-      "value": "http://eureka:eureka@password-manager.eureka.1:8761/eureka/"
     }
   },
   "formation": {
@@ -20,6 +17,21 @@
     },
     "configserver": {
       "quantity": 1
+    },
+    "user-api": {
+      "quantity": 2
+    },
+    "password-api": {
+      "quantity": 2
+    },
+    "oauth2-server": {
+      "quantity": 2
+    },
+    "email-api": {
+      "quantity": 2
+    },
+    "file-api": {
+      "quantity": 2
     }
   }
 }
