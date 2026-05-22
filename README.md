@@ -84,7 +84,7 @@ dokku network:create $NET
 dokku network:set $APP initial-network $NET
 # Enable letsencrypt for app
 dokku letsencrypt:enable $APP
-dokku ps:scale $APP web=1 eureka=1 configserver=1
+dokku ps:scale $APP web=1 eureka=1 configserver=1 user-api=1 password-api=1 oauth2-server=1 email-api=1 file-api=1 
 ```
 
 Deploy app using git:
