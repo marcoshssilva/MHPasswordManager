@@ -77,9 +77,9 @@ spring:
           issuer-uri: http://mhpasswordmanager.test.fake.com
   session:
     store-type: none
-eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
-  client:
-    enabled: false
+#eureka:
+#  instance:
+#    hostname: localhost
+#    prefer-ip-address: true
+#  client:
+#    enabled: false

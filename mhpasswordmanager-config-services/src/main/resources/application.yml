@@ -50,6 +50,6 @@ spring:
     config:
       server:
         enabled: false
-eureka:
-  client:
-    enabled: false
+#eureka:
+#  client:
+#    enabled: false

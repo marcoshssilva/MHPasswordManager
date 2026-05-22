@@ -98,12 +98,12 @@ spring:
     store-type: none
   flyway:
     enabled: false
-eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
-  client:
-    enabled: false
+#eureka:
+#  instance:
+#    hostname: localhost
+#    prefer-ip-address: true
+#  client:
+#    enabled: false
 authorization:
   issuer-uri: http://localhost:12010
   success-logout-uri: http://localhost:8100

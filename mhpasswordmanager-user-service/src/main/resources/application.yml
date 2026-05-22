@@ -101,12 +101,12 @@ spring:
     store-type: none
   flyway:
     enabled: false
-eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
-  client:
-    enabled: false
+#eureka:
+#  instance:
+#    hostname: localhost
+#    prefer-ip-address: true
+#  client:
+#    enabled: false
 springdoc:
   swagger-ui:
     oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/users/swagger-ui/redirect}
