@@ -26,6 +26,9 @@ spring:
             - Path=/mypass-manager/auth/**
           filters:
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -33,6 +36,9 @@ spring:
           filters:
             - RewritePath=/mypass-manager/users/(?<segment>.*),/mypass-manager/users/$\{segment}
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: password-service
           uri: lb://PASSWORD-SERVICE
           predicates:
@@ -40,6 +46,9 @@ spring:
           filters:
             - RewritePath=/mypass-manager/passwords/(?<segment>.*),/mypass-manager/passwords/$\{segment}
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: email-service
           uri: lb://EMAIL-SERVICE
           predicates:
@@ -47,6 +56,9 @@ spring:
           filters:
             - RewritePath=/mypass-manager/emails/(?<segment>.*),/mypass-manager/emails/$\{segment}
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: file-service
           uri: lb://FILE-SERVICE
           predicates:
@@ -54,6 +66,9 @@ spring:
           filters:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: eureka
           uri: lb://EUREKA-SERVICE-REGISTRY
           predicates:
@@ -63,6 +78,9 @@ spring:
           filters:
             - RewritePath=/eureka/(?<segment>.*),/eureka/$\{segment}
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: config-server
           uri: lb://CONFIG-SERVER
           predicates:
@@ -72,6 +90,9 @@ spring:
           filters:
             - RewritePath=/config/(?<segment>.*),/$\{segment}
             - PreserveHostHeader
+          metadata:
+            connect-timeout: 3000
+            response-timeout: 10s
         - id: default_route
           uri: no://op
           filters:
