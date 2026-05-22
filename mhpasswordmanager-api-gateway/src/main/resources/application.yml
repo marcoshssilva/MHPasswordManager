@@ -76,7 +76,7 @@ spring:
           uri: no://op
           filters:
             - PreserveHostHeader
-            - RedirectTo=302,${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:http://localhost:8080/mypass-manager/auth/}
+            - RedirectTo=302,${SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE:http://127.0.0.1:8080/mypass-manager/auth/}
           predicates:
             - Path=/**
 management:
