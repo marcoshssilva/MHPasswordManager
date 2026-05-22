@@ -12,25 +12,25 @@
     "web": {
       "quantity": 1
     },
-    "eureka": {
+    "discover": {
       "quantity": 1
     },
-    "configserver": {
+    "config": {
       "quantity": 1
     },
-    "user-api": {
+    "worker-user": {
       "quantity": 2
     },
-    "password-api": {
+    "worker-password": {
       "quantity": 2
     },
-    "oauth2-server": {
+    "worker-oauth2server": {
       "quantity": 2
     },
-    "email-api": {
+    "worker-email": {
       "quantity": 2
     },
-    "file-api": {
+    "worker-file": {
       "quantity": 2
     }
   }
