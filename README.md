@@ -43,15 +43,42 @@ First create app on server:
 ```shell
 APP=password-manager
 NET=password-manager-network
+
+SPRING_PROFILE=dokku
+
+# Config server
+CONFIGSERVER_HOST=password-manager.configserver.1
+CONFIGSERVER_PORT=8888
+CONFIGSERVER_GIT_URI=https://your/repo.git
+CONFIGSERVER_USER=git-user
+CONFIGSERVER_PASS=git-token-or-password
+
+# Eureka
 EUREKA_HOST=password-manager.eureka.1
 EUREKA_PORT=8761
 EUREKA_USER=eurekauser
 EUREKA_PASS=eurekapass
 
-# Create app
+# Gateway
+GATEWAY_ALLOWED_CONFIGSERVER_CODE=code.to.access.configserver.com
+GATEWAY_ALLOWED_CONFIGSERVER_HOSTS=hosts.allowed.to.access.configserver.com
+GATEWAY_ALLOWED_EUREKA_CODE=code.to.access.eureka.com
+GATEWAY_ALLOWED_EUREKA_HOSTS=hosts.allowed.to.access.eureka.com
+SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE=https://any.host.you.want.redirect.to.app.com/
+
+# Create app and environment
 dokku apps:create $APP
 dokku config:set $APP "EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://$EUREKA_USER:$EUREKA_PASS@$EUREKA_HOST:$EUREKA_PORT/eureka/" --no-restart
-dokku config:set $APP "SPRING_PROFILES_ACTIVE=dokku" --no-restart
+dokku config:set $APP "SPRING_PROFILES_ACTIVE=$SPRING_PROFILE" --no-restart
+dokku config:set $APP "SPRING_CONFIG_SERVER_URI=http://$CONFIGSERVER_HOST" --no-restart
+dokku config:set $APP "SPRING_CONFIG_SERVER_USERNAME=$CONFIGSERVER_USER" --no-restart
+dokku config:set $APP "SPRING_CONFIG_SERVER_PASSWORD=$CONFIGSERVER_PASS" --no-restart
+dokku config:set $APP "SPRING_CLOUD_CONFIG_SERVER_URI=$CONFIGSERVER_GIT_URI" --no-restart
+dokku config:set $APP "SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE=$SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE" --no-restart
+dokku config:set $APP "GATEWAY_ALLOWED_CONFIGSERVER_CODE=$GATEWAY_ALLOWED_CONFIGSERVER_CODE" --no-restart
+dokku config:set $APP "GATEWAY_ALLOWED_CONFIGSERVER_HOSTS=$GATEWAY_ALLOWED_CONFIGSERVER_HOSTS" --no-restart
+dokku config:set $APP "GATEWAY_ALLOWED_EUREKA_CODE=$GATEWAY_ALLOWED_EUREKA_CODE" --no-restart
+dokku config:set $APP "GATEWAY_ALLOWED_EUREKA_HOSTS=$GATEWAY_ALLOWED_EUREKA_HOSTS" --no-restart
 # Create network
 dokku network:create $NET
 dokku network:set $APP initial-network $NET
