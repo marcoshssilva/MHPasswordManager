@@ -10,7 +10,7 @@
   },
   "formation": {
     "web": {
-      "quantity": 1
+      "quantity": 2
     },
     "discover": {
       "quantity": 1
@@ -19,19 +19,19 @@
       "quantity": 1
     },
     "worker-user": {
-      "quantity": 1
+      "quantity": 2
     },
     "worker-password": {
-      "quantity": 1
+      "quantity": 2
     },
     "worker-oauth2server": {
-      "quantity": 1
+      "quantity": 2
     },
     "worker-email": {
-      "quantity": 1
+      "quantity": 2
     },
     "worker-file": {
-      "quantity": 1
+      "quantity": 2
     }
   }
 }
