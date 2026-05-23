@@ -17,6 +17,8 @@ spring:
     config:
       import: optional:configserver:${SPRING_CLOUD_CONFIG_IMPORT_URL:http://localhost:8888/}
       enabled: ${SPRING_CLOUD_CONFIG_ENABLED:false}
+      import-check:
+        enabled: ${SPRING_CLOUD_CONFIG_IMPORT_CHECK_ENABLED:false}
       server:
         git:
           uri: ${SPRING_CLOUD_CONFIG_SERVER_URI:https://github.com/marcoshssilva/MHPasswordManager-Config-Localhost.git}
