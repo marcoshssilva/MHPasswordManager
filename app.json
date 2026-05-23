@@ -19,19 +19,19 @@
       "quantity": 1
     },
     "worker-user": {
-      "quantity": 0
+      "quantity": 1
     },
     "worker-password": {
-      "quantity": 0
+      "quantity": 1
     },
     "worker-oauth2server": {
-      "quantity": 0
+      "quantity": 1
     },
     "worker-email": {
-      "quantity": 0
+      "quantity": 1
     },
     "worker-file": {
-      "quantity": 0
+      "quantity": 1
     }
   }
 }
