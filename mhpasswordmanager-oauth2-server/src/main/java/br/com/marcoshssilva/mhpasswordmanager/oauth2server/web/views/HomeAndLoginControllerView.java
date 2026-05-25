@@ -29,9 +29,6 @@ public class HomeAndLoginControllerView {
     @GetMapping("/login")
     public String loginPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         setupAtributes(model, userDetails);
-        if (userDetails != null) {
-            return "redirect:/";
-        }
         return "login";
     }
 
