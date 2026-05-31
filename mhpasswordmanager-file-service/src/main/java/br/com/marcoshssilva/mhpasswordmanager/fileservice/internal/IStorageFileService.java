@@ -4,7 +4,6 @@ import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.StoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.exceptions.StorageErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.Map;
 
 public interface IStorageFileService {
