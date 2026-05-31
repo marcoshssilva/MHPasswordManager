@@ -13,4 +13,5 @@ public interface UserStoredKeysService {
     IResultData<KeyStorePayloadEncodedDto> saveStoredQuestionStoredKey(UserAuthorizations authorization, String bucketUuid, Long keyId, Long keyStoreId, AbstractSecurityQuestionStoredValueDecodedDto decodedPassword);
     IResultData<KeyStorePayloadEncodedDto> getStoredKey(UserAuthorizations authorization, String bucketUuid, Long keyId, Long keyStoreId);
     IResultData<Void> deleteStoredKey(UserAuthorizations authorization, String bucketUuid, Long keyId, Long keyStoreId);
+    IResultData<String> encryptBase64UsingBucket(UserAuthorizations authorizations, String uuid, String base64Data);
 }

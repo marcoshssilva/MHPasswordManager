@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -46,6 +47,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
     public static final IResultDataFactory<KeyStorePayloadEncodedDto> KEY_STORE_PAYLOAD_ENCODED_DTO_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Void> VOID_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
+    public static final IResultDataFactory<String> STRING_I_RESULT_DATA_FACTORY = new ResultDataFactoryImpl<>();
 
     public UserStoredKeysServiceImpl(@Qualifier("rsaCryptService") CryptService cryptService, UserPasswordKeyRepository userPasswordKeyRepository, UserPasswordStoredValueRepository userPasswordStoredValueRepository, UserBucketService userBucketService, ObjectMapper objectMapper) {
         this.cryptService = cryptService;
@@ -149,6 +151,22 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
             return VOID_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
         }
 
+    }
+
+    @Override
+    public IResultData<String> encryptBase64UsingBucket(UserAuthorizations authorizations, String uuid, String base64Data) {
+        IResultData<BucketDataModel> bucket = userBucketService.getBucketByUuid(uuid, authorizations);
+        if (Boolean.TRUE.equals(bucket.hasError())) {
+            return STRING_I_RESULT_DATA_FACTORY.exception(new KeyRegistrationErrorException(bucket.getMessage()), bucket.getMessage());
+        }
+
+        try {
+            byte[] decoded = Base64.getDecoder().decode(base64Data);
+            byte[] encrypted = cryptService.encrypt(decoded, bucket.getData().getBucketPublicKey());
+            return STRING_I_RESULT_DATA_FACTORY.success(Base64.getEncoder().encodeToString(encrypted), "OK");
+        } catch (Exception e) {
+            return STRING_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
+        }
     }
 
     public KeyStorePayloadEncodedDto createPasswordStoredKey(BucketDataModel bucket, Long keyId, AbstractPasswordStoredValueDecodedDto decodedPassword) throws KeyRegistrationErrorException, KeyNotFoundException, JsonProcessingException {
