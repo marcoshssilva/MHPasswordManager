@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.fileservice.http.rest;
 
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.BucketStoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.StoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IStorageFileService;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.exceptions.StorageErrorException;
@@ -44,6 +45,11 @@ public class BucketFileOperationsController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Location", UriComponentsBuilder.fromPath("/mypass-manager/files/bucket/{bucketUuid}/{id}").buildAndExpand(bucketUuid, storedFile.getId()).toUriString())
                 .build();
+    }
+
+    @GetMapping("/{bucketUuid}/info")
+    public ResponseEntity<BucketStoredFile> getBucketInfo(@PathVariable String bucketUuid) throws StorageErrorException {
+        return ResponseEntity.ok(storageFileService.getBucketInfo(bucketUuid));
     }
 
     @GetMapping("/{bucketUuid}/{key}")
