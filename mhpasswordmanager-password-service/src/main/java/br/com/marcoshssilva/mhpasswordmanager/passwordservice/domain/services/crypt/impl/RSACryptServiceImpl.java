@@ -7,8 +7,11 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.cr
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
@@ -50,7 +53,7 @@ public class RSACryptServiceImpl implements CryptService {
         return (key.getModulus().bitLength() + 7) / 8;
     }
 
-    private byte[] doFinalInBlocks(Cipher cipher, byte[] payload, int blockSize) throws Exception {
+    private byte[] doFinalInBlocks(Cipher cipher, byte[] payload, int blockSize) throws IllegalBlockSizeException, BadPaddingException, IOException {
         if (payload.length == 0) {
             return cipher.doFinal(payload);
         }
