@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.impl;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.PasswordServiceClient;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.DecryptKeyBase64Payload;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.entities.StoredFileKey;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.BucketStoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.StoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.repositories.StoredFileKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IStorageFileService;
@@ -22,7 +23,13 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
@@ -71,6 +78,9 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
              * Calling password-service to encrypt and save in database. Refactor in future to save asynchronously and return a future.
              */
             DecryptKeyBase64Payload response = passwordServiceClient.encryptFileUsingBucket(bearerToken, bucketUuid, file).block(Duration.ofSeconds(300));
+            if (Objects.isNull(response) || Objects.isNull(response.getData())) {
+                throw new StorageErrorException("Cannot encrypt file.");
+            }
             InputStream inputStream = new ByteArrayInputStream(response.getData().getBytes(StandardCharsets.UTF_8));
             ObjectId objectId = gridFsTemplate.store(inputStream, filename, contentType, metadataMap);
             storedFileKeyRepository.save(StoredFileKey.builder().gridFsHex(objectId.toHexString()).metadata(metadataMap).bucket(bucketUuid).ready(Boolean.TRUE).build());
@@ -126,9 +136,19 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             if (file != null) {
                 gridFsTemplate.delete(Query.query(Criteria.where("_id").is(file.getId())));
             }
-            storedFileKeyRepository.deleteById(storedFileKey.get().getUuid());
+            storedFileKeyRepository.deleteById(id);
 
             return Boolean.TRUE;
+        } catch (Exception e) {
+            throw new StorageErrorException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public BucketStoredFile getBucketInfo(String bucketUuid) throws StorageErrorException {
+        try {
+            Collection<StoredFileKey> bucketStoredFiles = storedFileKeyRepository.findByBucket(bucketUuid);
+            return BucketStoredFile.builder().files(bucketStoredFiles.stream().map(fileMetadata -> StoredFile.builder().id(fileMetadata.getUuid()).bucket(fileMetadata.getBucket()).metadata(fileMetadata.getMetadata()).build()).collect(Collectors.toSet())).build();
         } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
