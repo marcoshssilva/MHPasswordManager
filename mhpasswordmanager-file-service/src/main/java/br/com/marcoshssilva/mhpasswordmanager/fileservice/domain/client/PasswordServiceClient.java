@@ -18,8 +18,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.MultipartBodyBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriBuilder;
 import reactor.core.publisher.Mono;
@@ -142,6 +148,21 @@ public class PasswordServiceClient extends AbstractClient {
                 .uri("/keys/{bucketUuid}/encrypt/base64", bucketUuid)
                 .headers(headers -> setBearerAuth(headers, accessToken))
                 .bodyValue(payload)
+                .retrieve()
+                .bodyToMono(DecryptKeyBase64Payload.class);
+    }
+
+    public Mono<DecryptKeyBase64Payload> encryptFileUsingBucket(String accessToken, String bucketUuid, MultipartFile file) {
+        MultipartBodyBuilder bodyBuilder = new MultipartBodyBuilder();
+        bodyBuilder.part("file", file.getResource())
+                .filename(file.getOriginalFilename());
+        MultiValueMap<String, HttpEntity<?>> multipartBody = bodyBuilder.build();
+
+        return getWebClient().post()
+                .uri("/keys/{bucketUuid}/encrypt/file", bucketUuid)
+                .headers(headers -> setBearerAuth(headers, accessToken))
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .body(BodyInserters.fromMultipartData(multipartBody))
                 .retrieve()
                 .bodyToMono(DecryptKeyBase64Payload.class);
     }
