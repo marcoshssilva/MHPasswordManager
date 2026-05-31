@@ -5,7 +5,6 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositorie
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserRegistrationNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserAuthorizationModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.models.UserRegisteredModel;
 
@@ -18,8 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserRegistrationServiceImpl implements UserRegistrationService {
-    public static final String MSGERROR_USERREGISTRATION_NOTFOUND = "User not found or not have any bucket with owner";
-
     private final UserBucketRepository userBucketRepository;
 
     public UserRegistrationServiceImpl(UserBucketRepository userBucketRepository) {
@@ -27,11 +24,8 @@ public class UserRegistrationServiceImpl implements UserRegistrationService {
     }
 
     @Override
-    public UserRegisteredModel getUserRegistration(String tokenSubject) throws UserRegistrationNotFoundException {
+    public UserRegisteredModel getUserRegistration(String tokenSubject) {
         Set<UserBucket> allByOwnerName = userBucketRepository.findAllByOwnerName(tokenSubject);
-        if (allByOwnerName.isEmpty()) {
-            throw new UserRegistrationNotFoundException(MSGERROR_USERREGISTRATION_NOTFOUND);
-        }
         return UserRegisteredModel.builder()
                 .ownerName(tokenSubject)
                 .buckets(allByOwnerName.stream().map(UserBucket::getId).collect(Collectors.toSet()))
