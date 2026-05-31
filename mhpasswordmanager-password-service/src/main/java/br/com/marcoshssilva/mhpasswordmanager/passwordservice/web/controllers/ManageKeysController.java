@@ -22,9 +22,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.Arrays;
+import java.util.Base64;
 
 @RestController
 @RequestMapping("/keys")
@@ -163,6 +165,15 @@ public class ManageKeysController {
     public ResponseEntity<DecryptKeyBase64Response> encryptBase64(@AuthenticationPrincipal Jwt token, @PathVariable("bucketUuid") String uuid, @RequestBody SimpleBucketCryptKeyRequest payload) throws Exception {
         final UserAuthorizations authorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<String> resultData = userStoredKeysService.encryptBase64UsingBucket(authorizations, uuid, payload.getBase64Data());
+        resultData.throwErrorIfExists();
+        return ResponseEntity.ok(DecryptKeyBase64Response.builder().data(resultData.getData()).build());
+    }
+
+    @PostMapping("{bucketUuid}/encrypt/file")
+    @Transactional(rollbackOn = Exception.class)
+    public ResponseEntity<DecryptKeyBase64Response> encryptFile(@AuthenticationPrincipal Jwt token, @PathVariable("bucketUuid") String uuid, @RequestPart MultipartFile file) throws Exception {
+        final UserAuthorizations authorizations = userRegistrationService.getUserAuthorizations(token);
+        final IResultData<String> resultData = userStoredKeysService.encryptBase64UsingBucket(authorizations, uuid, Base64.getEncoder().encodeToString(file.getBytes()));
         resultData.throwErrorIfExists();
         return ResponseEntity.ok(DecryptKeyBase64Response.builder().data(resultData.getData()).build());
     }

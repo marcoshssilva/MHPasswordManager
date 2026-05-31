@@ -55,6 +55,21 @@ class RSACryptServiceImplTests {
         });
     }
 
+    @DisplayName("Test if can encrypt and decrypt a message larger than one RSA block")
+    @Test
+    void mustEncodeAndDecodeLargeMessage() {
+        final String message = "Some message to encode".repeat(100);
+        final String k1 = encoder.encodeToString(privateKey.getEncoded());
+        final String k2 = encoder.encodeToString(publicKey.getEncoded());
+
+        assertDoesNotThrow(() -> {
+            byte[] bytesCrypt = cryptService.encrypt(message.getBytes(), k2);
+            byte[] bytesDecrypt = cryptService.decrypt(bytesCrypt, k1);
+            String decryptMessage = new String(bytesDecrypt);
+            assertEquals(message, decryptMessage);
+        });
+    }
+
     @DisplayName("Must resolve an EncryptionException")
     @Test
     void mustThrowEncryptionExceptionWhenCallIncorrectKeys() {
