@@ -1,0 +1,28 @@
+package br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.SuperBuilder;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
+@ToString
+public class SocialMediaSecurityQuestionStoredValue extends AbstractSecurityQuestionStoredValueDecoded {
+    private static final long serialVersionUID = 1L;
+
+    private String email;
+    private String username;
+
+    @JsonProperty("profile_url")
+    private String profileUrl;
+
+    @JsonProperty("phone_number")
+    private String phoneNumber;
+}
