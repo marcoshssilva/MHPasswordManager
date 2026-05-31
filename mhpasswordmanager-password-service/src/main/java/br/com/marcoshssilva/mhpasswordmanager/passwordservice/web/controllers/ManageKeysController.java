@@ -9,6 +9,8 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
 
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.SimpleBucketCryptKeyRequest;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.DecryptKeyBase64Response;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -154,5 +156,14 @@ public class ManageKeysController {
         final IResultData<Void> resultData = userStoredKeysService.deleteStoredKey(authorizations, uuid, keyId, keyStoredId);
         resultData.throwErrorIfExists();
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("{bucketUuid}/encrypt/base64")
+    @Transactional(rollbackOn = Exception.class)
+    public ResponseEntity<DecryptKeyBase64Response> encryptBase64(@AuthenticationPrincipal Jwt token, @PathVariable("bucketUuid") String uuid, @RequestBody SimpleBucketCryptKeyRequest payload) throws Exception {
+        final UserAuthorizations authorizations = userRegistrationService.getUserAuthorizations(token);
+        final IResultData<String> resultData = userStoredKeysService.encryptBase64UsingBucket(authorizations, uuid, payload.getBase64Data());
+        resultData.throwErrorIfExists();
+        return ResponseEntity.ok(DecryptKeyBase64Response.builder().data(resultData.getData()).build());
     }
 }
