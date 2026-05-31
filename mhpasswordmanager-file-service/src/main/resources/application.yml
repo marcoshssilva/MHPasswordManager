@@ -18,6 +18,12 @@ spring:
         X-Service-Name: ${spring.application.name}
   config:
     import: "optional:configserver:"
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 96MB
+      max-request-size: 110MB
+      resolve-lazily: false
 eureka:
   client:
     serviceUrl:
