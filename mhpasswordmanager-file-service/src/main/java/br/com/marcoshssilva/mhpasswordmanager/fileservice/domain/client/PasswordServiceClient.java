@@ -11,6 +11,7 @@ import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.KeyStorePayloadEncoded;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.PagePayload;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.RsaCryptKeyPayload;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.SimpleBucketCryptKeyPayload;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.UpdateBucketPayload;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.UserRegisteredPayload;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -134,6 +135,15 @@ public class PasswordServiceClient extends AbstractClient {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<PagePayload<KeyPayloadEncoded>>() {
                 });
+    }
+
+    public Mono<DecryptKeyBase64Payload> encryptBase64UsingBucket(String accessToken, String bucketUuid, SimpleBucketCryptKeyPayload payload) {
+        return getWebClient().post()
+                .uri("/keys/{bucketUuid}/encrypt/base64", bucketUuid)
+                .headers(headers -> setBearerAuth(headers, accessToken))
+                .bodyValue(payload)
+                .retrieve()
+                .bodyToMono(DecryptKeyBase64Payload.class);
     }
 
     public Mono<KeyPayloadEncoded> getKey(String accessToken, String bucketUuid, Long id) {

@@ -20,6 +20,7 @@ public class BucketDataPayload {
     private String bucketUuid;
     private String bucketName;
     private String bucketDescription;
+    private String encodedPublicKey;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     private Date createdAt;

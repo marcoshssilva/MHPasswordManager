@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.impl;
 
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.PasswordServiceClient;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.StoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IStorageFileService;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.exceptions.StorageErrorException;
@@ -12,6 +13,7 @@ import java.util.Map;
 @Service
 public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
 
+    private PasswordServiceClient passwordServiceClient;
     private GridFsTemplate gridFsTemplate;
     private GridFsOperations gridFsOperations;
 
