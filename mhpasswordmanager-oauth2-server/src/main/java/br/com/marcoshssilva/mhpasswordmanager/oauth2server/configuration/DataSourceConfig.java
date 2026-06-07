@@ -26,11 +26,25 @@ public class DataSourceConfig {
         return new DataSourceProperties();
     }
 
+    @Bean("dbUsersDataSourceProperties")
+    @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
+    @ConfigurationProperties("spring.datasource.users")
+    public DataSourceProperties dbUsersDatasourceProperties() {
+        return new DataSourceProperties();
+    }
+
     @Bean("dbAuthDatabaseDataSource")
     @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
     @Primary
-    public DataSource dbDataSource(@Qualifier("dbAuthDataSourceProperties") DataSourceProperties dataSourceProperties) {
+    public DataSource dbAuthDataSource(@Qualifier("dbAuthDataSourceProperties") DataSourceProperties dataSourceProperties) {
         LOG.info("Starting database using DB-Auth datasource");
+        return dataSourceProperties.initializeDataSourceBuilder().build();
+    }
+
+    @Bean("dbUsersDatabaseDataSource")
+    @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
+    public DataSource dbUsersDataSource(@Qualifier("dbUsersDataSourceProperties") DataSourceProperties dataSourceProperties) {
+        LOG.info("Starting database using DB-Users datasource");
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
@@ -51,13 +65,21 @@ public class DataSourceConfig {
 
     @Bean("dbAuthJdbcTemplate")
     @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
+    @Primary
     public JdbcTemplate jdbcForDbAuthTemplate(@Qualifier("dbAuthDatabaseDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
     @Bean("embeddedJdbcTemplate")
     @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "EMBEDDED")
+    @Primary
     public JdbcTemplate jdbcForEmbeddedTemplate(@Qualifier("embeddedDatabaseDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
+
+    @Bean("dbUsersJdbcTemplate")
+    @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
+    public JdbcTemplate jdbcForDbUsersTemplate(@Qualifier("dbUsersDatabaseDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 }

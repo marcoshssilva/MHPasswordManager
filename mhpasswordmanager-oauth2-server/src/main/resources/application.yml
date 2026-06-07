@@ -66,6 +66,11 @@ spring:
       enabled: true
       path: /h2
   datasource:
+#    UNCOMMENT IF YOU WANT TO USE config.users.mode=DATABASE
+#    users:
+#      username: 'sa-authorization-server'
+#      password: 'P@sswordAuthS3rv3r'
+#      url: 'jdbc:postgresql://127.0.0.1:5432/db_users'
     auth:
       username: 'sa-authorization-server'
       password: 'P@sswordAuthS3rv3r'

@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,16 +25,14 @@ public class RegisteredClientRepositoryConfig {
 
     @Bean("jdbcRegisteredClientRepository")
     @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
-    @ConditionalOnClass(JdbcTemplate.class)
-    public RegisteredClientRepository dbAuthJdbcRegisteredClientRepository(JdbcTemplate jdbcTemplate) {
+    public RegisteredClientRepository dbAuthJdbcRegisteredClientRepository(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate) {
         log.info("RegisteredClientRepository using JdbcRegisteredClient with auth-db datasource");
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     }
 
     @Bean("jdbcRegisteredClientRepository")
     @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "EMBEDDED")
-    @ConditionalOnClass(JdbcTemplate.class)
-    public RegisteredClientRepository embeddedJdbcRegisteredClientRepository(JdbcTemplate jdbcTemplate) {
+    public RegisteredClientRepository embeddedJdbcRegisteredClientRepository(@Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate) {
         log.info("RegisteredClientRepository using JdbcRegisteredClient with embedded datasource");
         return new JdbcRegisteredClientRepository(jdbcTemplate);
     }

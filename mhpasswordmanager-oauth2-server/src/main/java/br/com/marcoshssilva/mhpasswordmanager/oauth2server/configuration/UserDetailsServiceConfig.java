@@ -2,6 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.CustomWebClientUserDetailsManagerImpl;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,14 @@ public class UserDetailsServiceConfig {
 
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "EMBEDDED")
-    public UserDetailsManager jdbcUserDetailsManagerForEmbedded(DataSource dataSource) {
+    public UserDetailsManager jdbcUserDetailsManagerForEmbedded(@Qualifier("embeddedDatabaseDataSource") DataSource dataSource) {
+        log.info("UserDetailsManager using JdbcUserDetailsManager with configured DataSource");
+        return new JdbcUserDetailsManager(dataSource);
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
+    public UserDetailsManager jdbcUserDetailsManagerForDbUsers(@Qualifier("dbUsersDatabaseDataSource") DataSource dataSource) {
         log.info("UserDetailsManager using JdbcUserDetailsManager with configured DataSource");
         return new JdbcUserDetailsManager(dataSource);
     }

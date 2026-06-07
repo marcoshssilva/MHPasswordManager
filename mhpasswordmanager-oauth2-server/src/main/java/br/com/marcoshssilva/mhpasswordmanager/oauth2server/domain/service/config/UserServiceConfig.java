@@ -9,6 +9,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.J
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.WebClientUserServiceImpl;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -31,7 +32,7 @@ public class UserServiceConfig {
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
     @ConditionalOnClass(JdbcTemplate.class)
     @Primary
-    public UserService inJdbcUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired JdbcTemplate jdbcTemplate) {
+    public UserService inJdbcUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired @Qualifier("dbUsersJdbcTemplate") JdbcTemplate jdbcTemplate) {
         return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate, rabbitTemplate, authorizationConfigProperties, sendEmailService);
     }
 
