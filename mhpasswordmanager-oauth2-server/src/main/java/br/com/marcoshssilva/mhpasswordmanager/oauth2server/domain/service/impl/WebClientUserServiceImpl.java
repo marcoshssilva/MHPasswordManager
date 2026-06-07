@@ -5,37 +5,37 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.Fai
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.AbstractUserService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserService;
+
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
-public class InMemoryUserServiceImpl extends AbstractUserService implements UserService {
-    public InMemoryUserServiceImpl(UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder) {
-        super(userDetailsManager, passwordEncoder);
-    }
+public class WebClientUserServiceImpl extends AbstractUserService implements UserService {
+    private final UserServiceWebClient userServiceWebClient;
 
-    @Override
-    public Boolean isUserExistsAccount(String username) {
-        return getUserDetailsManager().userExists(username);
+    public WebClientUserServiceImpl(UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder, UserServiceWebClient userServiceWebClient) {
+        super(userDetailsManager, passwordEncoder);
+        this.userServiceWebClient = userServiceWebClient;
     }
 
     @Override
     public void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
-        throw new FailSendEmailException("Not enabled yet.");
+
     }
 
     @Override
     public void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
-        throw new BusinessRuleException("Not enabled yet.");
+
     }
 
     @Override
     public void resetUserPassword(String username, String newPassword) throws BusinessRuleException {
-        throw new BusinessRuleException("Not enabled yet.");
+
     }
 
     @Override
     public void verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) throws BusinessRuleException {
-        throw new BusinessRuleException("Not enabled yet.");
-    }
 
+    }
 }

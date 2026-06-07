@@ -3,12 +3,12 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -17,56 +17,25 @@ import javax.sql.DataSource;
 
 @Configuration
 public class DataSourceConfig {
-
     private static final Logger LOG = LoggerFactory.getLogger(DataSourceConfig.class);
 
-    @Bean
-    @ConfigurationProperties("spring.datasource.users")
-    public DataSourceProperties dbUsersDatasourceProperties() {
-        return new DataSourceProperties();
-    }
-
-    @Primary
-    @Bean
+    @Bean("dbAuthDataSourceProperties")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
     @ConfigurationProperties("spring.datasource.auth")
     public DataSourceProperties dbAuthDatasourceProperties() {
         return new DataSourceProperties();
     }
 
-    @Bean
-    @Profile("!test & !embedded-database & !in-memory-client")
-    public JdbcTemplate dbAuthJdbcTemplate(@Qualifier("dataSourceDbAuth") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    @Profile("embedded-database")
-    public JdbcTemplate embeddedJdbcTemplate(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    @Profile("!embedded-database & !in-memory-users")
-    public JdbcTemplate dbUsersJdbcTemplate(@Qualifier("dataSourceDbUsers") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
-    }
-
-    @Bean
-    @Profile("!embedded-database & !in-memory-client")
-    public DataSource dataSourceDbAuth(@Qualifier("dbAuthDatasourceProperties") DataSourceProperties dataSourceProperties) {
+    @Bean("dbAuthDatabaseDataSource")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
+    @Primary
+    public DataSource dbDataSource(@Qualifier("dbAuthDataSourceProperties") DataSourceProperties dataSourceProperties) {
         LOG.info("Starting database using DB-Auth datasource");
         return dataSourceProperties.initializeDataSourceBuilder().build();
     }
 
-    @Bean
-    @Profile("!embedded-database & !in-memory-users")
-    public DataSource dataSourceDbUsers(@Qualifier("dbUsersDatasourceProperties") DataSourceProperties dataSourceProperties) {
-        LOG.info("Starting database using DB-Users datasource");
-        return dataSourceProperties.initializeDataSourceBuilder().build();
-    }
-
-    @Bean
-    @Profile("embedded-database")
+    @Bean("embeddedDatabaseDataSource")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "EMBEDDED")
     public DataSource embeddedDatabase() {
         LOG.info("Starting database using Embedded-Database");
         return new EmbeddedDatabaseBuilder().generateUniqueName(true)
@@ -80,5 +49,15 @@ public class DataSourceConfig {
                 .build();
     }
 
+    @Bean("dbAuthJdbcTemplate")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
+    public JdbcTemplate jdbcForDbAuthTemplate(@Qualifier("dbAuthDatabaseDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 
+    @Bean("embeddedJdbcTemplate")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "EMBEDDED")
+    public JdbcTemplate jdbcForEmbeddedTemplate(@Qualifier("embeddedDatabaseDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 }
