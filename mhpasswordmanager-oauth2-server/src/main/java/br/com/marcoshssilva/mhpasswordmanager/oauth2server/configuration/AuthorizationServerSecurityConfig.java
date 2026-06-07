@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -56,37 +57,37 @@ public class AuthorizationServerSecurityConfig {
     }
 
     @Bean
-    @Profile({"in-memory-client", "test & !embedded-database"})
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "MEMORY")
     public OAuth2AuthorizationService inMemoryAuthAuthorizationService() {
         return new InMemoryOAuth2AuthorizationService();
     }
 
     @Bean
-    @Profile({"in-memory-client", "test & !embedded-database"})
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "MEMORY")
     public OAuth2AuthorizationConsentService inMemoryAuthorizationConsentService() {
         return new InMemoryOAuth2AuthorizationConsentService();
     }
 
     @Bean
-    @Profile("!test & !embedded-database & !in-memory-client")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
     public OAuth2AuthorizationService inJdbcDbAuthAuthorizationService(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
-    @Profile("!test & !embedded-database & !in-memory-client")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "DATABASE")
     public OAuth2AuthorizationConsentService inJdbcDbAuthAuthorizationConsentService(@Qualifier("dbAuthJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
-    @Profile("embedded-database")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "EMBEDDED")
     public OAuth2AuthorizationService inEmbeddedAuthAuthorizationService(@Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
 
     @Bean
-    @Profile("embedded-database")
+    @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "EMBEDDED")
     public OAuth2AuthorizationConsentService inEmbeddedAuthorizationConsentService(@Qualifier("embeddedJdbcTemplate") JdbcTemplate jdbcTemplate, RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, registeredClientRepository);
     }

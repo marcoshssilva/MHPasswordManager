@@ -8,6 +8,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.client
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountUserInternalResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordResponseData;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
@@ -17,6 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
 @Component
+@ConditionalOnProperty(name = "config.users.mode", havingValue = "WEB_CLIENT")
 public final class UserServiceWebClient {
     private static final String ACCOUNT_PATH = "/account";
     private final WebClient webClient;

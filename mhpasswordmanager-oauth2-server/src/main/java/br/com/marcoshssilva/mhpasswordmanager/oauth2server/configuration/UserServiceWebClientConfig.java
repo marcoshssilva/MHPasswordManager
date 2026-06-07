@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.AuthorizedClientServiceOAuth2AuthorizedClientManager;
@@ -15,6 +16,7 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
 @Configuration
+@ConditionalOnProperty(name = "config.users.mode", havingValue = "WEB_CLIENT")
 @EnableConfigurationProperties(UserServiceWebClientProperties.class)
 public class UserServiceWebClientConfig {
     @Bean

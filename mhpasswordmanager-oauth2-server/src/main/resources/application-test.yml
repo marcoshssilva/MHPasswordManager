@@ -1,0 +1,71 @@
+spring:
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
+  session:
+    store-type: none
+  flyway:
+    enabled: false
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    enabled: false
+oauth-config-starter:
+  clients:
+    - clientName: 'Registered client for PWA Client'
+      clientId: MHPasswordManager
+      clientSecret: b07968bd-8989-4f10-82c7-3e427e22c924
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - AUTHORIZATION_CODE
+        - REFRESH_TOKEN
+      redirectUris:
+        - http://127.0.0.1:8080/mypass-manager/auth/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/emails/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/files/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/users/swagger-ui/redirect
+        - http://127.0.0.1:8080/mypass-manager/client/authorize
+        - http://127.0.0.1:8080/authorize
+        - http://127.0.0.1:8100/authorize
+        - https://oauth.pstmn.io/v1/callback
+        - https://oidcdebugger.com/debug
+      scopes:
+        - 'profile'
+        - 'email'
+      tokenSettings:
+        durationInMillis: 900000
+        reuseRefreshToken: false
+        refreshTokenTimeToLiveInMillis: 10800000
+      clientSettings:
+        requireAuthorizationConsent: true
+        requireProofKey: false
+    - clientName: 'Registered client for Client Credentials'
+      clientId: MHPasswordManager-GlobalAdmin
+      clientSecret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - CLIENT_CREDENTIALS
+      scopes:
+        - 'global:fullAccess'
+        - 'users:any'
+        - 'users:read'
+        - 'users:write'
+        - 'users:reset-password'
+      tokenSettings:
+        durationInMillis: 180000
+config:
+  jwk:
+    mode: CLASSPATH
+  oauth:
+    mode: MEMORY
+    server-settings:
+      issuer-uri: http://localhost:12010
+  gateway:
+    allowed.configserver.code: ''
+  users:
+    mode: MEMORY
