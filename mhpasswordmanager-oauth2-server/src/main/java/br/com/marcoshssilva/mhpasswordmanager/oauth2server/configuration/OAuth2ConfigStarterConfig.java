@@ -1,24 +1,22 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.OAuthClient;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.OAuthUser;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-import org.springframework.security.provisioning.UserDetailsManager;
 
 import javax.annotation.PostConstruct;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,7 +26,6 @@ public class OAuth2ConfigStarterConfig {
     private final OAuth2ConfigStarterPropertiesConfig.OAuth2ConfigStarterProperties oAuth2ConfigStarterProperties;
     private final RegisteredClientRepository registeredClientRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserDetailsManager userDetailsManager;
 
     @PostConstruct
     public void init() {
@@ -37,36 +34,16 @@ public class OAuth2ConfigStarterConfig {
         clients.forEach(client -> {
             Optional<RegisteredClient> existentClient = Optional.ofNullable(registeredClientRepository.findByClientId(client.getClientId()));
             if (existentClient.isEmpty()) {
-                RegisteredClient clientCreated = registeredClientBuilder(client).build();
+                RegisteredClient clientCreated = registeredClientBuilder(client, passwordEncoder).build();
                 registeredClientRepository.save(clientCreated);
                 LOG.info("Register new client, details: ID - {} SECRET - {}", clientCreated.getClientId(), clientCreated.getClientSecret());
             } else {
                 LOG.info("Registered client with ID {} exists. Cannot be updated.", existentClient.get().getClientId());
             }
-
-        });
-
-        List<OAuthUser> users = oAuth2ConfigStarterProperties.getUsers();
-        users.forEach(user -> {
-            if (!userDetailsManager.userExists(user.getUsername())) {
-                userDetailsManager.createUser(
-                        User.builder()
-                            .username(user.getUsername())
-                            .password(passwordEncoder.encode(user.getPassword()))
-                            .roles(user.getRoles().toArray(new String[] {}))
-                            .accountExpired(!user.isAccountNonExpired())
-                            .accountLocked(!user.isAccountNonLocked())
-                            .credentialsExpired(!user.isCredentialsNonExpired())
-                            .build());
-                LOG.info("Request to create new user {} is ACCEPTED with roles={}", user.getUsername(), user.getRoles());
-            } else {
-                LOG.info("Request to create new user {} is REJECTED, because is already exists.", user.getUsername());
-            }
-
         });
     }
 
-    private RegisteredClient.Builder registeredClientBuilder(OAuthClient client) {
+    public static RegisteredClient.Builder registeredClientBuilder(OAuthClient client, PasswordEncoder passwordEncoder) {
         return RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId(client.getClientId())
                 .clientName(client.getClientName())
