@@ -52,10 +52,14 @@ public class AccountController {
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') || (#username == authentication.principal.subject)")
     @GetMapping("{username}/data")
-    public ResponseEntity<AccountResponseData> getDetailsFromAccount(@PathVariable String username)
-            throws ElementNotFoundException {
-        return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByUsername(username))
-                                );
+    public ResponseEntity<AccountResponseData> getDetailsFromAccount(@PathVariable String username) throws ElementNotFoundException {
+        return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByUsername(username)));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @GetMapping("{username}/user")
+    public ResponseEntity<AccountUserInternalResponseData> getInternalUserFromAccount(@PathVariable String username) throws ElementNotFoundException {
+        return ResponseEntity.ok(AccountUserInternalResponseData.fromUser(accountService.getUserByUsername(username).toUserDetails()));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#username == authentication.principal.subject)")
