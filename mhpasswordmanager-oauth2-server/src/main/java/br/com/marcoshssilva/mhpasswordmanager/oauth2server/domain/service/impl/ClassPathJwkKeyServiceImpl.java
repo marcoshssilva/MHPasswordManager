@@ -33,7 +33,7 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
     private static final String UUID = "0107f47a-2263-421c-81bb-10210c9c2e6d";
 
     public PublicKey getPublicKey() throws JwkLoaderFailException {
-        try (InputStream resource  = new ClassPathResource("/public-key.pem").getInputStream()) {
+        try (InputStream resource  = new ClassPathResource("/jwk-keyset/public-key.pem").getInputStream()) {
             String base64PublicKey = new String(resource.readAllBytes()).replace("\n", "").replace("-----BEGIN PUBLIC KEY-----", "").replace("-----END PUBLIC KEY-----", "");
             KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
             return kf.generatePublic(new X509EncodedKeySpec(Base64.getDecoder().decode(base64PublicKey)));
@@ -43,7 +43,7 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
     }
 
     public PrivateKey getPrivateKey() throws JwkLoaderFailException {
-        try (InputStream resource   = new ClassPathResource("/private-key.pem").getInputStream()) {
+        try (InputStream resource   = new ClassPathResource("/jwk-keyset/private-key.pem").getInputStream()) {
             String base64PrivateKey = new String(resource.readAllBytes()).replace("\n", "").replace("-----BEGIN PRIVATE KEY-----", "").replace("-----END PRIVATE KEY-----", "");
             KeyFactory kf = KeyFactory.getInstance(ALGORITHM);
             return kf.generatePrivate(new PKCS8EncodedKeySpec(Base64.getDecoder().decode(base64PrivateKey)));

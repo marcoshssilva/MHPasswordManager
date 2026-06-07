@@ -1,11 +1,9 @@
-gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
 server:
   port: 12010
   servlet:
     context-path: /mypass-manager/auth/
 spring:
-  #  profiles:
-  #    default: local
+  #  profiles.default: local
   application:
     name: authorization-server
   cloud:
@@ -14,7 +12,7 @@ spring:
         enabled: true
         service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
       headers:
-        X-Gateway-Auth: ${gateway.allowed.configserver.code:changeit}
+        X-Gateway-Auth: ${config.gateway.allowed.configserver.code}
         X-Service-Name: ${spring.application.name}
   config:
     import: "optional:configserver:"
@@ -34,46 +32,57 @@ springdoc:
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
   swagger-ui:
     oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom, doesnt exists on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom, doesnt exists on springdoc open-api
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/oauth2/authorize} # custom doesn't exist on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/oauth2/token} # custom doesn't exist on springdoc open-api
     csrf:
-      enabled: true # enable csrf in swagger-ui requests
+      enabled: true
+config:
+  gateway:
+    allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:}
+  jwk:
+    mode: CLASSPATH
+  oauth:
+    mode: MEMORY
+  users:
+    mode: MEMORY
 ---
 spring:
   config:
-    activate:
-      on-profile: embedded-database
+    activate.on-profile: embedded-database
   h2:
     console:
       enabled: true
       path: /h2
   flyway:
     enabled: false
+config:
+  jwk:
+    mode: DATABASE
+  oauth:
+    mode: EMBEDDED
+  users:
+    mode: EMBEDDED
 ---
 spring:
+  cloud.config.discovery.enabled: false
   config:
-    activate:
-      on-profile: local
+    activate.on-profile: local
   h2:
     console:
       enabled: true
       path: /h2
   datasource:
-    users:
-      username: 'sa-authorization-server'
-      password: 'P@sswordAuthS3rv3r'
-      url: 'jdbc:postgresql://localhost:5432/db_users'
     auth:
       username: 'sa-authorization-server'
       password: 'P@sswordAuthS3rv3r'
       url: 'jdbc:postgresql://localhost:5432/db_auth'
   flyway:
     enabled: true
-    user: 'sa-authorization-server'
-    password: 'P@sswordAuthS3rv3r'
+    url: ${spring.datasource.auth.url}
+    user: ${spring.datasource.auth.username}
+    password: ${spring.datasource.auth.password}
     schemas:
-      - 'public'
-    url: jdbc:postgresql://localhost:5432/db_auth
+      - public
   session:
     store-type: redis
   redis:
@@ -86,24 +95,48 @@ spring:
     virtual-host: vhost-password-manager
     username: authorization-server-pm
     password: authorization-server-pm-P@ss
+config:
+  jwk:
+    mode: DATABASE
+  oauth:
+    mode: DATABASE
+  users:
+    mode: WEB_CLIENT
+    webclient:
+      base-url: http://USER-SERVICE/mypass-manager/users
+      oauth2:
+        registration-id: passwordmanager-global
+        client-id: MHPasswordManager-GlobalAdmin
+        client-secret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
+        token-uri: ${authorization.issuer-uri}/oauth2/token
+        scopes: global:fullAccess
 authorization:
   issuer-uri: http://127.0.0.1:8080${server.servlet.context-path}
   success-logout-uri: http://127.0.0.1:8080${server.servlet.context-path}
 ---
 spring:
+  cloud.config.discovery.enabled: false
   config:
-    activate:
-      on-profile: test
+    activate.on-profile: test
   session:
     store-type: none
   flyway:
     enabled: false
-#eureka:
-#  instance:
-#    hostname: localhost
-#    prefer-ip-address: true
-#  client:
-#    enabled: false
 authorization:
   issuer-uri: http://localhost:12010
   success-logout-uri: http://localhost:8100
+eureka:
+  instance:
+    hostname: localhost
+    prefer-ip-address: true
+  client:
+    enabled: false
+config:
+  jwk:
+    mode: CLASSPATH
+  oauth:
+    mode: MEMORY
+  gateway:
+    allowed.configserver.code: ''
+  users:
+    mode: MEMORY
