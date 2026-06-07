@@ -8,6 +8,8 @@ import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.Accoun
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.converter.AccountDataModelToAccountResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.*;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountResponseValidatePasswordData;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountUserInternalResponseData;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +42,12 @@ public class AccountController {
             Pageable pageable
     ) {
         return ResponseEntity.ok(accountService.getAllUsers(pageable).map(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') || (#username == authentication.principal.subject)")
+    @PostMapping("{username}/validatePassword")
+    public ResponseEntity<AccountResponseValidatePasswordData> validatePassword(@PathVariable String username, @RequestBody AccountRequestValidatePasswordModel model) throws ElementNotFoundException {
+        return ResponseEntity.ok(AccountResponseValidatePasswordData.builder().isValid(accountService.matchPasswordFromUsername(username, model.getPassword())).build());
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') || (#username == authentication.principal.subject)")
