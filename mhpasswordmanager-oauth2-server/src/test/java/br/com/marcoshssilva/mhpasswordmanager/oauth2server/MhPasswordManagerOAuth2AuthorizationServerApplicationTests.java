@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles({"test", "embedded-database"})
+@ActiveProfiles({"test"})
 class MhPasswordManagerOAuth2AuthorizationServerApplicationTests {
 
 	private final Logger LOG = LoggerFactory.getLogger(MhPasswordManagerOAuth2AuthorizationServerApplicationTests.class);
