@@ -24,7 +24,6 @@ public class OAuth2ConfigStarterPropertiesConfig {
     @ToString
     public static class OAuth2ConfigStarterProperties {
         private List<OAuthClient> clients = new LinkedList<>();
-        private List<OAuthUser> users = new LinkedList<>();
     }
 
     @Bean
