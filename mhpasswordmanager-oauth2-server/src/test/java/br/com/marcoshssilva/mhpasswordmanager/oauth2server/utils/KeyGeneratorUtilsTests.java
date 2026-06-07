@@ -40,8 +40,7 @@ class KeyGeneratorUtilsTests {
     void shouldGenerateRecoveryCodeInCorrectFormat() {
         String recoveryCode = KeyGeneratorUtils.generateRecoveryCodeToResetPassword();
         assertNotNull(recoveryCode);
-        assertTrue(recoveryCode.matches("\\d{3}-\\d{3}-\\d{3}"), 
-            "Recovery code should match pattern XXX-XXX-XXX but was: " + recoveryCode);
+        assertTrue(recoveryCode.matches("\\d{3}-\\d{3}-\\d{3}"), "Recovery code should match pattern XXX-XXX-XXX but was: " + recoveryCode);
     }
 
     @Test
