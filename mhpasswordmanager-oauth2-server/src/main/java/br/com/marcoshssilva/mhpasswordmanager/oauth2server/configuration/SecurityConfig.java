@@ -26,31 +26,19 @@ public class SecurityConfig {
     @Order(1)
     @Bean
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        // csrf for specific routes
-        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-        // allow frame options only to sameOrigin -> fix /h2
-        http.headers().frameOptions().sameOrigin();
-        // config security routes
-        http.authorizeHttpRequests(authorize -> authorize
-                // register public routes
-                .antMatchers(publicRoutes).permitAll()
-                // register as public access only when GET method
-                .antMatchers(HttpMethod.GET, getMethodOnlyPublic).permitAll()
-                // register as public access only when POST method
-                .antMatchers(HttpMethod.POST, postMethodOnlyPublic).permitAll()
-                // only to role ADMIN or MASTER
-                .antMatchers(enabledOnlyToAdmin).hasAnyRole("ADMIN", "MASTER")
-                // any other requests for authenticated
-                .anyRequest().authenticated()
-        );
 
-        return http
-                // don't need to add in PUBLIC ROUTES because this method make it from default
-                .formLogin(login -> login.loginPage("/login").permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl(this.authorizationConfigProperties.getSuccessLogoutUri())
-                        .permitAll())
-                .build();
+        http.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+        http.headers().frameOptions().sameOrigin();
+        http.formLogin(login -> login.loginPage("/login").permitAll());
+        http.logout(logout -> logout.logoutUrl("/logout").permitAll());
+
+        http.authorizeHttpRequests(authorize -> authorize
+                .antMatchers(publicRoutes).permitAll()
+                .antMatchers(HttpMethod.GET, getMethodOnlyPublic).permitAll()
+                .antMatchers(HttpMethod.POST, postMethodOnlyPublic).permitAll()
+                .antMatchers(enabledOnlyToAdmin).hasAnyRole("ADMIN")
+                .anyRequest().authenticated());
+
+        return http.build();
     }
 }
