@@ -1,7 +1,12 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public record AccountDataModel(String username, String password, Boolean enabled, Set<String> roles, String firstName, String lastName, String imageUrl) {
     @Override
@@ -14,5 +19,13 @@ public record AccountDataModel(String username, String password, Boolean enabled
     @Override
     public int hashCode() {
         return Objects.hash(username, password, enabled, roles, firstName, lastName, imageUrl);
+    }
+
+    public UserDetails toUserDetails() {
+        return new User(
+                this.username,
+                this.password,
+                roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet())
+        );
     }
 }
