@@ -1,8 +1,6 @@
 springdoc:
-  # enable actuator to Swagger
   show-actuator: true
-  # show login-endpoint to Swagger
-  show-login-endpoint: false # -- dont need more, prefer OAuth2 @SecurityScheme
+  show-login-endpoint: false
   swagger-ui:
     oauth:
       client-id: MHPasswordManager
@@ -57,7 +55,6 @@ oauth-config-starter:
       clientSettings:
         requireAuthorizationConsent: true
         requireProofKey: false
-
     - clientName: 'Registered client for Client Credentials'
       clientId: MHPasswordManager-GlobalAdmin
       clientSecret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
@@ -66,8 +63,15 @@ oauth-config-starter:
         - CLIENT_CREDENTIALS
       scopes:
         - 'global:fullAccess'
+        - 'users:any'
+        - 'users:read'
+        - 'users:write'
+        - 'users:reset-password'
       tokenSettings:
         durationInMillis: 180000
+config:
+  gateway:
+    allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:}
 ---
 spring:
   config:
@@ -107,6 +111,13 @@ springdoc:
     oauth2-redirect-url: http://127.0.0.1:8080/mypass-manager/auth/swagger-ui/redirect
     csrf:
       enabled: true
+config:
+  jwk:
+    mode: DATABASE
+  oauth:
+    mode: DATABASE
+  users:
+    mode: DATABASE
 authorization:
   issuer-uri: http://host.docker.internal:8080/mypass-manager/auth/
   success-logout-uri: http://host.docker.internal:8080/mypass-manager/auth/

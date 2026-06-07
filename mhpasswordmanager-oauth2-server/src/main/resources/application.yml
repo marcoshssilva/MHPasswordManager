@@ -39,12 +39,6 @@ springdoc:
 config:
   gateway:
     allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:}
-  jwk:
-    mode: CLASSPATH
-  oauth:
-    mode: MEMORY
-  users:
-    mode: MEMORY
 ---
 spring:
   config:
