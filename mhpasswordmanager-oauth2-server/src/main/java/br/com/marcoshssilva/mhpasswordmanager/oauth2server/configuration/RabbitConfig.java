@@ -10,16 +10,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfig {
+
     @Bean
     public MessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
 
     @Bean
-    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory) {
+    public AmqpTemplate amqpTemplate(ConnectionFactory connectionFactory, MessageConverter converter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        // config to send any payload as Json, when producer mode
-        rabbitTemplate.setMessageConverter(converter());
+        rabbitTemplate.setMessageConverter(converter);
         return rabbitTemplate;
     }
+
 }
