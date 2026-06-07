@@ -99,6 +99,8 @@ config:
     mode: DATABASE
   oauth:
     mode: DATABASE
+    server-settings:
+      issuer-uri: http://127.0.0.1:8080${server.servlet.context-path}
   users:
     mode: WEB_CLIENT
     webclient:
@@ -109,9 +111,6 @@ config:
         client-secret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
         token-uri: ${authorization.issuer-uri}/oauth2/token
         scopes: global:fullAccess
-authorization:
-  issuer-uri: http://127.0.0.1:8080${server.servlet.context-path}
-  success-logout-uri: http://127.0.0.1:8080${server.servlet.context-path}
 ---
 spring:
   cloud.config.discovery.enabled: false
@@ -121,9 +120,6 @@ spring:
     store-type: none
   flyway:
     enabled: false
-authorization:
-  issuer-uri: http://localhost:12010
-  success-logout-uri: http://localhost:8100
 eureka:
   instance:
     hostname: localhost
@@ -135,6 +131,8 @@ config:
     mode: CLASSPATH
   oauth:
     mode: MEMORY
+    server-settings:
+      issuer-uri: http://localhost:12010
   gateway:
     allowed.configserver.code: ''
   users:

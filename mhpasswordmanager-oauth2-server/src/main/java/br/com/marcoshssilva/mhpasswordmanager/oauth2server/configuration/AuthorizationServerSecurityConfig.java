@@ -104,12 +104,10 @@ public class AuthorizationServerSecurityConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         AuthorizationServerSettings.Builder builder = AuthorizationServerSettings.builder();
-
         if (authorizationConfigProperties.getIssuerUri() != null) {
             LOG.info("Customize AuthorizationServerSettings with Issuer-Uri: {}", authorizationConfigProperties.getIssuerUri());
             builder.issuer(authorizationConfigProperties.getIssuerUri());
         }
-
         return builder.build();
     }
 

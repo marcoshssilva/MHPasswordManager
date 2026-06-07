@@ -116,8 +116,7 @@ config:
     mode: DATABASE
   oauth:
     mode: DATABASE
+    server-settings:
+      issuer-uri: http://host.docker.internal:8080/mypass-manager/auth/
   users:
     mode: DATABASE
-authorization:
-  issuer-uri: http://host.docker.internal:8080/mypass-manager/auth/
-  success-logout-uri: http://host.docker.internal:8080/mypass-manager/auth/

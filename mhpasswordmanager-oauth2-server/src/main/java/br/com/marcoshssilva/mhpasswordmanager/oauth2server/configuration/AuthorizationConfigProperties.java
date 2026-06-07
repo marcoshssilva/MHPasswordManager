@@ -6,7 +6,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties("authorization")
+@ConfigurationProperties("config.oauth.server-settings")
 @RefreshScope
 @Getter
 @Setter
@@ -16,8 +16,4 @@ import org.springframework.stereotype.Component;
 @EqualsAndHashCode
 public class AuthorizationConfigProperties {
     private String issuerUri;
-    private String successLogoutUri;
-    private String jwkPrivateKey;
-    private String jwkPublicKey;
-    private String jwkUuid;
 }
