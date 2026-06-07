@@ -37,10 +37,9 @@ public class CustomWebClientUserDetailsManagerImpl implements UserDetailsManager
     @Override
     public void changePassword(String oldPassword, String newPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null || authentication.getName() == null) {
+        if (authentication == null || authentication.getName() == null || !validatePassword(authentication.getName(), oldPassword)) {
             throw new UsernameNotFoundException("Cannot change password without authenticated user.");
         }
-        validatePassword(authentication.getName(), oldPassword);
         resetPassword(authentication.getName(), newPassword);
     }
 
