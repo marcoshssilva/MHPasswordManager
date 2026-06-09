@@ -1,7 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.OAuthClient;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.OAuthUser;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
