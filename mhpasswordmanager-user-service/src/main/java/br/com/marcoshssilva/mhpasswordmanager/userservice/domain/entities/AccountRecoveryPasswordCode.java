@@ -7,7 +7,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -28,10 +28,10 @@ public class AccountRecoveryPasswordCode implements Serializable {
     private String userAgentClient;
 
     @Column(name = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "expires_at")
-    private Date expiresAt;
+    private LocalDateTime expiresAt;
 
     @Column(name = "completed")
     private Boolean completed;

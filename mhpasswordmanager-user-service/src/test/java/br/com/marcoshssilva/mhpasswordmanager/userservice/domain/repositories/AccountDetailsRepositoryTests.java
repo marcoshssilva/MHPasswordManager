@@ -1,6 +1,5 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories;
 
-import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.Account;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetails;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetailsPK;
 import org.junit.jupiter.api.BeforeEach;

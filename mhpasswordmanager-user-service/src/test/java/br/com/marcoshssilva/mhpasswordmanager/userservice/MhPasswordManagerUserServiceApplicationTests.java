@@ -9,11 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("test")
 class MhPasswordManagerUserServiceApplicationTests {
-	private final Logger LOG = LoggerFactory.getLogger(MhPasswordManagerUserServiceApplicationTests.class);
+	private final Logger log = LoggerFactory.getLogger(MhPasswordManagerUserServiceApplicationTests.class);
 
 	@Test
 	void contextLoads() {
-		LOG.info("Application started with SUCCESS.");
+		log.info("Application started with SUCCESS.");
 	}
 
 }

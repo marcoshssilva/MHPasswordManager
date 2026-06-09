@@ -5,7 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -32,7 +32,7 @@ public class AccountDetails implements Serializable {
     private Boolean verified;
 
     @Column(name = "verified_at", columnDefinition = "TIMESTAMP")
-    private Date verifiedAt;
+    private LocalDateTime verifiedAt;
 
     @Column(name = "imageurl")
     private String imageUrl;

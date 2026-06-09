@@ -2,12 +2,14 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.configs.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -16,7 +18,7 @@ public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Coll
     private static final String AUTHORITIES_CLAIM_NAME = "authorities";
 
     @Override
-    public Collection<GrantedAuthority> convert(Jwt jwt) {
+    public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
         List<String> userRoleAuthorities = null;
         JwtGrantedAuthoritiesConverter scopesConverter;
         Collection<GrantedAuthority> scopeAuthorities = null;
@@ -42,10 +44,11 @@ public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Coll
             }
         }
 
-        scopeAuthorities.addAll(userRoleAuthorities.stream()
+        Collection<GrantedAuthority> authorities = new ArrayList<>(scopeAuthorities);
+        authorities.addAll(userRoleAuthorities.stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList());
 
-        return scopeAuthorities;
+        return authorities;
     }
 }

@@ -2,7 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,7 +44,7 @@ class AccountDetailsTests {
 
     @Test
     void testGetterAndSetter() {
-        Date now = new Date(System.currentTimeMillis());
+        LocalDateTime now = LocalDateTime.of(2026, 1, 1, 0, 0);
 
         AccountDetailsPK pk1 = new AccountDetailsPK("mary_lane", "marylane@email.com");
         AccountDetailsPK pk2 = new AccountDetailsPK("john_doe", "johndoe@email.com");
