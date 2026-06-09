@@ -2,9 +2,9 @@ package br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @lombok.Getter
 @lombok.Setter
@@ -16,7 +16,11 @@ public class BucketStoredFile implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String bucketUuid;
-    Collection<StoredFile> files = new ArrayList<>(0);
+    private HashSet<StoredFile> files = new HashSet<>(0);
+
+    public Set<StoredFile> getFiles() {
+        return files;
+    }
 
     @Override
     public boolean equals(Object o) {
