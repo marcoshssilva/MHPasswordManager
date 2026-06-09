@@ -28,8 +28,8 @@ public class JdbcJkwKeyServiceImpl implements JwkKeyService, JkwKeySelectorDispa
     @Override
     public void selectJwkKey(UUID uuid) throws JwkLoaderFailException {
         try {
-            int rowsNotDeleted = this.jdbcTemplate.update(DISABLE_ALL_NOT_DELETED_JWK_KEY_QUERY);
-            int rowsUpdated    = this.jdbcTemplate.update(ENABLE_BY_UUID_JWK_KEY_QUERY, uuid.toString());
+            this.jdbcTemplate.update(DISABLE_ALL_NOT_DELETED_JWK_KEY_QUERY);
+            int rowsUpdated = this.jdbcTemplate.update(ENABLE_BY_UUID_JWK_KEY_QUERY, uuid.toString());
             if (rowsUpdated == 0) {
                 throw new IllegalArgumentException("an active JWK key not found in database with the provided uuid");
             }

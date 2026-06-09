@@ -7,35 +7,31 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.Abstra
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserService;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 public class WebClientUserServiceImpl extends AbstractUserService implements UserService {
-    private final UserServiceWebClient userServiceWebClient;
-
     public WebClientUserServiceImpl(UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder, UserServiceWebClient userServiceWebClient) {
         super(userDetailsManager, passwordEncoder);
-        this.userServiceWebClient = userServiceWebClient;
     }
 
     @Override
     public void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
-
+        throw new UnsupportedOperationException("Password recovery by web client is not implemented yet.");
     }
 
     @Override
     public void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
-
+        throw new UnsupportedOperationException("Password reset by recovery code over web client is not implemented yet.");
     }
 
     @Override
     public void resetUserPassword(String username, String newPassword) throws BusinessRuleException {
-
+        throw new UnsupportedOperationException("Password reset over web client is not implemented yet.");
     }
 
     @Override
     public void verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) throws BusinessRuleException {
-
+        throw new UnsupportedOperationException("Account verification over web client is not implemented yet.");
     }
 }

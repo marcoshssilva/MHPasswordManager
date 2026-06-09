@@ -21,6 +21,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ClassPathJwkKeyServiceImpl implements JwkKeyService, JkwKeySelector
                 .privateKey(new String(getPrivateKey().getEncoded()))
                 .active(Boolean.TRUE)
                 .algorithm(getPublicKey().getAlgorithm())
-                .createdAt(LocalDateTime.of(2024, 6, 1, 0, 0))
+                .createdAt(LocalDateTime.of(2024, Month.JUNE, 1, 0, 0))
                 .build();
     }
 

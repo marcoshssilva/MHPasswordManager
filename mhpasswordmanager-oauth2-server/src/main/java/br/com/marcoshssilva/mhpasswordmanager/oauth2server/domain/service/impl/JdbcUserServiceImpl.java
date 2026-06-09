@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -59,7 +60,7 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
         // check if email already used by another account
         RegisteredUserData user = getUserByUsernameOrEmail(userRegistrationData.getUsername(), userRegistrationData.getEmail());
         if (Objects.nonNull(user)) {
-            throw new CannotRegisterUserException(super.ERROR_MESSAGE_CANNOT_USE);
+            throw new CannotRegisterUserException(ERROR_MESSAGE_CANNOT_USE);
         }
         // save user and user details
         super.registerNewUser(userRegistrationData, role);
@@ -96,7 +97,7 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
     @Override
     public void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
         try {
-            RecoveryPasswordCodeRequest codeRequest = this.jdbcTemplate.queryForObject(QUERY_GETRECOVERYCODEGENERATEDFORUSER, RecoveryPasswordCodeRequestMapper.getInstance(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now());
+            RecoveryPasswordCodeRequest codeRequest = this.jdbcTemplate.queryForObject(QUERY_GETRECOVERYCODEGENERATEDFORUSER, RecoveryPasswordCodeRequestMapper.getInstance(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(Clock.systemUTC()));
             if (codeRequest == null) {
                 throw new BusinessRuleException("Cannot reset password, codeRequest not found.");
             }
@@ -140,14 +141,15 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
     }
 
     private void saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
-        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now());
+        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now(Clock.systemUTC()));
         if (qtdOpenCodesToRecoveryPassword == null) {
             throw new FailSendEmailException("Cannot send email, user has no recovery codes active. Please, check your email.");
         }
         if (qtdOpenCodesToRecoveryPassword > 2) {
             throw new FailSendEmailException("Cannot send email, user has to many recovery codes active. Please, check your email.");
         }
-        this.jdbcTemplate.update(QUERY_SAVERECOVERYCODEGENERATEDFORUSER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(), LocalDateTime.now().plusHours(3L), Boolean.FALSE);
+        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+        this.jdbcTemplate.update(QUERY_SAVERECOVERYCODEGENERATEDFORUSER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), now, now.plusHours(3L), Boolean.FALSE);
     }
 
     private RegisteredUserData getUserByUsernameOrEmail(String username, String email) {
