@@ -3,7 +3,6 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.utils;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.SecureRandom;
-import java.util.Random;
 
 public final class KeyGeneratorUtils {
     private static SecureRandom secureRandom = null;
