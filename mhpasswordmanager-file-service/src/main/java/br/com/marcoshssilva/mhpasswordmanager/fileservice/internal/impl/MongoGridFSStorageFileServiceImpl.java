@@ -21,6 +21,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
@@ -71,8 +72,9 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             metadataMap.put("filename", file.getOriginalFilename());
             metadataMap.put("content_type", file.getContentType());
             metadataMap.put("bucket_uuid", bucketUuid);
-            metadataMap.put("created_at", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
-            metadataMap.put("updated_at", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(LocalDateTime.now()));
+            LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
+            metadataMap.put("created_at", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(now));
+            metadataMap.put("updated_at", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(now));
 
             /**
              * Calling password-service to encrypt and save in database. Refactor in future to save asynchronously and return a future.
@@ -148,7 +150,7 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
     public BucketStoredFile getBucketInfo(String bucketUuid) throws StorageErrorException {
         try {
             Collection<StoredFileKey> bucketStoredFiles = storedFileKeyRepository.findByBucket(bucketUuid);
-            return BucketStoredFile.builder().files(bucketStoredFiles.stream().map(fileMetadata -> StoredFile.builder().id(fileMetadata.getUuid()).bucket(fileMetadata.getBucket()).metadata(fileMetadata.getMetadata()).build()).collect(Collectors.toSet())).build();
+            return BucketStoredFile.builder().files(bucketStoredFiles.stream().map(fileMetadata -> StoredFile.builder().id(fileMetadata.getUuid()).bucket(fileMetadata.getBucket()).metadata(fileMetadata.getMetadata()).build()).collect(Collectors.toCollection(java.util.HashSet::new))).build();
         } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
