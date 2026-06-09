@@ -33,13 +33,16 @@ public class UserDetailsServiceConfig {
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "EMBEDDED")
     public UserDetailsManager jdbcUserDetailsManagerForEmbedded(@Qualifier("embeddedDatabaseDataSource") DataSource dataSource) {
-        log.info("UserDetailsManager using JdbcUserDetailsManager with configured DataSource");
-        return new JdbcUserDetailsManager(dataSource);
+        return createJdbcUserDetailsManager(dataSource);
     }
 
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
     public UserDetailsManager jdbcUserDetailsManagerForDbUsers(@Qualifier("dbUsersDatabaseDataSource") DataSource dataSource) {
+        return createJdbcUserDetailsManager(dataSource);
+    }
+
+    private UserDetailsManager createJdbcUserDetailsManager(DataSource dataSource) {
         log.info("UserDetailsManager using JdbcUserDetailsManager with configured DataSource");
         return new JdbcUserDetailsManager(dataSource);
     }
