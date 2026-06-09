@@ -32,7 +32,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Base64;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -190,7 +191,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
             String base64 = cryptService.convertByteToBase64(encrypted);
 
             keyStored.setData(base64);
-            keyStored.setLastUpdate(new Date());
+            keyStored.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
 
             UserPasswordStoredValue save = userPasswordStoredValueRepository.save(keyStored);
             builder.id(save.getId());
@@ -218,7 +219,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
             String base64 = cryptService.convertByteToBase64(encrypted);
 
             keyStored.setData(base64);
-            keyStored.setLastUpdate(new Date());
+            keyStored.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
 
             UserPasswordStoredValue save = userPasswordStoredValueRepository.save(keyStored);
             builder.id(save.getId());
@@ -279,8 +280,8 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
             keyStored.setData(base64);
             keyStored.setKeyId(userPasswordKey);
-            keyStored.setLastUpdate(new Date());
-            keyStored.setCreatedAt(new Date());
+            keyStored.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
+            keyStored.setCreatedAt(LocalDateTime.now(Clock.systemUTC()));
 
             UserPasswordStoredValue save = userPasswordStoredValueRepository.save(keyStored);
             builder.id(save.getId());

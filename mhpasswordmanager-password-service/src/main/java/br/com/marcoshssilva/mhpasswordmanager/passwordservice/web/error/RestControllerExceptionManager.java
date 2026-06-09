@@ -19,7 +19,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class RestControllerExceptionManager {
@@ -28,7 +29,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> keyNotFoundExceptionResolver(KeyNotFoundException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -36,7 +37,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> userRegistrationNotFoundExceptionResolver(UserRegistrationNotFoundException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -44,7 +45,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> bucketNotFoundExceptionResolver(BucketNotFoundException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -52,7 +53,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> jsonProcessingExceptionResolver(JsonProcessingException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -60,7 +61,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> keyRegistrationExceptionResolver(KeyRegistrationErrorException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -68,7 +69,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> keyEncodedErrorConverterExceptionResolver(KeyEncodedErrorConverterException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -76,7 +77,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> bucketCannotBeCreatedExceptionResolver(BucketCannotBeCreatedException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -84,7 +85,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> decryptionExceptionResolver(DecryptionException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -92,7 +93,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> encryptionExceptionResolver(EncryptionException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -100,7 +101,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> userAuthorizationCannotBeLoadedExceptionResolver(UserAuthorizationCannotBeLoadedException e, HttpServletRequest req) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 
@@ -108,7 +109,7 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> illegalArgumentExceptionResolver(IllegalArgumentException e, HttpServletRequest req){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
-                        .message(e.getMessage()).timestamp(new Date()).path(req.getServletPath())
+                        .message(e.getMessage()).timestamp(LocalDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
     }
 }

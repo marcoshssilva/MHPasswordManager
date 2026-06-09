@@ -2,7 +2,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.response
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @lombok.Getter
 @lombok.Setter
@@ -17,8 +17,8 @@ public class PasswordBucketControllerBucketDataResponseBody {
     private String bucketDescription;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
 }

@@ -23,15 +23,15 @@ class AESCryptServiceImplTests {
     @Qualifier("aesCryptService")
     CryptService cryptService;
 
-    static final String secretKey = "IN33dAP@ssw0rd#$";
+    static final String SECRET_KEY = "IN33dAP@ssw0rd#$";
 
     @DisplayName("Test if can convert String into bytes and encrypt and decrypt")
     @Test
     void mustEncryptAndDecryptData() {
         final String message = "Helo àáòó;;/21415678!@#!%@¨&*()";
         assertDoesNotThrow(() -> {
-            byte[] encrypt = cryptService.encrypt(cryptService.convertStringToByte(message), secretKey);
-            byte[] decrypt = cryptService.decrypt(encrypt, secretKey);
+            byte[] encrypt = cryptService.encrypt(cryptService.convertStringToByte(message), SECRET_KEY);
+            byte[] decrypt = cryptService.decrypt(encrypt, SECRET_KEY);
             assertEquals(message, cryptService.convertByteToString(decrypt));
         });
     }
@@ -40,7 +40,8 @@ class AESCryptServiceImplTests {
     @Test
     void mustThrowAndEncryptionException() {
         final String message = "Helo àáòó;;/21415678!@#!%@¨&*()";
-        assertThrows(EncryptionException.class,() -> cryptService.encrypt(cryptService.convertStringToByte(message), null));
+        byte[] payload = cryptService.convertStringToByte(message);
+        assertThrows(EncryptionException.class,() -> cryptService.encrypt(payload, null));
     }
 
     @DisplayName("Test if can using an null secret and null payload, throw an DecryptionException")

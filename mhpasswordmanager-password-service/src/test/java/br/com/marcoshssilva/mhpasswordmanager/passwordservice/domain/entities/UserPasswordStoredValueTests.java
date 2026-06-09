@@ -4,11 +4,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserPasswordStoredValueTests {
+    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, 1, 1, 0, 0);
+
     private UserPasswordStoredValue userPasswordStoredValue;
 
     @BeforeEach
@@ -23,15 +25,14 @@ class UserPasswordStoredValueTests {
         userPasswordStoredValue.setId(1L);
         userPasswordStoredValue.setKeyId(key);
         userPasswordStoredValue.setData("test data");
-        Date now = new Date();
-        userPasswordStoredValue.setCreatedAt(now);
-        userPasswordStoredValue.setLastUpdate(now);
+        userPasswordStoredValue.setCreatedAt(FIXED_DATE);
+        userPasswordStoredValue.setLastUpdate(FIXED_DATE);
 
         assertEquals(1L, userPasswordStoredValue.getId());
         assertEquals(key, userPasswordStoredValue.getKeyId());
         assertEquals("test data", userPasswordStoredValue.getData());
-        assertEquals(now, userPasswordStoredValue.getCreatedAt());
-        assertEquals(now, userPasswordStoredValue.getLastUpdate());
+        assertEquals(FIXED_DATE, userPasswordStoredValue.getCreatedAt());
+        assertEquals(FIXED_DATE, userPasswordStoredValue.getLastUpdate());
     }
 
     @DisplayName("Test equals method")
@@ -44,24 +45,24 @@ class UserPasswordStoredValueTests {
                 .id(1L)
                 .keyId(key)
                 .data("data1")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build();
 
         UserPasswordStoredValue value2 = UserPasswordStoredValue.builder()
                 .id(1L)
                 .keyId(key)
                 .data("data2")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build();
 
         UserPasswordStoredValue value3 = UserPasswordStoredValue.builder()
                 .id(2L)
                 .keyId(key)
                 .data("data1")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build();
 
         // Reflexive
@@ -91,16 +92,16 @@ class UserPasswordStoredValueTests {
                 .id(1L)
                 .keyId(key)
                 .data("data1")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build();
 
         UserPasswordStoredValue value2 = UserPasswordStoredValue.builder()
                 .id(1L)
                 .keyId(key)
                 .data("data2")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build();
 
         // Consistent
@@ -115,17 +116,15 @@ class UserPasswordStoredValueTests {
     void testToString() {
         UserPasswordKey key = new UserPasswordKey();
         key.setId(1L);
-        Date date = new Date();
-
         UserPasswordStoredValue value = UserPasswordStoredValue.builder()
                 .id(1L)
                 .keyId(key)
                 .data("data1")
-                .createdAt(date)
-                .lastUpdate(date)
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build();
 
-        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userBucket=null, tags=[], description=null, type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", date, date);
+        String expected = String.format("UserPasswordStoredValue(id=1, keyId=UserPasswordKey(id=1, userBucket=null, tags=[], description=null, type=null, createdAt=null, lastUpdate=null), data=data1, createdAt=%s, lastUpdate=%s)", FIXED_DATE, FIXED_DATE);
         String actual = value.toString();
 
         assertEquals(expected, actual);

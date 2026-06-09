@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -19,9 +19,9 @@ public final class KeyStorePayloadEncodedDto implements Serializable {
     private Long id;
     private String data;
     @JsonProperty(value = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @JsonProperty(value = "last_update")
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
 
     @Override
     public boolean equals(Object o) {

@@ -12,7 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Transactional
 class UserPasswordStoredValueRepositoryTests {
+    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, 1, 1, 0, 0);
+
     @Autowired
     private UserPasswordStoredValueRepository userPasswordStoredValueRepository;
     @Autowired
@@ -34,7 +36,7 @@ class UserPasswordStoredValueRepositoryTests {
     private final UUID userRegistrationUid = UUID.randomUUID();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         // save user registration
         UserBucket userRegistration = userBucketRepository.save(UserBucket.builder()
                 .id(userRegistrationUid.toString())
@@ -43,8 +45,8 @@ class UserPasswordStoredValueRepositoryTests {
                 .ownerName("anonymous.user")
                 .encodedPublicKey("a1a1a1a1a1a1a1a1a1a1a1a1a1a1a")
                 .encryptedPrivateKeyWithPassword("a1a1a1a1a1a1a1a1aa1a1a1a1a1a1a1")
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .build());
 
         // save user password key
@@ -52,8 +54,8 @@ class UserPasswordStoredValueRepositoryTests {
         userPasswordKey = userPasswordKeyRepository.save(UserPasswordKey.builder()
                 .userBucket(userRegistration)
                 .type(value)
-                .createdAt(new Date())
-                .lastUpdate(new Date())
+                .createdAt(FIXED_DATE)
+                .lastUpdate(FIXED_DATE)
                 .description("Example for test method")
                 .build());
     }
@@ -64,8 +66,8 @@ class UserPasswordStoredValueRepositoryTests {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
-                .lastUpdate(new Date())
-                .createdAt(new Date())
+                .lastUpdate(FIXED_DATE)
+                .createdAt(FIXED_DATE)
                 .build();
         assertNull(storedValue.getId());
 
@@ -80,8 +82,8 @@ class UserPasswordStoredValueRepositoryTests {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
-                .lastUpdate(new Date())
-                .createdAt(new Date())
+                .lastUpdate(FIXED_DATE)
+                .createdAt(FIXED_DATE)
                 .build();
         assertNull(storedValue.getId());
 
@@ -102,8 +104,8 @@ class UserPasswordStoredValueRepositoryTests {
         UserPasswordStoredValue storedValue = UserPasswordStoredValue.builder()
                 .keyId(userPasswordKey)
                 .data("password123")
-                .lastUpdate(new Date())
-                .createdAt(new Date())
+                .lastUpdate(FIXED_DATE)
+                .createdAt(FIXED_DATE)
                 .build();
         assertNull(storedValue.getId());
 

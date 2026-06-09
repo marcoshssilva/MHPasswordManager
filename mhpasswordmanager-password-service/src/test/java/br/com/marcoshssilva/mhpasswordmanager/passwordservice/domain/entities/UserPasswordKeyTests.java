@@ -6,11 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserPasswordKeyTests {
+    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, 1, 1, 0, 0);
 
     @DisplayName("Test hashCode and equals methods")
     @Test
@@ -58,8 +59,8 @@ class UserPasswordKeyTests {
         userRegistration.setEncryptedPrivateKeyWithPassword("12345678910");
 
         PasswordKeyTypesEnum type = PasswordKeyTypesEnum.SOCIAL_MEDIA;
-        Date createdAt = new Date();
-        Date lastUpdate = new Date();
+        LocalDateTime createdAt = FIXED_DATE;
+        LocalDateTime lastUpdate = FIXED_DATE.plusHours(1);
         Collection<String> tags = new ArrayList<>();
         tags.add("tag1");
         tags.add("tag2");

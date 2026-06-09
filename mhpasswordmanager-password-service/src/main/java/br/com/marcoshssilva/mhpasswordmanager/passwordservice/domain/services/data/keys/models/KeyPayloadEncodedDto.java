@@ -9,7 +9,7 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.Arrays;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,9 +32,9 @@ public final class KeyPayloadEncodedDto implements Serializable {
     private PasswordKeyTypesEnum type;
 
     @JsonProperty(value = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
     @JsonProperty(value = "last_update")
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
 
     @Override
     public boolean equals(Object o) {

@@ -6,13 +6,11 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.repositorie
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.stream.Stream;
@@ -23,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @SpringBootTest
 class MhPasswordManagerPasswordServiceApplicationTests {
-    private final Logger LOG = LoggerFactory.getLogger(MhPasswordManagerPasswordServiceApplicationTests.class);
+    private final Logger log = LoggerFactory.getLogger(MhPasswordManagerPasswordServiceApplicationTests.class);
 
     @Autowired
     private UserPasswordKeyTypeRepository userPasswordKeyTypeRepository;
@@ -33,7 +31,7 @@ class MhPasswordManagerPasswordServiceApplicationTests {
     @Test
     void contextLoads() {
         assertDoesNotThrow(() -> {
-            LOG.info("Project started with success!");
+            log.info("Project started with success!");
         });
     }
 
@@ -45,7 +43,7 @@ class MhPasswordManagerPasswordServiceApplicationTests {
             mocked.when(() -> {
                         SpringApplication.run(MhPasswordManagerPasswordServiceApplication.class, args);
                     })
-                    .thenReturn(Mockito.mock(ConfigurableApplicationContext.class));
+                    .thenReturn(null);
 
             MhPasswordManagerPasswordServiceApplication.main(args);
             mocked.verify(() -> {

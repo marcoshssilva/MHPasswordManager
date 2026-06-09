@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @lombok.AllArgsConstructor
@@ -26,11 +26,11 @@ public class SecurityQuestionsPayloadDecodedDto implements Serializable {
 
     @Schema(hidden = true)
     @JsonProperty(value = "created_at")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
     @Schema(hidden = true)
     @JsonProperty(value = "update_last")
-    private Date updateLast;
+    private LocalDateTime updateLast;
 
     @Override
     public boolean equals(Object o) {

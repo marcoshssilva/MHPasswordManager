@@ -25,7 +25,8 @@ import org.springframework.stereotype.Service;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.Base64;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -94,8 +95,8 @@ public class UserBucketServiceImpl implements UserBucketService {
             userBucket.setName(bucketNewDataModel.getBucketName());
             userBucket.setDescription(bucketNewDataModel.getBucketDescription());
             userBucket.setOwnerName(userAuthorizations.getUsername());
-            userBucket.setCreatedAt(new Date());
-            userBucket.setLastUpdate(new Date());
+            userBucket.setCreatedAt(LocalDateTime.now(Clock.systemUTC()));
+            userBucket.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
             userBucket.setEncryptedPrivateKeyWithPassword(Base64.getEncoder().encodeToString(encryptedPrivateKey));
             userBucket.setEncodedPublicKey(base64PublicKey);
 
@@ -123,7 +124,7 @@ public class UserBucketServiceImpl implements UserBucketService {
 
             bucket.setName(bucketUpdateDataModel.getBucketName());
             bucket.setDescription(bucketUpdateDataModel.getBucketDescription());
-            bucket.setLastUpdate(new Date());
+            bucket.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
 
             final UserBucket saved = userBucketRepository.save(bucket);
             return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), "UPDATED");

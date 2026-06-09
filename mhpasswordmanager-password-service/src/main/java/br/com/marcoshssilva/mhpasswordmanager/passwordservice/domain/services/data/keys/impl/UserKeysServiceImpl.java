@@ -35,7 +35,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
-import java.util.Date;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -145,21 +146,21 @@ public class UserKeysServiceImpl implements UserKeysService {
             }
 
             UserPasswordKey entity = data.toEntity();
-            entity.setLastUpdate(new Date());
+            entity.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
             entity.setType(UserPasswordKeyType.builder().id(data.getType().getId().longValue()).build());
 
             if (Objects.isNull(entity.getId())) {
-                entity.setCreatedAt(new Date());
+                entity.setCreatedAt(LocalDateTime.now(Clock.systemUTC()));
             }
             UserPasswordKey userPasswordKey = userPasswordKeyRepository.save(entity);
             Arrays.stream(data.getEncodedKeys())
                 .forEach(key -> {
                     UserPasswordStoredValue userPasswordStoredValue = key.toEntity();
                     if (Objects.isNull(userPasswordStoredValue.getId())) {
-                        userPasswordStoredValue.setCreatedAt(new Date());
+                        userPasswordStoredValue.setCreatedAt(LocalDateTime.now(Clock.systemUTC()));
                     }
 
-                    userPasswordStoredValue.setLastUpdate(new Date());
+                    userPasswordStoredValue.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
                     userPasswordStoredValue.setKeyId(userPasswordKey);
 
                     userPasswordStoredValueRepository.save(userPasswordStoredValue);
@@ -241,7 +242,7 @@ public class UserKeysServiceImpl implements UserKeysService {
 
             key.setDescription(data.getDescription());
             key.setTags(data.getTags());
-            key.setLastUpdate(new Date());
+            key.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
 
             for (int i = 0; i < key.getEncodedKeys().length; i++) {
 
@@ -249,7 +250,7 @@ public class UserKeysServiceImpl implements UserKeysService {
                 var find = Stream.of(data.getEncodedKeys()).filter(item -> item.getId().equals(key.getEncodedKeys()[finalI].getId())).findFirst();
                 if (find.isPresent()) {
                     key.getEncodedKeys()[i].setData(find.get().getData());
-                    key.getEncodedKeys()[i].setLastUpdate(new Date());
+                    key.getEncodedKeys()[i].setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
                 } else {
                     key.getEncodedKeys()[i].setId(null);
                 }

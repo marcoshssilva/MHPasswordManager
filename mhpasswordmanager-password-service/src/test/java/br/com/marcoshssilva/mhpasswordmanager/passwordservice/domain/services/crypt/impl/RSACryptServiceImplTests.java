@@ -26,14 +26,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class RSACryptServiceImplTests {
     static PrivateKey privateKey;
     static PublicKey publicKey;
-    static Base64.Encoder encoder = Base64.getEncoder();
+    static Base64.Encoder ENCODER = Base64.getEncoder();
 
     @Autowired
     @Qualifier("rsaCryptService")
     CryptService cryptService;
 
     @BeforeAll
-    public static void beforeTestClass() throws NoSuchAlgorithmException {
+    static void beforeTestClass() throws NoSuchAlgorithmException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         privateKey = keyPair.getPrivate();
@@ -44,8 +44,8 @@ class RSACryptServiceImplTests {
     @Test
     void mustEncodeAndDecodeMessage() {
         final String message = "Some message to encode";
-        final String k1 = encoder.encodeToString(privateKey.getEncoded());
-        final String k2 = encoder.encodeToString(publicKey.getEncoded());
+        final String k1 = ENCODER.encodeToString(privateKey.getEncoded());
+        final String k2 = ENCODER.encodeToString(publicKey.getEncoded());
 
         assertDoesNotThrow(() -> {
             byte[] bytesCrypt = cryptService.encrypt(message.getBytes(), k2);
@@ -59,8 +59,8 @@ class RSACryptServiceImplTests {
     @Test
     void mustEncodeAndDecodeLargeMessage() {
         final String message = "Some message to encode".repeat(100);
-        final String k1 = encoder.encodeToString(privateKey.getEncoded());
-        final String k2 = encoder.encodeToString(publicKey.getEncoded());
+        final String k1 = ENCODER.encodeToString(privateKey.getEncoded());
+        final String k2 = ENCODER.encodeToString(publicKey.getEncoded());
 
         assertDoesNotThrow(() -> {
             byte[] bytesCrypt = cryptService.encrypt(message.getBytes(), k2);
@@ -83,7 +83,7 @@ class RSACryptServiceImplTests {
     @Test
     void mustThrowDecryptionExceptionWhenCallIncorrectKeys() {
         final String message = "Some message to encode";
-        final String k2 = encoder.encodeToString(publicKey.getEncoded());
+        final String k2 = ENCODER.encodeToString(publicKey.getEncoded());
         final byte[] bytesCrypt = cryptService.encrypt(message.getBytes(), k2);
 
         assertThrows(DecryptionException.class, () -> cryptService.decrypt(bytesCrypt, "P@ssw0rd"));

@@ -38,10 +38,10 @@ public record ResultDataModel<M>(M data, Boolean success, String message, Except
     }
 
     @Override
-    public void throwErrorIfExists() throws Exception {
+    public void throwErrorIfExists() throws ResultDataErrorException {
         if (Boolean.TRUE.equals(hasError())) {
             log.error("Error message found, MESSAGE: [{}] - Exception: [{}]", getMessage(), Boolean.TRUE.equals(hasException()) ? getException().getMessage() : "NOTHING");
-            throw Boolean.TRUE.equals(hasException()) ? getException() : new ResultDataErrorException(getMessage());
+            throw Boolean.TRUE.equals(hasException()) ? new ResultDataErrorException(getMessage(), getException()) : new ResultDataErrorException(getMessage());
         }
     }
 }

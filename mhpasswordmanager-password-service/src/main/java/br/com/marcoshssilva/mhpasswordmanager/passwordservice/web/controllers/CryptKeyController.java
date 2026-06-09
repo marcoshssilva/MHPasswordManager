@@ -39,8 +39,8 @@ import java.util.Base64;
 @SecurityRequirement(name = "OAuth2 Authorization Code Flow")
 @SecurityRequirement(name = "Bearer Authorization")
 public class CryptKeyController {
-    public static final Base64.Encoder encoder = Base64.getEncoder();
-    public static final Base64.Decoder decoder = Base64.getDecoder();
+    public static final Base64.Encoder ENCODER = Base64.getEncoder();
+    public static final Base64.Decoder DECODER = Base64.getDecoder();
 
     private final CryptService cryptAesService;
     private final CryptService cryptRsaService;
@@ -60,10 +60,10 @@ public class CryptKeyController {
     @PostMapping("/rsa/decrypt/base64")
     public ResponseEntity<DecryptKeyBase64Response> decryptRsaDataAsBase64(@AuthenticationPrincipal Jwt token, @RequestBody RsaCryptKeyRequest payload) throws UserAuthorizationCannotBeLoadedException {
         final UserAuthorizations authorizations = userRegistrationService.getUserAuthorizations(token);
-        byte[] decryptedRsaData = decryptRsaData(decoder.decode(payload.getBase64Data()), payload.getSecret(), authorizations, payload.getBucketUuid());
+        byte[] decryptedRsaData = decryptRsaData(DECODER.decode(payload.getBase64Data()), payload.getSecret(), authorizations, payload.getBucketUuid());
         return ResponseEntity.ok(
                 DecryptKeyBase64Response.builder()
-                        .data(encoder.encodeToString(decryptedRsaData))
+                        .data(ENCODER.encodeToString(decryptedRsaData))
                         .build()
         );
     }
@@ -71,31 +71,31 @@ public class CryptKeyController {
     @PostMapping("/rsa/decrypt/json")
     public ResponseEntity<JsonNode> decryptRsaDataAsJson(@AuthenticationPrincipal Jwt token, @RequestBody RsaCryptKeyRequest payload) throws JsonProcessingException, UserAuthorizationCannotBeLoadedException {
         final UserAuthorizations authorizations = userRegistrationService.getUserAuthorizations(token);
-        byte[] decryptedRsaData = decryptRsaData(decoder.decode(payload.getBase64Data()), payload.getSecret(), authorizations, payload.getBucketUuid());
+        byte[] decryptedRsaData = decryptRsaData(DECODER.decode(payload.getBase64Data()), payload.getSecret(), authorizations, payload.getBucketUuid());
         JsonNode json = mapper.readTree(cryptRsaService.convertByteToString(decryptedRsaData));
         return ResponseEntity.ok(json);
     }
 
     @PostMapping("/aes/decrypt/base64")
     public ResponseEntity<DecryptKeyBase64Response> decryptAesDataAsBase64(@RequestBody AesCryptKeyRequest payload) {
-        byte[] decrypted = decryptAesData(decoder.decode(payload.getBase64Data()), payload.getSecret());
+        byte[] decrypted = decryptAesData(DECODER.decode(payload.getBase64Data()), payload.getSecret());
         return ResponseEntity.ok(
                 DecryptKeyBase64Response.builder()
-                        .data(encoder.encodeToString(decrypted))
+                        .data(ENCODER.encodeToString(decrypted))
                         .build()
         );
     }
 
     @PostMapping("/aes/decrypt/json")
     public ResponseEntity<JsonNode> decryptAesDataAsJson(@RequestBody AesCryptKeyRequest payload) throws JsonProcessingException {
-        byte[] decrypted = decryptAesData(decoder.decode(payload.getBase64Data()), payload.getSecret());
+        byte[] decrypted = decryptAesData(DECODER.decode(payload.getBase64Data()), payload.getSecret());
         JsonNode json = mapper.readTree(cryptRsaService.convertByteToString(decrypted));
         return ResponseEntity.ok(json);
     }
 
     @PostMapping("/aes/encrypt/base64")
     public ResponseEntity<String> encryptDataInAesAndConvertAsBase64(@RequestBody AesCryptKeyRequest payload) {
-        byte[] decoded = decoder.decode(payload.getBase64Data());
+        byte[] decoded = DECODER.decode(payload.getBase64Data());
         byte[] encrypted = cryptAesService.encrypt(decoded, payload.getSecret());
 
         return ResponseEntity.ok(cryptAesService.convertByteToBase64(encrypted));
@@ -110,8 +110,8 @@ public class CryptKeyController {
         }
 
         String publicKey = resultBucket.getData().getBucketPublicKey();
-        byte[] encrypted = cryptRsaService.encrypt(decoder.decode(payload.getBase64Data()), publicKey);
-        String encodeToString = encoder.encodeToString(encrypted);
+        byte[] encrypted = cryptRsaService.encrypt(DECODER.decode(payload.getBase64Data()), publicKey);
+        String encodeToString = ENCODER.encodeToString(encrypted);
 
         return ResponseEntity.ok(encodeToString);
     }
@@ -124,7 +124,7 @@ public class CryptKeyController {
         }
         String privateKeyBase64 = resultBucket.getData().getBucketPrivateKeyEncrypted();
 
-        byte[] decodedPrivateKey = decoder.decode(privateKeyBase64.getBytes());
+        byte[] decodedPrivateKey = DECODER.decode(privateKeyBase64.getBytes());
         byte[] decryptedPrivateKeyEncoded = cryptAesService.decrypt(decodedPrivateKey, secret);
 
         return cryptRsaService.decrypt(
