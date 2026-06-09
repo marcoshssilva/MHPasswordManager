@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class ConsentPageControllerView {
@@ -35,7 +34,7 @@ public class ConsentPageControllerView {
                     ScopesAvailable sa = ScopesAvailable.getByName(s);
                     return new ScopeDescription(s.toLowerCase(), sa != null ? sa.getDescription() : "Sem descrição disponível.");
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         model.addAttribute("baseHref", baseHref);
         model.addAttribute("clientId", clientId);
