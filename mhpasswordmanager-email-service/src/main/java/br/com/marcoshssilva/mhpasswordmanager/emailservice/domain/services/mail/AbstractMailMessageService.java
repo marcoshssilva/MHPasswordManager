@@ -8,6 +8,8 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Date;
 
 @RequiredArgsConstructor
@@ -23,13 +25,14 @@ public abstract class AbstractMailMessageService implements MailMessageService {
     public abstract JavaMailSender getJavaMailSender();
 
     @Override
+    @SuppressWarnings("java:S2143")
     public MimeMessage prepareMimeMessage(String destination, String subject, String body, Boolean isHtml, Boolean isMultipart) throws MessagingException {
         MimeMessage mm = getJavaMailSender().createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mm, isMultipart);
 
         helper.setFrom(getSender());
         helper.setSubject(subject);
-        helper.setSentDate(new Date());
+        helper.setSentDate(Date.from(Instant.now(Clock.systemUTC())));
         helper.setText(body, isHtml);
 
         if (Boolean.TRUE.equals(enableRedirectMail)) {
