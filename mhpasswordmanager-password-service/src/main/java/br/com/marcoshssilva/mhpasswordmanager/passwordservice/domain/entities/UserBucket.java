@@ -4,11 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @lombok.AllArgsConstructor
@@ -40,13 +38,11 @@ public class UserBucket implements Serializable {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String encryptedPrivateKeyWithPassword;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, columnDefinition = "TIMESTAMP")
-    private Date createdAt;
+    private LocalDateTime createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "last_update", nullable = false, columnDefinition = "TIMESTAMP")
-    private Date lastUpdate;
+    private LocalDateTime lastUpdate;
 
     @Column(name = "owner_name", nullable = false)
     private String ownerName;
