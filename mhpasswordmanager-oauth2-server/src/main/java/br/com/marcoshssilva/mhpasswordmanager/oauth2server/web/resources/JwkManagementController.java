@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.Collection;
@@ -57,14 +58,14 @@ public class JwkManagementController {
 
     @RequestMapping(value = "/generate-self-signed", method = RequestMethod.POST)
     public ResponseEntity<HttpJsonResponse<JwkKeyData>> generateSelfSignedJwkKey() throws JOSEException {
-        RSAKey rsaKey     = JwksUtils.generateRsa();
+        RSAKey rsaKey = JwksUtils.generateRsa();
         JwkKeyData jwkKey = jwkKeyService.createJwkKey(JwkKeyData.builder()
                 .uuid(jwkKeyService.createNotUsedUUID().toString())
-                .publicKey( new String(Base64.getEncoder().encode(rsaKey.toPublicKey() .getEncoded()), StandardCharsets.UTF_8))
+                .publicKey(new String(Base64.getEncoder().encode(rsaKey.toPublicKey().getEncoded()), StandardCharsets.UTF_8))
                 .privateKey(new String(Base64.getEncoder().encode(rsaKey.toPrivateKey().getEncoded()), StandardCharsets.UTF_8))
                 .algorithm("RSA")
                 .active(Boolean.FALSE)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(Clock.systemUTC()))
                 .build());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(HttpJsonResponse.<JwkKeyData>builder()
@@ -82,11 +83,11 @@ public class JwkManagementController {
         return ResponseEntity.status(HttpStatus.CREATED).body(HttpJsonResponse.<JwkKeyData>builder()
                         .data(jwkKeyService.createJwkKey(JwkKeyData.builder()
                             .privateKey(JwksUtils.getBase64PKCS8PrivateKeyFromBytes(privateKeyFile.getBytes(), "RSA"))
-                            .publicKey( JwksUtils.getBase64X509PublicKeyFromBytes(  publicKeyFile.getBytes() , "RSA"))
+                            .publicKey(JwksUtils.getBase64X509PublicKeyFromBytes(publicKeyFile.getBytes(), "RSA"))
                             .algorithm("RSA")
                             .uuid(jwkKeyService.createNotUsedUUID().toString())
                             .active(Boolean.FALSE)
-                            .createdAt(LocalDateTime.now())
+                            .createdAt(LocalDateTime.now(Clock.systemUTC()))
                             .build()))
                         .message("Jwk key created with success")
                         .build()
