@@ -13,11 +13,11 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles({"test"})
 class MhPasswordManagerOAuth2AuthorizationServerApplicationTests {
 
-	private final Logger LOG = LoggerFactory.getLogger(MhPasswordManagerOAuth2AuthorizationServerApplicationTests.class);
+	private final Logger log = LoggerFactory.getLogger(MhPasswordManagerOAuth2AuthorizationServerApplicationTests.class);
 
 	@Test
 	void contextLoads() {
-		LOG.info("Application Started");
+		log.info("Application Started");
 	}
 
 }
