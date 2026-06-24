@@ -10,7 +10,7 @@ public enum OAuthAuthorizationGrantTypes {
     AUTHORIZATION_CODE(AuthorizationGrantType.AUTHORIZATION_CODE),
     REFRESH_TOKEN(AuthorizationGrantType.REFRESH_TOKEN),
     CLIENT_CREDENTIALS(AuthorizationGrantType.CLIENT_CREDENTIALS),
-    PASSWORD(AuthorizationGrantType.PASSWORD),
+    PASSWORD(new AuthorizationGrantType("password")),
     JWT_BEARER(AuthorizationGrantType.JWT_BEARER);
     @Getter
     private final AuthorizationGrantType authorizationGrantType;

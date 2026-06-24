@@ -33,10 +33,10 @@ public class SecurityConfig {
         http.logout(logout -> logout.logoutUrl("/logout").permitAll());
 
         http.authorizeHttpRequests(authorize -> authorize
-                .antMatchers(publicRoutes).permitAll()
-                .antMatchers(HttpMethod.GET, getMethodOnlyPublic).permitAll()
-                .antMatchers(HttpMethod.POST, postMethodOnlyPublic).permitAll()
-                .antMatchers(enabledOnlyToAdmin).hasAnyRole("ADMIN")
+                .requestMatchers(publicRoutes).permitAll()
+                .requestMatchers(HttpMethod.GET, getMethodOnlyPublic).permitAll()
+                .requestMatchers(HttpMethod.POST, postMethodOnlyPublic).permitAll()
+                .requestMatchers(enabledOnlyToAdmin).hasAnyRole("ADMIN")
                 .anyRequest().authenticated());
 
         return http.build();

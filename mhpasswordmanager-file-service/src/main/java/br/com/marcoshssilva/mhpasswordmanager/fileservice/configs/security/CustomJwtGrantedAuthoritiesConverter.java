@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.fileservice.configs.security;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -18,7 +19,7 @@ public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Coll
     private static final String AUTHORITIES_CLAIM_NAME = "authorities";
 
     @Override
-    @NonNull
+    @Nullable
     public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
         List<String> userRoleAuthorities = null;
         JwtGrantedAuthoritiesConverter scopesConverter;

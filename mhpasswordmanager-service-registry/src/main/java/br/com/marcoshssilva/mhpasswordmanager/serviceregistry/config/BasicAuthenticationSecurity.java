@@ -2,13 +2,13 @@ package br.com.marcoshssilva.mhpasswordmanager.serviceregistry.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 @EnableWebSecurity
 public class BasicAuthenticationSecurity {
     protected final String[] endpointsIgnoreCsrfAttack = new String[] { "/eureka", "/eureka/**" };
@@ -17,16 +17,12 @@ public class BasicAuthenticationSecurity {
 
     @Bean
     SecurityFilterChain basicAuthenticationSecurityFilterChainConfigurer(HttpSecurity http) throws Exception {
-        return http
-                .csrf()
-                    .ignoringAntMatchers(endpointsIgnoreCsrfAttack)
-                .and()
-                .authorizeRequests()
-                    .antMatchers(endpointsIgnoreAuthentication).permitAll()
-                    .antMatchers(endpointsNeedAuthentication).authenticated()
-                    .anyRequest().authenticated().and()
-                .httpBasic()
-                .and()
-                .build();
+        http.csrf(csrf -> csrf.ignoringRequestMatchers(endpointsIgnoreCsrfAttack));
+        http.authorizeHttpRequests(authorize -> authorize
+                .requestMatchers(endpointsIgnoreAuthentication).permitAll()
+                .requestMatchers(endpointsNeedAuthentication).authenticated()
+                .anyRequest().authenticated());
+        http.httpBasic();
+        return http.build();
     }
 }
