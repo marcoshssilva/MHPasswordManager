@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.client
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountUserInternalResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -13,6 +14,7 @@ import org.springframework.security.provisioning.UserDetailsManager;
 
 @RequiredArgsConstructor
 public class CustomWebClientUserDetailsManagerImpl implements UserDetailsManager {
+    private static final String MSG_BADCREDENTIALS = "Bad credentials: access denied";
     private final UserServiceWebClient userServiceWebClient;
 
     @Override
@@ -38,7 +40,7 @@ public class CustomWebClientUserDetailsManagerImpl implements UserDetailsManager
     public void changePassword(String oldPassword, String newPassword) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || authentication.getName() == null || !validatePassword(authentication.getName(), oldPassword)) {
-            throw new UsernameNotFoundException("Cannot change password without authenticated user.");
+            throw new BadCredentialsException(MSG_BADCREDENTIALS);
         }
         resetPassword(authentication.getName(), newPassword);
     }
@@ -67,7 +69,7 @@ public class CustomWebClientUserDetailsManagerImpl implements UserDetailsManager
 
     private void assertUserExists(String username) {
         if (!userExists(username)) {
-            throw new UsernameNotFoundException(username);
+            throw new BadCredentialsException(MSG_BADCREDENTIALS);
         }
     }
 
