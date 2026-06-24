@@ -5,6 +5,15 @@
     const formsStep2 = document.querySelectorAll('#formForgotPasswordStep2')
     const btnBlockSkipStep2 = document.getElementById('block-skip-step2');
     const baseHref = (document.getElementsByTagName('base')[0] || {href: window.location.origin + '/'}).href;
+    const csrfToken = document.querySelector('meta[name="_csrf"]')?.getAttribute('content');
+    const csrfHeader = document.querySelector('meta[name="_csrf_header"]')?.getAttribute('content');
+    const jsonHeaders = () => {
+        const headers = {'Content-Type': 'application/json'};
+        if (csrfToken && csrfHeader) {
+            headers[csrfHeader] = csrfToken;
+        }
+        return headers;
+    };
     const showBoxForStep2 = () => {
         formsStep2.forEach(form => {
             btnBlockSkipStep2.classList.add('d-none')
@@ -26,18 +35,13 @@
             }
 
             if (form.checkValidity()) {
-                // getting XSRF-TOKEN
-                const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
                 // sending request to /api/account/forgot
                 fetch(baseHref + "api/account/forgot/step1", {
                     method: 'POST',
                     mode: 'same-origin',
+                    credentials: 'same-origin',
                     cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-XSRF-TOKEN': csrfToken,
-                        'Cookie': document.cookie
-                    },
+                    headers: jsonHeaders(),
                     referrerPolicy: 'no-referrer',
                     body: JSON.stringify(
                         {
@@ -63,18 +67,13 @@
             }
 
             if (form.checkValidity()) {
-                // getting XSRF-TOKEN
-                const csrfToken = document.cookie.replace(/(?:(?:^|.*;\s*)XSRF-TOKEN\s*\=\s*([^;]*).*$)|^.*$/, '$1');
                 // sending request to /api/account/forgot
                 fetch(baseHref + "api/account/forgot/step2", {
                     method: 'POST',
                     mode: 'same-origin',
+                    credentials: 'same-origin',
                     cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-XSRF-TOKEN': csrfToken,
-                        'Cookie': document.cookie
-                    },
+                    headers: jsonHeaders(),
                     referrerPolicy: 'no-referrer',
                     body: JSON.stringify(
                         {
