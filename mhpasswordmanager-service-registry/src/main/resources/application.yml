@@ -1,4 +1,6 @@
 spring:
+  session:
+    store-type: none
   application:
     name: eureka-service-registry
   security:
