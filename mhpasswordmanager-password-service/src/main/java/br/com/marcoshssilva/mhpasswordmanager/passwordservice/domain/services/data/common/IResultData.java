@@ -8,6 +8,6 @@ public interface IResultData<M> {
     Boolean hasError();
     Boolean hasException();
     String getMessage();
-    Exception getException();
+    Throwable getException();
     void throwErrorIfExists() throws ResultDataErrorException;
 }

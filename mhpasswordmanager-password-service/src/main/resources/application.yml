@@ -86,6 +86,7 @@ spring:
   config:
     activate:
       on-profile: test
+    import:
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:db_passwords;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -106,12 +107,16 @@ spring:
     store-type: none
   flyway:
     enabled: false
-#eureka:
-#  instance:
-#    hostname: localhost
-#    prefer-ip-address: true
-#  client:
-#    enabled: false
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
 springdoc:
   swagger-ui:
     oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect}

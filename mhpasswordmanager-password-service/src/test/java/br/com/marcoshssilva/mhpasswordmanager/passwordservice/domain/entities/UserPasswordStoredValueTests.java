@@ -5,11 +5,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class UserPasswordStoredValueTests {
-    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, 1, 1, 0, 0);
+    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, Month.JANUARY, 1, 0, 0);
 
     private UserPasswordStoredValue userPasswordStoredValue;
 

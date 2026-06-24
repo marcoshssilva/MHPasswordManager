@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 @SpringBootTest
 @ActiveProfiles("test")
 class RSAUtilServiceImplTests {
-    static final String ENCODED_KEY_PKCS8 =
+    private static final String ENCODED_KEY_PKCS8 =
             "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDD0RTu/rB1wVTm" +
             "niIyzabiDDQvNG+47iSUg/VT/OkQQaCi6F1SurbV1xwTtkvOzqzvyMcOGhX8JUx9" +
             "BSbB8TjjuXr+ZU/HGK9s1Fo64Pv6z+AwpQP/FIphdwJ9mN5gkUaH+1cuoPq348VC" +
@@ -48,7 +48,7 @@ class RSAUtilServiceImplTests {
             "rPtlfJuqFxLZ8fZnkutmi34J529tBJCHR9xqh48fqv9bvyKH4n5tdcoX/eJFfydp" +
             "+5WOFhNNctSXX5EBLuXDiw==";
 
-    static final String ENCODED_KEY_X509 =
+    private static final String ENCODED_KEY_X509 =
             "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAw9EU7v6wdcFU5p4iMs2m" +
             "4gw0LzRvuO4klIP1U/zpEEGgouhdUrq21dccE7ZLzs6s78jHDhoV/CVMfQUmwfE4" +
             "47l6/mVPxxivbNRaOuD7+s/gMKUD/xSKYXcCfZjeYJFGh/tXLqD6t+PFQoa2bstd" +
@@ -57,7 +57,7 @@ class RSAUtilServiceImplTests {
             "QDAVAvYX93hkkKl/UGXoWx2w+6NGMva1UGzQ8K5mZpx7ONiH/YNWWjHLGvz2LfaA" +
             "PQIDAQAB";
 
-    static final String DECODED_KEY_PKCS8 = """
+    private static final String DECODED_KEY_PKCS8 = """
             -----BEGIN PRIVATE KEY-----
             MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCbW4A4+jJlUHx6
             KdqSvZTfQJbFh9fKKBWV7Kjpk/Yq3V63/qz8CA+nWV7vEhFLn0V7X9jK1Edq3iB
@@ -74,7 +74,7 @@ class RSAUtilServiceImplTests {
             VdNTHe1aUuV6UkGV6U/fVcU08D/h36Cv0J+t9y+0qbz84SyXXW8EDv/fY5pZckPh
             WlFLvRc/ekXrC+UEgr40Pq8qNAX""";
 
-    static final String DECODED_KEY_X509 = """
+    private static final String DECODED_KEY_X509 = """
 Certificate:
     Data:
         Version: 3 (0x2)

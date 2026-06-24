@@ -13,6 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Transactional
 class UserPasswordStoredValueRepositoryTests {
-    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, 1, 1, 0, 0);
+    private static final LocalDateTime FIXED_DATE = LocalDateTime.of(2026, Month.JANUARY, 1, 0, 0);
 
     @Autowired
     private UserPasswordStoredValueRepository userPasswordStoredValueRepository;

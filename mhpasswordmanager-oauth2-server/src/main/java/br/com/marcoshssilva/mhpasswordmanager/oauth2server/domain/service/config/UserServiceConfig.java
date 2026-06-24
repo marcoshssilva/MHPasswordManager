@@ -3,7 +3,6 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.confi
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration.AuthorizationConfigProperties;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.SendEmailService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserService;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.InMemoryUserServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.JdbcUserServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.WebClientUserServiceImpl;
@@ -44,7 +43,7 @@ public class UserServiceConfig {
 
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "WEB_CLIENT")
-    public UserService inWebClientUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired UserServiceWebClient userServiceWebClient) {
-        return new WebClientUserServiceImpl(userDetailsManager, passwordEncoder, userServiceWebClient);
+    public UserService inWebClientUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder) {
+        return new WebClientUserServiceImpl(userDetailsManager, passwordEncoder);
     }
 }

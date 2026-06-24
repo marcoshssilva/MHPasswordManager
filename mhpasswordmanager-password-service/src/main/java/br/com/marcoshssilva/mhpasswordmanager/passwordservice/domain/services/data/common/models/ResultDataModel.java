@@ -6,7 +6,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import java.util.Objects;
 
 @lombok.extern.slf4j.Slf4j
-public record ResultDataModel<M>(M data, Boolean success, String message, Exception e) implements IResultData<M> {
+public record ResultDataModel<M>(M data, Boolean success, String message, Throwable e) implements IResultData<M> {
     @Override
     public M getData() {
         return data;
@@ -33,7 +33,7 @@ public record ResultDataModel<M>(M data, Boolean success, String message, Except
     }
 
     @Override
-    public Exception getException() {
+    public Throwable getException() {
         return e;
     }
 

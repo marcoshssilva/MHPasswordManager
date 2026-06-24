@@ -11,7 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -28,14 +34,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Tag(name = "JWK Management")
 public class JwkManagementController {
+    private static final Clock CLOCK = Clock.systemUTC();
+
     private final JwkKeyService jwkKeyService;
 
-    @RequestMapping(value = "/get/all", method = RequestMethod.GET)
+    @GetMapping("/get/all")
     public ResponseEntity<HttpJsonResponse<Collection<JwkKeyData>>> getAllJwkKeys() {
         return ResponseEntity.ok(HttpJsonResponse.<Collection<JwkKeyData>>builder().data(jwkKeyService.getAllKeys()).build());
     }
 
-    @RequestMapping(value = "/get/{uuid}", method = RequestMethod.GET)
+    @GetMapping("/get/{uuid}")
     public ResponseEntity<HttpJsonResponse<JwkKeyData>> getJwkKey(@PathVariable String uuid) {
         JwkKeyData jwkKey = jwkKeyService.getJwkKey(UUID.fromString(uuid));
         if (Objects.nonNull(jwkKey)) {
@@ -44,19 +52,19 @@ public class JwkManagementController {
         return ResponseEntity.notFound().build();
     }
 
-    @RequestMapping(value = "/select/{uuid}", method = RequestMethod.GET)
+    @GetMapping("/select/{uuid}")
     public ResponseEntity<HttpJsonResponse<Void>> selectJwkKey(@PathVariable String uuid) {
         jwkKeyService.selectJwkKey(UUID.fromString(uuid));
         return ResponseEntity.ok(HttpJsonResponse.<Void>builder().message("Jwk key selected with success").build());
     }
 
-    @RequestMapping(value = "/delete/{uuid}", method = RequestMethod.DELETE)
+    @DeleteMapping("/delete/{uuid}")
     public ResponseEntity<HttpJsonResponse<Void>> deleteJwkKey(@PathVariable String uuid) {
         jwkKeyService.deleteJwkKey(UUID.fromString(uuid));
         return ResponseEntity.ok(HttpJsonResponse.<Void>builder().message("Jwk key deleted with success").build());
     }
 
-    @RequestMapping(value = "/generate-self-signed", method = RequestMethod.POST)
+    @PostMapping("/generate-self-signed")
     public ResponseEntity<HttpJsonResponse<JwkKeyData>> generateSelfSignedJwkKey() throws JOSEException {
         RSAKey rsaKey = JwksUtils.generateRsa();
         JwkKeyData jwkKey = jwkKeyService.createJwkKey(JwkKeyData.builder()
@@ -65,7 +73,7 @@ public class JwkManagementController {
                 .privateKey(new String(Base64.getEncoder().encode(rsaKey.toPrivateKey().getEncoded()), StandardCharsets.UTF_8))
                 .algorithm("RSA")
                 .active(Boolean.FALSE)
-                .createdAt(LocalDateTime.now(Clock.systemUTC()))
+                .createdAt(LocalDateTime.now(CLOCK))
                 .build());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(HttpJsonResponse.<JwkKeyData>builder()
@@ -75,7 +83,7 @@ public class JwkManagementController {
                 );
     }
 
-    @RequestMapping(value = "/import/rsa", method = RequestMethod.POST, consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
+    @PostMapping(value = "/import/rsa", consumes = { MediaType.MULTIPART_FORM_DATA_VALUE })
     public ResponseEntity<HttpJsonResponse<JwkKeyData>> createRsaJwkKey(
             @RequestPart("private_key_file") MultipartFile privateKeyFile,
             @RequestPart("public_key_file")  MultipartFile publicKeyFile
@@ -87,7 +95,7 @@ public class JwkManagementController {
                             .algorithm("RSA")
                             .uuid(jwkKeyService.createNotUsedUUID().toString())
                             .active(Boolean.FALSE)
-                            .createdAt(LocalDateTime.now(Clock.systemUTC()))
+                            .createdAt(LocalDateTime.now(CLOCK))
                             .build()))
                         .message("Jwk key created with success")
                         .build()

@@ -34,11 +34,13 @@ import java.util.stream.Collectors;
 
 @Service
 public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
+    private static final Clock CLOCK = Clock.systemUTC();
+    private static final DateTimeFormatter METADATA_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private StoredFileKeyRepository storedFileKeyRepository;
-    private PasswordServiceClient passwordServiceClient;
-    private GridFsTemplate gridFsTemplate;
-    private HttpServletRequest request;
+    private final StoredFileKeyRepository storedFileKeyRepository;
+    private final PasswordServiceClient passwordServiceClient;
+    private final GridFsTemplate gridFsTemplate;
+    private final HttpServletRequest request;
 
     public MongoGridFSStorageFileServiceImpl(GridFsTemplate gridFsTemplate, HttpServletRequest request, StoredFileKeyRepository storedFileKeyRepository, PasswordServiceClient passwordServiceClient) {
         this.gridFsTemplate = gridFsTemplate;
@@ -72,9 +74,9 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             metadataMap.put("filename", file.getOriginalFilename());
             metadataMap.put("content_type", file.getContentType());
             metadataMap.put("bucket_uuid", bucketUuid);
-            LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-            metadataMap.put("created_at", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(now));
-            metadataMap.put("updated_at", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(now));
+            LocalDateTime now = LocalDateTime.now(CLOCK);
+            metadataMap.put("created_at", METADATA_DATE_FORMATTER.format(now));
+            metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
 
             /**
              * Calling password-service to encrypt and save in database. Refactor in future to save asynchronously and return a future.

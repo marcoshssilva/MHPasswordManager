@@ -18,6 +18,7 @@ public class CustomJwtGrantedAuthoritiesConverter implements Converter<Jwt, Coll
     private static final String AUTHORITIES_CLAIM_NAME = "authorities";
 
     @Override
+    @NonNull
     public Collection<GrantedAuthority> convert(@NonNull Jwt jwt) {
         List<String> userRoleAuthorities = null;
         JwtGrantedAuthoritiesConverter scopesConverter;

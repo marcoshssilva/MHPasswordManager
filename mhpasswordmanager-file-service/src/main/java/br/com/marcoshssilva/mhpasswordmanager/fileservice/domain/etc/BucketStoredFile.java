@@ -2,7 +2,6 @@ package br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +15,8 @@ public class BucketStoredFile implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String bucketUuid;
-    private HashSet<StoredFile> files = new HashSet<>(0);
+    @lombok.Builder.Default
+    private Set<StoredFile> files = new java.util.HashSet<>(0);
 
     public Set<StoredFile> getFiles() {
         return files;

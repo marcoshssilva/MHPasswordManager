@@ -12,6 +12,7 @@ import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAKey;
@@ -31,7 +32,7 @@ public class RSACryptServiceImpl implements CryptService {
             encrypt.init(Cipher.ENCRYPT_MODE, publicKey);
             int maxBlockSize = getRsaKeySizeInBytes((RSAKey) publicKey) - OAEP_SHA1_PADDING_LENGTH;
             return doFinalInBlocks(encrypt, payload, maxBlockSize);
-        } catch (Exception e) {
+        } catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
             log.error("Encryption failed", e);
             throw new EncryptionException("Encryption failed", e);
         }
@@ -44,7 +45,7 @@ public class RSACryptServiceImpl implements CryptService {
             Cipher decrypt = Cipher.getInstance(ALGORITHM);
             decrypt.init(Cipher.DECRYPT_MODE, privateKey);
             return doFinalInBlocks(decrypt, payload, getRsaKeySizeInBytes((RSAKey) privateKey));
-        } catch (Exception e) {
+        } catch (GeneralSecurityException | IOException | IllegalArgumentException e) {
             throw new DecryptionException("Decryption failed", e);
         }
     }

@@ -6,12 +6,11 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.Request
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.AbstractUserService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserService;
 
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 public class WebClientUserServiceImpl extends AbstractUserService implements UserService {
-    public WebClientUserServiceImpl(UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder, UserServiceWebClient userServiceWebClient) {
+    public WebClientUserServiceImpl(UserDetailsManager userDetailsManager, PasswordEncoder passwordEncoder) {
         super(userDetailsManager, passwordEncoder);
     }
 

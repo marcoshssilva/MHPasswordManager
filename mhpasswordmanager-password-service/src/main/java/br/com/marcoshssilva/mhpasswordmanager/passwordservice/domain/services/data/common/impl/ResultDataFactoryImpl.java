@@ -16,7 +16,7 @@ public class ResultDataFactoryImpl<T> implements IResultDataFactory<T> {
     }
 
     @Override
-    public IResultData<T> exception(Exception e, String message) {
+    public IResultData<T> exception(Throwable e, String message) {
         return new ResultDataModel<>(null, Boolean.FALSE, message, e);
     }
 }

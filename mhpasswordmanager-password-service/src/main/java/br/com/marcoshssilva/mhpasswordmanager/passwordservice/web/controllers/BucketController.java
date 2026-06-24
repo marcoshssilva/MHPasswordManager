@@ -5,8 +5,10 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.exceptions.ResultDataErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserRegistrationService;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerCreateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerUpdateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.PasswordBucketControllerBucketDataResponseBody;
@@ -43,8 +45,8 @@ public class BucketController {
     private final UserBucketService userBucketService;
 
     @PostMapping("/create")
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> createBucket(@AuthenticationPrincipal Jwt token, @RequestBody PasswordBucketControllerCreateBucketRequestBody payload) throws Exception {
+    @Transactional(rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> createBucket(@AuthenticationPrincipal Jwt token, @RequestBody PasswordBucketControllerCreateBucketRequestBody payload) throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<BucketDataModel> result = userBucketService.createBucket(
                 BucketNewDataModel.builder()
@@ -64,8 +66,8 @@ public class BucketController {
     }
 
     @GetMapping()
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Page<PasswordBucketControllerBucketDataResponseBody>> getAllBuckets(@AuthenticationPrincipal Jwt token, @ParameterObject @PageableDefault(size = 500) Pageable pageable) throws Exception {
+    @Transactional(rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<Page<PasswordBucketControllerBucketDataResponseBody>> getAllBuckets(@AuthenticationPrincipal Jwt token, @ParameterObject @PageableDefault(size = 500) Pageable pageable) throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<Page<BucketDataModel>> result = userBucketService.getBucketsByUserAuthorizations(userAuthorizations, pageable);
         result.throwErrorIfExists();
@@ -78,8 +80,8 @@ public class BucketController {
     }
 
     @GetMapping("/{bucketUuid}")
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> getBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws Exception {
+    @Transactional(rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> getBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         IResultData<BucketDataModel> result = userBucketService.getBucketByUuid(bucketUuid, userAuthorizations);
         result.throwErrorIfExists();
@@ -93,8 +95,8 @@ public class BucketController {
     }
 
     @DeleteMapping("/{bucketUuid}")
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<Void> deleteBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws Exception {
+    @Transactional(rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<Void> deleteBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid) throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         IResultData<Boolean> result = userBucketService.deleteBucketByUuid(bucketUuid, userAuthorizations);
         result.throwErrorIfExists();
@@ -102,8 +104,8 @@ public class BucketController {
     }
 
     @PutMapping("/{bucketUuid}")
-    @Transactional(rollbackFor = Exception.class)
-    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> updateBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid, @RequestBody PasswordBucketControllerUpdateBucketRequestBody payload) throws Exception {
+    @Transactional(rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<PasswordBucketControllerBucketDataResponseBody> updateBucket(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid, @RequestBody PasswordBucketControllerUpdateBucketRequestBody payload) throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         final IResultData<BucketDataModel> result = userBucketService.updateBucket(
                 bucketUuid,

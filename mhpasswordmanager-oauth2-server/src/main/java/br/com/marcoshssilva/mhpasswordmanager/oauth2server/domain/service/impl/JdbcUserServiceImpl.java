@@ -30,6 +30,8 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class JdbcUserServiceImpl extends AbstractUserService implements UserService {
+    private static final Clock CLOCK = Clock.systemUTC();
+
     public static final String QUERY_SEARCHIFUSERNAMEOREMAILEXISTS = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ? OR ud.username = ?";
     public static final String QUERY_UPDATEUSERPASSWORD = "UPDATE users u SET password = ? WHERE username = ?";
     public static final String QUERY_SAVERECOVERYCODEGENERATEDFORUSER = "INSERT INTO users_recovery_password_code(code, username, ip_client, user_agent_client, created_at, expires_at, completed) VALUES(?, ?, ?, ?, ?, ?, ?)";
@@ -97,7 +99,7 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
     @Override
     public void resetPasswordFromRecoveryPasswordCodeRequest(String code, String newPassword, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
         try {
-            RecoveryPasswordCodeRequest codeRequest = this.jdbcTemplate.queryForObject(QUERY_GETRECOVERYCODEGENERATEDFORUSER, RecoveryPasswordCodeRequestMapper.getInstance(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(Clock.systemUTC()));
+            RecoveryPasswordCodeRequest codeRequest = jdbcTemplate.queryForObject(QUERY_GETRECOVERYCODEGENERATEDFORUSER, RecoveryPasswordCodeRequestMapper.getInstance(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(CLOCK));
             if (codeRequest == null) {
                 throw new BusinessRuleException("Cannot reset password, codeRequest not found.");
             }
@@ -112,7 +114,7 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
 
     @Override
     public void resetUserPassword(String username, String newPassword) throws BusinessRuleException {
-        int rowsUpdated = this.jdbcTemplate.update(QUERY_UPDATEUSERPASSWORD, getPasswordEncoder().encode(newPassword), username);
+        int rowsUpdated = jdbcTemplate.update(QUERY_UPDATEUSERPASSWORD, getPasswordEncoder().encode(newPassword), username);
         if (rowsUpdated == 0) {
             throw new BusinessRuleException("Cannot reset password, user not found.");
         }
@@ -121,12 +123,12 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
     @Override
     public void verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) throws BusinessRuleException {
         try {
-            String username = this.jdbcTemplate.queryForObject(QUERY_GETUSERNAMEBYUUIDCODE, String.class, uuidCode);
-            int rowsUpdated = this.jdbcTemplate.update(QUERY_UPDATEUSERDETAILSVERIFIED, username);
+            String username = jdbcTemplate.queryForObject(QUERY_GETUSERNAMEBYUUIDCODE, String.class, uuidCode);
+            int rowsUpdated = jdbcTemplate.update(QUERY_UPDATEUSERDETAILSVERIFIED, username);
             if (rowsUpdated == 0) {
                 throw new BusinessRuleException("Cannot verify user account, user details not found.");
             }
-            this.jdbcTemplate.update(QUERY_DELETEUSERVERIFYCODE, uuidCode);
+            jdbcTemplate.update(QUERY_DELETEUSERVERIFYCODE, uuidCode);
         } catch (EmptyResultDataAccessException | BusinessRuleException e) {
              throw new BusinessRuleException("Cannot verify user account, invalid or expired code.");
         }
@@ -141,15 +143,15 @@ public class JdbcUserServiceImpl extends AbstractUserService implements UserServ
     }
 
     private void saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) throws FailSendEmailException {
-        Integer qtdOpenCodesToRecoveryPassword = this.jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now(Clock.systemUTC()));
+        Integer qtdOpenCodesToRecoveryPassword = jdbcTemplate.queryForObject(QUERY_GETCOUNTRECOVERYCODESACTIVEFORUSER, Integer.class, client.getUsername(), LocalDateTime.now(CLOCK));
         if (qtdOpenCodesToRecoveryPassword == null) {
             throw new FailSendEmailException("Cannot send email, user has no recovery codes active. Please, check your email.");
         }
         if (qtdOpenCodesToRecoveryPassword > 2) {
             throw new FailSendEmailException("Cannot send email, user has to many recovery codes active. Please, check your email.");
         }
-        LocalDateTime now = LocalDateTime.now(Clock.systemUTC());
-        this.jdbcTemplate.update(QUERY_SAVERECOVERYCODEGENERATEDFORUSER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), now, now.plusHours(3L), Boolean.FALSE);
+        LocalDateTime now = LocalDateTime.now(CLOCK);
+        jdbcTemplate.update(QUERY_SAVERECOVERYCODEGENERATEDFORUSER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), now, now.plusHours(3L), Boolean.FALSE);
     }
 
     private RegisteredUserData getUserByUsernameOrEmail(String username, String email) {

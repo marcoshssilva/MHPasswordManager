@@ -23,17 +23,17 @@ class AESCryptServiceImplTests {
     @Qualifier("aesCryptService")
     CryptService cryptService;
 
-    static final String SECRET_KEY = "IN33dAP@ssw0rd#$";
+    private static final String SECRET_KEY = "IN33dAP@ssw0rd#$";
 
     @DisplayName("Test if can convert String into bytes and encrypt and decrypt")
     @Test
     void mustEncryptAndDecryptData() {
         final String message = "Helo àáòó;;/21415678!@#!%@¨&*()";
-        assertDoesNotThrow(() -> {
-            byte[] encrypt = cryptService.encrypt(cryptService.convertStringToByte(message), SECRET_KEY);
-            byte[] decrypt = cryptService.decrypt(encrypt, SECRET_KEY);
-            assertEquals(message, cryptService.convertByteToString(decrypt));
-        });
+        byte[] payload = cryptService.convertStringToByte(message);
+        byte[] encrypt = assertDoesNotThrow(() -> cryptService.encrypt(payload, SECRET_KEY));
+        byte[] decrypt = assertDoesNotThrow(() -> cryptService.decrypt(encrypt, SECRET_KEY));
+
+        assertEquals(message, cryptService.convertByteToString(decrypt));
     }
 
     @DisplayName("Test if can using an null secret, throw an EncryptionException")
