@@ -50,3 +50,4 @@ npm-debug.log*
 
 ## Any other file
 /git_excludes
+sonar_report.md
