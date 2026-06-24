@@ -51,5 +51,5 @@ config:
         registration-id: passwordmanager-global
         client-id: MHPasswordManager-GlobalAdmin
         client-secret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
-        token-uri: ${authorization.issuer-uri}/oauth2/token
+        token-uri: ${config.oauth.server-settings.issuer-uri}/oauth2/token
         scopes: global:fullAccess
