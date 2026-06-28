@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.models;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @lombok.Data
@@ -10,5 +11,5 @@ import java.util.Map;
 @lombok.EqualsAndHashCode(callSuper = true)
 public class AMQPDataTemplatedMailEventModel extends AMQPDataEventModel {
     private String template;
-    private Map<String, Object> params;
+    private Map<String, ? extends Serializable> params;
 }
