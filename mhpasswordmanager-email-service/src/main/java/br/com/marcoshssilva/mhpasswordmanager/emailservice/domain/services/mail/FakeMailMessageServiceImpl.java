@@ -1,6 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.mail;
 
-import lombok.extern.slf4j.Slf4j;
+import br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.html.HTMLTemplateEngineService;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -11,10 +11,13 @@ import javax.mail.internet.MimeMessage;
 
 @Service
 @ConditionalOnProperty(prefix = "application.email", name = "type", havingValue = "fake-mail", matchIfMissing = true)
-@Slf4j
+@lombok.extern.slf4j.Slf4j
 public class FakeMailMessageServiceImpl extends AbstractMailMessageService implements MailMessageService {
-    public FakeMailMessageServiceImpl() {
+    private final HTMLTemplateEngineService htmlTemplateEngineService;
+
+    public FakeMailMessageServiceImpl(HTMLTemplateEngineService htmlTemplateEngineService) {
         super();
+        this.htmlTemplateEngineService = htmlTemplateEngineService;
     }
 
     @Override
@@ -30,5 +33,10 @@ public class FakeMailMessageServiceImpl extends AbstractMailMessageService imple
     @Override
     public JavaMailSender getJavaMailSender() {
         return new JavaMailSenderImpl();
+    }
+
+    @Override
+    public HTMLTemplateEngineService getHTMLTemplateEngineService() {
+        return htmlTemplateEngineService;
     }
 }

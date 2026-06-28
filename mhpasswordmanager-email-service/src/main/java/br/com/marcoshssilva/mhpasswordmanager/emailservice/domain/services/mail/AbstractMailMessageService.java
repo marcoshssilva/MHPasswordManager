@@ -1,5 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.mail;
 
+import br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.html.HTMLTemplateEngineService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -11,6 +12,7 @@ import javax.mail.internet.MimeMessage;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 
 @RequiredArgsConstructor
 public abstract class AbstractMailMessageService implements MailMessageService {
@@ -23,6 +25,7 @@ public abstract class AbstractMailMessageService implements MailMessageService {
 
     public abstract String getSender();
     public abstract JavaMailSender getJavaMailSender();
+    public abstract HTMLTemplateEngineService getHTMLTemplateEngineService();
 
     @Override
     @SuppressWarnings("java:S2143")
@@ -42,6 +45,12 @@ public abstract class AbstractMailMessageService implements MailMessageService {
         }
 
         return mm;
+    }
+
+    @Override
+    public MimeMessage prepareTemplatedMimeMessage(String destination, String subject, String templateName, Boolean isMultipart, Map<String, Object> params) throws MessagingException {
+        String mailMessage = getHTMLTemplateEngineService().prepareHtmlMailMessage("confirm-recovery-code", params);
+        return prepareMimeMessage(destination, subject, mailMessage, Boolean.TRUE, isMultipart);
     }
 
 }
