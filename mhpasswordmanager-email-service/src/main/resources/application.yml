@@ -1,4 +1,3 @@
-gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
 server:
   port: 12013
   servlet:
@@ -14,7 +13,7 @@ spring:
         enabled: true
         service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
       headers:
-        X-Gateway-Auth: ${gateway.allowed.configserver.code:changeit}
+        X-Gateway-Auth: ${config.gateway.allowed.configserver.code:changeit}
         X-Service-Name: ${spring.application.name}
   config:
     import: "optional:configserver:"
@@ -30,90 +29,12 @@ springdoc:
   description: @project.description@
   license-name: 'MIT'
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
----
-spring:
-  config:
-    activate:
-      on-profile: local
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://127.0.0.1:8080/mypass-manager/auth/
-  redis:
-    host: 127.0.0.1
-    password: 'MHP@SSW0R3#20230401'
-    port: 6379
-  rabbitmq:
-    host: 127.0.0.1
-    port: 5672
-    virtual-host: vhost-password-manager
-    username: email-service-pm
-    password: email-service-pm-P@ss
+config:
+  gateway:
+    allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
   mail:
-    host: localhost
-    # username: je7ls6pyin
-    # password: 5n4laalrzvtseypixfgl
-    properties:
-      mail.transport.protocol: smtp
-      mail.smtp.auth: false
-      mail.smtp.port: 1025
-      mail.smtp.starttls.enable: false
-      mail.smtp.starttls.required: false
-application:
-  email:
-    type: mail
-    default-sender: ${APPLICATION_EMAIL_DEFAULT_SENDER:no-reply@localhost.fake.mail.com}
-    enable-redirect-mail: ${APPLICATION_EMAIL_ENABLE_REDIRECT_MAIL:true}
-    address-redirect-mail: ${APPLICATION_EMAIL_ADDRESS_REDIRECT_MAIL:no-reply@localhost.fake.mail.com}
-logging:
-  level:
-    br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.listeners:
-      QueueSendConfirmationRegisteredUserListener: debug
-      QueueSendRecoveryCode: debug
-      QueueSendEmailListener: debug
-springdoc:
-  swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/emails/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
-    csrf:
-      enabled: false
----
-spring:
-  config:
-    activate:
-      on-profile: test
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://mhpasswordmanager.test.fake.com
-  mail:
-    host: localhost
-    # username: je7ls6pyin
-    # password: 5n4laalrzvtseypixfgl
-    properties:
-      mail.transport.protocol: smtp
-      mail.smtp.auth: false
-      mail.smtp.port: 25
-      mail.smtp.starttls.enable: false
-      mail.smtp.starttls.required: false
-  session:
-    store-type: none
-#eureka:
-#  instance:
-#    hostname: localhost
-#    prefer-ip-address: true
-#  client:
-#    enabled: false
-application:
-  email:
-    type: fake-mail
-    default-sender: 'no-reply@localhost.fake.mail.com'
-    enable-redirect-mail: false
-    address-redirect-mail: 'no-reply@localhost.fake.mail.com'
-management:
-  health:
-    mail:
-      enabled: false
+    queues-key:
+      send-confirmation-registered-user: ${CONFIG_MAIL_QUEUES_KEY_SEND_CONFIRMATION_REGISTERED_USER:email.send-confirmation-registered-user}
+      send-recovery-code: ${CONFIG_MAIL_QUEUES_KEY_SEND_RECOVERY_CODE:email.send-recovery-code}
+      send-email: ${CONFIG_MAIL_QUEUES_KEY_SEND_EMAIL:email.send-simple-email}
+      send-event: ${CONFIG_MAIL_QUEUES_KEY_SEND_EVENT:email.send-event}

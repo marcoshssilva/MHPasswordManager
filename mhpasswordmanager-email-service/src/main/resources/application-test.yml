@@ -1,0 +1,26 @@
+spring:
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://mhpasswordmanager.test.fake.com
+  mail:
+    host: localhost
+    properties:
+      mail.transport.protocol: smtp
+      mail.smtp.auth: false
+      mail.smtp.port: 25
+      mail.smtp.starttls.enable: false
+      mail.smtp.starttls.required: false
+  session:
+    store-type: none
+application:
+  email:
+    type: fake-mail
+    default-sender: 'no-reply@localhost.fake.mail.com'
+    enable-redirect-mail: false
+    address-redirect-mail: 'no-reply@localhost.fake.mail.com'
+management:
+  health:
+    mail:
+      enabled: false
