@@ -28,7 +28,7 @@ public class QueueSendConfirmationRegisteredUserListener {
     private final HTMLTemplateEngineService htmlTemplateEngineService;
     private final ObjectMapper objectMapper;
 
-    @RabbitListener(queues = {"email.send-confirmation-registered-user"})
+    @RabbitListener(queues = "${config.mail.queues-key.send-confirmation-registered-user}")
     public void onReceiveMessage(@Payload Message message) {
         try {
             String content = new String(message.getBody(), StandardCharsets.UTF_8);

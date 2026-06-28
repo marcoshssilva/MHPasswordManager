@@ -23,7 +23,7 @@ public class QueueSendEmailListener {
     private final MailMessageService mailMessageService;
     private final ObjectMapper objectMapper;
 
-    @RabbitListener(queues = {"email.send-simple-email"})
+    @RabbitListener(queues = "${config.mail.queues-key.send-email}")
     public void onReceiveMessage(@Payload Message message) {
         try {
             String content = new String(message.getBody(), StandardCharsets.UTF_8);

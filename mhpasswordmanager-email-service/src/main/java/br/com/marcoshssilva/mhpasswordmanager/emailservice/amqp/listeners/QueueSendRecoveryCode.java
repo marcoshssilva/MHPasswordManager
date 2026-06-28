@@ -25,7 +25,7 @@ public class QueueSendRecoveryCode {
     private final HTMLTemplateEngineService htmlTemplateEngineService;
     private final ObjectMapper objectMapper;
 
-    @RabbitListener(queues = {"email.send-recovery-code"})
+    @RabbitListener(queues = "${config.mail.queues-key.send-recovery-code}")
     public void onReceiveMessage(@Payload Message message) {
         try {
             String content = new String(message.getBody(), StandardCharsets.UTF_8);
