@@ -114,13 +114,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
-		<!-- use Jacoco to include coverage reports -->
-		<dependency>
-			<groupId>org.jacoco</groupId>
-			<artifactId>jacoco-maven-plugin</artifactId>
-			<version>${jacoco.version}</version>
-		</dependency>
 	</dependencies>
 
 	<dependencyManagement>
@@ -134,19 +127,6 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
-
-	<distributionManagement>
-		<repository>
-			<id>app-nx-marcoshssilva</id>
-			<name>nexus-release</name>
-			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-releases/</url>
-		</repository>
-		<snapshotRepository>
-			<id>app-nx-marcoshssilva</id>
-			<name>nexus-snapshot</name>
-			<url>https://mirror-nx.marcoshssilva.com.br/repository/maven-snapshots/</url>
-		</snapshotRepository>
-	</distributionManagement>
 
 	<build>
 		<plugins>
