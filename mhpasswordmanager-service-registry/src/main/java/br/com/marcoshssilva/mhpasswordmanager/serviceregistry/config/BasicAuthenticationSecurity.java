@@ -19,6 +19,7 @@ public class BasicAuthenticationSecurity {
     SecurityFilterChain basicAuthenticationSecurityFilterChainConfigurer(HttpSecurity http) throws Exception {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.httpBasic();
+        http.csrf().disable();
         http.authorizeHttpRequests(authorize -> authorize
                 .requestMatchers(endpointsIgnoreAuthentication).permitAll()
                 .requestMatchers(endpointsNeedAuthentication).authenticated()
