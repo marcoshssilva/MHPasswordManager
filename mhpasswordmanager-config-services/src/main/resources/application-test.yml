@@ -1,0 +1,10 @@
+spring:
+  session.store-type: none
+  config:
+    enabled: false
+    import:
+eureka:
+  enabled: false
+  client:
+    register-with-eureka: false
+    fetch-registry: false
