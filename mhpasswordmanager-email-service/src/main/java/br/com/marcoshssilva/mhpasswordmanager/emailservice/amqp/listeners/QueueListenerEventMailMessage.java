@@ -28,7 +28,7 @@ public class QueueListenerEventMailMessage {
             AMQPEventModel amqpEventModel = objectMapper.readValue(message.getBody(), AMQPEventModel.class);
             MimeMessage mimeMessage;
             if (amqpEventModel.getData() instanceof AMQPDataSimpleMailEventModel e) {
-                mimeMessage = mailMessageService.prepareMimeMessage(e.getTo(), e.getSubject(), e.getBody(), e.getIsHtml(), Boolean.FALSE);
+                mimeMessage = mailMessageService.prepareSimpleMimeMessage(e.getTo(), e.getSubject(), e.getBody(), e.getIsHtml(), Boolean.FALSE);
             } else if (amqpEventModel.getData() instanceof AMQPDataTemplatedMailEventModel e) {
                 mimeMessage = mailMessageService.prepareTemplatedMimeMessage(e.getTo(), e.getSubject(), e.getTemplate(), Boolean.FALSE, e.getParams());
             } else {

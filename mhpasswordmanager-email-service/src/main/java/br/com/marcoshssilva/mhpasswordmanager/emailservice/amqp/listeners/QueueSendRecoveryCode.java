@@ -36,7 +36,7 @@ public class QueueSendRecoveryCode {
             HashMap<String, Serializable> map = new HashMap<>();
             map.put("data", data);
             String mailMessage = htmlTemplateEngineService.prepareHtmlMailMessage("confirm-recovery-code", map);
-            MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(data.getEmail(), String.format(DEFAULT_TITLE, data.getName()), mailMessage, true, false);
+            MimeMessage mimeMessage = mailMessageService.prepareSimpleMimeMessage(data.getEmail(), String.format(DEFAULT_TITLE, data.getName()), mailMessage, true, false);
 
             mailMessageService.sendEmail(mimeMessage);
 

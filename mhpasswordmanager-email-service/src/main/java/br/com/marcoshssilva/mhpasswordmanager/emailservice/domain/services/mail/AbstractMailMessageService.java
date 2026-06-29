@@ -1,7 +1,6 @@
 package br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.mail;
 
 import br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.html.HTMLTemplateEngineService;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -15,7 +14,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.Map;
 
-@RequiredArgsConstructor
+@lombok.RequiredArgsConstructor
 public abstract class AbstractMailMessageService implements MailMessageService {
 
     @Value("${application.email.address-redirect-mail}")
@@ -29,8 +28,7 @@ public abstract class AbstractMailMessageService implements MailMessageService {
     public abstract HTMLTemplateEngineService getHTMLTemplateEngineService();
 
     @Override
-    @SuppressWarnings("java:S2143")
-    public MimeMessage prepareMimeMessage(String destination, String subject, String body, Boolean isHtml, Boolean isMultipart) throws MessagingException {
+    public MimeMessage prepareSimpleMimeMessage(String destination, String subject, String body, Boolean isHtml, Boolean isMultipart) throws MessagingException {
         MimeMessage mm = getJavaMailSender().createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mm, isMultipart);
 
@@ -51,7 +49,7 @@ public abstract class AbstractMailMessageService implements MailMessageService {
     @Override
     public MimeMessage prepareTemplatedMimeMessage(String destination, String subject, String templateName, Boolean isMultipart, Map<String, ? extends Serializable> params) throws MessagingException {
         String mailMessage = getHTMLTemplateEngineService().prepareHtmlMailMessage(templateName, params);
-        return prepareMimeMessage(destination, subject, mailMessage, Boolean.TRUE, isMultipart);
+        return prepareSimpleMimeMessage(destination, subject, mailMessage, Boolean.TRUE, isMultipart);
     }
 
 }
