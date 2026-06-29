@@ -50,7 +50,7 @@ public abstract class AbstractMailMessageService implements MailMessageService {
 
     @Override
     public MimeMessage prepareTemplatedMimeMessage(String destination, String subject, String templateName, Boolean isMultipart, Map<String, ? extends Serializable> params) throws MessagingException {
-        String mailMessage = getHTMLTemplateEngineService().prepareHtmlMailMessage("confirm-recovery-code", params);
+        String mailMessage = getHTMLTemplateEngineService().prepareHtmlMailMessage(templateName, params);
         return prepareMimeMessage(destination, subject, mailMessage, Boolean.TRUE, isMultipart);
     }
 
