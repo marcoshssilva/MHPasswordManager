@@ -2,6 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.models;
 
 import lombok.*;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -9,7 +11,10 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RecoveryCodeUserMailMessage {
+public class RecoveryCodeUserMailMessage implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String code;
     private String name;
     private String email;

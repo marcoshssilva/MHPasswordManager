@@ -12,6 +12,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import javax.mail.internet.MimeMessage;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
@@ -32,7 +33,7 @@ public class QueueSendRecoveryCode {
             log.debug("Received message: {}", content);
 
             RecoveryCodeUserMailMessage data = objectMapper.readValue(message.getBody(), RecoveryCodeUserMailMessage.class);
-            HashMap<String, Object> map = new HashMap<>();
+            HashMap<String, Serializable> map = new HashMap<>();
             map.put("data", data);
             String mailMessage = htmlTemplateEngineService.prepareHtmlMailMessage("confirm-recovery-code", map);
             MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(data.getEmail(), String.format(DEFAULT_TITLE, data.getName()), mailMessage, true, false);

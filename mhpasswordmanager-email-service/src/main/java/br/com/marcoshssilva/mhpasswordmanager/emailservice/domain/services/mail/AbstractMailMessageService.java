@@ -9,6 +9,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.Serializable;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
@@ -48,7 +49,7 @@ public abstract class AbstractMailMessageService implements MailMessageService {
     }
 
     @Override
-    public MimeMessage prepareTemplatedMimeMessage(String destination, String subject, String templateName, Boolean isMultipart, Map<String, Object> params) throws MessagingException {
+    public MimeMessage prepareTemplatedMimeMessage(String destination, String subject, String templateName, Boolean isMultipart, Map<String, ? extends Serializable> params) throws MessagingException {
         String mailMessage = getHTMLTemplateEngineService().prepareHtmlMailMessage("confirm-recovery-code", params);
         return prepareMimeMessage(destination, subject, mailMessage, Boolean.TRUE, isMultipart);
     }

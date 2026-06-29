@@ -15,6 +15,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import javax.mail.internet.MimeMessage;
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
@@ -35,7 +36,7 @@ public class QueueSendConfirmationRegisteredUserListener {
             log.debug("Received message: {}", content);
 
             RegisteredUserMailMessage registeredUserMailMessage = objectMapper.readValue(message.getBody(), RegisteredUserMailMessage.class);
-            HashMap<String, Object> map = new HashMap<>();
+            HashMap<String, Serializable> map = new HashMap<>();
             map.put("registration", registeredUserMailMessage);
             String mailMessage = htmlTemplateEngineService.prepareHtmlMailMessage("confirm-user-registration", map);
             MimeMessage mimeMessage = mailMessageService.prepareMimeMessage(registeredUserMailMessage.getEmail(), DEFAULT_TITLE, mailMessage, true, false);

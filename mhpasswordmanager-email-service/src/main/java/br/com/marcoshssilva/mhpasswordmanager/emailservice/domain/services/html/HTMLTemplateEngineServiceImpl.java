@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @Service
@@ -13,9 +14,9 @@ public class HTMLTemplateEngineServiceImpl implements HTMLTemplateEngineService 
     private final TemplateEngine templateEngine;
 
     @Override
-    public String prepareHtmlMailMessage(String templateName, Map<String, Object> variables) {
+    public String prepareHtmlMailMessage(String templateName, Map<String, ? extends Serializable> variables) {
         Context context = new Context();
-        context.setVariables(variables);
+        context.setVariables(Map.copyOf(variables));
         return templateEngine.process(templateName, context);
     }
 
