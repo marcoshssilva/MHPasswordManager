@@ -32,15 +32,12 @@ public class JpaAccountServiceImpl implements AccountService {
 
     @Override
     public Page<AccountDataModel> getAllUsers(Pageable pageable) {
-        return accountRepository
-                .findAll(pageable)
+        return accountRepository.findAll(pageable)
                 .map(item -> {
                     Optional<AccountDetails> details = accountDetailsRepository.getAccountDetailsByIdUsername(item.getUsername());
-                    return details.map(accountDetails -> new AccountDataModel(item.getUsername(),
-                            item.getPassword(), item.getEnabled(), item.getRoles(),
-                            accountDetails.getFirstName(), accountDetails.getLastName(), accountDetails.getImageUrl())).orElseGet(() -> new AccountDataModel(item.getUsername(),
-                            item.getPassword(), item.getEnabled(), item.getRoles(),
-                            null, null, null));
+                    return details.map(accountDetails -> new AccountDataModel(item.getUsername(), item.getPassword(), item.getEnabled(), item.getRoles(), accountDetails.getId().getEmail(), accountDetails.getFirstName(), accountDetails.getLastName(), accountDetails.getImageUrl()))
+                        .orElseGet(
+                            () -> new AccountDataModel(item.getUsername(), item.getPassword(), item.getEnabled(), item.getRoles(), null, null, null, null));
                 });
     }
 
@@ -48,10 +45,7 @@ public class JpaAccountServiceImpl implements AccountService {
     public AccountDataModel getUserByUsername(String username) throws ElementNotFoundException {
         Account account = accountRepository.findById(username).orElseThrow(ElementNotFoundException::new);
         AccountDetails details = accountDetailsRepository.getAccountDetailsByIdUsername(username).orElseThrow(ElementNotFoundException::new);
-
-        return new AccountDataModel(account.getUsername(), account.getPassword(), account.getEnabled(),
-                account.getRoles(), details.getFirstName(), details.getLastName(),
-                details.getImageUrl());
+        return new AccountDataModel(account.getUsername(), account.getPassword(), account.getEnabled(), account.getRoles(), details.getId().getEmail(), details.getFirstName(), details.getLastName(), details.getImageUrl());
     }
 
     @Override
@@ -77,6 +71,7 @@ public class JpaAccountServiceImpl implements AccountService {
 
         return new AccountDataModel(accountToSave.getUsername(), accountToSave.getPassword(), accountToSave.getEnabled(),
                 accountToSave.getRoles(),
+                accountDetailsToSave.getId().getEmail(),
                 accountDetailsToSave.getFirstName(), accountDetailsToSave.getLastName(),
                 accountDetailsToSave.getImageUrl());
     }

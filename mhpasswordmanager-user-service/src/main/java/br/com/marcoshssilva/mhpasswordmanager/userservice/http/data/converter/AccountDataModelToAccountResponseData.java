@@ -9,7 +9,7 @@ public class AccountDataModelToAccountResponseData implements Function<AccountDa
     @Override
     public AccountResponseData apply(AccountDataModel account) {
         return AccountResponseData.builder()
-                .enabled(account.enabled()).firstName(account.firstName()).imageUrl(account.imageUrl()).lastName(account.lastName()).roles(account.roles()).username(account.username())
+                .enabled(account.enabled()).email(account.email()).firstName(account.firstName()).imageUrl(account.imageUrl()).lastName(account.lastName()).roles(account.roles()).username(account.username())
                 .build();
     }
 }
