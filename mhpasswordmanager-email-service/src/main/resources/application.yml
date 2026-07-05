@@ -34,7 +34,4 @@ config:
     allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
   mail:
     queues-key:
-      send-confirmation-registered-user: ${CONFIG_MAIL_QUEUES_KEY_SEND_CONFIRMATION_REGISTERED_USER:email.send-confirmation-registered-user}
-      send-recovery-code: ${CONFIG_MAIL_QUEUES_KEY_SEND_RECOVERY_CODE:email.send-recovery-code}
-      send-email: ${CONFIG_MAIL_QUEUES_KEY_SEND_EMAIL:email.send-simple-email}
       send-event: ${CONFIG_MAIL_QUEUES_KEY_SEND_EVENT:email.send-event}
