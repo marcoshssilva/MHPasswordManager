@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService {
     public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) throws BusinessRuleException {
         try {
             // check if email already used by another account
-            if (userOperationsService.checkIfHasEmailUsedByAnotherUser(userRegistrationData.getUsername())) {
+            if (userOperationsService.checkIfHasEmailUsedByAnotherUser(userRegistrationData.getEmail())) {
                 throw new CannotRegisterUserException(ERROR_MESSAGE_CANNOT_USE);
             }
             // check if the user already exists
@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
                 LOG.error(ERROR_MESSAGE_CANNOT_SEND_LINK_CHECK_EMAIL, e);
             }
         } catch (Exception e) {
-            throw new BusinessRuleException(e.getMessage());
+            throw new BusinessRuleException(e.getMessage(), e);
         }
     }
 
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
                 LOG.error(ERROR_MESSAGE_CANNOT_SEND_RESET_PASSWORD_EMAIL, e);
             }
         } catch (Exception e) {
-            throw new BusinessRuleException(e.getMessage());
+            throw new BusinessRuleException(e.getMessage(), e);
         }
     }
 
@@ -97,7 +97,7 @@ public class UserServiceImpl implements UserService {
             }
             this.userOperationsService.resetUserPassword(codeRequest.getUsername(), newPassword);
         } catch (Exception e) {
-            throw new BusinessRuleException("Cannot reset password, please try again later.");
+            throw new BusinessRuleException("Cannot reset password, please try again later.", e);
         }
     }
 
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService {
         try {
             this.userOperationsService.verifyUserAccount(uuidCode, browserParams);
         } catch (Exception e) {
-            throw new BusinessRuleException("Cannot verify user account, please check params.");
+            throw new BusinessRuleException("Cannot verify user account, please check params.", e);
         }
     }
 }
