@@ -8,8 +8,11 @@ import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.Accoun
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.converter.AccountDataModelToAccountResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.*;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountExistsResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountRecoveryPasswordCodeResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountResponseValidatePasswordData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountUserInternalResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.responses.AccountVerificationCodeResponseData;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +57,22 @@ public class AccountController {
     @GetMapping("{username}/data")
     public ResponseEntity<AccountResponseData> getDetailsFromAccount(@PathVariable String username) throws ElementNotFoundException {
         return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByUsername(username)));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @GetMapping("/byEmail")
+    public ResponseEntity<AccountResponseData> getDetailsFromAccountByEmail(@RequestParam String email) throws ElementNotFoundException {
+        return ResponseEntity.ok(DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA.apply(accountService.getUserByEmail(email)));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @GetMapping("/exists")
+    public ResponseEntity<AccountExistsResponseData> accountExists(@RequestParam(required = false) String username,
+                                                                    @RequestParam(required = false) String email) {
+        boolean exists = username != null
+                ? accountService.existsByUsername(username)
+                : email != null && accountService.existsByEmail(email);
+        return ResponseEntity.ok(AccountExistsResponseData.builder().exists(exists).build());
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
@@ -105,6 +124,36 @@ public class AccountController {
     public ResponseEntity<Void> resetAccountPassword(@PathVariable String username, @RequestBody AccountResetPasswordRequestData data) throws ElementNotFoundException {
         accountService.updatePasswordByUsername(username, data.getNewPassword());
         return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @PostMapping("{username}/verificationCode")
+    public ResponseEntity<AccountVerificationCodeResponseData> generateAccountVerificationCode(@PathVariable String username) throws ElementNotFoundException {
+        return ResponseEntity.ok(AccountVerificationCodeResponseData.builder()
+                .code(accountService.generateAccountVerificationCode(username))
+                .build());
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @PostMapping("/verify/{uuidCode}")
+    public ResponseEntity<Boolean> verifyAccount(@PathVariable String uuidCode) throws ElementNotFoundException {
+        return ResponseEntity.ok(accountService.verifyAccount(uuidCode));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @PostMapping("/recoveryPasswordCode")
+    public ResponseEntity<AccountRecoveryPasswordCodeResponseData> saveRecoveryPasswordCode(@RequestBody AccountRecoveryPasswordCodeRequestData data) throws ElementNotFoundException {
+        return ResponseEntity.ok(AccountRecoveryPasswordCodeResponseData.fromModel(
+                accountService.saveRecoveryPasswordCode(data.getUsername(), data.getCode(), data.getIpClient(), data.getUserAgentClient())));
+    }
+
+    @PreAuthorize("hasAuthority('SCOPE_global:fullAccess')")
+    @GetMapping("/recoveryPasswordCode/{code}")
+    public ResponseEntity<AccountRecoveryPasswordCodeResponseData> findRecoveryPasswordCode(@PathVariable String code,
+                                                                                             @RequestParam String ipClient,
+                                                                                             @RequestParam String userAgentClient) throws ElementNotFoundException {
+        return ResponseEntity.ok(AccountRecoveryPasswordCodeResponseData.fromModel(
+                accountService.findRecoveryPasswordCode(code, ipClient, userAgentClient)));
     }
 
     @PreAuthorize("hasAuthority('SCOPE_global:fullAccess') or (#username == authentication.principal.subject)")

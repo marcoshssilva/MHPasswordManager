@@ -13,6 +13,7 @@ import java.util.Set;
 public class AccountResponseData implements Serializable {
     private String username;
     private Boolean enabled;
+    private String email;
     private String firstName;
     private String lastName;
     private String imageUrl;

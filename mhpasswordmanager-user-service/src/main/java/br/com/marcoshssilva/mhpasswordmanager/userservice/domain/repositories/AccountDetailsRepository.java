@@ -21,4 +21,7 @@ public interface AccountDetailsRepository extends JpaRepository<AccountDetails, 
 
     @Query("SELECT obj FROM AccountDetails obj WHERE obj.id.username = ?1")
     Optional<AccountDetails> getAccountDetailsByIdUsername(String username);
+
+    @Query("SELECT obj FROM AccountDetails obj WHERE obj.id.email = ?1")
+    Optional<AccountDetails> getAccountDetailsByIdEmail(String email);
 }

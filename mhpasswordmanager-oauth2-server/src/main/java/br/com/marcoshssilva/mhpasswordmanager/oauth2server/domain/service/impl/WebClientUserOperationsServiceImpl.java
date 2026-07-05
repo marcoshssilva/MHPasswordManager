@@ -7,6 +7,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.Request
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserOperationsService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountCreateRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountRecoveryPasswordCodeRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models.UserRegistrationData;
 
@@ -22,17 +23,17 @@ public class WebClientUserOperationsServiceImpl implements UserOperationsService
 
     @Override
     public Boolean checkIfHasEmailUsedByAnotherUser(String email) {
-        return userServiceWebClient.accountExists(email);
+        return userServiceWebClient.accountExistsByEmail(email);
     }
 
     @Override
     public Boolean checkIfHasUsernameUsedByAnotherUser(String username) {
-        return userServiceWebClient.accountExists(username);
+        return userServiceWebClient.accountExistsByUsername(username);
     }
 
     @Override
     public UUID generateUUIDCodeToCheckAccountMailVerification(RegisteredUserData client) {
-        return UUID.randomUUID();
+        return userServiceWebClient.generateAccountVerificationCode(client.getUsername());
     }
 
     @Override
@@ -42,12 +43,20 @@ public class WebClientUserOperationsServiceImpl implements UserOperationsService
 
     @Override
     public RecoveryPasswordCodeRequest saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) {
-        return null;
+        return userServiceWebClient.saveRecoveryPasswordCode(AccountRecoveryPasswordCodeRequestData.builder()
+                .username(client.getUsername())
+                .code(code)
+                .ipClient(requestedBrowserParams.getIpAddress())
+                .userAgentClient(requestedBrowserParams.getUserAgent())
+                .build());
     }
 
     @Override
     public RecoveryPasswordCodeRequest findCodeEmailRecoveryPassword(String code, RequestedBrowserParams requestedBrowserParams) {
-        return null;
+        return userServiceWebClient.findRecoveryPasswordCode(
+                code,
+                requestedBrowserParams.getIpAddress(),
+                requestedBrowserParams.getUserAgent());
     }
 
     @Override
@@ -69,6 +78,7 @@ public class WebClientUserOperationsServiceImpl implements UserOperationsService
         AccountResponseData accountData = userServiceWebClient.getAccountData(username);
         return RegisteredUserData.builder()
                 .username(accountData.getUsername())
+                .email(accountData.getEmail())
                 .isEnabled(accountData.getEnabled())
                 .lastName(accountData.getLastName())
                 .firstName(accountData.getFirstName())
@@ -77,9 +87,10 @@ public class WebClientUserOperationsServiceImpl implements UserOperationsService
 
     @Override
     public RegisteredUserData getUserByEmail(String email) {
-        AccountResponseData accountData = userServiceWebClient.getAccountData(email);
+        AccountResponseData accountData = userServiceWebClient.getAccountDataByEmail(email);
         return RegisteredUserData.builder()
                 .username(accountData.getUsername())
+                .email(accountData.getEmail())
                 .isEnabled(accountData.getEnabled())
                 .lastName(accountData.getLastName())
                 .firstName(accountData.getFirstName())
@@ -88,6 +99,6 @@ public class WebClientUserOperationsServiceImpl implements UserOperationsService
 
     @Override
     public Boolean verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) {
-        return null;
+        return userServiceWebClient.verifyAccount(uuidCode);
     }
 }

@@ -2,6 +2,8 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.confi
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountDetailsRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRepository;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRecoveryPasswordCodeRepository;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountVerifyCodesRepository;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl.JpaAccountServiceImpl;
@@ -15,7 +17,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AccountServiceConfig {
     @Primary
     @Bean
-    AccountService jpaUserService(@Autowired AccountRepository accountRepository, @Autowired AccountDetailsRepository accountDetailsRepository, @Autowired PasswordEncoder encoder) {
-        return new JpaAccountServiceImpl(accountRepository, accountDetailsRepository, encoder);
+    AccountService jpaUserService(@Autowired AccountRepository accountRepository,
+                                  @Autowired AccountDetailsRepository accountDetailsRepository,
+                                  @Autowired AccountVerifyCodesRepository accountVerifyCodesRepository,
+                                  @Autowired AccountRecoveryPasswordCodeRepository accountRecoveryPasswordCodeRepository,
+                                  @Autowired PasswordEncoder encoder) {
+        return new JpaAccountServiceImpl(accountRepository, accountDetailsRepository, accountVerifyCodesRepository, accountRecoveryPasswordCodeRepository, encoder);
     }
 }

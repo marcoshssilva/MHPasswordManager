@@ -6,6 +6,8 @@ import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.Accoun
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountDetailsRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRepository;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountRecoveryPasswordCodeRepository;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories.AccountVerifyCodesRepository;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl.JpaAccountServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,6 +28,10 @@ class JpaAccountServiceTests {
     @Mock
     private AccountDetailsRepository accountDetailsRepository;
     @Mock
+    private AccountVerifyCodesRepository accountVerifyCodesRepository;
+    @Mock
+    private AccountRecoveryPasswordCodeRepository accountRecoveryPasswordCodeRepository;
+    @Mock
     private PasswordEncoder passwordEncoder;
 
     @Test
@@ -45,7 +51,8 @@ class JpaAccountServiceTests {
         when(accountRepository.findById("john")).thenReturn(Optional.of(account));
         when(accountDetailsRepository.getAccountDetailsByIdUsername("john")).thenReturn(Optional.of(accountDetails));
 
-        AccountDataModel result = new JpaAccountServiceImpl(accountRepository, accountDetailsRepository, passwordEncoder)
+        AccountDataModel result = new JpaAccountServiceImpl(accountRepository, accountDetailsRepository,
+                        accountVerifyCodesRepository, accountRecoveryPasswordCodeRepository, passwordEncoder)
                 .getUserByUsername("john");
 
         assertEquals("john", result.username());

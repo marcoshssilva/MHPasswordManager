@@ -2,12 +2,16 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clien
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration.UserServiceWebClientProperties;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountCreateRequestData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RecoveryPasswordCodeRequest;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountExistsResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountRecoveryPasswordCodeRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountResetPasswordRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountUpdateEnabledRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountUserInternalResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordResponseData;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountVerificationCodeResponseData;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpStatus;
@@ -16,6 +20,8 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
+
+import java.util.UUID;
 
 @Component
 @ConditionalOnProperty(name = "config.users.mode", havingValue = "WEB_CLIENT")
@@ -59,8 +65,37 @@ public final class UserServiceWebClient {
         }
     }
 
-    public boolean accountExists(String username) {
-        return getAccountData(username) != null;
+    public AccountResponseData getAccountDataByEmail(String email) {
+        try {
+            return webClient.get()
+                    .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/byEmail").queryParam("email", email).build())
+                    .retrieve()
+                    .bodyToMono(AccountResponseData.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
+                return null;
+            }
+            throw e;
+        }
+    }
+
+    public boolean accountExistsByUsername(String username) {
+        AccountExistsResponseData response = webClient.get()
+                .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/exists").queryParam("username", username).build())
+                .retrieve()
+                .bodyToMono(AccountExistsResponseData.class)
+                .block();
+        return response != null && Boolean.TRUE.equals(response.getExists());
+    }
+
+    public boolean accountExistsByEmail(String email) {
+        AccountExistsResponseData response = webClient.get()
+                .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/exists").queryParam("email", email).build())
+                .retrieve()
+                .bodyToMono(AccountExistsResponseData.class)
+                .block();
+        return response != null && Boolean.TRUE.equals(response.getExists());
     }
 
     public AccountUserInternalResponseData getInternalUserFromAccount(String username) {
@@ -112,6 +147,46 @@ public final class UserServiceWebClient {
                 .bodyValue(AccountResetPasswordRequestData.builder().newPassword(newPassword).build())
                 .retrieve()
                 .toBodilessEntity()
+                .block();
+    }
+
+    public UUID generateAccountVerificationCode(String username) {
+        AccountVerificationCodeResponseData response = webClient.post()
+                .uri(ACCOUNT_PATH + "/{username}/verificationCode", username)
+                .retrieve()
+                .bodyToMono(AccountVerificationCodeResponseData.class)
+                .block();
+        if (response == null || response.getCode() == null) {
+            throw new IllegalStateException("User service returned no account verification code.");
+        }
+        return response.getCode();
+    }
+
+    public Boolean verifyAccount(String uuidCode) {
+        return webClient.post()
+                .uri(ACCOUNT_PATH + "/verify/{uuidCode}", uuidCode)
+                .retrieve()
+                .bodyToMono(Boolean.class)
+                .block();
+    }
+
+    public RecoveryPasswordCodeRequest saveRecoveryPasswordCode(AccountRecoveryPasswordCodeRequestData request) {
+        return webClient.post()
+                .uri(ACCOUNT_PATH + "/recoveryPasswordCode")
+                .bodyValue(request)
+                .retrieve()
+                .bodyToMono(RecoveryPasswordCodeRequest.class)
+                .block();
+    }
+
+    public RecoveryPasswordCodeRequest findRecoveryPasswordCode(String code, String ipClient, String userAgentClient) {
+        return webClient.get()
+                .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/recoveryPasswordCode/{code}")
+                        .queryParam("ipClient", ipClient)
+                        .queryParam("userAgentClient", userAgentClient)
+                        .build(code))
+                .retrieve()
+                .bodyToMono(RecoveryPasswordCodeRequest.class)
                 .block();
     }
 }
