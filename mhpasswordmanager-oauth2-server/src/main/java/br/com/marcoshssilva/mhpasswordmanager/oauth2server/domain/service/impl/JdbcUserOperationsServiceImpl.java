@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class JdbcUserOperationsServiceImpl implements UserOperationsService {
-    public static final String QUERY_SEARCH_IF_USERNAME_EXISTS = "SELECT 1 FROM users u  WHERE u.username = ?";
-    public static final String QUERY_SEARCH_IF_EMAIL_EXISTS = "SELECT 1 FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ?";
+    public static final String QUERY_SEARCH_IF_USERNAME_EXISTS = "SELECT count(1) FROM users u  WHERE u.username = ?";
+    public static final String QUERY_SEARCH_IF_EMAIL_EXISTS = "SELECT count(1) FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ?";
     public static final String QUERY_GET_BY_USERNAME = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.username = ?";
     public static final String QUERY_GET_BY_EMAIL = "SELECT ud.username, ud.email, ud.firstname, ud.lastName, u.enabled FROM users u INNER JOIN users_details ud ON u.username = ud.username WHERE ud.email = ?";
     public static final String QUERY_UPDATE_USER_PASSWORD = "UPDATE users u SET password = ? WHERE username = ?";
@@ -45,14 +45,14 @@ public class JdbcUserOperationsServiceImpl implements UserOperationsService {
 
     @Override
     public Boolean checkIfHasEmailUsedByAnotherUser(String email) {
-        Boolean r = jdbcTemplate.queryForObject(QUERY_SEARCH_IF_EMAIL_EXISTS, Boolean.class, email);
-        return r;
+        Integer count = jdbcTemplate.queryForObject(QUERY_SEARCH_IF_EMAIL_EXISTS, Integer.class, email);
+        return count != null && count > 0;
     }
 
     @Override
     public Boolean checkIfHasUsernameUsedByAnotherUser(String username) {
-        Boolean r = jdbcTemplate.queryForObject(QUERY_SEARCH_IF_USERNAME_EXISTS, Boolean.class, username);
-        return r;
+        Integer count = jdbcTemplate.queryForObject(QUERY_SEARCH_IF_USERNAME_EXISTS, Integer.class, username);
+        return count != null && count > 0;
     }
 
     @Override
@@ -92,20 +92,22 @@ public class JdbcUserOperationsServiceImpl implements UserOperationsService {
 
     @Override
     public RegisteredUserData getUserByUsername(String username) {
-        RegisteredUserData userData = jdbcTemplate.queryForObject(QUERY_GET_BY_USERNAME, new RegisteredUserDataMapper(), username);
-        return userData;
+        List<RegisteredUserData> results = jdbcTemplate.query(QUERY_GET_BY_USERNAME, new RegisteredUserDataMapper(), username);
+        return results.stream().findFirst().orElse(null);
     }
 
     @Override
     public RegisteredUserData getUserByEmail(String email) {
-        RegisteredUserData userData = jdbcTemplate.queryForObject(QUERY_GET_BY_EMAIL, new RegisteredUserDataMapper(), email);
-        return userData;
+        List<RegisteredUserData> results = jdbcTemplate.query(QUERY_GET_BY_EMAIL, new RegisteredUserDataMapper(), email);
+        return results.stream().findFirst().orElse(null);
     }
 
     @Override
     public Boolean verifyUserAccount(String uuidCode, RequestedBrowserParams browserParams) {
-        String username = jdbcTemplate.queryForObject(QUERY_GET_USERNAME_BY_UUID_CODE, String.class, uuidCode);
-        if (username != null) {
+        List<String> results = jdbcTemplate.query(QUERY_GET_USERNAME_BY_UUID_CODE, (rs, rowNum) -> rs.getString("username"), uuidCode);
+        String username = results.stream().findFirst().orElse(null);
+
+        if (username == null) {
             throw new RuntimeException("User not found.");
         }
         int rowsUpdated = jdbcTemplate.update(QUERY_UPDATE_USER_DETAILS_VERIFIED, username);
