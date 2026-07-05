@@ -39,3 +39,6 @@ springdoc:
 config:
   gateway:
     allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:6a0fb275-b928-83e9-b42a-8f7020e95ec6}
+  mail:
+    queues-key:
+      send-event: ${CONFIG_MAIL_QUEUES_KEY_SEND_EVENT:email.send-event}
