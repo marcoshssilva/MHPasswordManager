@@ -2,11 +2,14 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.confi
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.configuration.AuthorizationConfigProperties;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.SendEmailService;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserOperationsService;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.UserService;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.InMemoryUserServiceImpl;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.JdbcUserServiceImpl;
-import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.WebClientUserServiceImpl;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.web.UserServiceWebClient;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.InMemoryUserOperationsServiceImpl;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.JdbcUserOperationsServiceImpl;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.UserServiceImpl;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl.WebClientUserOperationsServiceImpl;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -23,27 +26,28 @@ import lombok.RequiredArgsConstructor;
 @Configuration
 @RequiredArgsConstructor
 public class UserServiceConfig {
-    private final RabbitTemplate rabbitTemplate;
-    private final AuthorizationConfigProperties authorizationConfigProperties;
-    private final SendEmailService sendEmailService;
-
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "DATABASE")
     @ConditionalOnClass(JdbcTemplate.class)
     @Primary
-    public UserService inJdbcUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder, @Autowired @Qualifier("dbUsersJdbcTemplate") JdbcTemplate jdbcTemplate) {
-        return new JdbcUserServiceImpl(userDetailsManager, passwordEncoder, jdbcTemplate, rabbitTemplate, authorizationConfigProperties, sendEmailService);
+    public UserOperationsService inJdbcUserService(@Autowired PasswordEncoder passwordEncoder, @Autowired @Qualifier("dbUsersJdbcTemplate") JdbcTemplate jdbcTemplate) {
+        return new JdbcUserOperationsServiceImpl(passwordEncoder, jdbcTemplate);
     }
 
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "MEMORY")
-    public UserService inMemoryUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder) {
-        return new InMemoryUserServiceImpl(userDetailsManager, passwordEncoder);
+    public UserOperationsService inMemoryUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder) {
+        return new InMemoryUserOperationsServiceImpl(userDetailsManager, passwordEncoder);
     }
 
     @Bean
     @ConditionalOnProperty(name = "config.users.mode", havingValue = "WEB_CLIENT")
-    public UserService inWebClientUserService(@Autowired UserDetailsManager userDetailsManager, @Autowired PasswordEncoder passwordEncoder) {
-        return new WebClientUserServiceImpl(userDetailsManager, passwordEncoder);
+    public UserOperationsService inWebClientUserService(@Autowired UserServiceWebClient userServiceWebClient) {
+        return new WebClientUserOperationsServiceImpl(userServiceWebClient);
+    }
+
+    @Bean
+    public UserService userService(@Autowired UserOperationsService userOperationsService, @Autowired SendEmailService sendEmailService, @Autowired AuthorizationConfigProperties authorizationConfigProperties) {
+        return new UserServiceImpl(userOperationsService, sendEmailService, authorizationConfigProperties);
     }
 }

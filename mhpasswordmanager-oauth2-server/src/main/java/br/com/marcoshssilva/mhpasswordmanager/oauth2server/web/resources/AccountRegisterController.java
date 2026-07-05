@@ -31,14 +31,14 @@ public class AccountRegisterController {
     private final UserService userService;
 
     @PostMapping(value = "/register")
-    public HttpJsonResponse<Object> registerAccount(@Valid @RequestBody UserRegistrationData userRegistrationData) {
+    public HttpJsonResponse<Object> registerAccount(@Valid @RequestBody UserRegistrationData userRegistrationData) throws BusinessRuleException {
         userService.registerNewUser(userRegistrationData, UserRolesEnum.USER);
         return HttpJsonResponse.builder().message("User registered with success").status(StatusTypeEnum.SUCCESS)
                 .build();
     }
 
     @PostMapping(value = "/forgot/step1")
-    public HttpJsonResponse<Object> recoverAccountStep1(@Valid @RequestBody UserResetPasswordStep1Data data, HttpServletRequest request) throws FailSendEmailException {
+    public HttpJsonResponse<Object> recoverAccountStep1(@Valid @RequestBody UserResetPasswordStep1Data data, HttpServletRequest request) throws BusinessRuleException {
 
         userService.generateAndSendConfirmationCodeToResetPassword(data.getIdentification(),
                 RequestedBrowserParams.builder()

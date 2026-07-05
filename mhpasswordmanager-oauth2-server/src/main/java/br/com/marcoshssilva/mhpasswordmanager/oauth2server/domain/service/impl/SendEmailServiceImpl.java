@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.FailSendEmailException;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserCheckMailVerificationMessage;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserKeyVerificationMailMessage;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.SendEmailService;
 import lombok.RequiredArgsConstructor;
@@ -17,11 +18,18 @@ public class SendEmailServiceImpl implements SendEmailService {
     @Override
     public void sendEmailRecoveryPassword(RegisteredUserKeyVerificationMailMessage message) throws FailSendEmailException {
         try {
-            log.debug("Send message to {}...", message.getEmail());
             this.rabbitTemplate.convertAndSend("email.send-recovery-code", message);
         } catch (Exception e) {
             throw new FailSendEmailException(e.getMessage(), e);
         }
+    }
 
+    @Override
+    public void sendEmailVerifyAccount(RegisteredUserCheckMailVerificationMessage message) throws FailSendEmailException {
+        try {
+            rabbitTemplate.convertAndSend("email.send-confirmation-registered-user", message);
+        } catch (Exception e) {
+            throw new FailSendEmailException(e.getMessage(), e);
+        }
     }
 }
