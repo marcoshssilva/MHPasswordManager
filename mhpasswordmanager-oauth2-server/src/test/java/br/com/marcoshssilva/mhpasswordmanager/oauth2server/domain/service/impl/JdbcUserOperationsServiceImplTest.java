@@ -25,7 +25,12 @@ class JdbcUserOperationsServiceImplTest {
         DataSource dataSource = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .setName("testdb_" + System.currentTimeMillis())
+                .setScriptEncoding("UTF-8")
+                .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql")
+                .addScript("org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql")
+                .addScript("org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql")
                 .addScript("db/h2/schema.sql")
+                .addScript("db/h2/data.sql")
                 .build();
 
         jdbcTemplate = new JdbcTemplate(dataSource);
