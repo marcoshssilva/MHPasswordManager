@@ -6,7 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.sql.DataSource;
 
@@ -16,9 +17,11 @@ class JdbcUserOperationsServiceImplTest {
 
     private JdbcUserOperationsServiceImpl service;
     private JdbcTemplate jdbcTemplate;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
+        passwordEncoder = new BCryptPasswordEncoder(10);
         DataSource dataSource = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.H2)
                 .setName("testdb_" + System.currentTimeMillis())
@@ -35,7 +38,7 @@ class JdbcUserOperationsServiceImplTest {
         jdbcTemplate.execute("DROP TABLE users_details");
         jdbcTemplate.execute("CREATE TABLE users_details (username varchar(255) NOT NULL PRIMARY KEY, email varchar(255), firstname varchar(255), lastname varchar(255), verified boolean, verified_at timestamp, imageUrl varchar(255))");
 
-        service = new JdbcUserOperationsServiceImpl(NoOpPasswordEncoder.getInstance(), jdbcTemplate);
+        service = new JdbcUserOperationsServiceImpl(passwordEncoder, jdbcTemplate);
     }
 
     @Test
