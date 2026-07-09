@@ -1,4 +1,4 @@
-package br.com.marcoshssilva.mhpasswordmanager.userservice.configs.security;
+package br.com.marcoshssilva.mhpasswordmanager.userservice.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
