@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.UserOperationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RecoveryPasswordCodeRequest;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
@@ -13,8 +14,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -64,11 +65,7 @@ public class InMemoryUserOperationsServiceImpl implements UserOperationsService 
         UUID uuid = UUID.randomUUID();
         LOCK.writeLock().lock();
         try {
-            boolean saved = VERIFY_CODES.add(new String[] { uuid.toString(), client.getUsername() });
-            if (!saved) {
-                throw new RuntimeException(
-                        "Error generating UUID code to verify account. UUID cannot be saved in memory.");
-            }
+            VERIFY_CODES.add(new String[] { uuid.toString(), client.getUsername() });
         } finally {
             LOCK.writeLock().unlock();
         }
@@ -95,8 +92,8 @@ public class InMemoryUserOperationsServiceImpl implements UserOperationsService 
                 .username(client.getUsername())
                 .ipClient(requestedBrowserParams.getIpAddress())
                 .userAgentClient(requestedBrowserParams.getUserAgent())
-                .createdAt(LocalDate.now())
-                .expiresAt(LocalDate.now().plusDays(1))
+                .createdAt(LocalDate.now(ZoneId.systemDefault()))
+                .expiresAt(LocalDate.now(ZoneId.systemDefault()).plusDays(1))
                 .completed(Boolean.FALSE)
                 .build();
 
@@ -120,9 +117,9 @@ public class InMemoryUserOperationsServiceImpl implements UserOperationsService 
                     .filter(r -> r.getIpClient().equals(requestedBrowserParams.getIpAddress()))
                     .filter(r -> r.getUserAgentClient().equals(requestedBrowserParams.getUserAgent()))
                     .filter(r -> Boolean.FALSE.equals(r.getCompleted()))
-                    .filter(r -> r.getExpiresAt() != null && !r.getExpiresAt().isBefore(LocalDate.now()))
+                    .filter(r -> r.getExpiresAt() != null && !r.getExpiresAt().isBefore(LocalDate.now(ZoneId.systemDefault())))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("Recovery code not found"));
+                    .orElseThrow(() -> new UserOperationErrorException("Recovery code not found"));
         } finally {
             LOCK.readLock().unlock();
         }
@@ -164,7 +161,7 @@ public class InMemoryUserOperationsServiceImpl implements UserOperationsService 
             return USERS.stream()
                     .filter(u -> u.getUsername().equals(username))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("User not found with username: " + username));
+                    .orElseThrow(() -> new UserOperationErrorException("User not found with username: " + username));
         } finally {
             LOCK.readLock().unlock();
         }
@@ -177,7 +174,7 @@ public class InMemoryUserOperationsServiceImpl implements UserOperationsService 
             return USERS.stream()
                     .filter(u -> email != null && email.equalsIgnoreCase(u.getEmail()))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+                    .orElseThrow(() -> new UserOperationErrorException("User not found with email: " + email));
         } finally {
             LOCK.readLock().unlock();
         }
@@ -192,42 +189,20 @@ public class InMemoryUserOperationsServiceImpl implements UserOperationsService 
                     .findFirst();
 
             if (verifyEntry.isEmpty()) {
-                throw new RuntimeException("User not found for verification code: " + uuidCode);
+                throw new UserOperationErrorException("User not found for verification code: " + uuidCode);
             }
 
             String username = verifyEntry.get()[1];
 
             // Mark the user as enabled (verified)
-            boolean userUpdated = USERS.stream()
-                    .filter(u -> u.getUsername().equals(username))
-                    .peek(u -> u.setIsEnabled(Boolean.TRUE))
-                    .findFirst()
-                    .isPresent();
+            Optional<RegisteredUserData> data = USERS.stream().filter(u -> u.getUsername().equals(username)).findFirst();
+            data.ifPresent(u -> u.setIsEnabled(Boolean.TRUE));
+            boolean userUpdated = data.isPresent();
 
             // Remove the consumed verification code
             boolean codeRemoved = VERIFY_CODES.removeIf(entry -> entry[0].equals(uuidCode));
 
             return userUpdated && codeRemoved;
-        } finally {
-            LOCK.writeLock().unlock();
-        }
-    }
-
-    public static List<RegisteredUserData> getUsersSnapshot() {
-        LOCK.readLock().lock();
-        try {
-            return Collections.unmodifiableList(new ArrayList<>(USERS));
-        } finally {
-            LOCK.readLock().unlock();
-        }
-    }
-
-    public static void clearAll() {
-        LOCK.writeLock().lock();
-        try {
-            USERS.clear();
-            RECOVERY_CODES.clear();
-            VERIFY_CODES.clear();
         } finally {
             LOCK.writeLock().unlock();
         }
