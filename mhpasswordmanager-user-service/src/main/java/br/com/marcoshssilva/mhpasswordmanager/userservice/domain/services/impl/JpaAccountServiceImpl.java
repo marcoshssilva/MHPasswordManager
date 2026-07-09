@@ -27,6 +27,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZoneId;
 import java.util.Optional;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -146,7 +147,7 @@ public class JpaAccountServiceImpl implements AccountService {
         accountVerifyCodesRepository.save(AccountVerifyCodes.builder()
                 .code(uuid.toString())
                 .username(username)
-                .createdAt(LocalDateTime.now())
+                .createdAt(LocalDateTime.now(ZoneId.systemDefault()))
                 .build());
         return uuid;
     }
@@ -157,7 +158,7 @@ public class JpaAccountServiceImpl implements AccountService {
         AccountVerifyCodes verifyCode = accountVerifyCodesRepository.findById(uuidCode).orElseThrow(ElementNotFoundException::new);
         AccountDetails details = accountDetailsRepository.getAccountDetailsByIdUsername(verifyCode.getUsername()).orElseThrow(ElementNotFoundException::new);
         details.setVerified(Boolean.TRUE);
-        details.setVerifiedAt(LocalDateTime.now());
+        details.setVerifiedAt(LocalDateTime.now(ZoneId.systemDefault()));
         accountDetailsRepository.save(details);
         accountVerifyCodesRepository.delete(verifyCode);
         return Boolean.TRUE;
@@ -166,7 +167,7 @@ public class JpaAccountServiceImpl implements AccountService {
     @Override
     public AccountRecoveryPasswordCodeModel saveRecoveryPasswordCode(String username, String code, String ipClient, String userAgentClient) throws ElementNotFoundException {
         accountRepository.findById(username).orElseThrow(ElementNotFoundException::new);
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         AccountRecoveryPasswordCode recoveryCode = accountRecoveryPasswordCodeRepository.save(AccountRecoveryPasswordCode.builder()
                 .id(AccountRecoveryPasswordCodePK.builder().code(code).username(username).ipClient(ipClient).build())
                 .userAgentClient(userAgentClient)
@@ -179,7 +180,7 @@ public class JpaAccountServiceImpl implements AccountService {
 
     @Override
     public AccountRecoveryPasswordCodeModel findRecoveryPasswordCode(String code, String ipClient, String userAgentClient) throws ElementNotFoundException {
-        return accountRecoveryPasswordCodeRepository.findValidCode(code, ipClient, userAgentClient, LocalDateTime.now())
+        return accountRecoveryPasswordCodeRepository.findValidCode(code, ipClient, userAgentClient, LocalDateTime.now(ZoneId.systemDefault()))
                 .map(this::toRecoveryPasswordCodeModel)
                 .orElseThrow(ElementNotFoundException::new);
     }
