@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.constants.UserRolesEnum;
+import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.UserOperationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RecoveryPasswordCodeRequest;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RegisteredUserData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.RequestedBrowserParams;
@@ -16,6 +17,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.UUID;
 
@@ -60,7 +62,7 @@ public class JdbcUserOperationsServiceImpl implements UserOperationsService {
         UUID uuid = UUID.randomUUID();
         int rowsUpdated = jdbcTemplate.update(QUERY_SAVE_VERIFY_CODE, uuid.toString(), client.getUsername());
         if (rowsUpdated == 0) {
-            throw new RuntimeException("Error generating UUID code to verify account. UUID cannot be saved on database.");
+            throw new UserOperationErrorException("Error generating UUID code to verify account. UUID cannot be saved on database.");
         }
         return uuid;
     }
@@ -73,13 +75,13 @@ public class JdbcUserOperationsServiceImpl implements UserOperationsService {
 
     @Override
     public RecoveryPasswordCodeRequest saveCodeEmailRecoveryPassword(RegisteredUserData client, String code, RequestedBrowserParams requestedBrowserParams) {
-        jdbcTemplate.update(QUERY_SAVE_RECOVERY_CODE_GENERATED_FOR_USER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(), LocalDateTime.now().plusHours(24), Boolean.FALSE);
+        jdbcTemplate.update(QUERY_SAVE_RECOVERY_CODE_GENERATED_FOR_USER, code, client.getUsername(), requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(ZoneId.systemDefault()), LocalDateTime.now(ZoneId.systemDefault()).plusHours(24), Boolean.FALSE);
         return findCodeEmailRecoveryPassword(code, requestedBrowserParams);
     }
 
     @Override
     public RecoveryPasswordCodeRequest findCodeEmailRecoveryPassword(String code, RequestedBrowserParams requestedBrowserParams) {
-        List<RecoveryPasswordCodeRequest> r = jdbcTemplate.query(QUERY_GET_RECOVERY_CODE_GENERATED_FOR_USER, new RecoveryPasswordCodeRequestMapper(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now());
+        List<RecoveryPasswordCodeRequest> r = jdbcTemplate.query(QUERY_GET_RECOVERY_CODE_GENERATED_FOR_USER, new RecoveryPasswordCodeRequestMapper(), code, requestedBrowserParams.getIpAddress(), requestedBrowserParams.getUserAgent(), LocalDateTime.now(ZoneId.systemDefault()));
         return r.stream().findFirst().orElseThrow(() -> new RuntimeException("Recovery code not found"));
     }
 
@@ -108,7 +110,7 @@ public class JdbcUserOperationsServiceImpl implements UserOperationsService {
         String username = results.stream().findFirst().orElse(null);
 
         if (username == null) {
-            throw new RuntimeException("User not found.");
+            throw new UserOperationErrorException("User not found.");
         }
         int rowsUpdated = jdbcTemplate.update(QUERY_UPDATE_USER_DETAILS_VERIFIED, username);
         int rowsDeleted = jdbcTemplate.update(QUERY_DELETE_USER_VERIFY_CODE, uuidCode);
