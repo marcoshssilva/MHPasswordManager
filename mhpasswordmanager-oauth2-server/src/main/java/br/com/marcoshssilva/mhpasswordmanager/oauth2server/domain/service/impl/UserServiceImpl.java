@@ -34,54 +34,58 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerNewUser(UserRegistrationData userRegistrationData, UserRolesEnum role) throws BusinessRuleException {
+        RegisteredUserData userData;
         try {
             // check if email already used by another account
-            if (userOperationsService.checkIfHasEmailUsedByAnotherUser(userRegistrationData.getEmail())) {
+            if (Boolean.TRUE.equals(userOperationsService.checkIfHasEmailUsedByAnotherUser(userRegistrationData.getEmail()))) {
                 throw new CannotRegisterUserException(ERROR_MESSAGE_CANNOT_USE);
             }
             // check if the user already exists
-            if (userOperationsService.checkIfHasUsernameUsedByAnotherUser(userRegistrationData.getUsername())) {
+            if (Boolean.TRUE.equals(userOperationsService.checkIfHasUsernameUsedByAnotherUser(userRegistrationData.getUsername()))) {
                 throw new CannotRegisterUserException(ERROR_MESSAGE_CANNOT_USE);
             }
 
             // call UserOperationsService to save user
-            RegisteredUserData userData = userOperationsService.saveUser(userRegistrationData, role);
-
-            // send email to user with link to verify account
-            try {
-                UUID uuidVerifyAccount = userOperationsService.generateUUIDCodeToCheckAccountMailVerification(userData);
-                sendEmailService.sendEmailVerifyAccount(RegisteredUserCheckMailVerificationMessage.builder().name(userData.getFirstName()).email(userData.getEmail()).link(authorizationConfigProperties.getIssuerUri().concat("/verify/").concat(uuidVerifyAccount.toString())).build());
-            } catch (FailSendEmailException e) {
-                LOG.error(ERROR_MESSAGE_CANNOT_SEND_LINK_CHECK_EMAIL, e);
-            }
+            userData = userOperationsService.saveUser(userRegistrationData, role);
         } catch (Exception e) {
             throw new BusinessRuleException(e.getMessage(), e);
+        }
+
+        // send email to user with link to verify account
+        try {
+            UUID uuidVerifyAccount = userOperationsService.generateUUIDCodeToCheckAccountMailVerification(userData);
+            sendEmailService.sendEmailVerifyAccount(RegisteredUserCheckMailVerificationMessage.builder().name(userData.getFirstName()).email(userData.getEmail()).link(authorizationConfigProperties.getIssuerUri().concat("/verify/").concat(uuidVerifyAccount.toString())).build());
+        } catch (FailSendEmailException e) {
+            LOG.error(ERROR_MESSAGE_CANNOT_SEND_LINK_CHECK_EMAIL, e);
         }
     }
 
     @Override
     public void generateAndSendConfirmationCodeToResetPassword(String email, RequestedBrowserParams requestedBrowserParams) throws BusinessRuleException {
+        RegisteredUserData registeredUserData;
+        String code;
         try {
             // check if email or username is registered
-            RegisteredUserData registeredUserData = userOperationsService.getUserByEmail(email);
+            registeredUserData = userOperationsService.getUserByEmail(email);
             if (registeredUserData == null) {
                 throw new BusinessRuleException("Cannot send email, user doesn't have registered account.");
             }
             // generate code
-            String code = KeyGeneratorUtils.generateRecoveryCodeToResetPassword();
-            // save and send by mail-service queue
-            try {
-                userOperationsService.saveCodeEmailRecoveryPassword(registeredUserData, code, requestedBrowserParams);
-                sendEmailService.sendEmailRecoveryPassword(RegisteredUserKeyVerificationMailMessage.builder()
-                        .code(code)
-                        .email(registeredUserData.getEmail())
-                        .name(registeredUserData.getFirstName())
-                        .build());
-            } catch (FailSendEmailException e) {
-                LOG.error(ERROR_MESSAGE_CANNOT_SEND_RESET_PASSWORD_EMAIL, e);
-            }
+            code = KeyGeneratorUtils.generateRecoveryCodeToResetPassword();
         } catch (Exception e) {
             throw new BusinessRuleException(e.getMessage(), e);
+        }
+
+        // save and send by mail-service queue
+        try {
+            userOperationsService.saveCodeEmailRecoveryPassword(registeredUserData, code, requestedBrowserParams);
+            sendEmailService.sendEmailRecoveryPassword(RegisteredUserKeyVerificationMailMessage.builder()
+                    .code(code)
+                    .email(registeredUserData.getEmail())
+                    .name(registeredUserData.getFirstName())
+                    .build());
+        } catch (FailSendEmailException e) {
+            LOG.error(ERROR_MESSAGE_CANNOT_SEND_RESET_PASSWORD_EMAIL, e);
         }
     }
 
