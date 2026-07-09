@@ -1,0 +1,116 @@
+name: Build and push Docker image to Docker Hub
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: arm64,amd64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      - name: Set up JDK 17 Temurin
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: Extract version from pom.xml
+        id: extract_version
+        run: |
+          VERSIONS=$(grep -oPm2 "(?<=<version>)[^<]+" pom.xml)
+          VERSION=$(echo "$VERSIONS" | sed -n '2p' | sed 's/[^a-zA-Z0-9._-]/_/g')
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+
+      - name: Make Maven Wrapper executable
+        run: chmod +x mvnw
+
+      - name: Run Tests with Testcontainers
+        run: ./mvnw package -DskipTests
+
+      - name: api-gateway | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx create --use
+          docker buildx build ./mhpasswordmanager-api-gateway \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-api-gateway/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-api-gateway:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-api-gateway:latest \
+            --push
+
+      - name: config-services | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-config-services \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-config-services/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-config-services:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-config-services:latest \
+            --push
+
+      - name: service-registry | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-service-registry \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-service-registry/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-service-registry:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-service-registry:latest \
+            --push
+
+      - name: oauth2-server | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-oauth2-server \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-oauth2-server/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-oauth2-server:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-oauth2-server:latest \
+            --push
+
+      - name: user-service | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-user-service \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-user-service/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-user-service:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-user-service:latest \
+            --push
+
+      - name: password-service | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-password-service \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-password-service/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-password-service:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-password-service:latest \
+            --push
+
+      - name: email-service | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-email-service \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-email-service/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-email-service:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-email-service:latest \
+            --push
+
+      - name: file-service | Build and push Docker image to multiple platforms
+        run: |
+          docker buildx build ./mhpasswordmanager-file-service \
+            --platform linux/amd64,linux/arm64/v8 \
+            --file ./mhpasswordmanager-file-service/Dockerfile \
+            --tag marcoshssilvadev/mhpasswordmanager-file-service:${{ env.VERSION }} \
+            --tag marcoshssilvadev/mhpasswordmanager-file-service:latest \
+            --push
