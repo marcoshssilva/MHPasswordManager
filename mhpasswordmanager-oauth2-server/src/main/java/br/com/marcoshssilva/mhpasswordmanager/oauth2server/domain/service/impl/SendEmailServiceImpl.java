@@ -31,7 +31,6 @@ public class SendEmailServiceImpl implements SendEmailService {
 
         params.put("name", message.getName());
         params.put("code", message.getCode());
-        params.put("code", message.getCode());
 
         sendMailByMessaging(AMQPMailEventModel.builder()
                 .data(AMQPDataTemplatedMailEventModel.builder()
