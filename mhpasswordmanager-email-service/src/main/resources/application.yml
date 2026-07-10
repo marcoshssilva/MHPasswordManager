@@ -17,6 +17,8 @@ spring:
         X-Service-Name: ${spring.application.name}
   config:
     import: "optional:configserver:"
+  session:
+    store-type: none
 eureka:
   client:
     serviceUrl:

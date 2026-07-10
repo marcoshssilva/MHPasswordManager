@@ -12,8 +12,6 @@ spring:
       mail.smtp.port: 25
       mail.smtp.starttls.enable: false
       mail.smtp.starttls.required: false
-  session:
-    store-type: none
 application:
   email:
     type: fake-mail
