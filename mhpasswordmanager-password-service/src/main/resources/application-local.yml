@@ -1,0 +1,36 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://127.0.0.1:5432/db_passwords
+    username: 'sa-password-service'
+    password: 'P@ssw0rdP@ssw0rds'
+  flyway:
+    enabled: true
+    driver-class-name: org.postgresql.Driver
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    schemas:
+      - 'public'
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      fail-on-empty-beans: false
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://127.0.0.1:8080/mypass-manager/auth/
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
+    csrf:
+      enabled: false
