@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.server.authorization.token.JwtEncodin
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Configuration
@@ -28,6 +29,10 @@ public class JwtClaimsConfig {
             String username = context.getPrincipal().getName();
 
             RegisteredUserData user = userOperationsService.getUserByUsername(username);
+
+            if (Objects.isNull(user)) {
+                return;
+            }
 
             List<String> authorities = context.getPrincipal()
                     .getAuthorities()
