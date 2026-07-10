@@ -14,7 +14,6 @@ management:
           show-components: when_authorized
           show-details: when_authorized
           include:
-            - redis
             - mongo
     shutdown:
       enabled: false
@@ -31,11 +30,7 @@ spring:
     activate:
       on-profile: docker0
   session:
-    store-type: redis
-  redis:
-    host: redis
-    password: 'MHP@SSW0R3#20230401'
-    port: 6379
+    store-type: none
   data:
     mongodb:
       host: mongo

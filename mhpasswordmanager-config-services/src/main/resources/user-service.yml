@@ -14,7 +14,6 @@ management:
           show-components: when_authorized
           show-details: when_authorized
           include:
-            - redis
             - db
     shutdown:
       enabled: false
@@ -36,11 +35,7 @@ spring:
     username: 'sa-user-service'
     password: 'P@ssw0rdUs3rS3rvic3'
   session:
-    store-type: redis
-  redis:
-    host: redis
-    password: 'MHP@SSW0R3#20230401'
-    port: 6379
+    store-type: none
   flyway:
     enabled: true
     driver-class-name: org.postgresql.Driver

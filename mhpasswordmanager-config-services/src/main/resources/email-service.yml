@@ -15,7 +15,6 @@ management:
           show-details: when_authorized
           include:
             - db
-            - redis
             - rabbit
             - mail
     shutdown:
