@@ -23,6 +23,8 @@ spring:
       max-file-size: 96MB
       max-request-size: 110MB
       resolve-lazily: false
+  session:
+    store-type: none
 eureka:
   client:
     serviceUrl:
@@ -45,12 +47,6 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5432/db_passwords
     username: 'sa-password-service'
     password: 'P@ssw0rdP@ssw0rds'
-  session:
-    store-type: redis
-  redis:
-    host: 127.0.0.1
-    password: 'MHP@SSW0R3#20230401' # default no password, for set use SPRING_REDIS_PASSWORD or -Dspring.redis.password
-    port: 6379
   flyway:
     enabled: true
     driver-class-name: org.postgresql.Driver
@@ -103,8 +99,6 @@ spring:
       resource-server:
         jwt:
           issuer-uri: http://mhpasswordmanager.test.fake.com
-  session:
-    store-type: none
   flyway:
     enabled: false
   cloud:
