@@ -1,88 +1,6 @@
-gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
-server:
-  port: 12012
-  servlet:
-    context-path: /mypass-manager/passwords
-spring:
-  #  profiles:
-  #    default: local
-  application:
-    name: password-service
-  cloud:
-    config:
-      discovery:
-        enabled: true
-        service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
-      headers:
-        X-Gateway-Auth: ${gateway.allowed.configserver.code:changeit}
-        X-Service-Name: ${spring.application.name}
-  config:
-    import: "optional:configserver:"
-  servlet:
-    multipart:
-      max-file-size: 96MB
-      max-request-size: 110MB
-      resolve-lazily: false
-  session:
-    store-type: none
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: http://eureka:eureka@localhost:8761/eureka
-  instance:
-    prefer-ip-address: true
-springdoc:
-  version: @project.version@
-  title: @project.name@
-  description: @project.description@
-  license-name: 'MIT'
-  license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
----
 spring:
   config:
-    activate:
-      on-profile: local
-  datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://127.0.0.1:5432/db_passwords
-    username: 'sa-password-service'
-    password: 'P@ssw0rdP@ssw0rds'
-  flyway:
-    enabled: true
-    driver-class-name: org.postgresql.Driver
-    url: ${spring.datasource.url}
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    schemas:
-      - 'public'
-  jpa:
-    hibernate:
-      ddl-auto: validate
-    show-sql: false
-    properties:
-      dialect: org.hibernate.dialect.PostgreSQLDialect
-  jackson:
-    default-property-inclusion: non_null
-    serialization:
-      fail-on-empty-beans: false
-  security:
-    oauth2:
-      resource-server:
-        jwt:
-          issuer-uri: http://127.0.0.1:8080/mypass-manager/auth/
-springdoc:
-  swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize} # custom, doesnt exists on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
-    csrf:
-      enabled: false
----
-spring:
-  config:
-    activate:
-      on-profile: test
-    import:
+    import: ""
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:db_passwords;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
@@ -102,10 +20,7 @@ spring:
   flyway:
     enabled: false
   cloud:
-    config:
-      enabled: false
-      discovery:
-        enabled: false
+    config.enabled: false
 eureka:
   client:
     enabled: false
