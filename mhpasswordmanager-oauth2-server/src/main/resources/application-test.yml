@@ -1,19 +1,17 @@
 spring:
   cloud:
-    config:
-      enabled: false
-      discovery:
-        enabled: false
+    config.enabled: false
+  config:
+    import: ""
   session:
     store-type: none
   flyway:
     enabled: false
 eureka:
-  instance:
-    hostname: localhost
-    prefer-ip-address: true
   client:
     enabled: false
+    register-with-eureka: false
+    fetch-registry: false
 oauth-config-starter:
   clients:
     - clientName: 'Registered client for PWA Client'

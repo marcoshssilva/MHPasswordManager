@@ -6,10 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(properties = {
-		"spring.cloud.config.enabled=false",
-		"spring.config.import="
-})
+@SpringBootTest(classes = MhPasswordManagerOAuth2AuthorizationServerApplication.class)
 @ActiveProfiles({"test"})
 class MhPasswordManagerOAuth2AuthorizationServerApplicationTests {
 
