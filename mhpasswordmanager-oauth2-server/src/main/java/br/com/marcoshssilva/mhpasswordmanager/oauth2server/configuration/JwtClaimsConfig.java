@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -22,14 +23,20 @@ public class JwtClaimsConfig {
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
         return context -> {
-            if (!OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
+            String username = null;
+            RegisteredUserData user = null;
+
+            if (!OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())
+                    || !AuthorizationGrantType.AUTHORIZATION_CODE.equals(context.getAuthorizationGrantType())) {
                 return;
             }
 
-            String username = context.getPrincipal().getName();
+            username = context.getPrincipal().getName();
+            if (Objects.isNull(username)) {
+                return;
+            }
 
-            RegisteredUserData user = userOperationsService.getUserByUsername(username);
-
+            user = userOperationsService.getUserByUsername(username);
             if (Objects.isNull(user)) {
                 return;
             }
