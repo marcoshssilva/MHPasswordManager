@@ -56,6 +56,6 @@ config:
         scopes: global:fullAccess
 springdoc:
   swagger-ui:
-    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/mypass-manager/auth/swagger-ui/redirect}
-    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/mypass-manager/auth/oauth2/authorize} # custom doesn't exist on springdoc open-api
-    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/mypass-manager/auth/oauth2/token} # custom doesn't exist on springdoc open-api
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/auth/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize} # custom doesn't exist on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom doesn't exist on springdoc open-api
