@@ -1,4 +1,11 @@
 spring:
+  cloud:
+    config:
+      enabled: false
+      discovery:
+        enabled: false
+  config:
+    import: ""
   security:
     oauth2:
       resource-server:
@@ -22,3 +29,8 @@ management:
   health:
     mail:
       enabled: false
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
