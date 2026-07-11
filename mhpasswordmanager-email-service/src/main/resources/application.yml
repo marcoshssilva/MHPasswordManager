@@ -3,20 +3,13 @@ server:
   servlet:
     context-path: /mypass-manager/emails
 spring:
-#  profiles:
-#    default: local
+  profiles:
+    default: configserver
   application:
     name: email-service
   cloud:
     config:
-      discovery:
-        enabled: true
-        service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
-      headers:
-        X-Gateway-Auth: ${config.gateway.allowed.configserver.code:changeit}
-        X-Service-Name: ${spring.application.name}
-  config:
-    import: "optional:configserver:"
+      enabled: false
   session:
     store-type: none
 eureka:
