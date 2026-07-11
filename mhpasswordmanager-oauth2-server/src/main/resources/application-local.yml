@@ -8,11 +8,11 @@ spring:
       enabled: true
       path: /h2
   datasource:
-#    UNCOMMENT IF YOU WANT TO USE config.users.mode=DATABASE
-#    users:
-#      username: 'sa-authorization-server'
-#      password: 'P@sswordAuthS3rv3r'
-#      url: 'jdbc:postgresql://127.0.0.1:5432/db_users'
+    # REQUIRED ONLY if you want to use config.users.mode=DATABASE, unless not needed
+    users:
+      username: 'sa-authorization-server'
+      password: 'P@sswordAuthS3rv3r'
+      url: 'jdbc:postgresql://127.0.0.1:5432/db_users'
     auth:
       username: 'sa-authorization-server'
       password: 'P@sswordAuthS3rv3r'
@@ -54,3 +54,8 @@ config:
         client-secret: 9f45dc98-8e4f-11ee-b9d1-0242ac120002
         token-uri: ${config.oauth.server-settings.issuer-uri}/oauth2/token
         scopes: global:fullAccess
+springdoc:
+  swagger-ui:
+    oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:12010/mypass-manager/auth/swagger-ui/redirect}
+    oauth2-authorization-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL:http://127.0.0.1:12010/mypass-manager/auth/oauth2/authorize} # custom doesn't exist on springdoc open-api
+    oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:12010/mypass-manager/auth/oauth2/token} # custom doesn't exist on springdoc open-api
