@@ -1,10 +1,11 @@
 spring:
-  session.store-type: none
+  cloud:
+    config.enabled: false
   config:
-    enabled: false
-    import:
+    import: ""
+  session.store-type: none
 eureka:
-  enabled: false
   client:
+    enabled: false
     register-with-eureka: false
     fetch-registry: false

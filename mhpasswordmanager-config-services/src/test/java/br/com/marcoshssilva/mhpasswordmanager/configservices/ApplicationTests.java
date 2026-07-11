@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ActiveProfiles("test")
-@SpringBootTest
+@SpringBootTest(classes = Application.class)
 class ApplicationTests {
 
 	private final Logger log = LoggerFactory.getLogger(ApplicationTests.class);
@@ -19,15 +19,6 @@ class ApplicationTests {
 	@DisplayName("Should initialize project with success")
 	@Test
 	void contextLoads() {
-		assertDoesNotThrow(() -> {
-			log.info("Project started with success!");
-		});
+		assertDoesNotThrow(() -> log.info("Project started with success!"));
 	}
-
-	@DisplayName("Should call main but using a ")
-	@Test
-	void shouldExposeApplicationClass() {
-		assertNotNull(Application.class);
-	}
-
 }
