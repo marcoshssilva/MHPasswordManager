@@ -12,6 +12,7 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.client
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountVerificationCodeResponseData;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @Component
@@ -28,8 +30,10 @@ import java.util.UUID;
 public final class UserServiceWebClient {
     private static final String ACCOUNT_PATH = "/account";
     private final WebClient webClient;
+    private final Duration responseTimeoutDuration;
 
-    public UserServiceWebClient(@LoadBalanced WebClient.Builder webClientBuilder, UserServiceWebClientProperties properties, OAuth2AuthorizedClientManager userServiceOAuth2AuthorizedClientManager) {
+    public UserServiceWebClient(@LoadBalanced WebClient.Builder webClientBuilder, UserServiceWebClientProperties properties, OAuth2AuthorizedClientManager userServiceOAuth2AuthorizedClientManager, @Value("${config.users.webclient.request-timeout:3s}") Duration responseTimeoutDuration) {
+        this.responseTimeoutDuration = responseTimeoutDuration;
         this.webClient = createWebClient(webClientBuilder, properties, userServiceOAuth2AuthorizedClientManager);
     }
 
@@ -47,6 +51,7 @@ public final class UserServiceWebClient {
                 .bodyValue(request)
                 .retrieve()
                 .toBodilessEntity()
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 
@@ -56,6 +61,7 @@ public final class UserServiceWebClient {
                     .uri(ACCOUNT_PATH + "/{username}/data", username)
                     .retrieve()
                     .bodyToMono(AccountResponseData.class)
+                    .timeout(responseTimeoutDuration)
                     .block();
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -71,6 +77,7 @@ public final class UserServiceWebClient {
                     .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/byEmail").queryParam("email", email).build())
                     .retrieve()
                     .bodyToMono(AccountResponseData.class)
+                    .timeout(responseTimeoutDuration)
                     .block();
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -85,6 +92,7 @@ public final class UserServiceWebClient {
                 .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/exists").queryParam("username", username).build())
                 .retrieve()
                 .bodyToMono(AccountExistsResponseData.class)
+                .timeout(responseTimeoutDuration)
                 .block();
         return response != null && Boolean.TRUE.equals(response.getExists());
     }
@@ -94,6 +102,7 @@ public final class UserServiceWebClient {
                 .uri(uriBuilder -> uriBuilder.path(ACCOUNT_PATH + "/exists").queryParam("email", email).build())
                 .retrieve()
                 .bodyToMono(AccountExistsResponseData.class)
+                .timeout(responseTimeoutDuration)
                 .block();
         return response != null && Boolean.TRUE.equals(response.getExists());
     }
@@ -104,6 +113,7 @@ public final class UserServiceWebClient {
                     .uri(ACCOUNT_PATH + "/{username}/user", username)
                     .retrieve()
                     .bodyToMono(AccountUserInternalResponseData.class)
+                    .timeout(responseTimeoutDuration)
                     .block();
         } catch (WebClientResponseException e) {
             if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
@@ -119,6 +129,7 @@ public final class UserServiceWebClient {
                 .bodyValue(AccountValidatePasswordRequestData.builder().password(password).build())
                 .retrieve()
                 .bodyToMono(AccountValidatePasswordResponseData.class)
+                .timeout(responseTimeoutDuration)
                 .block();
 
         return response != null && Boolean.TRUE.equals(response.getIsValid());
@@ -129,6 +140,7 @@ public final class UserServiceWebClient {
                 .uri(ACCOUNT_PATH + "/{username}/delete", username)
                 .retrieve()
                 .toBodilessEntity()
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 
@@ -138,6 +150,7 @@ public final class UserServiceWebClient {
                 .bodyValue(AccountUpdateEnabledRequestData.builder().enabled(enabled).build())
                 .retrieve()
                 .toBodilessEntity()
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 
@@ -147,6 +160,7 @@ public final class UserServiceWebClient {
                 .bodyValue(AccountResetPasswordRequestData.builder().newPassword(newPassword).build())
                 .retrieve()
                 .toBodilessEntity()
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 
@@ -155,6 +169,7 @@ public final class UserServiceWebClient {
                 .uri(ACCOUNT_PATH + "/{username}/verificationCode", username)
                 .retrieve()
                 .bodyToMono(AccountVerificationCodeResponseData.class)
+                .timeout(responseTimeoutDuration)
                 .block();
         if (response == null || response.getCode() == null) {
             throw new IllegalStateException("User service returned no account verification code.");
@@ -167,6 +182,7 @@ public final class UserServiceWebClient {
                 .uri(ACCOUNT_PATH + "/verify/{uuidCode}", uuidCode)
                 .retrieve()
                 .bodyToMono(Boolean.class)
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 
@@ -176,6 +192,7 @@ public final class UserServiceWebClient {
                 .bodyValue(request)
                 .retrieve()
                 .bodyToMono(RecoveryPasswordCodeRequest.class)
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 
@@ -187,6 +204,7 @@ public final class UserServiceWebClient {
                         .build(code))
                 .retrieve()
                 .bodyToMono(RecoveryPasswordCodeRequest.class)
+                .timeout(responseTimeoutDuration)
                 .block();
     }
 }

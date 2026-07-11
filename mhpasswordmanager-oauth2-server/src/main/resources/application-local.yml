@@ -47,6 +47,7 @@ config:
     mode: WEB_CLIENT
     webclient:
       base-url: http://USER-SERVICE/mypass-manager/users
+      request-timeout: 5s
       oauth2:
         registration-id: passwordmanager-global
         client-id: MHPasswordManager-GlobalAdmin
