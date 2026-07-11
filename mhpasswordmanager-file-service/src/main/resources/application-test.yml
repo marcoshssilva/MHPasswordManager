@@ -1,12 +1,15 @@
 spring:
+  cloud:
+    config.enabled: false
+  config:
+    import: ""
   security:
     oauth2:
       resource-server:
         jwt:
           issuer-uri: http://mhpasswordmanager.test.fake.com
-#eureka:
-#  instance:
-#    hostname: localhost
-#    prefer-ip-address: true
-#  client:
-#    enabled: false
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
