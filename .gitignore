@@ -49,6 +49,7 @@ log.txt
 npm-debug.log*
 
 ## Any other file
+**/src/main/resources/templates/static
 /git_excludes
 sonar_report.md
 sonar_new_code_report.md
