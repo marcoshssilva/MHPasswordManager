@@ -24,7 +24,7 @@ import java.util.List;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class ResourceServerSecurityConfig {
-    private static final String AUTHORITIES_CLAIM_NAME = "authorities";
+    private static final String AUTHORITIES_CLAIM_NAME = "roles";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -47,7 +47,7 @@ public class ResourceServerSecurityConfig {
             Collection<GrantedAuthority> scopeAuthorities = null;
 
             try {
-                userRoleAuthorities = jwt.getClaimAsStringList(AUTHORITIES_CLAIM_NAME);
+                userRoleAuthorities = jwt.getClaimAsStringList(AUTHORITIES_CLAIM_NAME).stream().map(role -> "ROLE_".concat(role.toUpperCase())).toList();
             } catch (Exception e) {
                 log.error("Cannot get AUTHORITIES FROM Token.", e);
             } finally {
