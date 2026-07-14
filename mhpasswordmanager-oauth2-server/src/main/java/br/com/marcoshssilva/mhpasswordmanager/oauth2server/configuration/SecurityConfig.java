@@ -17,7 +17,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 public class SecurityConfig {
     private final AuthorizationConfigProperties authorizationConfigProperties;
 
-    public final String[] publicRoutes = new String[]{"/h2/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/content/**", "/actuator/**", "/favicon.ico", "/error"};
+    public final String[] publicRoutes = new String[]{"/h2/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/static/**", "/actuator/**", "/favicon.ico", "/error"};
 
     private final String[] getMethodOnlyPublic = new String[]{"/verify/**"};
 
