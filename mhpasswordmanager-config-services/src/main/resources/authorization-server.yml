@@ -48,6 +48,7 @@ oauth-config-starter:
       scopes:
         - 'profile'
         - 'email'
+        - 'openid'
       tokenSettings:
         durationInMillis: 900000
         reuseRefreshToken: false
