@@ -2,11 +2,7 @@ spring:
   session:
     store-type: none
   application:
-    name: eureka-service-registry
-  security:
-    user:
-      name: ${SPRING_SECURITY_USERNAME:eureka}
-      password: ${SPRING_SECURITY_PASSWORD:eureka}
+    name: eureka-server
 server:
   port: 8761
   servlet:
@@ -20,7 +16,7 @@ eureka:
     fetch-registry: false
     register-with-eureka: false
     service-url:
-      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@localhost:${server.port}/eureka
+      defaultZone: http://localhost:${server.port}/eureka
   instance:
     prefer-ip-address: true
 logging:
