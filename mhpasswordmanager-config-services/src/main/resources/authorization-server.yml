@@ -70,9 +70,6 @@ oauth-config-starter:
         - 'users:reset-password'
       tokenSettings:
         durationInMillis: 180000
-config:
-  gateway:
-    allowed.configserver.code: ${CONFIG_GATEWAY_ALLOWED_CONFIGSERVER_CODE:}
 ---
 spring:
   config:
