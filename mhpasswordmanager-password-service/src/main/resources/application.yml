@@ -1,4 +1,3 @@
-gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
 server:
   port: 12012
   servlet:
