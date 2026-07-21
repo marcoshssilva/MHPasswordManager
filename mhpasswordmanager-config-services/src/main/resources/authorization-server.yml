@@ -70,6 +70,27 @@ oauth-config-starter:
         - 'users:reset-password'
       tokenSettings:
         durationInMillis: 180000
+    - clientName: 'Registered client for Eureka'
+      clientId: 53644fa0-5f4f-4430-87e3-453c79fcbf68
+      clientSecret: 7470f7d0-8f8f-4f4f-adc7-e78cfee1a34e
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - CLIENT_CREDENTIALS
+      scopes:
+        - 'eureka:write'
+        - 'eureka:read'
+      tokenSettings:
+        durationInMillis: 180000
+    - clientName: 'Registered client for ConfigServer'
+      clientId: b341326d-cabe-457e-86cb-7cab9c969c72
+      clientSecret: 3d169f28-2bbd-4c27-beb0-03bcad3ea6d4
+      authenticationMethod: CLIENT_SECRET_BASIC
+      authenticationGrantTypes:
+        - CLIENT_CREDENTIALS
+      scopes:
+        - 'configserver:read'
+      tokenSettings:
+        durationInMillis: 180000
 ---
 spring:
   config:
