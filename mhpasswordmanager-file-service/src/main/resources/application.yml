@@ -1,4 +1,3 @@
-gateway.allowed.configserver.code: ${GATEWAY_ALLOWED_CONFIGSERVER_CODE:6a0fb275-b928-83e9-b42a-8f7020e95ec6}
 server:
   port: 12014
   servlet:
