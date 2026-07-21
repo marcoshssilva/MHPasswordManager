@@ -63,7 +63,7 @@ spring:
             - RewritePath=/mypass-manager/files/(?<segment>.*),/mypass-manager/files/$\{segment}
             - PreserveHostHeader
         - id: eureka
-          uri: lb://EUREKA-SERVICE-REGISTRY
+          uri: lb://EUREKA-SERVER
           predicates:
             - Path=/eureka/**
             - Host=${GATEWAY_ALLOWED_EUREKA_HOSTS:localhost,127.0.0.1,host.docker.internal}
