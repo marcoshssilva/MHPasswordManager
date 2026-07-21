@@ -3,6 +3,11 @@ server:
 spring:
   application:
     name: 'gateway'
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          jwk-set-uri: http://127.0.0.1:8080/mypass-manager/auth/oauth2/jwks
   cloud:
     gateway:
       httpclient:
@@ -62,7 +67,6 @@ spring:
           predicates:
             - Path=/eureka/**
             - Host=${GATEWAY_ALLOWED_EUREKA_HOSTS:localhost,127.0.0.1,host.docker.internal}
-            - Header=X-Gateway-Auth,${GATEWAY_ALLOWED_EUREKA_CODE:changeit}
           filters:
             - RewritePath=/eureka/(?<segment>.*),/eureka/$\{segment}
             - PreserveHostHeader
@@ -71,7 +75,6 @@ spring:
           predicates:
             - Path=/config/**
             - Host=${GATEWAY_ALLOWED_CONFIGSERVER_HOSTS:localhost,127.0.0.1,host.docker.internal}
-            - Header=X-Gateway-Auth,${GATEWAY_ALLOWED_CONFIGSERVER_CODE:changeit}
           filters:
             - RewritePath=/config/(?<segment>.*),/$\{segment}
             - PreserveHostHeader
