@@ -12,25 +12,19 @@
     "web": {
       "quantity": 1
     },
-    "discover": {
+    "api-user": {
       "quantity": 1
     },
-    "config": {
+    "api-password": {
       "quantity": 1
     },
-    "worker-user": {
+    "api-oauth2server": {
       "quantity": 1
     },
-    "worker-password": {
+    "api-email": {
       "quantity": 1
     },
-    "worker-oauth2server": {
-      "quantity": 1
-    },
-    "worker-email": {
-      "quantity": 1
-    },
-    "worker-file": {
+    "api-file": {
       "quantity": 1
     }
   }
