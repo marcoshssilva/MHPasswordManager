@@ -6,7 +6,6 @@ spring:
         enabled: true
         service-id: ${SPRING_CLOUD_DISCOVERY_SERVICE_ID:config-server}
       headers:
-        X-Gateway-Auth: ${gateway.allowed.configserver.code}
         X-Service-Name: ${spring.application.name}
   config:
     import: "optional:configserver:"
