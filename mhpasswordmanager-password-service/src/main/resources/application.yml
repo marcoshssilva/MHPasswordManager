@@ -4,7 +4,7 @@ server:
     context-path: /mypass-manager/passwords
 spring:
   profiles:
-    default: configserver
+    default: configserver,opentelemetry
   application:
     name: password-service
   cloud:
@@ -29,3 +29,6 @@ springdoc:
   description: @project.description@
   license-name: 'MIT'
   license-url: 'https://github.com/marcoshssilva/MHPasswordManager/blob/main/LICENSE'
+otel:
+  sdk:
+    disabled: true
