@@ -1,0 +1,85 @@
+otel:
+  sdk:
+    disabled: ${OTEL_SDK_DISABLED:false}
+  instrumentation:
+    common:
+      default-enabled: true
+    jdbc:
+      enabled: true
+    log4j-appender:
+      enabled: true
+    logback-mdc:
+      enabled: true
+    spring-web:
+      enabled: true
+    spring-webmvc:
+      enabled: true
+    spring-webflux:
+      enabled: true
+    kafka:
+      enabled: true
+    mongo:
+      enabled: true
+    micrometer:
+      enabled: true
+    r2dbc:
+      enabled: true
+  resource:
+    attributes_list: ${OTEL_RESOURCE_ATTRIBUTES:}
+    attributes:
+      - name: deployment.environment
+        value: ${ENV:LOCAL}
+      - name: service.name
+        value: ${OTEL_SERVICE_NAME:${spring.application.name}}
+      - name: service.namespace
+        value: ${OTEL_SERVICE_NAMESPACE:${spring.application.name}}
+      - name: service.version
+        value: ${APP_VERSION:unknown}
+      - name: service.instance.id
+        value: ${OTEL_SERVICE_INSTANCE_ID:${HOSTNAME:${random.uuid}}}
+      - name: host.name
+        value: ${HOSTNAME:localhost}
+      - name: application.domain
+        value: ${APPLICATION_DOMAIN:default}
+      - name: application.team
+        value: ${APPLICATION_TEAM:unknown}
+      - name: spring.profiles.active
+        value: ${spring.profiles.active:default}
+      - name: spring.application.group
+        value: ${SPRING_APPLICATION_GROUP:default}
+      - name: cloud.provider
+        value: ${CLOUD_PROVIDER:none}
+      - name: cloud.region
+        value: ${CLOUD_REGION:local}
+  tracer_provider:
+    sampler:
+      parent_based:
+        root:
+          always_on:
+    processors:
+      - batch:
+          exporter:
+            otlp_http:
+              endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
+              headers:
+                - name: Authorization
+                  value: ${OTEL_AUTHORIZATION_HEADER:}
+
+  meter_provider:
+    readers:
+      - periodic:
+          exporter:
+            otlp_http:
+              endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
+              headers:
+                - name: Authorization
+                  value: ${OTEL_AUTHORIZATION_HEADER:}
+  logger_provider:
+    processors:
+      - batch:
+          exporter:
+            otlp_http:
+              endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
+              headers:
+                - name: Authorization
+                  value: ${OTEL_AUTHORIZATION_HEADER:}

@@ -11,8 +11,8 @@ spring:
   application:
     name: config-server
   profiles:
-#   active: native  # native if you need use config from default of this project, reading all .yml files
     active: default # default for use remote git or specific directory to read git config
+    include: opentelemetry
   cloud:
     config:
       import: optional:configserver:${SPRING_CLOUD_CONFIG_IMPORT_URL:http://localhost:8888/}
@@ -43,3 +43,6 @@ management:
     web:
       exposure:
         include: '*'
+otel:
+  sdk:
+    disabled: true
