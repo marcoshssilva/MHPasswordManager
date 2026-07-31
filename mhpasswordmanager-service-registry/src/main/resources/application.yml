@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    default: opentelemetry
   session:
     store-type: none
   application:
@@ -36,3 +38,6 @@ management:
     web:
       exposure:
         include: '*'
+otel:
+  sdk:
+    disabled: true
