@@ -31,6 +31,7 @@
         <springdoc.version>1.8.0</springdoc.version>
         <jacoco.version>0.8.13</jacoco.version>
         <lombok.version>1.18.38</lombok.version>
+        <kotlin.version>2.2.20</kotlin.version>
     </properties>
     <modules>
         <module>mhpasswordmanager-api-gateway</module>
@@ -42,6 +43,12 @@
         <module>mhpasswordmanager-service-registry</module>
         <module>mhpasswordmanager-user-service</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>io.opentelemetry.instrumentation</groupId>
+            <artifactId>opentelemetry-spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -73,6 +80,20 @@
     </build>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom</artifactId>
+                <version>2.29.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-bom</artifactId>
+                <version>${kotlin.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
