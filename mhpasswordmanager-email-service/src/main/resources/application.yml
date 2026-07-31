@@ -4,7 +4,7 @@ server:
     context-path: /mypass-manager/emails
 spring:
   profiles:
-    default: configserver
+    default: configserver,opentelemetry
   application:
     name: email-service
   cloud:
@@ -30,3 +30,6 @@ config:
   mail:
     queues-key:
       send-event: ${CONFIG_MAIL_QUEUES_KEY_SEND_EVENT:email.send-event}
+otel:
+  sdk:
+    disabled: true
