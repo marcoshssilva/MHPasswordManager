@@ -31,8 +31,7 @@ jobs:
 
       - name: api-gateway | Build and push Docker image to multiple platforms
         run: |
-          docker buildx create --use
-          docker buildx build ./mhpasswordmanager-api-gateway \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-api-gateway/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-api-gateway:${{ env.VERSION }} \
@@ -41,7 +40,7 @@ jobs:
 
       - name: config-services | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-config-services \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-config-services/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-config-services:${{ env.VERSION }} \
@@ -50,7 +49,7 @@ jobs:
 
       - name: service-registry | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-service-registry \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-service-registry/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-service-registry:${{ env.VERSION }} \
@@ -59,7 +58,7 @@ jobs:
 
       - name: oauth2-server | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-oauth2-server \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-oauth2-server/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-oauth2-server:${{ env.VERSION }} \
@@ -68,7 +67,7 @@ jobs:
 
       - name: user-service | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-user-service \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-user-service/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-user-service:${{ env.VERSION }} \
@@ -77,7 +76,7 @@ jobs:
 
       - name: password-service | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-password-service \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-password-service/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-password-service:${{ env.VERSION }} \
@@ -86,7 +85,7 @@ jobs:
 
       - name: email-service | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-email-service \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-email-service/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-email-service:${{ env.VERSION }} \
@@ -95,7 +94,7 @@ jobs:
 
       - name: file-service | Build and push Docker image to multiple platforms
         run: |
-          docker buildx build ./mhpasswordmanager-file-service \
+          docker buildx build . \
             --platform linux/amd64,linux/arm64/v8 \
             --file ./mhpasswordmanager-file-service/Dockerfile \
             --tag marcoshssilvadev/mhpasswordmanager-file-service:${{ env.VERSION }} \
