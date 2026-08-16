@@ -2,7 +2,8 @@ services:
   config:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-config-services
+      context: .
+      dockerfile: mhpasswordmanager-config-services/Dockerfile
     env_file:
       - etc/env/CONFIG-SERVICES.env
     depends_on:
@@ -23,7 +24,8 @@ services:
   eureka:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-service-registry
+      context: .
+      dockerfile: mhpasswordmanager-service-registry/Dockerfile
     env_file:
       - etc/env/SERVICE-REGISTRY.env
     networks:
@@ -41,7 +43,8 @@ services:
   oauth2-server:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-oauth2-server
+      context: .
+      dockerfile: mhpasswordmanager-oauth2-server/Dockerfile
     env_file:
       - etc/env/OAUTH2-AUTHORIZATION-SERVER.env
     depends_on:
@@ -67,7 +70,8 @@ services:
   gateway:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-api-gateway
+      context: .
+      dockerfile: mhpasswordmanager-api-gateway/Dockerfile
     env_file:
       - etc/env/API-GATEWAY.env
     depends_on:
@@ -94,7 +98,8 @@ services:
   user-service:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-user-service
+      context: .
+      dockerfile: mhpasswordmanager-user-service/Dockerfile
     env_file:
       - etc/env/USER-SERVICE.env
     depends_on:
@@ -116,7 +121,8 @@ services:
   password-service:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-password-service
+      context: .
+      dockerfile: mhpasswordmanager-password-service/Dockerfile
     env_file:
       - etc/env/PASSWORD-SERVICE.env
     depends_on:
@@ -138,7 +144,8 @@ services:
   email-service:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-email-service
+      context: .
+      dockerfile: mhpasswordmanager-email-service/Dockerfile
     env_file:
       - etc/env/EMAIL-SERVICE.env
     networks:
@@ -162,7 +169,8 @@ services:
   file-service:
     restart: on-failure
     build:
-      context: ./mhpasswordmanager-file-service
+      context: .
+      dockerfile: mhpasswordmanager-file-service/Dockerfile
     env_file:
       - etc/env/FILE-SERVICE.env
 #    ports:
