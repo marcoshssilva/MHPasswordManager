@@ -22,25 +22,12 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
-      - name: Set up JDK 17 Temurin
-        uses: actions/setup-java@v4
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-          cache: maven
-
       - name: Extract version from pom.xml
         id: extract_version
         run: |
           VERSIONS=$(grep -oPm2 "(?<=<version>)[^<]+" pom.xml)
           VERSION=$(echo "$VERSIONS" | sed -n '2p' | sed 's/[^a-zA-Z0-9._-]/_/g')
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
-
-      - name: Make Maven Wrapper executable
-        run: chmod +x mvnw
-
-      - name: Run Tests with Testcontainers
-        run: ./mvnw package -DskipTests
 
       - name: api-gateway | Build and push Docker image to multiple platforms
         run: |
