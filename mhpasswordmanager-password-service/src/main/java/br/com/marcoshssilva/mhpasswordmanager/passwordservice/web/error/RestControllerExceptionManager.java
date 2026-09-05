@@ -13,6 +13,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import org.slf4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,7 @@ import java.time.OffsetDateTime;
 
 @RestControllerAdvice
 public class RestControllerExceptionManager {
+    private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(RestControllerExceptionManager.class);
 
     @ExceptionHandler(KeyNotFoundException.class)
     public ResponseEntity<HttpErrorResponse> keyNotFoundExceptionResolver(KeyNotFoundException e, HttpServletRequest req) {
@@ -51,6 +53,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<HttpErrorResponse> jsonProcessingExceptionResolver(JsonProcessingException e, HttpServletRequest req) {
+        LOGGER.error("Error processing JSON", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -59,6 +62,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(KeyRegistrationErrorException.class)
     public ResponseEntity<HttpErrorResponse> keyRegistrationExceptionResolver(KeyRegistrationErrorException e, HttpServletRequest req) {
+        LOGGER.error("Error registering key", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -67,6 +71,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(KeyEncodedErrorConverterException.class)
     public ResponseEntity<HttpErrorResponse> keyEncodedErrorConverterExceptionResolver(KeyEncodedErrorConverterException e, HttpServletRequest req) {
+        LOGGER.error("Error converting key", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -75,6 +80,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(BucketCannotBeCreatedException.class)
     public ResponseEntity<HttpErrorResponse> bucketCannotBeCreatedExceptionResolver(BucketCannotBeCreatedException e, HttpServletRequest req) {
+        LOGGER.error("Error creating bucket", e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -83,6 +89,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(DecryptionException.class)
     public ResponseEntity<HttpErrorResponse> decryptionExceptionResolver(DecryptionException e, HttpServletRequest req) {
+        LOGGER.error("Error decrypting data", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -91,6 +98,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(EncryptionException.class)
     public ResponseEntity<HttpErrorResponse> encryptionExceptionResolver(EncryptionException e, HttpServletRequest req) {
+        LOGGER.error("Error encrypting data", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -99,6 +107,7 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(UserAuthorizationCannotBeLoadedException.class)
     public ResponseEntity<HttpErrorResponse> userAuthorizationCannotBeLoadedExceptionResolver(UserAuthorizationCannotBeLoadedException e, HttpServletRequest req) {
+        LOGGER.error("Error loading user authorization", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
@@ -107,6 +116,16 @@ public class RestControllerExceptionManager {
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<HttpErrorResponse> illegalArgumentExceptionResolver(IllegalArgumentException e, HttpServletRequest req){
+        LOGGER.error("Error handling illegal argument", e);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                HttpErrorResponse.builder()
+                        .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
+                        .build());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<HttpErrorResponse> exceptionResolver(Exception e, HttpServletRequest req){
+        LOGGER.error("Error generic handling exception", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
