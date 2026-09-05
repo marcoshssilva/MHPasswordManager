@@ -26,6 +26,14 @@ eureka:
     enabled: false
     register-with-eureka: false
     fetch-registry: false
+storage:
+  s3:
+    endpoint: http://127.0.0.1:9000
+    region: us-east-1
+    bucket: mhp-files
+    access-key: test-access-key
+    secret-key: test-secret-key
+    path-style-access: true
 springdoc:
   swagger-ui:
     oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/passwords/swagger-ui/redirect}
