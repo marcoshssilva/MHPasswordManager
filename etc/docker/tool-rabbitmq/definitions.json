@@ -19,6 +19,20 @@
       "limits": {}
     },
     {
+      "name": "file-service-pm",
+      "password_hash": "kdEgvgnUQM6TKxCokrpwWJnHqxdV6ta2cOOuJ+C71tuKrepB",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [],
+      "limits": {}
+    },
+    {
+      "name": "password-service-pm",
+      "password_hash": "BLQwSA8HURUgn6QEzp036oEgLknM24BZbZnC4C/haYPHb+Y6",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [],
+      "limits": {}
+    },
+    {
       "name": "guest",
       "password_hash": "CT6ev3pBpW7hy2FZSKMlDT2nHabsOMnPK8Jct+uWPS9QE7v/",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
@@ -39,6 +53,20 @@
   "permissions": [
     {
       "user": "email-service-pm",
+      "vhost": "vhost-password-manager",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "file-service-pm",
+      "vhost": "vhost-password-manager",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "password-service-pm",
       "vhost": "vhost-password-manager",
       "configure": ".*",
       "write": ".*",
@@ -78,7 +106,7 @@
       "arguments": {
         "x-queue-type": "classic"
       }
-    },
+    }
   ],
   "exchanges": [],
   "bindings": []
