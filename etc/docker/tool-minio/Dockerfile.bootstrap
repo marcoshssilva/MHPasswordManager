@@ -1,0 +1,5 @@
+FROM minio/mc:latest
+
+COPY scripts/bootstrap.sh /usr/local/bin/bootstrap.sh
+
+ENTRYPOINT ["/bin/sh", "/usr/local/bin/bootstrap.sh"]

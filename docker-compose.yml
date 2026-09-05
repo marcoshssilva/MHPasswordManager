@@ -125,6 +125,7 @@ services:
       dockerfile: mhpasswordmanager-password-service/Dockerfile
     env_file:
       - etc/env/PASSWORD-SERVICE.env
+      - etc/env/MINIO-PASSWORD-SERVICE.env
     depends_on:
       eureka:
         condition: service_healthy
@@ -134,6 +135,10 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-bootstrap:
+        condition: service_completed_successfully
     networks:
       - net
 #    ports:
@@ -173,6 +178,7 @@ services:
       dockerfile: mhpasswordmanager-file-service/Dockerfile
     env_file:
       - etc/env/FILE-SERVICE.env
+      - etc/env/MINIO-FILE-SERVICE.env
 #    ports:
 #      - "12014:12014"
     networks:
@@ -186,6 +192,10 @@ services:
         condition: service_healthy
       mongo:
         condition: service_healthy
+      minio:
+        condition: service_healthy
+      minio-bootstrap:
+        condition: service_completed_successfully
     profiles:
       - apps
       - all
@@ -310,6 +320,21 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    profiles:
+      - tools
+      - all
+  minio-bootstrap:
+    restart: "no"
+    build:
+      context: ./etc/docker/tool-minio
+      dockerfile: Dockerfile.bootstrap
+    env_file:
+      - etc/env/MINIO.env
+    depends_on:
+      minio:
+        condition: service_healthy
+    networks:
+      - net
     profiles:
       - tools
       - all
