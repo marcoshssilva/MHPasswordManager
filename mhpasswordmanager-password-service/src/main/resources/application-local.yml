@@ -4,6 +4,12 @@ spring:
     url: jdbc:postgresql://127.0.0.1:5432/db_passwords
     username: 'sa-password-service'
     password: 'P@ssw0rdP@ssw0rds'
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    virtual-host: vhost-password-manager
+    username: password-service-pm
+    password: password-service-pm-P@ss
   flyway:
     enabled: true
     driver-class-name: org.postgresql.Driver

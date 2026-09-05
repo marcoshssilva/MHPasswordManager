@@ -39,6 +39,12 @@ spring:
       database: 'db_files'
       authentication-database: 'admin'
       authentication-mechanism: 'SCRAM-SHA-1'
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    virtual-host: vhost-password-manager
+    username: file-service-pm
+    password: file-service-pm-P@ss
   jackson:
     default-property-inclusion: non_null
     serialization:
