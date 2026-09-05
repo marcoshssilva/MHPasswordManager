@@ -19,6 +19,15 @@
       "limits": {}
     },
     {
+      "name": "guest",
+      "password_hash": "CT6ev3pBpW7hy2FZSKMlDT2nHabsOMnPK8Jct+uWPS9QE7v/",
+      "hashing_algorithm": "rabbit_password_hashing_sha256",
+      "tags": [
+        "administrator"
+      ],
+      "limits": {}
+    },
+    {
       "name": "file-service-pm",
       "password_hash": "kdEgvgnUQM6TKxCokrpwWJnHqxdV6ta2cOOuJ+C71tuKrepB",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
@@ -30,15 +39,6 @@
       "password_hash": "BLQwSA8HURUgn6QEzp036oEgLknM24BZbZnC4C/haYPHb+Y6",
       "hashing_algorithm": "rabbit_password_hashing_sha256",
       "tags": [],
-      "limits": {}
-    },
-    {
-      "name": "guest",
-      "password_hash": "CT6ev3pBpW7hy2FZSKMlDT2nHabsOMnPK8Jct+uWPS9QE7v/",
-      "hashing_algorithm": "rabbit_password_hashing_sha256",
-      "tags": [
-        "administrator"
-      ],
       "limits": {}
     }
   ],
@@ -52,6 +52,20 @@
   ],
   "permissions": [
     {
+      "user": "guest",
+      "vhost": "/",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
+      "user": "file-service-pm",
+      "vhost": "vhost-password-manager",
+      "configure": ".*",
+      "write": ".*",
+      "read": ".*"
+    },
+    {
       "user": "email-service-pm",
       "vhost": "vhost-password-manager",
       "configure": ".*",
@@ -59,7 +73,7 @@
       "read": ".*"
     },
     {
-      "user": "file-service-pm",
+      "user": "authorization-server-pm",
       "vhost": "vhost-password-manager",
       "configure": ".*",
       "write": ".*",
@@ -74,20 +88,6 @@
     },
     {
       "user": "guest",
-      "vhost": "/",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
-    },
-    {
-      "user": "guest",
-      "vhost": "vhost-password-manager",
-      "configure": ".*",
-      "write": ".*",
-      "read": ".*"
-    },
-    {
-      "user": "authorization-server-pm",
       "vhost": "vhost-password-manager",
       "configure": ".*",
       "write": ".*",
@@ -96,6 +96,12 @@
   ],
   "topic_permissions": [],
   "parameters": [],
+  "global_parameters": [
+    {
+      "name": "internal_cluster_id",
+      "value": "rabbitmq-cluster-id-FQnUrUM_HKGmLOkKXXJj2A"
+    }
+  ],
   "policies": [],
   "queues": [
     {
@@ -106,8 +112,64 @@
       "arguments": {
         "x-queue-type": "classic"
       }
+    },
+    {
+      "name": "file.encryption.requested",
+      "vhost": "vhost-password-manager",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "file.encryption.failed",
+      "vhost": "vhost-password-manager",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
+    },
+    {
+      "name": "file.encryption.completed",
+      "vhost": "vhost-password-manager",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {}
     }
   ],
-  "exchanges": [],
-  "bindings": []
+  "exchanges": [
+    {
+      "name": "files.events",
+      "vhost": "vhost-password-manager",
+      "type": "topic",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "bindings": [
+    {
+      "source": "files.events",
+      "vhost": "vhost-password-manager",
+      "destination": "file.encryption.completed",
+      "destination_type": "queue",
+      "routing_key": "file.encryption.completed",
+      "arguments": {}
+    },
+    {
+      "source": "files.events",
+      "vhost": "vhost-password-manager",
+      "destination": "file.encryption.failed",
+      "destination_type": "queue",
+      "routing_key": "file.encryption.failed",
+      "arguments": {}
+    },
+    {
+      "source": "files.events",
+      "vhost": "vhost-password-manager",
+      "destination": "file.encryption.requested",
+      "destination_type": "queue",
+      "routing_key": "file.encryption.requested",
+      "arguments": {}
+    }
+  ]
 }
