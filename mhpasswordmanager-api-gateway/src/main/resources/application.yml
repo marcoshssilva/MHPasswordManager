@@ -9,7 +9,7 @@ spring:
     oauth2:
       resource-server:
         jwt:
-          jwk-set-uri: http://127.0.0.1:8080/mypass-manager/auth/oauth2/jwks
+          jwk-set-uri: http://127.0.0.1:${server.port}/mypass-manager/auth/oauth2/jwks
   cloud:
     gateway:
       httpclient:
