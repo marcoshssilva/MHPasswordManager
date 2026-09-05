@@ -18,5 +18,7 @@ public interface IS3StorageService {
 
     PutObjectResponse upload(String objectKey, RequestBody requestBody);
 
+    void delete(String objectKey);
+
     PresignedPutObjectRequest createPresignedUpload(String objectKey, String contentType, Duration expiration);
 }

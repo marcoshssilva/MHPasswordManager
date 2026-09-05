@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.enums.FileProcessingStatus;
 
 @lombok.Getter
 @lombok.Setter
@@ -17,4 +18,7 @@ public class StoredFile implements Serializable {
     private String id;
     private String bucket;
     private Map<String, String> metadata;
+    private FileProcessingStatus status;
+    private String error;
+    private Boolean ready;
 }

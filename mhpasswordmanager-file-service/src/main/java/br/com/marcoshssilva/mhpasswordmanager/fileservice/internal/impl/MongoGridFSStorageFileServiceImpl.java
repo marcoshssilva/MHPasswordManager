@@ -1,12 +1,13 @@
 package br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.impl;
 
-import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.PasswordServiceClient;
-import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.client.entities.DecryptKeyBase64Payload;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.amqp.queues.FileProcessingWorkerQueue;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.entities.StoredFileKey;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.enums.FileProcessingStatus;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.BucketStoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.etc.StoredFile;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.repositories.StoredFileKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IStorageFileService;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IS3StorageService;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.exceptions.StorageErrorException;
 import com.mongodb.client.gridfs.model.GridFSFile;
 import org.bson.types.ObjectId;
@@ -16,20 +17,17 @@ import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
 import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,37 +36,21 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
     private static final DateTimeFormatter METADATA_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private final StoredFileKeyRepository storedFileKeyRepository;
-    private final PasswordServiceClient passwordServiceClient;
     private final GridFsTemplate gridFsTemplate;
-    private final HttpServletRequest request;
+    private final FileProcessingWorkerQueue processingWorker;
+    private final IS3StorageService s3StorageService;
 
-    public MongoGridFSStorageFileServiceImpl(GridFsTemplate gridFsTemplate, HttpServletRequest request, StoredFileKeyRepository storedFileKeyRepository, PasswordServiceClient passwordServiceClient) {
+    public MongoGridFSStorageFileServiceImpl(GridFsTemplate gridFsTemplate, StoredFileKeyRepository storedFileKeyRepository, FileProcessingWorkerQueue processingWorker, IS3StorageService s3StorageService) {
         this.gridFsTemplate = gridFsTemplate;
-        this.request = request;
         this.storedFileKeyRepository = storedFileKeyRepository;
-        this.passwordServiceClient = passwordServiceClient;
+        this.processingWorker = processingWorker;
+        this.s3StorageService = s3StorageService;
     }
 
     @Override
     public StoredFile saveFileInStorage(MultipartFile file, String bucketUuid, Map<String, String> metadata) throws StorageErrorException {
         try {
-            /**
-             * Get token reusing from request header. Refactor in future to use any other authentication method.
-             */
-            String bearerToken = request.getHeader("Authorization");
-            if (Objects.isNull(bearerToken) || !bearerToken.startsWith("Bearer ")) {
-                throw new StorageErrorException("Credentials are not set.");
-            }
-
-            /**
-             * Generating random filename and content type from UUID.
-             */
-            String filename = bucketUuid.concat(UUID.randomUUID().toString());
-            String contentType = "application/octet-stream";
-
-            /**
-             * Put file metadata in a map.
-             */
+            String fileId = UUID.randomUUID().toString();
             Map<String, String> metadataMap = new HashMap<>(metadata.size() + 1);
             metadataMap.putAll(metadata);
             metadataMap.put("filename", file.getOriginalFilename());
@@ -78,18 +60,17 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             metadataMap.put("created_at", METADATA_DATE_FORMATTER.format(now));
             metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
 
-            /**
-             * Calling password-service to encrypt and save in database. Refactor in future to save asynchronously and return a future.
-             */
-            DecryptKeyBase64Payload response = passwordServiceClient.encryptFileUsingBucket(bearerToken, bucketUuid, file).block(Duration.ofSeconds(300));
-            if (Objects.isNull(response) || Objects.isNull(response.getData())) {
-                throw new StorageErrorException("Cannot encrypt file.");
-            }
-            InputStream inputStream = new ByteArrayInputStream(response.getData().getBytes(StandardCharsets.UTF_8));
-            ObjectId objectId = gridFsTemplate.store(inputStream, filename, contentType, metadataMap);
-            storedFileKeyRepository.save(StoredFileKey.builder().gridFsHex(objectId.toHexString()).metadata(metadataMap).bucket(bucketUuid).ready(Boolean.TRUE).build());
-
-            return StoredFile.builder().id(objectId.toHexString()).metadata(metadataMap).build();
+            Path temporaryFile = Files.createTempFile("mhp-upload-", ".bin");
+            try (InputStream input = file.getInputStream()) { Files.copy(input, temporaryFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
+            storedFileKeyRepository.save(StoredFileKey.builder().uuid(fileId).bucket(bucketUuid).stagingObjectKey("staging/" + fileId + "/source").metadata(metadataMap).status(FileProcessingStatus.UPLOAD_RECEIVED).ready(Boolean.FALSE).build());
+            processingWorker.storeSource(fileId, temporaryFile);
+            return StoredFile.builder()
+                    .id(fileId)
+                    .bucket(bucketUuid)
+                    .metadata(metadataMap)
+                    .status(FileProcessingStatus.UPLOAD_RECEIVED)
+                    .ready(Boolean.FALSE)
+                    .build();
         } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
@@ -103,12 +84,21 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
                 throw new StorageErrorException("File not found.");
             }
 
-            GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(storedFileKey.get().getGridFsHex()))));
-            if (file == null) {
-                throw new StorageErrorException("File not found.");
+            StoredFileKey fileKey = storedFileKey.get();
+            if (!Boolean.TRUE.equals(fileKey.getReady())) {
+                throw new StorageErrorException("File is still being processed.");
             }
-
-            return gridFsTemplate.getResource(file).getInputStream().readAllBytes();
+            try (InputStream input = s3StorageService.download(fileKey.getS3ObjectKey())) {
+                return input.readAllBytes();
+            } catch (Exception s3Exception) {
+                GridFSFile gridFsFile = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(fileKey.getGridFsHex()))));
+                if (gridFsFile == null) {
+                    throw s3Exception;
+                }
+                try (InputStream input = gridFsTemplate.getResource(gridFsFile).getInputStream()) {
+                    return input.readAllBytes();
+                }
+            }
         } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
@@ -122,7 +112,7 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             if (storedFileKey.isEmpty()) {
                 throw new StorageErrorException("File not found.");
             }
-            return StoredFile.builder().id(id).bucket(bucket).metadata(storedFileKey.get().getMetadata()).build();
+            return toStoredFile(storedFileKey.get());
         } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
@@ -136,9 +126,18 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
                 throw new StorageErrorException("File not found.");
             }
 
-            GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(storedFileKey.get().getGridFsHex()))));
-            if (file != null) {
-                gridFsTemplate.delete(Query.query(Criteria.where("_id").is(file.getId())));
+            StoredFileKey fileKey = storedFileKey.get();
+            if (fileKey.getGridFsHex() != null) {
+                GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(fileKey.getGridFsHex()))));
+                if (file != null) {
+                    gridFsTemplate.delete(Query.query(Criteria.where("_id").is(file.getId())));
+                }
+            }
+            if (fileKey.getS3ObjectKey() != null) {
+                s3StorageService.delete(fileKey.getS3ObjectKey());
+            }
+            if (fileKey.getStagingObjectKey() != null) {
+                s3StorageService.delete(fileKey.getStagingObjectKey());
             }
             storedFileKeyRepository.deleteById(id);
 
@@ -152,9 +151,20 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
     public BucketStoredFile getBucketInfo(String bucketUuid) throws StorageErrorException {
         try {
             Collection<StoredFileKey> bucketStoredFiles = storedFileKeyRepository.findByBucket(bucketUuid);
-            return BucketStoredFile.builder().files(bucketStoredFiles.stream().map(fileMetadata -> StoredFile.builder().id(fileMetadata.getUuid()).bucket(fileMetadata.getBucket()).metadata(fileMetadata.getMetadata()).build()).collect(Collectors.toCollection(java.util.HashSet::new))).build();
+            return BucketStoredFile.builder().files(bucketStoredFiles.stream().map(this::toStoredFile).collect(Collectors.toCollection(java.util.HashSet::new))).build();
         } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
+    }
+
+    private StoredFile toStoredFile(StoredFileKey file) {
+        return StoredFile.builder()
+                .id(file.getUuid())
+                .bucket(file.getBucket())
+                .metadata(file.getMetadata())
+                .status(file.getStatus())
+                .error(file.getError())
+                .ready(file.getReady())
+                .build();
     }
 }

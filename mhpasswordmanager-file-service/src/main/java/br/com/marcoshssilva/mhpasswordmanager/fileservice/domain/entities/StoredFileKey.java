@@ -6,6 +6,7 @@ import org.springframework.lang.Nullable;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.enums.FileProcessingStatus;
 
 @lombok.Getter
 @lombok.Setter
@@ -22,6 +23,10 @@ public class StoredFileKey implements Serializable {
     private String uuid;
     private String bucket;
     private String gridFsHex;
+    private String s3ObjectKey;
+    private String stagingObjectKey;
+    private FileProcessingStatus status;
+    private String error;
     private Map<String, String> metadata;
     private Boolean ready;
 }

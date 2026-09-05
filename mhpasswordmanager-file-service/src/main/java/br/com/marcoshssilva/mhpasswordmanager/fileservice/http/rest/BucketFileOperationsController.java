@@ -42,8 +42,8 @@ public class BucketFileOperationsController {
             }));
         }
         StoredFile storedFile = storageFileService.saveFileInStorage(file, bucketUuid, metadataMap);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Location", UriComponentsBuilder.fromPath("/mypass-manager/files/bucket/{bucketUuid}/{id}").buildAndExpand(bucketUuid, storedFile.getId()).toUriString())
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .header("Location", UriComponentsBuilder.fromPath("/mypass-manager/files/bucket/{bucketUuid}/{id}/info").buildAndExpand(bucketUuid, storedFile.getId()).toUriString())
                 .build();
     }
 
