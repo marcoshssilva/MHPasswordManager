@@ -22,6 +22,14 @@ spring:
       resource-server:
         jwt:
           issuer-uri: http://127.0.0.1:8080/mypass-manager/auth/
+storage:
+  s3:
+    endpoint: ${STORAGE_S3_ENDPOINT:http://127.0.0.1:9000}
+    region: ${STORAGE_S3_REGION:us-east-1}
+    bucket: ${STORAGE_S3_BUCKET:mhp-files}
+    access-key: ${STORAGE_S3_ACCESS_KEY:file-service}
+    secret-key: ${STORAGE_S3_SECRET_KEY:MHPasswordManagerFileService2026}
+    path-style-access: ${STORAGE_S3_PATH_STYLE_ACCESS:true}
 springdoc:
   swagger-ui:
     oauth2-redirect-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL:http://127.0.0.1:8080/mypass-manager/files/swagger-ui/redirect}
