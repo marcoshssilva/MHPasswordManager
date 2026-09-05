@@ -292,6 +292,27 @@ services:
     profiles:
       - tools
       - all
+  minio:
+    restart: on-failure
+    build:
+      context: ./etc/docker/tool-minio
+    env_file:
+      - etc/env/MINIO.env
+    networks:
+      - net
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - data-minio:/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:9000/minio/health/live || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    profiles:
+      - tools
+      - all
 networks:
   net:
     driver: bridge
@@ -301,3 +322,4 @@ volumes:
   data-mongo-db:
   data-rabbitmq-logs:
   data-rabbitmq-data:
+  data-minio:
