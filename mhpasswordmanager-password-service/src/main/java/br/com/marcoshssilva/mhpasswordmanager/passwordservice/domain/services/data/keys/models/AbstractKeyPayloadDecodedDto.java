@@ -17,7 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -54,12 +54,12 @@ public abstract class AbstractKeyPayloadDecodedDto implements Serializable {
     @JsonProperty(value = "last_update")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     @Schema(hidden = true)
-    private LocalDateTime lastUpdate;
+    private OffsetDateTime lastUpdate;
 
     @JsonProperty(value = "created_at")
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
     @Schema(hidden = true)
-    private LocalDateTime createdAt;
+    private OffsetDateTime createdAt;
 
     @JsonIgnore
     public abstract PasswordKeyTypesEnum getType();

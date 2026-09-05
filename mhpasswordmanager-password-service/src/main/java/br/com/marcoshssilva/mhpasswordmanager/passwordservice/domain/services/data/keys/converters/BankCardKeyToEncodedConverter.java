@@ -27,8 +27,8 @@ public class BankCardKeyToEncodedConverter extends AbstractKeyDecodedToEncodedCo
             final String base64Encrypted = super.encryptAndEncodeAsBase64(dataDecrypted, key);
             final KeyStorePayloadEncodedDto payloadEncodedDto = KeyStorePayloadEncodedDto.builder()
                     .id(data.getId())
-                    .lastUpdate(data.getLastUpdate())
-                    .createdAt(data.getCreatedAt())
+                    .lastUpdate(toUtcLocalDateTime(data.getLastUpdate()))
+                    .createdAt(toUtcLocalDateTime(data.getCreatedAt()))
                     .data(base64Encrypted)
                     .build();
 

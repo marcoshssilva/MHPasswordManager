@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -20,7 +20,7 @@ public class HttpErrorResponse implements Serializable {
     private String message;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ssZ")
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
 
     @Override
     public boolean equals(Object o) {

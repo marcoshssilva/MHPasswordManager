@@ -11,6 +11,9 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Map;
 
 @lombok.RequiredArgsConstructor
@@ -24,8 +27,8 @@ public abstract class AbstractKeyDecodedToEncodedConverter<T extends AbstractKey
 
             builder.id(data.getKeyId());
             builder.tags(data.getTags());
-            builder.lastUpdate(data.getLastUpdate());
-            builder.createdAt(data.getCreatedAt());
+            builder.lastUpdate(toUtcLocalDateTime(data.getLastUpdate()));
+            builder.createdAt(toUtcLocalDateTime(data.getCreatedAt()));
             builder.ownerId(data.getOwnerId());
             builder.description(data.getDescription());
 
@@ -62,5 +65,9 @@ public abstract class AbstractKeyDecodedToEncodedConverter<T extends AbstractKey
 
     protected CryptService getCryptService() {
         return cryptService;
+    }
+
+    protected LocalDateTime toUtcLocalDateTime(OffsetDateTime dateTime) {
+        return dateTime == null ? null : dateTime.withOffsetSameInstant(ZoneOffset.UTC).toLocalDateTime();
     }
 }
