@@ -1,6 +1,11 @@
 otel:
   sdk:
     disabled: ${OTEL_SDK_DISABLED:false}
+  exporter:
+    otlp:
+      endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}
+      protocol: ${OTEL_EXPORTER_OTLP_PROTOCOL:http/protobuf}
+      headers: ${OTEL_EXPORTER_OTLP_HEADERS:}
   instrumentation:
     common:
       default-enabled: true
@@ -51,35 +56,3 @@ otel:
         value: ${CLOUD_PROVIDER:none}
       - name: cloud.region
         value: ${CLOUD_REGION:local}
-  tracer_provider:
-    sampler:
-      parent_based:
-        root:
-          always_on:
-    processors:
-      - batch:
-          exporter:
-            otlp_http:
-              endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/traces
-              headers:
-                - name: Authorization
-                  value: ${OTEL_AUTHORIZATION_HEADER:}
-
-  meter_provider:
-    readers:
-      - periodic:
-          exporter:
-            otlp_http:
-              endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/metrics
-              headers:
-                - name: Authorization
-                  value: ${OTEL_AUTHORIZATION_HEADER:}
-  logger_provider:
-    processors:
-      - batch:
-          exporter:
-            otlp_http:
-              endpoint: ${OTEL_EXPORTER_OTLP_ENDPOINT:http://localhost:4318}/v1/logs
-              headers:
-                - name: Authorization
-                  value: ${OTEL_AUTHORIZATION_HEADER:}
