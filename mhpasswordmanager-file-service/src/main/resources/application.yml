@@ -13,8 +13,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 96MB
-      max-request-size: 110MB
+      max-file-size: 10MB
+      max-request-size: 12MB
       resolve-lazily: false
   session:
     store-type: none
