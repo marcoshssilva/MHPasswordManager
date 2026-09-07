@@ -10,8 +10,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.amqp.queues.FileProcessingWorkerQueue;
+import org.springframework.amqp.core.Queue;
+
 @Configuration
 public class RabbitConfig {
+
+    @Bean
+    public Queue encryptionCompletedQueue() {
+        return new Queue(FileProcessingWorkerQueue.ENCRYPTION_COMPLETED, true);
+    }
+
+    @Bean
+    public Queue encryptionFailedQueue() {
+        return new Queue(FileProcessingWorkerQueue.ENCRYPTION_FAILED, true);
+    }
+
+    @Bean
+    public Queue encryptionRequestedQueue() {
+        return new Queue(FileProcessingWorkerQueue.ENCRYPTION_REQUESTED, true);
+    }
 
     @Bean
     public MessageConverter converter() {
