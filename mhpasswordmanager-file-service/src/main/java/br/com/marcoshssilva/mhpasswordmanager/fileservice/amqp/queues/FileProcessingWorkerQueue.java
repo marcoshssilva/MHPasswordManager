@@ -65,7 +65,7 @@ public class FileProcessingWorkerQueue {
         }
     }
 
-    @RabbitListener(queues = FileProcessingWorkerQueue.ENCRYPTION_COMPLETED)
+    @RabbitListener(id = "completeEncryptionListener", queues = FileProcessingWorkerQueue.ENCRYPTION_COMPLETED)
     public void complete(FileEncryptionCompletedEvent event) {
         Path encrypted = null;
         try {
@@ -110,7 +110,7 @@ public class FileProcessingWorkerQueue {
         }
     }
 
-    @RabbitListener(queues = FileProcessingWorkerQueue.ENCRYPTION_FAILED)
+    @RabbitListener(id = "failedEncryptionListener", queues = FileProcessingWorkerQueue.ENCRYPTION_FAILED)
     public void encryptionFailed(FileEncryptionFailedEvent event) {
         try {
             fail(event.getFileId(), event.getError());
