@@ -1,6 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.fileservice.amqp.queues;
 
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.Application;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.RabbitMQMockTestConfiguration;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.amqp.models.FileEncryptionCompletedEvent;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.amqp.models.FileEncryptionFailedEvent;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.entities.StoredFileKey;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.when;
 @ActiveProfiles("test")
 @SpringBootTest(classes = Application.class)
 @RabbitListenerTest(spy = true, capture = true)
+@Import(RabbitMQMockTestConfiguration.class)
 class FileProcessingWorkerQueueListenerTests {
 
     @Autowired
