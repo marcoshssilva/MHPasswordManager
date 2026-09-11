@@ -1,5 +1,7 @@
 package br.com.marcoshssilva.mhpasswordmanager.oauth2server.web.data.models;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -8,6 +10,8 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Objects;
 
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @ToString
 @Getter
