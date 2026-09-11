@@ -27,7 +27,7 @@ import java.util.UUID;
 
 @Component
 @ConditionalOnProperty(name = "config.users.mode", havingValue = "WEB_CLIENT")
-public final class UserServiceWebClient {
+public class UserServiceWebClient {
     private static final String ACCOUNT_PATH = "/account";
     private final WebClient webClient;
     private final Duration responseTimeoutDuration;
@@ -35,6 +35,11 @@ public final class UserServiceWebClient {
     public UserServiceWebClient(@LoadBalanced WebClient.Builder webClientBuilder, UserServiceWebClientProperties properties, OAuth2AuthorizedClientManager userServiceOAuth2AuthorizedClientManager, @Value("${config.users.webclient.request-timeout:3s}") Duration responseTimeoutDuration) {
         this.responseTimeoutDuration = responseTimeoutDuration;
         this.webClient = createWebClient(webClientBuilder, properties, userServiceOAuth2AuthorizedClientManager);
+    }
+
+    UserServiceWebClient(WebClient webClient, Duration responseTimeoutDuration) {
+        this.responseTimeoutDuration = responseTimeoutDuration;
+        this.webClient = webClient;
     }
 
     private WebClient createWebClient(WebClient.Builder webClientBuilder, UserServiceWebClientProperties properties, OAuth2AuthorizedClientManager userServiceOAuth2AuthorizedClientManager) {
