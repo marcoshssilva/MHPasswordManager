@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.cr
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.crypt.exceptions.EncryptionException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketCannotBeCreatedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.exceptions.ResultDataErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyRegistrationErrorException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.keys.exceptions.KeyEncodedErrorConverterException;
@@ -118,6 +119,45 @@ public class RestControllerExceptionManager {
     public ResponseEntity<HttpErrorResponse> illegalArgumentExceptionResolver(IllegalArgumentException e, HttpServletRequest req){
         LOGGER.error("Error handling illegal argument", e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                HttpErrorResponse.builder()
+                        .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
+                        .build());
+    }
+
+    @ExceptionHandler(ResultDataErrorException.class)
+    public ResponseEntity<HttpErrorResponse> resultDataErrorExceptionResolver(ResultDataErrorException e, HttpServletRequest req) {
+        if (e.getCause() instanceof KeyNotFoundException keyNotFoundException) {
+            return keyNotFoundExceptionResolver(keyNotFoundException, req);
+        }
+        if (e.getCause() instanceof UserRegistrationNotFoundException userRegistrationNotFoundException) {
+            return userRegistrationNotFoundExceptionResolver(userRegistrationNotFoundException, req);
+        }
+        if (e.getCause() instanceof BucketNotFoundException bucketNotFoundException) {
+            return bucketNotFoundExceptionResolver(bucketNotFoundException, req);
+        }
+        if (e.getCause() instanceof KeyRegistrationErrorException keyRegistrationErrorException) {
+            return keyRegistrationExceptionResolver(keyRegistrationErrorException, req);
+        }
+        if (e.getCause() instanceof KeyEncodedErrorConverterException keyEncodedErrorConverterException) {
+            return keyEncodedErrorConverterExceptionResolver(keyEncodedErrorConverterException, req);
+        }
+        if (e.getCause() instanceof BucketCannotBeCreatedException bucketCannotBeCreatedException) {
+            return bucketCannotBeCreatedExceptionResolver(bucketCannotBeCreatedException, req);
+        }
+        if (e.getCause() instanceof DecryptionException decryptionException) {
+            return decryptionExceptionResolver(decryptionException, req);
+        }
+        if (e.getCause() instanceof EncryptionException encryptionException) {
+            return encryptionExceptionResolver(encryptionException, req);
+        }
+        if (e.getCause() instanceof UserAuthorizationCannotBeLoadedException userAuthorizationCannotBeLoadedException) {
+            return userAuthorizationCannotBeLoadedExceptionResolver(userAuthorizationCannotBeLoadedException, req);
+        }
+        if (e.getCause() instanceof IllegalArgumentException illegalArgumentException) {
+            return illegalArgumentExceptionResolver(illegalArgumentException, req);
+        }
+        LOGGER.error("Error ResultDataErrorException", e);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 HttpErrorResponse.builder()
                         .message(e.getMessage()).timestamp(OffsetDateTime.now(Clock.systemUTC())).path(req.getServletPath())
                         .build());
