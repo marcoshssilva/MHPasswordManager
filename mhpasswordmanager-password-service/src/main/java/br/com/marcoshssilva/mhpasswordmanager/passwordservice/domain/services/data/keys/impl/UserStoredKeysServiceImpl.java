@@ -147,7 +147,7 @@ public class UserStoredKeysServiceImpl implements UserStoredKeysService {
 
         try {
             deleteStoredKey(bucket.getData(), keyId, keyStoreId);
-            return VOID_I_RESULT_DATA_FACTORY.success(Void.class.getDeclaredConstructor().newInstance(), "SUCCESS");
+            return VOID_I_RESULT_DATA_FACTORY.success(null, "SUCCESS");
         } catch (Exception e) {
             return VOID_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
         }
