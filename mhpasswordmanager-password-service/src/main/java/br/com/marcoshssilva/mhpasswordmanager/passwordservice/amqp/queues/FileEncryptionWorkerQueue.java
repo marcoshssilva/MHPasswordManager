@@ -32,7 +32,7 @@ public class FileEncryptionWorkerQueue {
         this.storageService = storageService; this.bucketRepository = bucketRepository; this.rsaCryptService = rsaCryptService; this.rabbitTemplate = rabbitTemplate;
     }
 
-    @RabbitListener(queues = FileEncryptionWorkerQueue.ENCRYPTION_REQUESTED)
+    @RabbitListener(id = "encryptListener", queues = FileEncryptionWorkerQueue.ENCRYPTION_REQUESTED)
     public void encrypt(FileEncryptionRequestedEvent event) {
         try {
             UserBucket bucket = bucketRepository.findById(event.getBucketUuid()).orElseThrow(() -> new IllegalArgumentException("Bucket not found"));
