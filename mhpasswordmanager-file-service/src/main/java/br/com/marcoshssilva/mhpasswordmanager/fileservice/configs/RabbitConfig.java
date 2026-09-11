@@ -1,6 +1,9 @@
 package br.com.marcoshssilva.mhpasswordmanager.fileservice.configs;
 
 import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.converter.Jackson2JavaTypeMapper;
@@ -29,6 +32,26 @@ public class RabbitConfig {
     @Bean
     public Queue encryptionRequestedQueue() {
         return new Queue(FileProcessingWorkerQueue.ENCRYPTION_REQUESTED, true);
+    }
+
+    @Bean
+    public TopicExchange filesEventsExchange() {
+        return new TopicExchange(FileProcessingWorkerQueue.EXCHANGE);
+    }
+
+    @Bean
+    public Binding encryptionCompletedBinding(Queue encryptionCompletedQueue, TopicExchange filesEventsExchange) {
+        return BindingBuilder.bind(encryptionCompletedQueue).to(filesEventsExchange).with(FileProcessingWorkerQueue.ENCRYPTION_COMPLETED);
+    }
+
+    @Bean
+    public Binding encryptionFailedBinding(Queue encryptionFailedQueue, TopicExchange filesEventsExchange) {
+        return BindingBuilder.bind(encryptionFailedQueue).to(filesEventsExchange).with(FileProcessingWorkerQueue.ENCRYPTION_FAILED);
+    }
+
+    @Bean
+    public Binding encryptionRequestedBinding(Queue encryptionRequestedQueue, TopicExchange filesEventsExchange) {
+        return BindingBuilder.bind(encryptionRequestedQueue).to(filesEventsExchange).with(FileProcessingWorkerQueue.ENCRYPTION_REQUESTED);
     }
 
     @Bean
