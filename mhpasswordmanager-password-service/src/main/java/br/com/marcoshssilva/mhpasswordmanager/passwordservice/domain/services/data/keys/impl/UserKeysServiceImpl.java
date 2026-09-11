@@ -221,7 +221,7 @@ public class UserKeysServiceImpl implements UserKeysService {
             Arrays.stream(resultData.getData().getEncodedKeys()).forEach(keyStored -> userPasswordStoredValueRepository.deleteById(keyStored.getId()));
             // delete key
             userPasswordKeyRepository.deleteById(resultData.getData().getId());
-            return VOID_I_RESULT_DATA_FACTORY.success(Void.class.getDeclaredConstructor().newInstance(), STRING_MSG_SUCCESS);
+            return VOID_I_RESULT_DATA_FACTORY.success(null, STRING_MSG_SUCCESS);
         } catch (Exception e) {
             return VOID_I_RESULT_DATA_FACTORY.exception(e, e.getMessage());
         }
