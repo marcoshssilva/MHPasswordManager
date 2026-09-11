@@ -10,6 +10,7 @@ import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.enums.FileProce
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.repositories.StoredFileKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IS3StorageService;
 
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
@@ -48,6 +50,9 @@ class FileProcessingWorkerQueueListenerTests {
 
     @Autowired
     private StoredFileKeyRepository repository;
+
+    @Autowired
+    private GridFsTemplate gridFsTemplate;
 
     @MockBean
     private IS3StorageService s3;
@@ -121,5 +126,39 @@ class FileProcessingWorkerQueueListenerTests {
                 assertThat(file.getReady()).isFalse();
                 assertThat(file.getError()).isEqualTo("Encryption error");
             });
+    }
+
+    @DisplayName("Should complete encryption for updated file and clean up old gridfs object")
+    @Test
+    void shouldCompleteEncryptionAndCleanupOldGridFsOnUpdate() throws Exception {
+        ObjectId oldGridFsId = gridFsTemplate.store(new ByteArrayInputStream("old content".getBytes()), "old-file", "application/octet-stream");
+
+        FileEncryptionCompletedEvent event = new FileEncryptionCompletedEvent();
+        event.setFileId("file-update-123");
+        event.setEncryptedObjectKey("encrypted/file-update-123");
+
+        StoredFileKey storedFile = new StoredFileKey();
+        storedFile.setUuid("file-update-123");
+        storedFile.setStatus(FileProcessingStatus.ENCRYPTING);
+        storedFile.setBucket("bucket-uuid");
+        storedFile.setStagingObjectKey("staging/file-update-123");
+        storedFile.setGridFsHex(oldGridFsId.toHexString());
+        repository.save(storedFile);
+
+        when(s3.download("encrypted/file-update-123")).thenReturn(new ResponseInputStream<>(
+                GetObjectResponse.builder().build(),
+                new ByteArrayInputStream("new encrypted content".getBytes())
+        ));
+
+        rabbitTemplate.convertAndSend(FileProcessingWorkerQueue.ENCRYPTION_COMPLETED, event);
+
+        var invocationData = harness.getNextInvocationDataFor("completeEncryptionListener", 5, TimeUnit.SECONDS);
+
+        assertThat(invocationData).isNotNull();
+        StoredFileKey updated = repository.findById("file-update-123").orElseThrow();
+        assertThat(updated.getStatus()).isEqualTo(FileProcessingStatus.READY);
+        assertThat(updated.getReady()).isTrue();
+        assertThat(updated.getGridFsHex()).isNotEqualTo(oldGridFsId.toHexString());
+        assertThat(gridFsTemplate.findOne(org.springframework.data.mongodb.core.query.Query.query(org.springframework.data.mongodb.core.query.Criteria.where("_id").is(oldGridFsId)))).isNull();
     }
 }
