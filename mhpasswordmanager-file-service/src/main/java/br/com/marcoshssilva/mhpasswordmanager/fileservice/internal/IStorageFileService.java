@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface IStorageFileService {
     StoredFile saveFileInStorage(MultipartFile file, String bucket, Map<String, String> metadata) throws StorageErrorException;
+    StoredFile updateFileInStorage(MultipartFile file, String bucket, String id, Map<String, String> metadata) throws StorageErrorException;
     byte[] getFileInStorage(String id, String bucket) throws StorageErrorException;
     StoredFile getMetadataInStorage(String id, String bucket) throws StorageErrorException;
     Boolean deleteFileInStorage(String id, String bucket) throws StorageErrorException;

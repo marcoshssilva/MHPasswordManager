@@ -77,6 +77,48 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
     }
 
     @Override
+    public StoredFile updateFileInStorage(MultipartFile file, String bucketUuid, String id, Map<String, String> metadata) throws StorageErrorException {
+        try {
+            Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucketUuid);
+            if (storedFileKey.isEmpty()) {
+                throw new StorageErrorException("File not found.");
+            }
+
+            StoredFileKey fileKey = storedFileKey.get();
+            Map<String, String> metadataMap = new HashMap<>();
+            if (fileKey.getMetadata() != null) {
+                metadataMap.putAll(fileKey.getMetadata());
+            }
+            if (metadata != null) {
+                metadataMap.putAll(metadata);
+            }
+            metadataMap.put("filename", file.getOriginalFilename());
+            metadataMap.put("content_type", file.getContentType());
+            metadataMap.put("bucket_uuid", bucketUuid);
+            LocalDateTime now = LocalDateTime.now(CLOCK);
+            if (!metadataMap.containsKey("created_at")) {
+                metadataMap.put("created_at", METADATA_DATE_FORMATTER.format(now));
+            }
+            metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
+
+            Path temporaryFile = Files.createTempFile("mhp-upload-", ".bin");
+            try (InputStream input = file.getInputStream()) { Files.copy(input, temporaryFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
+
+            fileKey.setMetadata(metadataMap);
+            fileKey.setStagingObjectKey("staging/" + id + "/source");
+            fileKey.setStatus(FileProcessingStatus.UPLOAD_RECEIVED);
+            fileKey.setReady(Boolean.FALSE);
+            fileKey.setError(null);
+            storedFileKeyRepository.save(fileKey);
+
+            processingWorker.storeSource(id, temporaryFile);
+            return toStoredFile(fileKey);
+        } catch (Exception e) {
+            throw new StorageErrorException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public byte[] getFileInStorage(String id, String bucket) throws StorageErrorException {
         try {
             Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucket);

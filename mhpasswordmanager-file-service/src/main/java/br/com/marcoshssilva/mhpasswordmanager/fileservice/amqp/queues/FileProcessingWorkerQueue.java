@@ -11,6 +11,8 @@ import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IS3StorageSer
 import org.bson.types.ObjectId;
 import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -82,12 +84,19 @@ public class FileProcessingWorkerQueue {
             CompletableFuture<Void> s3Copy = CompletableFuture.runAsync(() -> s3.upload(finalKey, RequestBody.fromFile(finalEncrypted)));
             CompletableFuture<ObjectId> gridFsCopy = CompletableFuture.supplyAsync(() -> storeGridFsCopy(finalEncrypted, finalKey, file));
             CompletableFuture.allOf(s3Copy, gridFsCopy).join();
+            String oldGridFsHex = file.getGridFsHex();
             file.setGridFsHex(gridFsCopy.join().toHexString());
             file.setS3ObjectKey(finalKey);
             file.setStatus(FileProcessingStatus.READY);
             file.setReady(Boolean.TRUE);
             file.setError(null);
             repository.save(file);
+            if (oldGridFsHex != null && !oldGridFsHex.equals(file.getGridFsHex())) {
+                try {
+                    gridFs.delete(Query.query(Criteria.where("_id").is(new ObjectId(oldGridFsHex))));
+                } catch (Exception ignored) {
+                }
+            }
             deleteQuietly(file.getStagingObjectKey());
             deleteQuietly(event.getEncryptedObjectKey());
         } catch (Exception e) {

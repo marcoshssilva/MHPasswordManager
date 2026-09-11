@@ -47,6 +47,18 @@ public class BucketFileOperationsController {
                 .build();
     }
 
+    @PutMapping(value = "/{bucketUuid}/{key}/put-file", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> updateBucketFileKey(@PathVariable String bucketUuid, @PathVariable String key, @RequestPart("file") MultipartFile file, @RequestPart(value = "metadata", required = false) String metadata) throws IOException, StorageErrorException {
+        HashMap<String, String> metadataMap = new HashMap<>();
+        if (metadata != null) {
+            metadataMap.putAll(objectMapper.readValue(metadata, new TypeReference<Map<String, String>>() {
+            }));
+        }
+        storageFileService.updateFileInStorage(file, bucketUuid, key, metadataMap);
+        return ResponseEntity.status(HttpStatus.ACCEPTED)
+                .build();
+    }
+
     @GetMapping("/{bucketUuid}/info")
     public ResponseEntity<BucketStoredFile> getBucketInfo(@PathVariable String bucketUuid) throws StorageErrorException {
         return ResponseEntity.ok(storageFileService.getBucketInfo(bucketUuid));
