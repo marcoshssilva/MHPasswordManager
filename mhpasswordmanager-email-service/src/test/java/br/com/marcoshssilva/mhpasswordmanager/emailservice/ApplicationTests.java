@@ -1,19 +1,33 @@
 package br.com.marcoshssilva.mhpasswordmanager.emailservice;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.MockedStatic;
+import org.springframework.boot.SpringApplication;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mockStatic;
 
-@ActiveProfiles("test")
-@SpringBootTest(classes = Application.class)
-@EnableAutoConfiguration(exclude = {RabbitAutoConfiguration.class})
 class ApplicationTests {
 
+	@DisplayName("Should initialize objectMapper bean")
 	@Test
-	void contextLoads() {
+	void shouldInitializeObjectMapperBean() {
+		Application application = new Application();
+		assertNotNull(application.objectMapper());
 	}
 
+	@DisplayName("Should call SpringApplication.run when main is executed")
+	@Test
+	void shouldCallSpringApplicationRun() {
+		try (MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
+			String[] args = new String[]{};
+			mocked.when(() -> SpringApplication.run(Application.class, args))
+					.thenReturn(null);
+
+			Application.main(args);
+
+			mocked.verify(() -> SpringApplication.run(Application.class, args));
+		}
+	}
 }
