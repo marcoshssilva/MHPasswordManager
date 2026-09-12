@@ -1,19 +1,25 @@
 package br.com.marcoshssilva.mhpasswordmanager.userservice;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.MockedStatic;
+import org.springframework.boot.SpringApplication;
 
-@SpringBootTest
-@ActiveProfiles("test")
+import static org.mockito.Mockito.mockStatic;
+
 class MhPasswordManagerUserServiceApplicationTests {
-	private final Logger log = LoggerFactory.getLogger(MhPasswordManagerUserServiceApplicationTests.class);
 
+	@DisplayName("Should call SpringApplication.run when main is executed")
 	@Test
-	void contextLoads() {
-		log.info("Application started with SUCCESS.");
-	}
+	void shouldCallSpringApplicationRun() {
+		try (MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
+			String[] args = new String[]{};
+			mocked.when(() -> SpringApplication.run(MhPasswordManagerUserServiceApplication.class, args))
+					.thenReturn(null);
 
+			MhPasswordManagerUserServiceApplication.main(args);
+
+			mocked.verify(() -> SpringApplication.run(MhPasswordManagerUserServiceApplication.class, args));
+		}
+	}
 }
