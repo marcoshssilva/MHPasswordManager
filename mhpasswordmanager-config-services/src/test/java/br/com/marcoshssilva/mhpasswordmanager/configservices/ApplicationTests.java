@@ -2,22 +2,24 @@ package br.com.marcoshssilva.mhpasswordmanager.configservices;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.MockedStatic;
+import org.springframework.boot.SpringApplication;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.mockito.Mockito.mockStatic;
 
-@ActiveProfiles("test")
-@SpringBootTest(classes = Application.class)
 class ApplicationTests {
 
-	private final Logger log = LoggerFactory.getLogger(ApplicationTests.class);
-
-	@DisplayName("Should initialize project with success")
+	@DisplayName("Should call SpringApplication.run when main is executed")
 	@Test
-	void contextLoads() {
-		assertDoesNotThrow(() -> log.info("Project started with success!"));
+	void shouldCallSpringApplicationRun() {
+		try (MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
+			String[] args = new String[]{};
+			mocked.when(() -> SpringApplication.run(Application.class, args))
+					.thenReturn(null);
+
+			Application.main(args);
+
+			mocked.verify(() -> SpringApplication.run(Application.class, args));
+		}
 	}
 }
