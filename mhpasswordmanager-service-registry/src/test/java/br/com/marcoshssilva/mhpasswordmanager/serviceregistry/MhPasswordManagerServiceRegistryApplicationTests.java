@@ -2,28 +2,24 @@ package br.com.marcoshssilva.mhpasswordmanager.serviceregistry;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.mockito.MockedStatic;
+import org.springframework.boot.SpringApplication;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.mockStatic;
 
-@SpringBootTest
 class MhPasswordManagerServiceRegistryApplicationTests {
-	private final Logger log = LoggerFactory.getLogger(MhPasswordManagerServiceRegistryApplicationTests.class);
 
-	@DisplayName("Should initialize project with success")
+	@DisplayName("Should call SpringApplication.run when main is executed")
 	@Test
-	void contextLoads() {
-		assertDoesNotThrow(() -> {
-			log.info("Project started with success!");
-		});
-	}
+	void shouldCallSpringApplicationRun() {
+		try (MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
+			String[] args = new String[]{};
+			mocked.when(() -> SpringApplication.run(MhPasswordManagerServiceRegistryApplication.class, args))
+					.thenReturn(null);
 
-	@DisplayName("Should call main but using a ")
-	@Test
-	void shouldExposeApplicationClass() {
-		assertNotNull(MhPasswordManagerServiceRegistryApplication.class);
+			MhPasswordManagerServiceRegistryApplication.main(args);
+
+			mocked.verify(() -> SpringApplication.run(MhPasswordManagerServiceRegistryApplication.class, args));
+		}
 	}
 }
