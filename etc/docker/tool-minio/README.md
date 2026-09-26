@@ -2,6 +2,13 @@
 
 Local S3-compatible object storage used by the file upload flow.
 
+The Dockerfiles compile the server and client from pinned upstream Go module
+versions because the historical `minio/minio` and `minio/mc` container images
+are no longer publicly accessible from the registries tested. This follows the
+[upstream source-only distribution](https://github.com/minio/minio#source-only-distribution).
+The first build downloads Go dependencies and can take several minutes.
+Use the `MINIO_VERSION` and `MC_VERSION` build arguments to change source versions.
+
 - S3 API: `http://localhost:9000`
 - Console: `http://localhost:9001`
 

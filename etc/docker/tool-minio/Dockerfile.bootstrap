@@ -1,4 +1,12 @@
-FROM minio/mc:latest
+FROM golang:1.26-alpine AS builder
+
+ARG MC_VERSION=v0.0.0-20251106162529-77f82e18b540
+RUN CGO_ENABLED=0 go install github.com/minio/mc@${MC_VERSION}
+
+FROM alpine:3.23
+
+RUN apk add --no-cache ca-certificates
+COPY --from=builder /go/bin/mc /usr/local/bin/mc
 
 COPY scripts/bootstrap.sh /usr/local/bin/bootstrap.sh
 
