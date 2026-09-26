@@ -5,6 +5,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public final class ImageUtils {
@@ -20,5 +21,15 @@ public final class ImageUtils {
         graphics2D.drawImage(originalImage, 0, 0, targetWidth, targetHeight, null);
         graphics2D.dispose();
         return resizedImage;
+    }
+
+    public static File saveImageAsTemp(BufferedImage image) throws IOException {
+        File outputFile = File.createTempFile("image", ".png");
+        ImageIO.write(image, "png", outputFile);
+        return outputFile;
+    }
+
+    public static void saveImageToOutputFile(BufferedImage image, File outputFile) throws IOException {
+        ImageIO.write(image, "png", outputFile);
     }
 }
