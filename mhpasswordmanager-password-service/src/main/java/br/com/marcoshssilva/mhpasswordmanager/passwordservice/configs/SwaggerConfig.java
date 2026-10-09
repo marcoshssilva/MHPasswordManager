@@ -23,7 +23,8 @@ import org.springframework.context.annotation.Configuration;
                         tokenUrl = "${springdoc.swagger-ui.oauth2-token-url}",
                         scopes = {
                                 @OAuthScope(name = "profile", description = "Can read your own profile"),
-                                @OAuthScope(name = "email", description = "Can do login using email")
+                                @OAuthScope(name = "email", description = "Can do login using email"),
+                                @OAuthScope(name = "openid", description = "Can authenticate using OpenID Connect")
                         }))
 )
 @OpenAPIDefinition
