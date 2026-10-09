@@ -34,7 +34,7 @@ public class AccountDetails implements Serializable {
     @Column(name = "verified_at", columnDefinition = "TIMESTAMP")
     private LocalDateTime verifiedAt;
 
-    @Column(name = "imageurl")
+    @Column(name = "imageurl", length = 2048)
     private String imageUrl;
 
     @Override

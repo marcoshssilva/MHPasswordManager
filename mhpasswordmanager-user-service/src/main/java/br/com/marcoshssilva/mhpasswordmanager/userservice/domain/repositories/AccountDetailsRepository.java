@@ -6,11 +6,17 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Repository
 public interface AccountDetailsRepository extends JpaRepository<AccountDetails, AccountDetailsPK> {
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query("UPDATE AccountDetails ad SET ad.imageUrl = ?2 WHERE ad.id.username = ?1")
+    int updateImageUrlByUsername(String username, String imageUrl);
+
     @Modifying(clearAutomatically = true)
     @Query("UPDATE AccountDetails ad SET ad.firstName = ?2, ad.lastName = ?3 WHERE ad.id.username = ?1")
     void updateAccountDetailsByUsername(String username, String firstName, String lastName);
