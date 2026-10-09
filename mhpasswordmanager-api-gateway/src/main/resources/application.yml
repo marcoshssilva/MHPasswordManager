@@ -110,3 +110,8 @@ eureka:
 otel:
   sdk:
     disabled: true
+avatar:
+  bucket: ${AVATAR_S3_BUCKET:}
+  region: ${AVATAR_S3_REGION:us-east-1}
+  endpoint: ${AVATAR_S3_ENDPOINT:}
+  path-style-access: ${AVATAR_S3_PATH_STYLE_ACCESS:false}
