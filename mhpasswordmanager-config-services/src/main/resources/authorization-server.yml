@@ -49,6 +49,10 @@ oauth-config-starter:
         - 'profile'
         - 'email'
         - 'openid'
+        - 'user:changeImageProfile'
+        - 'user:delete'
+        - 'user:validatePassword'
+        - 'user:updatePassword'
       tokenSettings:
         durationInMillis: 900000
         reuseRefreshToken: false
@@ -64,10 +68,15 @@ oauth-config-starter:
         - CLIENT_CREDENTIALS
       scopes:
         - 'global:fullAccess'
-        - 'users:any'
-        - 'users:read'
-        - 'users:write'
         - 'users:reset-password'
+        - 'users:delete'
+        - 'users:canVerify'
+        - 'users:create'
+        - 'users:changeImageProfile'
+        - 'users:update'
+        - 'users:get'
+        - 'users:searchByEmail'
+        - 'users:validatePassword'
       tokenSettings:
         durationInMillis: 180000
     - clientName: 'Registered client for Eureka'
