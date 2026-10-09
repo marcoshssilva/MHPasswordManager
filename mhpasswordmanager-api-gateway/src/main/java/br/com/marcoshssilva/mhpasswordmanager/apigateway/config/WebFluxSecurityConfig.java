@@ -29,6 +29,7 @@ public class WebFluxSecurityConfig {
             "/mypass-manager/auth/v3/api-docs/swagger-config",
             "/mypass-manager/auth/swagger-ui.html",
             "/mypass-manager/auth/swagger-ui/**",
+            "/mypass-manager/avatars/**",
             "/mypass-manager/users/v3/api-docs",
             "/mypass-manager/users/v3/api-docs/swagger-config",
             "/mypass-manager/users/swagger-ui.html",
