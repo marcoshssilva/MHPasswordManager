@@ -32,7 +32,7 @@ public class ConsentPageControllerView {
         List<ScopeDescription> scopeDescriptions = Arrays.stream(StringUtils.delimitedListToStringArray(scope, " "))
                 .map(s -> {
                     ScopesAvailable sa = ScopesAvailable.getByName(s);
-                    return new ScopeDescription(s.toLowerCase(), sa != null ? sa.getDescription() : "Sem descrição disponível.");
+                    return new ScopeDescription(s, sa != null ? sa.getDescription() : "Sem descrição disponível.");
                 })
                 .toList();
 

@@ -7,6 +7,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.security.Principal;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
@@ -16,6 +17,22 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ConsentPageControllerViewTests {
 
     private MockMvc mockMvc;
+
+    @DisplayName("Should preserve case-sensitive scope values submitted by the consent page")
+    @Test
+    void shouldPreserveScopeCase() throws Exception {
+        mockMvc.perform(get("/oauth2/consent")
+                        .principal(() -> "testuser")
+                        .param("scope", "profile email user:changeImageProfile")
+                        .param("client_id", "MHPasswordManager")
+                        .param("state", "state123"))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("scopes", List.of(
+                        new ConsentPageControllerView.ScopeDescription("profile", "Permite ver e consultar seu perfil."),
+                        new ConsentPageControllerView.ScopeDescription("email", "Permite realizar login com seu usuário."),
+                        new ConsentPageControllerView.ScopeDescription("user:changeImageProfile", "Sem descrição disponível.")
+                )));
+    }
 
     @BeforeEach
     void setUp() {
