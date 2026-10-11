@@ -2,9 +2,12 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.http.controllers;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.exceptions.AlreadyExistsInDatabaseException;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.exceptions.ElementNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountAvatarDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountDataToUpdateModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountRegistrationModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AvatarService;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl.S3BasedAvatarServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.converter.AccountDataModelToAccountResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.AccountCreateRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.AccountRecoveryPasswordCodeRequestData;
@@ -31,6 +34,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,6 +48,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
+
 @RequiredArgsConstructor
 @RequestMapping("/account")
 @RestController
@@ -53,6 +59,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class AccountController {
     private static final AccountDataModelToAccountResponseData DATA_MODEL_TO_ACCOUNT_RESPONSE_DATA = new AccountDataModelToAccountResponseData();
     private final AccountService accountService;
+    private final AvatarService avatarService;
 
     @PreAuthorize("hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:get') || hasAnyRole('ADMIN', 'MASTER')")
     @GetMapping("/all")
@@ -121,9 +128,10 @@ public class AccountController {
     }
 
     @PreAuthorize("hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:changeImageProfile') || hasAnyRole('ADMIN', 'MASTER') || (#username == authentication.principal.subject && hasAuthority('SCOPE_user:changeImageProfile'))")
-    @PostMapping("{username}/uploadImageFromAccountProfile")
+    @PostMapping(value = "{username}/uploadImageFromAccountProfile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updateImageFromAccountProfile(@PathVariable String username, @RequestParam(name = "file") MultipartFile image) {
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).build();
+        AccountAvatarDataModel avatarDataModel = avatarService.upload(username, image);
+        return ResponseEntity.noContent().location(avatarDataModel.getAvatarPublicUrl()).build();
     }
 
     @PreAuthorize("hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:create') || hasAnyRole('ADMIN', 'MASTER')")
