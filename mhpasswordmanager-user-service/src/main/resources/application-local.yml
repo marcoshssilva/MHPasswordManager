@@ -34,3 +34,13 @@ springdoc:
     oauth2-token-url: ${SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL:http://127.0.0.1:8080/mypass-manager/auth/oauth2/token} # custom, doesnt exists on springdoc open-api
     csrf:
       enabled: false
+storage:
+  s3:
+    endpoint: ${STORAGE_S3_ENDPOINT:http://localhost:9000}
+    region: ${STORAGE_S3_REGION:us-east-1}
+    bucket: ${STORAGE_S3_BUCKET:mhp-files}
+    access-key: ${STORAGE_S3_ACCESS_KEY:user-service}
+    secret-key: ${STORAGE_S3_SECRET_KEY:MHPasswordManagerUserService2026}
+    path-style-access: ${STORAGE_S3_PATH_STYLE_ACCESS:true}
+avatar:
+  default-public-base-url: ${AVATAR_DEFAULT_PUBLIC_BASE_URL:http://127.0.0.1:8080}
