@@ -7,25 +7,5 @@
     "SPRING_PROFILES_ACTIVE": {
       "value": "dokku,configserver"
     }
-  },
-  "formation": {
-    "web": {
-      "quantity": 1
-    },
-    "api-user": {
-      "quantity": 1
-    },
-    "api-password": {
-      "quantity": 1
-    },
-    "api-oauth2server": {
-      "quantity": 1
-    },
-    "api-email": {
-      "quantity": 1
-    },
-    "api-file": {
-      "quantity": 1
-    }
   }
 }
