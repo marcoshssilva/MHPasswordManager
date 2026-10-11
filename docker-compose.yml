@@ -74,6 +74,7 @@ services:
       dockerfile: mhpasswordmanager-api-gateway/Dockerfile
     env_file:
       - etc/env/API-GATEWAY.env
+      - etc/env/MINIO-GATEWAY-API.env
     depends_on:
       eureka:
         condition: service_healthy
@@ -102,6 +103,7 @@ services:
       dockerfile: mhpasswordmanager-user-service/Dockerfile
     env_file:
       - etc/env/USER-SERVICE.env
+      - etc/env/MINIO-USERS-SERVICE.env
     depends_on:
       eureka:
         condition: service_healthy
