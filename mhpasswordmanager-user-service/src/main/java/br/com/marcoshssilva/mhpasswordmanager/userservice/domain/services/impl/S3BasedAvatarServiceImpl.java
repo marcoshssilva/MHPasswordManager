@@ -50,7 +50,7 @@ public class S3BasedAvatarServiceImpl implements AvatarService {
         }
         for (int attempt = 0; attempt < 3; attempt++) {
             String filename = UUID.randomUUID().toString().concat(".png");
-            String bucketKey = "avatar/" + UUID.randomUUID() + ".png";
+            String bucketKey = "avatar/".concat(filename);
             URI url = URI.create(base + "/mypass-manager/avatars/" + filename);
 
             if (url.toASCIIString().length() > 2048) throw new IllegalStateException("Avatar URL exceeds 2048 characters");
