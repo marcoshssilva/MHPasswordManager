@@ -2,11 +2,13 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.http.controllers;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.exceptions.AlreadyExistsInDatabaseException;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.exceptions.ElementNotFoundException;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountAvatarDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountDataToUpdateModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountRecoveryPasswordCodeModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.models.AccountRegistrationModel;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.AccountService;
+import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.services.impl.S3BasedAvatarServiceImpl;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.AccountCreateRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.AccountRecoveryPasswordCodeRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.http.data.requests.AccountRequestValidatePasswordModel;
@@ -56,6 +58,9 @@ class AccountControllerTests {
     @Mock
     private AccountService accountService;
 
+    @Mock
+    private S3BasedAvatarServiceImpl avatarService;
+
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
 
@@ -73,7 +78,7 @@ class AccountControllerTests {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        AccountController controller = new AccountController(accountService);
+        AccountController controller = new AccountController(accountService, avatarService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setControllerAdvice(new RestControllerAdviceResolver())
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
@@ -250,14 +255,19 @@ class AccountControllerTests {
         verify(accountService).updateAccountHasEnabledByUsername("john", Boolean.FALSE);
     }
 
-    @DisplayName("Should return 501 NOT IMPLEMENTED on uploadImageFromAccountProfile")
+    @DisplayName("Should return 204 and the public avatar Location")
     @Test
-    void shouldReturn501OnUploadImage() throws Exception {
+    void shouldReturnAvatarLocation() throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", "test.jpg", "image/jpeg", "image_data".getBytes());
+        when(avatarService.upload(eq("john"), any())).thenReturn(
+                new AccountAvatarDataModel("john", java.net.URI.create("https://gateway.example/mypass-manager/avatars/avatar.png"))
+                );
 
         mockMvc.perform(multipart("/account/{username}/uploadImageFromAccountProfile", "john")
                         .file(file))
-                .andExpect(status().isNotImplemented());
+                .andExpect(status().isNoContent())
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header().string("Location", "https://gateway.example/mypass-manager/avatars/avatar.png"))
+                .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.content().string(""));
     }
 
     @DisplayName("Should create new account")
