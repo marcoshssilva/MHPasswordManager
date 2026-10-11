@@ -110,8 +110,11 @@ eureka:
 otel:
   sdk:
     disabled: true
-avatar:
-  bucket: ${AVATAR_S3_BUCKET:}
-  region: ${AVATAR_S3_REGION:us-east-1}
-  endpoint: ${AVATAR_S3_ENDPOINT:}
-  path-style-access: ${AVATAR_S3_PATH_STYLE_ACCESS:false}
+storage:
+  s3:
+    endpoint: ${STORAGE_S3_ENDPOINT:http://localhost:9000}
+    region: ${STORAGE_S3_REGION:us-east-1}
+    bucket: ${STORAGE_S3_BUCKET:mhp-files}
+    access-key: ${STORAGE_S3_ACCESS_KEY:gateway-api}
+    secret-key: ${STORAGE_S3_SECRET_KEY:MHPasswordManagerGatewayAPI2026}
+    path-style-access: ${STORAGE_S3_PATH_STYLE_ACCESS:true}
