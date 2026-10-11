@@ -17,6 +17,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @Transactional
 class AccountDetailsRepositoryTests {
+    @Test
+    void updatesOnlyAvatarAndSupportsLongUrls() {
+        String url = "https://gateway.example/" + "a".repeat(300) + "/avatar.png";
+        assertEquals(1, accountDetailsRepository.updateImageUrlByUsername("john_doe", url));
+        var details = accountDetailsRepository.getAccountDetailsByIdUsername("john_doe").orElseThrow();
+        assertEquals(url, details.getImageUrl());
+        assertEquals("John", details.getFirstName());
+        assertEquals("Doe", details.getLastName());
+        assertEquals("johndoe@email.com", details.getId().getEmail());
+        assertEquals(0, accountDetailsRepository.updateImageUrlByUsername("missing", url));
+    }
+
     @Autowired
     private AccountDetailsRepository accountDetailsRepository;
 
