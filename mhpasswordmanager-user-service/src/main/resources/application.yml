@@ -4,6 +4,10 @@ server:
   servlet:
     context-path: /mypass-manager/users
 spring:
+  servlet:
+    multipart:
+      max-file-size: 8MB
+      max-request-size: 9MB
   profiles:
     default: configserver,opentelemetry
   application:
