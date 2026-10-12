@@ -1,1 +1,1 @@
-web: sh etc/scripts/exec-app.sh "$PORT" "$APP"
+web: sh etc/scripts/exec-app.sh "$PORT" "$JAVA_APP_STARTUP"
