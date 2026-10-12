@@ -1,8 +1,8 @@
 pipelineUsingJava17AndMaven('marcoshssilva/password-manager',
         [
-        'ENABLE_DEPENDENCY_CHECK': 'false',
-        'ENABLE_SONARQUBE_CHECK': 'false',
-        'DEPLOY': 'DOKKU',
+        'ENABLE_DEPENDENCY_CHECK': 'true',
+        'ENABLE_SONARQUBE_CHECK': 'true',
+        'DEPLOY': 'MAVEN',
         'APP_NAME': 'password-manager',
         'CLEAN_WORKSPACE': 'true',
         'DOKKU_PROJECTS_PIPELINES': [
