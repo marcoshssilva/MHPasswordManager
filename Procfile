@@ -1,1 +1,1 @@
-web: java -jar mhpasswordmanager-api-gateway/target/mhpasswordmanager.apigateway-1.0.0-RC-SNAPSHOT.jar --server.port=$PORT
+web: sh etc/scripts/exec-app.sh "$PORT" "$APP"
