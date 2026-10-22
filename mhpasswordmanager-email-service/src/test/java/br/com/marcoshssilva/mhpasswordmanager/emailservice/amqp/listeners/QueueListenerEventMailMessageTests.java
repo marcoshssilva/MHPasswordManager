@@ -5,13 +5,17 @@ import br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.models.AMQPDataS
 import br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.models.AMQPDataTemplatedMailEventModel;
 import br.com.marcoshssilva.mhpasswordmanager.emailservice.amqp.models.AMQPEventModel;
 import br.com.marcoshssilva.mhpasswordmanager.emailservice.domain.services.mail.MailMessageService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
 import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
@@ -22,9 +26,9 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
