@@ -9,6 +9,7 @@ import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.enums.FileProce
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.repositories.StoredFileKeyRepository;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IS3StorageService;
 
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.utils.FileUtils;
 import org.bson.types.ObjectId;
 
 import org.slf4j.Logger;
@@ -165,18 +166,9 @@ public class FileProcessingWorkerQueue {
 
     private Path downloadFileAsPath(FileEncryptionCompletedEvent event) throws IOException {
         try (ResponseInputStream<GetObjectResponse> input = s3.download(event.getEncryptedObjectKey())) {
-            File tempFile = Files.createTempFile("mhp-encrypted-", ".bin").toFile();
-            if (!tempFile.setExecutable(Boolean.FALSE)){
-                LOGGER.warn("Unable to set executable to {}", tempFile.getAbsolutePath());
-            }
-            if (!tempFile.setReadable(Boolean.FALSE, Boolean.TRUE)){
-                LOGGER.warn("Unable to set readable to {}", tempFile.getAbsolutePath());
-            }
-            if (!tempFile.setWritable(Boolean.FALSE, Boolean.TRUE)){
-                LOGGER.warn("Unable to set writable to {}", tempFile.getAbsolutePath());
-            }
-            Files.copy(input, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            return tempFile.toPath();
+            Path tempFile = FileUtils.createSecureTempFile("mhp-encryped-", ".bin");
+            Files.copy(input, tempFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return tempFile;
         }
     }
 
