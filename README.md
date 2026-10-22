@@ -116,5 +116,4 @@ git push dokku main
 - [ ] Implements hystrix or resilience4j to improve better api calls
 - [ ] Create units tests and E2E (Mockito for unit tests and MockMvc, TestContainers to E2E). If possible performance tests like stress or response time
 - [ ] Upgrade Spring version and spring cloud (project is legacy using SB 2.7)
-- [ ] Implements API to store and get image profile URL
 - [ ] Implements token exchange flow (preference to work with Firebase and develops mobile app)
