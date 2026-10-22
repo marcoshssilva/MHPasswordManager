@@ -92,7 +92,7 @@ public class FileProcessingWorkerQueue {
             updateStatusAsFinalizing(file);
 
             finalKey = "files/" + file.getBucket() + "/" + file.getUuid();
-            encrypted = getFileAsPath(event);
+            encrypted = downloadFileAsPath(event);
             oldGridFsHex = file.getGridFsHex();
 
             encryptAndUploadFile(finalKey, file, encrypted);
@@ -163,7 +163,7 @@ public class FileProcessingWorkerQueue {
         repository.save(file);
     }
 
-    private Path getFileAsPath(FileEncryptionCompletedEvent event) throws IOException {
+    private Path downloadFileAsPath(FileEncryptionCompletedEvent event) throws IOException {
         try (ResponseInputStream<GetObjectResponse> input = s3.download(event.getEncryptedObjectKey())) {
             File tempFile = Files.createTempFile("mhp-encrypted-", ".bin").toFile();
             if (!tempFile.setExecutable(Boolean.FALSE)){
