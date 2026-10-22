@@ -104,7 +104,7 @@ public class FileProcessingWorkerQueue {
         } catch (MustAbortMessageQueueException e1) {
             LOGGER.error(e1.getMessage());
         } catch (Exception e2) {
-            fail(event == null ? null : event.getFileId(), e2.getMessage());
+            fail(event.getFileId(), e2.getMessage());
         } finally {
             if (encrypted != null) {
                 try { Files.deleteIfExists(encrypted); }
