@@ -87,7 +87,7 @@ public final class ImageUtils {
     }
 
     public static File saveImageAsTemp(BufferedImage image) throws IOException {
-        File outputFile = File.createTempFile("image", ".png");
+        File outputFile = FileUtils.createSecureTempFile("image", ".png").toFile();
         ImageIO.write(image, "png", outputFile);
         return outputFile;
     }
