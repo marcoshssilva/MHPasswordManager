@@ -9,9 +9,12 @@ import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class FileUtils {
     private FileUtils() {}
+    private static final Logger LOG = LoggerFactory.getLogger(FileUtils.class);
 
     /**
      * Creates a secure temporary file with permissions restricted only to the owner.
@@ -32,9 +35,13 @@ public final class FileUtils {
             File file = Files.createTempFile(prefix, suffix).toFile();
 
             // The second parameter 'true' ensures the permission applies only to the owner (ownerOnly)
-            file.setReadable(true, true);
-            file.setWritable(true, true);
-            file.setExecutable(true, true);
+            boolean readable = file.setReadable(true, true);
+            boolean writable = file.setWritable(true, true);
+            boolean executable = file.setExecutable(true, true);
+
+            if (!readable && !writable && !executable) {
+                LOG.warn("Failure when trying to define permissions to file {}. Please check permissions.", file.getAbsolutePath());
+            }
 
             return file.toPath();
         }
