@@ -9,7 +9,10 @@ import br.com.marcoshssilva.mhpasswordmanager.fileservice.domain.repositories.St
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IStorageFileService;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IS3StorageService;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.exceptions.StorageErrorException;
+import br.com.marcoshssilva.mhpasswordmanager.fileservice.utils.FileUtils;
+
 import com.mongodb.client.gridfs.model.GridFSFile;
+
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -60,7 +63,7 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             metadataMap.put("created_at", METADATA_DATE_FORMATTER.format(now));
             metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
 
-            Path temporaryFile = Files.createTempFile("mhp-upload-", ".bin");
+            Path temporaryFile = FileUtils.createSecureTempFile("mhp-upload-", ".bin");
             try (InputStream input = file.getInputStream()) { Files.copy(input, temporaryFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
             storedFileKeyRepository.save(StoredFileKey.builder().uuid(fileId).bucket(bucketUuid).stagingObjectKey("staging/" + fileId + "/source").metadata(metadataMap).status(FileProcessingStatus.UPLOAD_RECEIVED).ready(Boolean.FALSE).build());
             processingWorker.storeSource(fileId, temporaryFile);
@@ -101,7 +104,7 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             }
             metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
 
-            Path temporaryFile = Files.createTempFile("mhp-upload-", ".bin");
+            Path temporaryFile = FileUtils.createSecureTempFile("mhp-upload-", ".bin");
             try (InputStream input = file.getInputStream()) { Files.copy(input, temporaryFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
 
             fileKey.setMetadata(metadataMap);
