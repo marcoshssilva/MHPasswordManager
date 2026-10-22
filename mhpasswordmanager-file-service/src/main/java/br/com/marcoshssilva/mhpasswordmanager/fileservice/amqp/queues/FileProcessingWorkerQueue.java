@@ -26,6 +26,7 @@ import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -164,9 +165,18 @@ public class FileProcessingWorkerQueue {
 
     private Path getFileAsPath(FileEncryptionCompletedEvent event) throws IOException {
         try (ResponseInputStream<GetObjectResponse> input = s3.download(event.getEncryptedObjectKey())) {
-            Path tempFile = Files.createTempFile("mhp-encrypted-", ".bin");
-            Files.copy(input, tempFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            return tempFile;
+            File tempFile = Files.createTempFile("mhp-encrypted-", ".bin").toFile();
+            if (!tempFile.setExecutable(Boolean.FALSE)){
+                LOGGER.warn("Unable to set executable to {}", tempFile.getAbsolutePath());
+            }
+            if (!tempFile.setReadable(Boolean.FALSE, Boolean.TRUE)){
+                LOGGER.warn("Unable to set readable to {}", tempFile.getAbsolutePath());
+            }
+            if (!tempFile.setWritable(Boolean.FALSE, Boolean.TRUE)){
+                LOGGER.warn("Unable to set writable to {}", tempFile.getAbsolutePath());
+            }
+            Files.copy(input, tempFile.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return tempFile.toPath();
         }
     }
 
