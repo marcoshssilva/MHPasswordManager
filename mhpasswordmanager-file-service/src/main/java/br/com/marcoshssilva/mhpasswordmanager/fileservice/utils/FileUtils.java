@@ -39,7 +39,7 @@ public final class FileUtils {
             boolean writable = file.setWritable(true, true);
             boolean executable = file.setExecutable(true, true);
 
-            if (!readable && !writable && !executable) {
+            if (!readable || !writable || !executable) {
                 LOG.warn("Failure when trying to define permissions to file {}. Please check permissions.", file.getAbsolutePath());
             }
 
