@@ -127,19 +127,21 @@ class FileProcessingWorkerQueueTests {
         worker.storeSource("file-1", tempFile);
 
         long deadline = System.currentTimeMillis() + 5000;
-        StoredFileKey updated = null;
-        while (System.currentTimeMillis() < deadline) {
-            updated = repository.findById("file-1").orElse(null);
-            if (updated != null && updated.getStatus() == FileProcessingStatus.FAILED && !Files.exists(tempFile)) {
-                break;
-            }
-            Thread.sleep(50);
-        }
+        final AtomicReference<StoredFileKey> updated = new AtomicReference<>(null);
 
-        assertThat(updated).isNotNull();
-        assertThat(updated.getStatus()).isEqualTo(FileProcessingStatus.FAILED);
-        assertThat(updated.getReady()).isFalse();
-        assertThat(updated.getError()).isEqualTo("S3 upload failed");
+        await()
+            .during(Duration.ofMillis(deadline - System.currentTimeMillis()))
+            .pollInterval(Duration.ofMillis(50))
+            .until(() -> {
+                updated.set(repository.findById("file-1").orElse(null));
+                return updated.get() != null && updated.get().getStatus() == FileProcessingStatus.FAILED && !Files.exists(tempFile);
+            });
+        
+
+        assertThat(updated.get()).isNotNull();
+        assertThat(updated.get().getStatus()).isEqualTo(FileProcessingStatus.FAILED);
+        assertThat(updated.get().getReady()).isFalse();
+        assertThat(updated.get().getError()).isEqualTo("S3 upload failed");
         assertThat(Files.exists(tempFile)).isFalse();
     }
 
