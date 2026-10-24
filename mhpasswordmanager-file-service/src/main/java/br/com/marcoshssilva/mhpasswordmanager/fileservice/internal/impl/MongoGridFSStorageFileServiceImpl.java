@@ -31,12 +31,31 @@ import java.util.Optional;
 import java.util.UUID;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
 @Service
 public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
     private static final Clock CLOCK = Clock.systemUTC();
-    private static final DateTimeFormatter METADATA_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String METADATA_DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    private static final DateTimeFormatter METADATA_DATE_FORMATTER = DateTimeFormatter.ofPattern(METADATA_DATE_PATTERN);
+
+    private static final String METADATA_FILENAME = "filename";
+    private static final String METADATA_CONTENT_TYPE = "content_type";
+    private static final String METADATA_BUCKET_UUID = "bucket_uuid";
+    private static final String METADATA_CREATED_AT = "created_at";
+    private static final String METADATA_UPDATED_AT = "updated_at";
+
+    private static final String TEMP_FILE_PREFIX = "mhp-upload-";
+    private static final String TEMP_FILE_SUFFIX = ".bin";
+
+    private static final String STAGING_PREFIX = "staging/";
+    private static final String STAGING_SUFFIX = "/source";
+
+    private static final String ID_FIELD = "_id";
+
+    private static final String ERROR_FILE_NOT_FOUND = "File not found.";
+    private static final String ERROR_FILE_STILL_BEING_PROCESSED = "File is still being processed.";
 
     private final StoredFileKeyRepository storedFileKeyRepository;
     private final GridFsTemplate gridFsTemplate;
@@ -52,42 +71,34 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
 
     @Override
     public StoredFile saveFileInStorage(MultipartFile file, String bucketUuid, Map<String, String> metadata) throws StorageErrorException {
-        try {
+        return catchThrowableStorageErrorExceptionWhenFall(() -> {
             String fileId = UUID.randomUUID().toString();
             Map<String, String> metadataMap = new HashMap<>(metadata.size() + 1);
-            metadataMap.putAll(metadata);
-            metadataMap.put("filename", file.getOriginalFilename());
-            metadataMap.put("content_type", file.getContentType());
-            metadataMap.put("bucket_uuid", bucketUuid);
-            LocalDateTime now = LocalDateTime.now(CLOCK);
-            metadataMap.put("created_at", METADATA_DATE_FORMATTER.format(now));
-            metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
 
-            Path temporaryFile = FileUtils.createSecureTempFile("mhp-upload-", ".bin");
+            metadataMap.putAll(metadata);
+            metadataMap.put(METADATA_FILENAME, file.getOriginalFilename());
+            metadataMap.put(METADATA_CONTENT_TYPE, file.getContentType());
+            metadataMap.put(METADATA_BUCKET_UUID, bucketUuid);
+
+            LocalDateTime now = LocalDateTime.now(CLOCK);
+            metadataMap.put(METADATA_CREATED_AT, METADATA_DATE_FORMATTER.format(now));
+            metadataMap.put(METADATA_UPDATED_AT, METADATA_DATE_FORMATTER.format(now));
+
+            Path temporaryFile = FileUtils.createSecureTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
             try (InputStream input = file.getInputStream()) { Files.copy(input, temporaryFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
-            storedFileKeyRepository.save(StoredFileKey.builder().uuid(fileId).bucket(bucketUuid).stagingObjectKey("staging/" + fileId + "/source").metadata(metadataMap).status(FileProcessingStatus.UPLOAD_RECEIVED).ready(Boolean.FALSE).build());
+
+            storedFileKeyRepository.save(StoredFileKey.builder().uuid(fileId).bucket(bucketUuid).stagingObjectKey(STAGING_PREFIX + fileId + STAGING_SUFFIX).metadata(metadataMap).status(FileProcessingStatus.UPLOAD_RECEIVED).ready(Boolean.FALSE).build());
             processingWorker.storeSource(fileId, temporaryFile);
-            return StoredFile.builder()
-                    .id(fileId)
-                    .bucket(bucketUuid)
-                    .metadata(metadataMap)
-                    .status(FileProcessingStatus.UPLOAD_RECEIVED)
-                    .ready(Boolean.FALSE)
-                    .build();
-        } catch (Exception e) {
-            throw new StorageErrorException(e.getMessage(), e);
-        }
+
+            return StoredFile.builder().id(fileId).bucket(bucketUuid).metadata(metadataMap).status(FileProcessingStatus.UPLOAD_RECEIVED).ready(Boolean.FALSE).build();
+        });
     }
 
     @Override
     public StoredFile updateFileInStorage(MultipartFile file, String bucketUuid, String id, Map<String, String> metadata) throws StorageErrorException {
-        try {
-            Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucketUuid);
-            if (storedFileKey.isEmpty()) {
-                throw new StorageErrorException("File not found.");
-            }
+        return catchThrowableStorageErrorExceptionWhenFall(() -> {
+            var fileKey = getStoredFileKey(id, bucketUuid);
 
-            StoredFileKey fileKey = storedFileKey.get();
             Map<String, String> metadataMap = new HashMap<>();
             if (fileKey.getMetadata() != null) {
                 metadataMap.putAll(fileKey.getMetadata());
@@ -95,48 +106,45 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
             if (metadata != null) {
                 metadataMap.putAll(metadata);
             }
-            metadataMap.put("filename", file.getOriginalFilename());
-            metadataMap.put("content_type", file.getContentType());
-            metadataMap.put("bucket_uuid", bucketUuid);
-            LocalDateTime now = LocalDateTime.now(CLOCK);
-            if (!metadataMap.containsKey("created_at")) {
-                metadataMap.put("created_at", METADATA_DATE_FORMATTER.format(now));
-            }
-            metadataMap.put("updated_at", METADATA_DATE_FORMATTER.format(now));
+            metadataMap.put(METADATA_FILENAME, file.getOriginalFilename());
+            metadataMap.put(METADATA_CONTENT_TYPE, file.getContentType());
+            metadataMap.put(METADATA_BUCKET_UUID, bucketUuid);
 
-            Path temporaryFile = FileUtils.createSecureTempFile("mhp-upload-", ".bin");
+            LocalDateTime now = LocalDateTime.now(CLOCK);
+
+            if (!metadataMap.containsKey(METADATA_CREATED_AT)) {
+                metadataMap.put(METADATA_CREATED_AT, METADATA_DATE_FORMATTER.format(now));
+            }
+
+            metadataMap.put(METADATA_UPDATED_AT, METADATA_DATE_FORMATTER.format(now));
+
+            Path temporaryFile = FileUtils.createSecureTempFile(TEMP_FILE_PREFIX, TEMP_FILE_SUFFIX);
             try (InputStream input = file.getInputStream()) { Files.copy(input, temporaryFile, java.nio.file.StandardCopyOption.REPLACE_EXISTING); }
 
             fileKey.setMetadata(metadataMap);
-            fileKey.setStagingObjectKey("staging/" + id + "/source");
+            fileKey.setStagingObjectKey(STAGING_PREFIX + id + STAGING_SUFFIX);
             fileKey.setStatus(FileProcessingStatus.UPLOAD_RECEIVED);
             fileKey.setReady(Boolean.FALSE);
             fileKey.setError(null);
-            storedFileKeyRepository.save(fileKey);
 
+            storedFileKeyRepository.save(fileKey);
             processingWorker.storeSource(id, temporaryFile);
+
             return toStoredFile(fileKey);
-        } catch (Exception e) {
-            throw new StorageErrorException(e.getMessage(), e);
-        }
+        });
     }
 
     @Override
     public byte[] getFileInStorage(String id, String bucket) throws StorageErrorException {
-        try {
-            Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucket);
-            if (storedFileKey.isEmpty()) {
-                throw new StorageErrorException("File not found.");
-            }
-
-            StoredFileKey fileKey = storedFileKey.get();
+        return catchThrowableStorageErrorExceptionWhenFall(() -> {
+            var fileKey = getStoredFileKey(id, bucket);
             if (!Boolean.TRUE.equals(fileKey.getReady())) {
-                throw new StorageErrorException("File is still being processed.");
+                throw new StorageErrorException(ERROR_FILE_STILL_BEING_PROCESSED);
             }
             try (InputStream input = s3StorageService.download(fileKey.getS3ObjectKey())) {
                 return input.readAllBytes();
             } catch (Exception s3Exception) {
-                GridFSFile gridFsFile = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(fileKey.getGridFsHex()))));
+                GridFSFile gridFsFile = gridFsTemplate.findOne(Query.query(Criteria.where(ID_FIELD).is(new ObjectId(fileKey.getGridFsHex()))));
                 if (gridFsFile == null) {
                     throw s3Exception;
                 }
@@ -144,72 +152,57 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
                     return input.readAllBytes();
                 }
             }
-        } catch (Exception e) {
-            throw new StorageErrorException(e.getMessage(), e);
-        }
+        });
     }
-
 
     @Override
     public StoredFile getMetadataInStorage(String id, String bucket) throws StorageErrorException {
-        try {
-            Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucket);
-            if (storedFileKey.isEmpty()) {
-                throw new StorageErrorException("File not found.");
-            }
-            return toStoredFile(storedFileKey.get());
-        } catch (Exception e) {
-            throw new StorageErrorException(e.getMessage(), e);
-        }
+        return catchThrowableStorageErrorExceptionWhenFall(() -> toStoredFile(getStoredFileKey(id, bucket)));
     }
 
     @Override
     public Boolean deleteFileInStorage(String id, String bucket) throws StorageErrorException {
-        try {
-            Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucket);
-            if (storedFileKey.isEmpty()) {
-                throw new StorageErrorException("File not found.");
-            }
-
-            StoredFileKey fileKey = storedFileKey.get();
+        return catchThrowableStorageErrorExceptionWhenFall(() -> {
+            var fileKey = getStoredFileKey(id, bucket);
             if (fileKey.getGridFsHex() != null) {
-                GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where("_id").is(new ObjectId(fileKey.getGridFsHex()))));
-                if (file != null) {
-                    gridFsTemplate.delete(Query.query(Criteria.where("_id").is(file.getId())));
-                }
+                GridFSFile file = gridFsTemplate.findOne(Query.query(Criteria.where(ID_FIELD).is(new ObjectId(fileKey.getGridFsHex()))));
+                if (file != null)
+                    gridFsTemplate.delete(Query.query(Criteria.where(ID_FIELD).is(file.getId())));
             }
-            if (fileKey.getS3ObjectKey() != null) {
-                s3StorageService.delete(fileKey.getS3ObjectKey());
-            }
-            if (fileKey.getStagingObjectKey() != null) {
-                s3StorageService.delete(fileKey.getStagingObjectKey());
-            }
+            if (fileKey.getS3ObjectKey() != null) s3StorageService.delete(fileKey.getS3ObjectKey());
+            if (fileKey.getStagingObjectKey() != null) s3StorageService.delete(fileKey.getStagingObjectKey());
+
             storedFileKeyRepository.deleteById(id);
 
             return Boolean.TRUE;
-        } catch (Exception e) {
-            throw new StorageErrorException(e.getMessage(), e);
-        }
+        });
     }
 
     @Override
     public BucketStoredFile getBucketInfo(String bucketUuid) throws StorageErrorException {
-        try {
+        return catchThrowableStorageErrorExceptionWhenFall(() -> {
             Collection<StoredFileKey> bucketStoredFiles = storedFileKeyRepository.findByBucket(bucketUuid);
             return BucketStoredFile.builder().files(bucketStoredFiles.stream().map(this::toStoredFile).collect(Collectors.toCollection(java.util.HashSet::new))).build();
-        } catch (Exception e) {
-            throw new StorageErrorException(e.getMessage(), e);
-        }
+        });
     }
 
     private StoredFile toStoredFile(StoredFileKey file) {
-        return StoredFile.builder()
-                .id(file.getUuid())
-                .bucket(file.getBucket())
-                .metadata(file.getMetadata())
-                .status(file.getStatus())
-                .error(file.getError())
-                .ready(file.getReady())
-                .build();
+        return StoredFile.builder().id(file.getUuid()).bucket(file.getBucket()).metadata(file.getMetadata()).status(file.getStatus()).error(file.getError()).ready(file.getReady()).build();
+    }
+
+    private StoredFileKey getStoredFileKey(String id, String bucket) throws StorageErrorException {
+        Optional<StoredFileKey> storedFileKey = storedFileKeyRepository.findByUuidAndBucket(id, bucket);
+        if (storedFileKey.isEmpty()) {
+            throw new StorageErrorException(ERROR_FILE_NOT_FOUND);
+        }
+        return storedFileKey.get();
+    }
+
+    private static <T> T catchThrowableStorageErrorExceptionWhenFall(Callable<T> executable) throws StorageErrorException {
+        try {
+            return executable.call();
+        } catch (Throwable e) {
+            throw new StorageErrorException(e.getMessage(), e);
+        }
     }
 }
