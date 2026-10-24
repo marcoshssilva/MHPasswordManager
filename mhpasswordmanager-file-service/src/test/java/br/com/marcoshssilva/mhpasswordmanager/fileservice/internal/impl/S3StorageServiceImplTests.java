@@ -18,9 +18,15 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.net.URI;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.bouncycastle.asn1.cms.CMSAttributes.contentType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -138,21 +144,44 @@ class S3StorageServiceImplTests {
     @DisplayName("Should create presigned upload request in S3")
     @Test
     void shouldCreatePresignedUpload() {
-        when(properties.getBucket()).thenReturn(BUCKET_NAME);
-        PresignedPutObjectRequest expectedPresigned = mock(PresignedPutObjectRequest.class);
-        when(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class))).thenReturn(expectedPresigned);
-
         Duration expiration = Duration.ofMinutes(15);
-        PresignedPutObjectRequest result = s3StorageService.createPresignedUpload("file/path/presigned.txt", "text/plain", expiration);
+        String objectKey = "file/path/presigned.txt";
+        String mimeType = "text/plain";
+        int daysToAdd = 1;
+
+        PresignedPutObjectRequest expectedPresigned = PresignedPutObjectRequest.builder()
+                .expiration(LocalDate.now(ZoneId.systemDefault()).plusDays(daysToAdd).atStartOfDay(ZoneId.systemDefault()).toInstant())
+                .isBrowserExecutable(Boolean.FALSE)
+                .signedHeaders(
+                        java.util.Collections.singletonMap("Content-Type", List.of(mimeType))
+                )
+                .httpRequest(
+                        software.amazon.awssdk.http.SdkHttpRequest.builder()
+                                .method(software.amazon.awssdk.http.SdkHttpMethod.PUT)
+                                .uri(URI.create("https://s3.amazonaws.com/" + BUCKET_NAME + "/" + objectKey))
+                                .putHeader("Content-Type", mimeType)
+                                .build()
+                )
+                .build();
+
+        when(properties.getBucket()).thenReturn(BUCKET_NAME);
+        doReturn(expectedPresigned).when(s3Presigner).presignPutObject(any(java.util.function.Consumer.class));
+
+        PresignedPutObjectRequest result = s3StorageService.createPresignedUpload(objectKey, mimeType, expiration);
 
         assertThat(result).isEqualTo(expectedPresigned);
 
-        ArgumentCaptor<PutObjectPresignRequest> captor = ArgumentCaptor.forClass(PutObjectPresignRequest.class);
+        @SuppressWarnings("unchecked") ArgumentCaptor<java.util.function.Consumer<PutObjectPresignRequest.Builder>> captor = ArgumentCaptor.forClass(java.util.function.Consumer.class);
+
         verify(s3Presigner).presignPutObject(captor.capture());
-        PutObjectPresignRequest request = captor.getValue();
+
+        PutObjectPresignRequest.Builder builder = PutObjectPresignRequest.builder();
+        captor.getValue().accept(builder);
+        PutObjectPresignRequest request = builder.build();
+
         assertThat(request.signatureDuration()).isEqualTo(expiration);
         assertThat(request.putObjectRequest().bucket()).isEqualTo(BUCKET_NAME);
-        assertThat(request.putObjectRequest().key()).isEqualTo("file/path/presigned.txt");
-        assertThat(request.putObjectRequest().contentType()).isEqualTo("text/plain");
+        assertThat(request.putObjectRequest().key()).isEqualTo(objectKey);
+        assertThat(request.putObjectRequest().contentType()).isEqualTo(mimeType);
     }
 }
