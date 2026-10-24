@@ -31,9 +31,12 @@ import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import java.io.ByteArrayInputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -90,17 +93,20 @@ class FileProcessingWorkerQueueTests {
         verify(s3, timeout(5000)).upload(eq("staging/file-1/source"), any(RequestBody.class));
 
         long deadline = System.currentTimeMillis() + 5000;
-        StoredFileKey updated = null;
-        while (System.currentTimeMillis() < deadline) {
-            updated = repository.findById("file-1").orElse(null);
-            if (updated != null && updated.getStatus() == FileProcessingStatus.ENCRYPTING && !Files.exists(tempFile)) {
-                break;
-            }
-            Thread.sleep(50);
-        }
+        AtomicReference<StoredFileKey> updated = new AtomicReference<>();
+
+        await()
+            .atMost(Duration.ofMillis(deadline - System.currentTimeMillis()))
+            .pollInterval(Duration.ofMillis(50))
+            .until(() -> {
+                updated.set(repository.findById("file-1").orElse(null));
+                return updated.get() != null
+                        && updated.get().getStatus() == FileProcessingStatus.ENCRYPTING
+                        && !Files.exists(tempFile);
+            });
 
         assertThat(updated).isNotNull();
-        assertThat(updated.getStatus()).isEqualTo(FileProcessingStatus.ENCRYPTING);
+        assertThat(updated.get().getStatus()).isEqualTo(FileProcessingStatus.ENCRYPTING);
         assertThat(Files.exists(tempFile)).isFalse();
     }
 
