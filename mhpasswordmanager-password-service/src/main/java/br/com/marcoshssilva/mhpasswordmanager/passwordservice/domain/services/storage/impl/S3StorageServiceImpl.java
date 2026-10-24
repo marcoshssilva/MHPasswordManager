@@ -15,7 +15,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
 
@@ -54,7 +53,15 @@ public class S3StorageServiceImpl implements S3StorageService {
 
     @Override
     public PresignedPutObjectRequest createPresignedUpload(String objectKey, String contentType, Duration expiration) {
-        PutObjectRequest request = PutObjectRequest.builder().bucket(getBucketName()).key(objectKey).contentType(contentType).build();
-        return s3Presigner.presignPutObject(PutObjectPresignRequest.builder().signatureDuration(expiration).putObjectRequest(request).build());
+        return s3Presigner.presignPutObject(
+                req -> req
+                        .signatureDuration(expiration)
+                        .putObjectRequest(
+                                objReq -> objReq
+                                        .bucket(getBucketName())
+                                        .key(objectKey)
+                                        .contentType(contentType)
+                                        .build())
+                        .build());
     }
 }
