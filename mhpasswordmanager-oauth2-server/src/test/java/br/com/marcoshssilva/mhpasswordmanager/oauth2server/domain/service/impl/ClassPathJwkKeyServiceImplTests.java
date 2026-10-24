@@ -2,7 +2,9 @@ package br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.exceptions.JwkLoaderFailException;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.models.JwkKeyData;
+
 import com.nimbusds.jose.jwk.JWK;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +14,7 @@ import java.security.PublicKey;
 import java.util.Collection;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -29,7 +32,7 @@ class ClassPathJwkKeyServiceImplTests {
 
     @DisplayName("Should load public and private key from classpath")
     @Test
-    void shouldLoadPublicAndPrivateKey() throws Exception {
+    void shouldLoadPublicAndPrivateKey() {
         PublicKey publicKey = service.getPublicKey();
         assertNotNull(publicKey);
         assertEquals("RSA", publicKey.getAlgorithm());
@@ -41,7 +44,7 @@ class ClassPathJwkKeyServiceImplTests {
 
     @DisplayName("Should get JwkKeyData for default classpath uuid")
     @Test
-    void shouldGetJwkKeyForDefaultUuid() throws Exception {
+    void shouldGetJwkKeyForDefaultUuid() {
         JwkKeyData keyData = service.getJwkKey(UUID.fromString(DEFAULT_UUID));
         assertNotNull(keyData);
         assertEquals(DEFAULT_UUID, keyData.getUuid());
@@ -52,12 +55,13 @@ class ClassPathJwkKeyServiceImplTests {
     @DisplayName("Should throw JwkLoaderFailException when getting key for unknown uuid")
     @Test
     void shouldThrowWhenGettingKeyForUnknownUuid() {
-        assertThrows(JwkLoaderFailException.class, () -> service.getJwkKey(UUID.randomUUID()));
+        UUID uuid = randomUUID();
+        assertThrows(JwkLoaderFailException.class, () -> service.getJwkKey(uuid));
     }
 
     @DisplayName("Should get all keys containing single default key")
     @Test
-    void shouldGetAllKeys() throws Exception {
+    void shouldGetAllKeys() {
         Collection<JwkKeyData> all = service.getAllKeys();
         assertEquals(1, all.size());
         assertEquals(DEFAULT_UUID, all.iterator().next().getUuid());
@@ -65,7 +69,7 @@ class ClassPathJwkKeyServiceImplTests {
 
     @DisplayName("Should get JWK instance successfully")
     @Test
-    void shouldGetJwkInstance() throws Exception {
+    void shouldGetJwkInstance() {
         JWK jwk = service.getKey();
         assertNotNull(jwk);
         assertEquals(DEFAULT_UUID, jwk.getKeyID());
@@ -74,8 +78,10 @@ class ClassPathJwkKeyServiceImplTests {
     @DisplayName("Should throw unsupported exceptions on mutable operations")
     @Test
     void shouldThrowOnMutableOperations() {
-        assertThrows(JwkLoaderFailException.class, () -> service.selectJwkKey(UUID.randomUUID()));
-        assertThrows(JwkLoaderFailException.class, () -> service.deleteJwkKey(UUID.randomUUID()));
-        assertThrows(JwkLoaderFailException.class, () -> service.createJwkKey(JwkKeyData.builder().build()));
+        UUID uuid = randomUUID();
+        JwkKeyData build = JwkKeyData.builder().build();
+        assertThrows(JwkLoaderFailException.class, () -> service.selectJwkKey(uuid));
+        assertThrows(JwkLoaderFailException.class, () -> service.deleteJwkKey(uuid));
+        assertThrows(JwkLoaderFailException.class, () -> service.createJwkKey(build));
     }
 }
