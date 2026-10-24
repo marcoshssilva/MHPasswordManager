@@ -48,12 +48,16 @@ class JwksUtilsTests {
     @DisplayName("Should throw JwkLoaderFailException when public key bytes are invalid")
     @Test
     void shouldThrowWhenPublicKeyInvalid() {
-        assertThrows(JwkLoaderFailException.class, () -> JwksUtils.getBase64X509PublicKeyFromBytes("invalid".getBytes(), "RSA"));
+        byte[] bytes = "invalid".getBytes();
+        String algorithm = "RSA";
+        assertThrows(JwkLoaderFailException.class, () -> JwksUtils.getBase64X509PublicKeyFromBytes(bytes, algorithm));
     }
 
     @DisplayName("Should throw JwkLoaderFailException when private key bytes are invalid")
     @Test
     void shouldThrowWhenPrivateKeyInvalid() {
-        assertThrows(JwkLoaderFailException.class, () -> JwksUtils.getBase64PKCS8PrivateKeyFromBytes("invalid".getBytes(), "RSA"));
+        byte[] bytes = "invalid".getBytes();
+        String algorithm = "RSA";
+        assertThrows(JwkLoaderFailException.class, () -> JwksUtils.getBase64PKCS8PrivateKeyFromBytes(bytes, algorithm));
     }
 }
