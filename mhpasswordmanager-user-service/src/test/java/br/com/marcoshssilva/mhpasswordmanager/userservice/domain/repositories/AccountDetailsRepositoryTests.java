@@ -2,20 +2,22 @@ package br.com.marcoshssilva.mhpasswordmanager.userservice.domain.repositories;
 
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetails;
 import br.com.marcoshssilva.mhpasswordmanager.userservice.domain.entities.AccountDetailsPK;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ActiveProfiles("test")
 @DataJpaTest
-@Transactional
 class AccountDetailsRepositoryTests {
     @Test
     void updatesOnlyAvatarAndSupportsLongUrls() {
