@@ -196,7 +196,7 @@ class UserServiceImplTests {
 
     @DisplayName("Should reset password from recovery password code request successfully")
     @Test
-    void shouldResetPasswordFromRecoveryPasswordCodeRequestSuccessfully() throws Exception {
+    void shouldResetPasswordFromRecoveryPasswordCodeRequestSuccessfully() {
         RequestedBrowserParams browserParams = RequestedBrowserParams.builder().build();
         RecoveryPasswordCodeRequest codeRequest = RecoveryPasswordCodeRequest.builder()
                 .code("12345678901")
@@ -238,7 +238,7 @@ class UserServiceImplTests {
 
     @DisplayName("Should verify user account successfully")
     @Test
-    void shouldVerifyUserAccountSuccessfully() throws Exception {
+    void shouldVerifyUserAccountSuccessfully() {
         RequestedBrowserParams browserParams = RequestedBrowserParams.builder().build();
         when(userOperationsService.verifyUserAccount("uuid-code", browserParams)).thenReturn(true);
 
