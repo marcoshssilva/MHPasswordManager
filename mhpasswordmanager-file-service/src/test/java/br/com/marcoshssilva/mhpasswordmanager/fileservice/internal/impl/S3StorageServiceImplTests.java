@@ -22,11 +22,9 @@ import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.bouncycastle.asn1.cms.CMSAttributes.contentType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
