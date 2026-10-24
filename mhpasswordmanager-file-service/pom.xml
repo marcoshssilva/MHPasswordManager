@@ -118,6 +118,10 @@
 			<artifactId>mongo-java-server</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+		</dependency>
 
 
 		<!-- https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin -->
