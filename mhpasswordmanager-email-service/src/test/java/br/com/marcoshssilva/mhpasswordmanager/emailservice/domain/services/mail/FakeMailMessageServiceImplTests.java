@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 import java.io.Serializable;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -45,7 +46,7 @@ class FakeMailMessageServiceImplTests {
     @Test
     void shouldSendEmail() throws Exception {
         MimeMessage mimeMessage = service.prepareSimpleMimeMessage("recipient@example.com", "Subject", "Body", false, false);
-        service.sendEmail(mimeMessage);
+        assertDoesNotThrow(() -> service.sendEmail(mimeMessage));
     }
 
     @DisplayName("Should prepare simple mime message without redirect")
