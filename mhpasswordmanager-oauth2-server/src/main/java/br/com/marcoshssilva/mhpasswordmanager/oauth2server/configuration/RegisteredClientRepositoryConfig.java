@@ -41,6 +41,6 @@ public class RegisteredClientRepositoryConfig {
     @ConditionalOnProperty(name = "config.oauth.mode", havingValue = "MEMORY")
     public RegisteredClientRepository inMemoryRegisteredClientRepository(OAuth2ConfigStarterPropertiesConfig.OAuth2ConfigStarterProperties oAuth2ConfigStarterProperties, PasswordEncoder passwordEncoder) {
         log.info("RegisteredClientRepository using InMemoryRegisteredClient with default client and No Database");
-        return new InMemoryRegisteredClientRepository(oAuth2ConfigStarterProperties.getClients().stream().map(client -> registeredClientBuilder(client, passwordEncoder).build()).collect(Collectors.toUnmodifiableList()));
+        return new InMemoryRegisteredClientRepository(oAuth2ConfigStarterProperties.getClients().stream().map(client -> registeredClientBuilder(client, passwordEncoder).build()).toList());
     }
 }
