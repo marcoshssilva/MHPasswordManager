@@ -121,7 +121,8 @@ class JdbcJkwKeyServiceImplTests {
     @DisplayName("Should throw JwkLoaderFailException when selecting non-existent key")
     @Test
     void shouldThrowWhenSelectingNonExistentKey() {
-        assertThrows(JwkLoaderFailException.class, () -> service.selectJwkKey(UUID.randomUUID()));
+        UUID uuid = UUID.randomUUID();
+        assertThrows(JwkLoaderFailException.class, () -> service.selectJwkKey(uuid));
     }
 
     @DisplayName("Should soft delete JWK key")
@@ -139,7 +140,8 @@ class JdbcJkwKeyServiceImplTests {
     @DisplayName("Should throw JwkLoaderFailException when deleting non-existent key")
     @Test
     void shouldThrowWhenDeletingNonExistentKey() {
-        assertThrows(JwkLoaderFailException.class, () -> service.deleteJwkKey(UUID.randomUUID()));
+        UUID uuid = UUID.randomUUID();
+        assertThrows(JwkLoaderFailException.class, () -> service.deleteJwkKey(uuid));
     }
 
     @DisplayName("Should get active JWK as Nimbus JWK")
