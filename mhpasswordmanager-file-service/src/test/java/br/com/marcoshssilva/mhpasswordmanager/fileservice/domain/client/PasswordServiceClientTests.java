@@ -17,7 +17,6 @@ import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -64,19 +63,23 @@ class PasswordServiceClientTests {
     @Test
     @SuppressWarnings("unchecked")
     void shouldEncryptFileUsingBucket() {
+        String encryptionUri = "/keys/{bucketUuid}/encrypt/file";
+        String bucketUuid = "bucket-uuid";
+
         MockMultipartFile file = new MockMultipartFile("file", "document.pdf", MediaType.APPLICATION_PDF_VALUE, "payload".getBytes());
         DecryptKeyBase64Payload expectedPayload = new DecryptKeyBase64Payload();
         expectedPayload.setData("base64-data");
 
         when(webClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(eq("/keys/{bucketUuid}/encrypt/file"), eq("bucket-uuid"))).thenReturn(requestBodySpec);
+
+        when(requestBodyUriSpec.uri(encryptionUri, bucketUuid)).thenReturn(requestBodySpec);
         when(requestBodySpec.headers(any(Consumer.class))).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(MediaType.MULTIPART_FORM_DATA)).thenReturn(requestBodySpec);
         when(requestBodySpec.body(any(BodyInserter.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(DecryptKeyBase64Payload.class)).thenReturn(Mono.just(expectedPayload));
 
-        Mono<DecryptKeyBase64Payload> resultMono = passwordServiceClient.encryptFileUsingBucket("Bearer sample-token", "bucket-uuid", file);
+        Mono<DecryptKeyBase64Payload> resultMono = passwordServiceClient.encryptFileUsingBucket("Bearer sample-token", bucketUuid, file);
 
         DecryptKeyBase64Payload result = resultMono.block();
         assertThat(result).isEqualTo(expectedPayload);
@@ -86,19 +89,22 @@ class PasswordServiceClientTests {
     @Test
     @SuppressWarnings("unchecked")
     void shouldEncryptFileWithDefaultFilename() {
+        String uri = "/keys/{bucketUuid}/encrypt/file";
+        String bucketId = "bucket-uuid";
         MockMultipartFile file = new MockMultipartFile("file", "", MediaType.APPLICATION_PDF_VALUE, "payload".getBytes());
         DecryptKeyBase64Payload expectedPayload = new DecryptKeyBase64Payload();
         expectedPayload.setData("base64-data");
 
         when(webClient.post()).thenReturn(requestBodyUriSpec);
-        when(requestBodyUriSpec.uri(eq("/keys/{bucketUuid}/encrypt/file"), eq("bucket-uuid"))).thenReturn(requestBodySpec);
+
+        when(requestBodyUriSpec.uri(uri, bucketId)).thenReturn(requestBodySpec);
         when(requestBodySpec.headers(any(Consumer.class))).thenReturn(requestBodySpec);
         when(requestBodySpec.contentType(MediaType.MULTIPART_FORM_DATA)).thenReturn(requestBodySpec);
         when(requestBodySpec.body(any(BodyInserter.class))).thenReturn(requestHeadersSpec);
         when(requestHeadersSpec.retrieve()).thenReturn(responseSpec);
         when(responseSpec.bodyToMono(DecryptKeyBase64Payload.class)).thenReturn(Mono.just(expectedPayload));
 
-        Mono<DecryptKeyBase64Payload> resultMono = passwordServiceClient.encryptFileUsingBucket(null, "bucket-uuid", file);
+        Mono<DecryptKeyBase64Payload> resultMono = passwordServiceClient.encryptFileUsingBucket(null, bucketId, file);
 
         DecryptKeyBase64Payload result = resultMono.block();
         assertThat(result).isEqualTo(expectedPayload);
