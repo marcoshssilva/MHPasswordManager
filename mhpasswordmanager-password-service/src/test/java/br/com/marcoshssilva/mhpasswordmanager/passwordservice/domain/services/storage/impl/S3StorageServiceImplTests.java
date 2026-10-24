@@ -104,16 +104,20 @@ class S3StorageServiceImplTests {
     @Test
     void shouldCreatePresignedUpload() {
         PresignedPutObjectRequest presignedResponse = mock(PresignedPutObjectRequest.class);
-        when(s3Presigner.presignPutObject(any(PutObjectPresignRequest.class))).thenReturn(presignedResponse);
+        when(s3Presigner.presignPutObject(org.mockito.ArgumentMatchers.<java.util.function.Consumer<PutObjectPresignRequest.Builder>>any())).thenReturn(presignedResponse);
 
         PresignedPutObjectRequest result = service.createPresignedUpload("file-key", "text/plain", Duration.ofMinutes(10));
 
         assertThat(result).isSameAs(presignedResponse);
-        ArgumentCaptor<PutObjectPresignRequest> captor = ArgumentCaptor.forClass(PutObjectPresignRequest.class);
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<java.util.function.Consumer<PutObjectPresignRequest.Builder>> captor = ArgumentCaptor.forClass(java.util.function.Consumer.class);
         verify(s3Presigner).presignPutObject(captor.capture());
-        assertThat(captor.getValue().signatureDuration()).isEqualTo(Duration.ofMinutes(10));
-        assertThat(captor.getValue().putObjectRequest().bucket()).isEqualTo("test-bucket");
-        assertThat(captor.getValue().putObjectRequest().key()).isEqualTo("file-key");
-        assertThat(captor.getValue().putObjectRequest().contentType()).isEqualTo("text/plain");
+        PutObjectPresignRequest.Builder builder = PutObjectPresignRequest.builder();
+        captor.getValue().accept(builder);
+        PutObjectPresignRequest built = builder.build();
+        assertThat(built.signatureDuration()).isEqualTo(Duration.ofMinutes(10));
+        assertThat(built.putObjectRequest().bucket()).isEqualTo("test-bucket");
+        assertThat(built.putObjectRequest().key()).isEqualTo("file-key");
+        assertThat(built.putObjectRequest().contentType()).isEqualTo("text/plain");
     }
 }
