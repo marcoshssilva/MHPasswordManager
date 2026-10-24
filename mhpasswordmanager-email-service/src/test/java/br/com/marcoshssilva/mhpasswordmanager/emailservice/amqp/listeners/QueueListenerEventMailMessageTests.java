@@ -98,9 +98,7 @@ class QueueListenerEventMailMessageTests {
     @DisplayName("Should throw AmqpRejectAndDontRequeueException when unknown data model is received")
     @Test
     void shouldThrowWhenUnknownDataModelReceived() {
-        AMQPEventModel event = new AMQPEventModel("event-3", List.of("mail"), new CustomUnknownDataModel());
         Message message = new Message(new byte[0], new MessageProperties());
-
         assertThrows(AmqpRejectAndDontRequeueException.class, () -> listener.onReceiveMessage(message));
     }
 
