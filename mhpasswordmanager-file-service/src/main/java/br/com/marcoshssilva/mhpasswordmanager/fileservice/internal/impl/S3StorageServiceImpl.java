@@ -2,8 +2,10 @@ package br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.impl;
 
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.configs.S3StorageProperties;
 import br.com.marcoshssilva.mhpasswordmanager.fileservice.internal.IS3StorageService;
+
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+
 import software.amazon.awssdk.core.ResponseInputStream;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
@@ -16,7 +18,6 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 import java.time.Duration;
 
@@ -60,7 +61,15 @@ public class S3StorageServiceImpl implements IS3StorageService {
 
     @Override
     public PresignedPutObjectRequest createPresignedUpload(String objectKey, String contentType, Duration expiration) {
-        PutObjectRequest request = PutObjectRequest.builder().bucket(getBucketName()).key(objectKey).contentType(contentType).build();
-        return s3Presigner.presignPutObject(PutObjectPresignRequest.builder().signatureDuration(expiration).putObjectRequest(request).build());
+        return s3Presigner.presignPutObject(
+                req -> req
+                        .signatureDuration(expiration)
+                        .putObjectRequest(
+                                objReq -> objReq
+                                        .bucket(getBucketName())
+                                        .key(objectKey)
+                                        .contentType(contentType)
+                                        .build())
+                        .build());
     }
 }
