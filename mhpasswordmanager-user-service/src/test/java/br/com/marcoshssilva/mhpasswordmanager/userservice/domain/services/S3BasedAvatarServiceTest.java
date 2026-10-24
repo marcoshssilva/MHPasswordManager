@@ -31,6 +31,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -73,10 +74,21 @@ class S3BasedAvatarServiceTest {
     }
 
     AccountDetails accountExists() {
-        return repository.saveAndFlush(AccountDetails.builder()
-                .id(ACCOUNT_ID).firstName("John").lastName("Doe")
-                .verified(true).verifiedAt(LocalDateTime.of(2026, 1, 1, 12, 0))
-                .imageUrl(OLD_URL).build());
+        var year = 2026;
+        var month = Month.JANUARY.getValue();
+        var day = 1;
+        var hour = 12;
+        var minute = 0;
+
+        return repository.saveAndFlush(
+                AccountDetails.builder()
+                    .id(ACCOUNT_ID)
+                    .firstName("John")
+                    .lastName("Doe")
+                    .verified(true)
+                    .verifiedAt(LocalDateTime.of(year, month, day, hour, minute))
+                    .imageUrl(OLD_URL)
+                    .build());
     }
 
     AccountDetails persistedAccount() {
