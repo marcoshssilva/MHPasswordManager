@@ -201,7 +201,7 @@ public class MongoGridFSStorageFileServiceImpl implements IStorageFileService {
     private static <T> T catchThrowableStorageErrorExceptionWhenFall(Callable<T> executable) throws StorageErrorException {
         try {
             return executable.call();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             throw new StorageErrorException(e.getMessage(), e);
         }
     }
