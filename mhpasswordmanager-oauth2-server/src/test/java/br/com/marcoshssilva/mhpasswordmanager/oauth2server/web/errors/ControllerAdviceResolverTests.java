@@ -35,7 +35,9 @@ class ControllerAdviceResolverTests {
         response = new MockHttpServletResponse();
     }
 
-    public void dummyMethod(String param) {}
+    public void dummyMethod(String param) {
+        // empty method used by tests to create MethodParameter instances
+    }
 
     @DisplayName("Should handle MethodArgumentNotValidException")
     @Test
