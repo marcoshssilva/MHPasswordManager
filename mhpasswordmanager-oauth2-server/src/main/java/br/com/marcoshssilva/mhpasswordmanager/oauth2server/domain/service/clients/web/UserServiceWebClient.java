@@ -12,6 +12,8 @@ import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.client
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordRequestData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountValidatePasswordResponseData;
 import br.com.marcoshssilva.mhpasswordmanager.oauth2server.domain.service.clients.entities.AccountVerificationCodeResponseData;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -32,6 +34,7 @@ public class UserServiceWebClient {
     private final WebClient webClient;
     private final Duration responseTimeoutDuration;
 
+    @Autowired
     public UserServiceWebClient(@LoadBalanced WebClient.Builder webClientBuilder, UserServiceWebClientProperties properties, OAuth2AuthorizedClientManager userServiceOAuth2AuthorizedClientManager, @Value("${config.users.webclient.request-timeout:3s}") Duration responseTimeoutDuration) {
         this.responseTimeoutDuration = responseTimeoutDuration;
         this.webClient = createWebClient(webClientBuilder, properties, userServiceOAuth2AuthorizedClientManager);
