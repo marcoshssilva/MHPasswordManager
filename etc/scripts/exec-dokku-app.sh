@@ -42,7 +42,11 @@ STAGES=(
     "EUREKA"
     "CONFIGSERVER"
     "GATEWAY"
-    "OAUTH2-SERVER USER-API PASSWORD-API EMAIL-API FILE-API"
+    "USER-API"
+    "PASSWORD-API"
+    "EMAIL-API"
+    "FILE-API"
+    "OAUTH2-SERVER"
 )
 # --------------------------------------------------------------------------
 
