@@ -53,3 +53,6 @@ npm-debug.log*
 /git_excludes
 sonar_report.md
 sonar_new_code_report.md
+
+# Local Config Server encryption material
+.mhp-config/
