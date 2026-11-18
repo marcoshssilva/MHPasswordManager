@@ -55,6 +55,12 @@ before running Compose as described in the root README. This automatic
 initialization is for development only; provision and protect a stable
 keystore separately in production.
 
+For Dokku, the repository's startup script uses the existing `dokku` profile and
+generates the PKCS#12 file only when it is missing from the configured persistent
+directory. Set the password in Dokku's config store and mount persistent storage
+at `/app/config-crypto`; see the root README's Dokku deployment instructions. This
+Dokku-only bootstrap does not change Kubernetes PEM or keystore configuration.
+
 Set these environment variables on the Config Server:
 
 The configuration prefix is `config.configserver.crypto`.

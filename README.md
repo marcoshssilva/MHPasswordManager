@@ -58,6 +58,26 @@ intend to delete the keystore and other persistent data. See the
 [Config Server README](mhpasswordmanager-config-services/README.md) for
 security requirements and how to encrypt configuration values.
 
+## Dokku
+
+The Dokku `Procfile` starts the Config Server with the other applications. Before
+deploying, configure a persistent mount for its generated PKCS#12 keystore and
+provide a keystore password through Dokku's config store:
+
+```sh
+dokku storage:mount <app-name> /var/lib/dokku/data/storage/<app-name>/config-crypto:/app/config-crypto
+dokku config:set <app-name> CONFIG_CONFIGSERVER_CRYPTO_PASSWORD='<strong-password>'
+```
+
+Create the host directory first if it does not exist, and ensure the Dokku app
+can write to the mounted directory. On startup, the Dokku shell script generates
+an RSA keystore there only when `keystore.p12` is absent, then passes its path
+and password only to the Config Server process. The existing
+`dokku,configserver` Spring profiles are unchanged. Keep both the mounted
+keystore and its password across deployments; if either is lost or changed,
+existing ciphertext may no longer be decryptable. This Dokku bootstrap does not
+change the PEM/Kubernetes setup.
+
 ---
 
 # TODO
