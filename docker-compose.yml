@@ -1,12 +1,20 @@
 services:
   config:
     restart: on-failure
-    build:
+    build: &config-build
       context: .
       dockerfile: mhpasswordmanager-config-services/Dockerfile
     env_file:
       - etc/env/CONFIG-SERVICES.env
+    environment:
+      CONFIG_CONFIGSERVER_CRYPTO_PASSWORD: ${CONFIG_CONFIGSERVER_CRYPTO_PASSWORD:-}
+      CONFIG_CONFIGSERVER_CRYPTO_ENABLED: "true"
+      CONFIG_CONFIGSERVER_CRYPTO_LOCATION: /app/config-crypto/keystore.p12
+    volumes:
+      - config-crypto:/app/config-crypto
     depends_on:
+      config-key-init:
+        condition: service_completed_successfully
       eureka:
         condition: service_healthy
     networks:
@@ -18,6 +26,39 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    profiles:
+      - apps
+      - all
+  config-key-init:
+    build: *config-build
+    environment:
+      CONFIG_CONFIGSERVER_CRYPTO_PASSWORD: ${CONFIG_CONFIGSERVER_CRYPTO_PASSWORD:-}
+    volumes:
+      - config-crypto:/app/config-crypto
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        test -n "$$CONFIG_CONFIGSERVER_CRYPTO_PASSWORD" || { echo "Set CONFIG_CONFIGSERVER_CRYPTO_PASSWORD" >&2; exit 1; }
+        test -f /app/config-crypto/keystore.p12 && exit 0
+        mkdir /app/config-crypto/.keygen-lock || { echo "Keystore generation already in progress" >&2; exit 1; }
+        temp_dir=""
+        cleanup() {
+          if [ -n "$$temp_dir" ]; then
+            rm -f "$$temp_dir/keystore.p12"
+            rmdir "$$temp_dir"
+          fi
+          rmdir /app/config-crypto/.keygen-lock
+        }
+        trap cleanup EXIT
+        test -f /app/config-crypto/keystore.p12 && exit 0
+        umask 077
+        temp_dir=$$(mktemp -d /app/config-crypto/.keygen.XXXXXX)
+        keytool -genkeypair -alias config-server -keyalg RSA -keysize 2048 \
+          -sigalg SHA256withRSA -validity 3650 \
+          -dname "CN=MHPasswordManager Config Server" -storetype PKCS12 \
+          -keystore "$$temp_dir/keystore.p12" \
+          -storepass:env CONFIG_CONFIGSERVER_CRYPTO_PASSWORD -keypass:env CONFIG_CONFIGSERVER_CRYPTO_PASSWORD -noprompt
+        mv "$$temp_dir/keystore.p12" /app/config-crypto/keystore.p12
     profiles:
       - apps
       - all
@@ -47,6 +88,10 @@ services:
       dockerfile: mhpasswordmanager-oauth2-server/Dockerfile
     env_file:
       - etc/env/OAUTH2-AUTHORIZATION-SERVER.env
+    environment: &config-client-environment
+      SPRING_CLOUD_CONFIG_ENABLED: "true"
+      SPRING_CLOUD_CONFIG_DISCOVERY_ENABLED: "false"
+      SPRING_CONFIG_IMPORT: "configserver:http://config:8888"
     depends_on:
       redis:
         condition: service_healthy
@@ -75,6 +120,8 @@ services:
     env_file:
       - etc/env/API-GATEWAY.env
       - etc/env/MINIO-GATEWAY-API.env
+    environment:
+      MANAGEMENT_PORT: "8081"
     depends_on:
       eureka:
         condition: service_healthy
@@ -104,6 +151,7 @@ services:
     env_file:
       - etc/env/USER-SERVICE.env
       - etc/env/MINIO-USERS-SERVICE.env
+    environment: *config-client-environment
     depends_on:
       eureka:
         condition: service_healthy
@@ -128,6 +176,7 @@ services:
     env_file:
       - etc/env/PASSWORD-SERVICE.env
       - etc/env/MINIO-PASSWORD-SERVICE.env
+    environment: *config-client-environment
     depends_on:
       eureka:
         condition: service_healthy
@@ -157,6 +206,7 @@ services:
       dockerfile: mhpasswordmanager-email-service/Dockerfile
     env_file:
       - etc/env/EMAIL-SERVICE.env
+    environment: *config-client-environment
     networks:
       - net
 #    ports:
@@ -183,6 +233,7 @@ services:
     env_file:
       - etc/env/FILE-SERVICE.env
       - etc/env/MINIO-FILE-SERVICE.env
+    environment: *config-client-environment
 #    ports:
 #      - "12014:12014"
     networks:
@@ -348,6 +399,7 @@ networks:
   net:
     driver: bridge
 volumes:
+  config-crypto:
   data-postgres-db:
   data-redis:
   data-mongo-db:
