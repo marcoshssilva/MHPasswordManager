@@ -40,6 +40,8 @@ COPY --from=extractor --chown=spring:spring /app/spring-boot-loader/ ./
 COPY --from=extractor --chown=spring:spring /app/snapshot-dependencies/ ./
 COPY --from=extractor --chown=spring:spring /app/application/ ./
 
+RUN mkdir -p /app/config-crypto && chown spring:spring /app/config-crypto
+
 USER spring:spring
 
 EXPOSE ${PORT}
