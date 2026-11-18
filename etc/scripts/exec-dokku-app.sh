@@ -13,6 +13,7 @@ set -u
 
 # ---- Configuration -------------------------------------------------------
 RESTART_WORKER="etc/scripts/restart-worker.sh"
+KEYSTORE_SETUP="etc/scripts/ensure-dokku-config-keystore.sh"
 LOG_DIR="${LOG_DIR:-logs}"
 JAVA_BIN="${JAVA_BIN:-java}"
 HEALTH_HOST="${HEALTH_HOST:-127.0.0.1}"
@@ -89,12 +90,22 @@ app_entry() {
 start_app() {
     local name="$1" module="$2" artifact="$3" port="$4" pass_port="$5" jar
     local -a args=(-jar)
+    local -a crypto_env=()
     jar="$(find_jar "$module" "$artifact")" || return 1
     args+=("$jar")
     [ "$pass_port" = true ] && args+=("--server.port=$port")
 
+    if [ "$name" = "CONFIGSERVER" ]; then
+        crypto_env=(
+            "CONFIG_CONFIGSERVER_CRYPTO_ENABLED=$CONFIG_CONFIGSERVER_CRYPTO_ENABLED"
+            "CONFIG_CONFIGSERVER_CRYPTO_LOCATION=$CONFIG_CONFIGSERVER_CRYPTO_LOCATION"
+            "CONFIG_CONFIGSERVER_CRYPTO_PASSWORD=$CONFIG_CONFIGSERVER_CRYPTO_PASSWORD"
+        )
+    fi
+
     log "Starting $name on port $port ($jar)"
-    PORT="$port" MANAGEMENT_PORT="$GATEWAY_MANAGEMENT_PORT" sh "$RESTART_WORKER" "$JAVA_BIN" "${args[@]}" \
+    env "${crypto_env[@]}" PORT="$port" MANAGEMENT_PORT="$GATEWAY_MANAGEMENT_PORT" \
+        sh "$RESTART_WORKER" "$JAVA_BIN" "${args[@]}" \
         > >(tee -a "$LOG_DIR/$name.log" >/dev/null) 2>&1 &
     PIDS+=("$!")
     LAST_PID="$!"
@@ -187,6 +198,10 @@ main() {
     [ "$#" -le 2 ] || { log "Usage: $0 [PORT] [APP]" >&2; exit 64; }
     validate_port
     [ -f "$RESTART_WORKER" ] || { log "$RESTART_WORKER not found. Run from the repository root." >&2; exit 1; }
+    [ -f "$KEYSTORE_SETUP" ] || { log "$KEYSTORE_SETUP not found. Run from the repository root." >&2; exit 1; }
+    # shellcheck source=etc/scripts/ensure-dokku-config-keystore.sh
+    source "$KEYSTORE_SETUP"
+    ensure_dokku_config_keystore || { log "Config Server keystore setup failed." >&2; exit 1; }
     prepare_logs
     trap stop_all INT TERM
     follow_logs
