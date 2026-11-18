@@ -38,11 +38,25 @@ You can start application following steps:
     JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
     ./mvnw clean install -DskipTests
     ```
-3. Run docker compose file inside project
+3. Set a keystore password (at least six characters) for this local Compose
+   deployment. For example, in PowerShell:
+    ```powershell
+    $password = Read-Host "Config Server keystore password" -AsSecureString
+    $env:CONFIG_CONFIGSERVER_CRYPTO_PASSWORD = [System.Net.NetworkCredential]::new("", $password).Password
     ```
+4. Run docker compose file inside project
+    ```powershell
     docker compose -f ".\docker-compose.yml" --profile all up -d --build
     ```
-4. Open in browser **[127.0.0.1:8080/mypass-manager/auth](http://127.0.0.1:8080/mypass-manager/auth)**
+5. Open in browser **[127.0.0.1:8080/mypass-manager/auth](http://127.0.0.1:8080/mypass-manager/auth)**
+
+Compose initializes a dedicated Config Server keystore once in the
+`config-crypto` volume and continues to use the existing `native` Spring profile.
+Keep the volume and password across restarts; losing either prevents decryption
+of previously encrypted values. Do not use `docker compose down -v` unless you
+intend to delete the keystore and other persistent data. See the
+[Config Server README](mhpasswordmanager-config-services/README.md) for
+security requirements and how to encrypt configuration values.
 
 ---
 
