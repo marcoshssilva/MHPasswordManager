@@ -13,12 +13,12 @@ import org.springframework.security.rsa.crypto.RsaSecretEncryptor;
 class ConfigEncryptionConfiguration {
 
     @Bean
-    TextEncryptorLocator configTextEncryptorLocator(Environment environment) throws Exception {
+    TextEncryptorLocator configTextEncryptorLocator(Environment environment) throws CryptoErrorException {
         if (environment.containsProperty("encrypt.key") || environment.containsProperty("encrypt.key-store.location")) {
-            throw new IllegalStateException("Do not combine config.configserver.crypto with Spring encrypt.key or encrypt.key-store");
+            throw new CryptoErrorException("Do not combine config.configserver.crypto with Spring encrypt.key or encrypt.key-store");
         }
         if (!environment.getProperty("spring.cloud.config.server.encrypt.enabled", Boolean.class, true)) {
-            throw new IllegalStateException("Config Server decryption must be enabled");
+            throw new CryptoErrorException("Config Server decryption must be enabled");
         }
         return new SingleTextEncryptorLocator(new RsaSecretEncryptor(ConfigKeySource.load(environment)));
     }
