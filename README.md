@@ -100,6 +100,33 @@ that do not match a configured route are redirected to the authorization
 server. Circuit-breaker open/closed behavior and service-failure fallbacks are
 not currently configured.
 
+## API documentation
+
+The OAuth2, User, Password, File and Email services generate OpenAPI 3
+specifications with Springdoc OpenAPI 1.8.0 (compatible with the project's
+Spring Boot 2.7.18). Their Swagger UI and API descriptions are routed through
+the Gateway:
+
+| API | Swagger UI | OpenAPI JSON |
+|---|---|---|
+| OAuth2 Server | `http://localhost:8080/mypass-manager/auth/swagger-ui.html` | `http://localhost:8080/mypass-manager/auth/v3/api-docs` |
+| User Service | `http://localhost:8080/mypass-manager/users/swagger-ui.html` | `http://localhost:8080/mypass-manager/users/v3/api-docs` |
+| Password Service | `http://localhost:8080/mypass-manager/passwords/swagger-ui.html` | `http://localhost:8080/mypass-manager/passwords/v3/api-docs` |
+| File Service | `http://localhost:8080/mypass-manager/files/swagger-ui.html` | `http://localhost:8080/mypass-manager/files/v3/api-docs` |
+| Email Service | `http://localhost:8080/mypass-manager/emails/swagger-ui.html` | `http://localhost:8080/mypass-manager/emails/v3/api-docs` |
+
+Swagger UI and the listed JSON OpenAPI documents are public through the
+Gateway, but protected API operations still require a valid JWT with their
+required scopes/roles. Use the
+authorization-code flow in Swagger UI with a registered OAuth client and an
+exactly matching redirect URI, or provide a token with the
+`Bearer Authorization` scheme. The flow uses
+`/mypass-manager/auth/oauth2/authorize` and
+`/mypass-manager/auth/oauth2/token`. See each service README for direct URLs,
+callback URIs and configuration. The Config Server and Service Registry do
+not include Springdoc; they provide Config Server endpoints and the Eureka
+dashboard respectively.
+
 Spring Boot services use Eureka clients to register their instances and discover
 other services. Eureka tracks instance availability through registrations and
 heartbeats; clients can use the discovered instances with load-balanced routing

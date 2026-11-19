@@ -43,6 +43,15 @@ network access and use TLS as appropriate; the gateway does not secure direct
 connections. All Actuator web endpoints and health details are exposed by
 default and should also be restricted.
 
+## API documentation
+
+The Service Registry does not include Springdoc/OpenAPI and has no
+`/swagger-ui.html` or `/v3/api-docs` endpoint. Its Eureka dashboard is at
+`http://localhost:8761/`; restrict access to this administrative UI and the
+registry endpoints at the network layer. OpenAPI documentation for the
+application APIs is provided by the OAuth2, User, Password, File and Email
+services through the Gateway.
+
 ## Java
 
 From the repository root, with Java 17:

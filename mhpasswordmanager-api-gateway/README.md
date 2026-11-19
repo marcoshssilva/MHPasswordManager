@@ -51,6 +51,31 @@ to the security rules. The default is the local authorization-server URL.
 Connection timeout is 3 seconds and response timeout is 15 seconds by
 default; circuit breakers and service-failure fallbacks are not configured.
 
+## Swagger UI and OpenAPI
+
+The Gateway forwards documentation paths to each API service; it does not
+publish a separate OpenAPI specification for the Gateway itself:
+
+| API | Swagger UI | OpenAPI JSON |
+|---|---|---|
+| OAuth2 Server | `http://localhost:8080/mypass-manager/auth/swagger-ui.html` | `http://localhost:8080/mypass-manager/auth/v3/api-docs` |
+| User Service | `http://localhost:8080/mypass-manager/users/swagger-ui.html` | `http://localhost:8080/mypass-manager/users/v3/api-docs` |
+| Password Service | `http://localhost:8080/mypass-manager/passwords/swagger-ui.html` | `http://localhost:8080/mypass-manager/passwords/v3/api-docs` |
+| File Service | `http://localhost:8080/mypass-manager/files/swagger-ui.html` | `http://localhost:8080/mypass-manager/files/v3/api-docs` |
+| Email Service | `http://localhost:8080/mypass-manager/emails/swagger-ui.html` | `http://localhost:8080/mypass-manager/emails/v3/api-docs` |
+
+Swagger UI and JSON OpenAPI endpoints are explicitly public at the Gateway;
+the services also permit their OpenAPI endpoints when accessed directly.
+This does not make the documented API operations public:
+protected operations still require a JWT with the required scopes/roles. Use
+**Authorize** with the registered OAuth2 authorization-code client, or
+provide a valid token using the `Bearer Authorization` scheme. The
+authorization and token endpoints are
+`/mypass-manager/auth/oauth2/authorize` and
+`/mypass-manager/auth/oauth2/token`. Each UI redirect URI must exactly match
+the URI registered on its OAuth client; see the service README for that
+callback and its Springdoc settings.
+
 ## Configuration
 
 Set environment variables before starting the process. Spring Boot also

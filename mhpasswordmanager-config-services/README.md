@@ -88,6 +88,40 @@ Configure the registry, server and client addresses so they are mutually
 reachable; service registration alone does not grant authorization or encrypt
 traffic.
 
+## API documentation
+
+The Config Server does not include Springdoc/OpenAPI dependencies, so it has
+no `/swagger-ui.html` or `/v3/api-docs` endpoint. It serves configuration
+through Spring Cloud Config's `/{application}/{profile}` API. The APIs whose
+OpenAPI documents are configured in this repository are the OAuth2, User,
+Password, File and Email services; see their individual READMEs for the
+Swagger UI URLs and authorization setup.
+
+Their Springdoc settings are supplied as part of each service's configuration
+(`authorization-server.yml`, `user-service.yml`, `password-service.yml`,
+`file-service.yml` and `email-service.yml`). The main properties are:
+
+| Property | Purpose |
+|---|---|
+| `springdoc.show-actuator` | Includes Actuator operations in the generated OpenAPI document; currently enabled by the bundled service configuration. |
+| `springdoc.show-login-endpoint` | Controls whether Springdoc includes the login endpoint in generated documentation; bundled service configuration disables it. |
+| `springdoc.swagger-ui.oauth.client-id` | Client ID used by Swagger UI's OAuth2 authorization-code flow. It must identify a client registered on the OAuth2 Server. |
+| `springdoc.swagger-ui.oauth.client-secret` | Optional confidential-client setting. Swagger UI runs in the browser, so a configured secret is exposed to its users; do not place a production confidential secret here. |
+| `springdoc.swagger-ui.oauth2-authorization-url` | OAuth2 authorization endpoint used by the API OpenAPI scheme. |
+| `springdoc.swagger-ui.oauth2-token-url` | OAuth2 token endpoint used by the API OpenAPI scheme. |
+| `springdoc.swagger-ui.oauth2-redirect-url` | Browser-visible Swagger UI callback; it must exactly match a redirect URI registered for the client. |
+
+The local configuration points to the authorization and token endpoints
+through the Gateway and sets a distinct redirect path for each API. For a
+deployment, update those URLs to the browser-reachable hostname, register
+each callback URI with the OAuth2 client, and ensure the client grants the
+scopes required by the API operations. Keep credentials in protected
+configuration; never copy development client secrets into production. The
+Swagger UI/OpenAPI paths are public, but API operations remain subject to
+JWT scope and role checks.
+
+Reference: [Springdoc OpenAPI 1.x](https://springdoc.org/v1/).
+
 ## Health and management
 
 The default health endpoint is `http://localhost:8888/actuator/health`.

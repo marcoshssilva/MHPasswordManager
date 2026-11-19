@@ -402,6 +402,57 @@ that path; `/actuator/**` is publicly permitted by the application security
 configuration. Restrict management endpoints and private service traffic at
 the network layer and use TLS.
 
+## Springdoc, Swagger UI and authentication
+
+This service uses Springdoc OpenAPI 1.8.0 with Spring Boot 2.7.18. When
+running locally through the Gateway, use:
+
+| Resource | URL |
+|---|---|
+| Swagger UI | `http://localhost:8080/mypass-manager/auth/swagger-ui.html` |
+| OpenAPI JSON | `http://localhost:8080/mypass-manager/auth/v3/api-docs` |
+| Direct OpenAPI YAML | `http://localhost:12010/mypass-manager/auth/v3/api-docs.yaml` |
+| Direct Swagger UI | `http://localhost:12010/mypass-manager/auth/swagger-ui.html` |
+| Direct OpenAPI JSON | `http://localhost:12010/mypass-manager/auth/v3/api-docs` |
+
+The UI, JSON/YAML specifications and OAuth2 authorization endpoints are
+public. This does not make protected authorization-server APIs public. The
+OpenAPI definition provides HTTP Bearer and OAuth2 authorization-code
+schemes. In Swagger UI, **Authorize** uses the configured OAuth client; for
+other OAuth flows, obtain an access token separately and enter it with
+`Bearer Authorization`. The token must contain the scopes/roles required by
+the requested operation.
+
+| Environment variable | Spring property | Purpose |
+|---|---|---|
+| `SPRINGDOC_SWAGGERUI_OAUTH_CLIENTID` | `springdoc.swagger-ui.oauth.client-id` | OAuth client ID for Swagger UI; register it with the authorization server. |
+| `SPRINGDOC_SWAGGERUI_OAUTH_CLIENTSECRET` | `springdoc.swagger-ui.oauth.client-secret` | Optional confidential-client setting. A secret sent to browser-based Swagger UI is exposed to its users; do not use a production confidential secret here. |
+| `SPRINGDOC_SWAGGERUI_OAUTH2_AUTHORIZATION_URL` | `springdoc.swagger-ui.oauth2-authorization-url` | OAuth authorization endpoint; bundled local value `http://127.0.0.1:8080/mypass-manager/auth/oauth2/authorize`. |
+| `SPRINGDOC_SWAGGERUI_OAUTH2_TOKEN_URL` | `springdoc.swagger-ui.oauth2-token-url` | OAuth token endpoint; bundled local value `http://127.0.0.1:8080/mypass-manager/auth/oauth2/token`. |
+| `SPRINGDOC_SWAGGERUI_OAUTH2_REDIRECT_URL` | `springdoc.swagger-ui.oauth2-redirect-url` | Swagger UI callback; bundled local value `http://127.0.0.1:8080/mypass-manager/auth/swagger-ui/redirect`. |
+| `SPRINGDOC_SHOW_ACTUATOR` | `springdoc.show-actuator` | Include Actuator operations in the generated API docs; Config Server config enables this by default. |
+
+The `*_URL` variables above are explicit overrides in the bundled `local`
+profile. With Config Server profiles, change the corresponding properties in
+the Config Server's OAuth2 Server configuration. Local `-D` overrides apply
+only if the remote configuration allows them.
+
+Use an `AUTHORIZATION_CODE` OAuth client with a redirect URI that exactly
+matches the URL above. Set the client ID, authorization/token URLs and
+callback for the browser-visible host, and register that callback in the
+authorization-server configuration. The UI callback URL is distinct from the
+OAuth authorization and token endpoints. In deployment, do not assume
+`localhost` is reachable from a user's browser.
+
+These settings can also be supplied as JVM properties before `-jar`, for
+example `-Dspringdoc.swagger-ui.oauth.client-id=...` and
+`-Dspringdoc.swagger-ui.oauth2-redirect-url=...`. If Spring Cloud Config is
+enabled, set the same properties in the OAuth2 Server's external configuration
+or use a local override only when the remote property-source precedence
+allows it.
+
+Reference: [Springdoc OpenAPI 1.x](https://springdoc.org/v1/).
+
 ## Java
 
 From the repository root with Java 17:
