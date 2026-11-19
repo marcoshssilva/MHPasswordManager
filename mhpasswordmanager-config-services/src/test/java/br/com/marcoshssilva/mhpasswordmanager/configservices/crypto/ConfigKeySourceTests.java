@@ -37,12 +37,12 @@ class ConfigKeySourceTests {
     @DisplayName("Should fail outside the local profile and preserve the keystore on incorrect password")
     void missingStoreFailsOutsideLocalAndWrongPasswordDoesNotReplaceIt() throws Exception {
         MockEnvironment env = keystoreEnvironment("production");
-        assertThatThrownBy(() -> ConfigKeySource.load(env)).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(() -> ConfigKeySource.load(env)).isInstanceOf(CryptoErrorException.class);
         env.setActiveProfiles("local");
         ConfigKeySource.load(env);
         byte[] before = Files.readAllBytes(directory.resolve("keys.p12"));
         env.setProperty("config.configserver.crypto.password", "incorrect");
-        assertThatThrownBy(() -> ConfigKeySource.load(env)).isInstanceOf(Exception.class);
+        assertThatThrownBy(() -> ConfigKeySource.load(env)).isInstanceOf(CryptoErrorException.class);
         assertThat(Files.readAllBytes(directory.resolve("keys.p12"))).isEqualTo(before);
     }
 
@@ -56,7 +56,7 @@ class ConfigKeySourceTests {
                 "CONFIG_CONFIGSERVER_CRYPTO_PASSWORD", "test-password",
                 "CONFIG_CONFIGSERVER_CRYPTO_GENERATE", "false")));
         assertThatThrownBy(() -> ConfigKeySource.load(env))
-                .isInstanceOf(IllegalStateException.class).hasMessageContaining("does not exist");
+                .isInstanceOf(CryptoErrorException.class).hasMessageContaining("does not exist");
         assertThat(Files.exists(directory.resolve("keys.p12"))).isFalse();
     }
 
@@ -83,7 +83,115 @@ class ConfigKeySourceTests {
         generator.initialize(2048);
         Files.writeString(key, pem("PRIVATE KEY", generator.generateKeyPair().getPrivate().getEncoded()));
         assertThatThrownBy(() -> ConfigKeySource.load(env))
-                .isInstanceOf(IllegalArgumentException.class).hasMessageContaining("do not match");
+                .isInstanceOf(CryptoErrorException.class).hasMessageContaining("do not match");
+    }
+
+    @Test
+    @DisplayName("Should throw CryptoErrorException when unsupported source is provided")
+    void throwsCryptoErrorExceptionForUnsupportedSource() {
+        MockEnvironment env = keystoreEnvironment("local");
+        env.setProperty("config.configserver.crypto.source", "unsupported-source");
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .hasMessageContaining("Unsupported config encryption key source");
+    }
+
+    @Test
+    @DisplayName("Should throw CryptoErrorException when missing required password property")
+    void throwsCryptoErrorExceptionForMissingPassword() {
+        MockEnvironment env = new MockEnvironment();
+        env.setActiveProfiles("local");
+        env.setProperty("config.configserver.crypto.location", directory.resolve("keys.p12").toString());
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .hasMessageContaining("Missing required property");
+    }
+
+    @Test
+    @DisplayName("Should throw CryptoErrorException with cause for PEM certificate file not found")
+    void throwsCryptoErrorExceptionWithCauseForMissingPemFile() {
+        MockEnvironment env = new MockEnvironment();
+        env.setActiveProfiles("local");
+        env.setProperty("config.configserver.crypto.source", "pem");
+        env.setProperty("config.configserver.crypto.certificate", directory.resolve("nonexistent.pem").toString());
+        env.setProperty("config.configserver.crypto.private-key", directory.resolve("key.pem").toString());
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .hasMessageContaining("Failed to load PEM files")
+                .hasCauseInstanceOf(Exception.class);
+    }
+
+    @Test
+    @DisplayName("Should throw CryptoErrorException for invalid PEM format")
+    void throwsCryptoErrorExceptionForInvalidPemFormat() throws Exception {
+        MockEnvironment env = keystoreEnvironment("local");
+        Path certificate = directory.resolve("certificate.pem");
+        Path key = directory.resolve("private.pem");
+        
+        // Generate initial keystore first
+        ConfigKeySource.load(env);
+        
+        KeyStore store = KeyStore.getInstance("PKCS12");
+        try (InputStream input = Files.newInputStream(directory.resolve("keys.p12"))) {
+            store.load(input, "test-password".toCharArray());
+        }
+        Files.writeString(certificate, pem("CERTIFICATE", store.getCertificate("config-server").getEncoded()));
+        Files.writeString(key, "INVALID PEM FORMAT");
+        
+        env.setProperty("config.configserver.crypto.source", "pem");
+        env.setProperty("config.configserver.crypto.certificate", certificate.toString());
+        env.setProperty("config.configserver.crypto.private-key", key.toString());
+        
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .hasMessageContaining("PEM private key must be unencrypted PKCS#8");
+    }
+
+    @Test
+    @DisplayName("Should preserve cause in CryptoErrorException when IOException occurs")
+    void preservesCauseInCryptoErrorException() {
+        MockEnvironment env = keystoreEnvironment("production");
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .satisfies(exception -> {
+                    CryptoErrorException cryptoException = (CryptoErrorException) exception;
+                    assertThat(cryptoException.getMessage()).contains("Config encryption keystore does not exist");
+                });
+    }
+
+    @Test
+    @DisplayName("Should wrap IOException with CryptoErrorException message")
+    void wrapsIOExceptionWithCryptoErrorException() throws Exception {
+        MockEnvironment env = keystoreEnvironment("local");
+        Path keystore = directory.resolve("keys.p12");
+        
+        // Generate initial keystore
+        ConfigKeySource.load(env);
+        
+        // Make keystore unreadable to simulate IOException
+        Files.delete(keystore);
+        env.setProperty("config.configserver.crypto.generate", "false");
+        
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .hasMessageContaining("does not exist");
+    }
+
+    @Test
+    @DisplayName("Should provide cause for root cause analysis")
+    void cryptoErrorExceptionPreservesStackTrace() {
+        MockEnvironment env = keystoreEnvironment("local");
+        env.setProperty("config.configserver.crypto.source", "pem");
+        env.setProperty("config.configserver.crypto.certificate", "/nonexistent/cert.pem");
+        env.setProperty("config.configserver.crypto.private-key", "/nonexistent/key.pem");
+        
+        assertThatThrownBy(() -> ConfigKeySource.load(env))
+                .isInstanceOf(CryptoErrorException.class)
+                .satisfies(exception -> {
+                    CryptoErrorException cryptoException = (CryptoErrorException) exception;
+                    assertThat(cryptoException.getCause()).isNotNull();
+                    assertThat(cryptoException.getCause().getMessage()).isNotEmpty();
+                });
     }
 
     private MockEnvironment keystoreEnvironment(String profile) {
