@@ -45,6 +45,9 @@ authentication, routing, connection and response timeouts, and
 discovery-based load balancing. Eureka maintains the service registry, and the
 Config Server centralizes service configuration.
 
+Detailed sequence diagrams and component flows are documented in the
+[application flows guide](docs/README.md).
+
 ```mermaid
 flowchart LR
     Mobile["📱 Mobile client"] --> Gateway["API Gateway"]
