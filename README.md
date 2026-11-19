@@ -19,8 +19,21 @@ App project to store and encrypt all passwords with key pair and full validation
 - (config-development) [marcoshssilva/MHPasswordmanager-Config-Development](https://g.starlord443.dev/git/marcoshssilva-dev/MHPasswordManager-Config-Development.git)
 
 ---
-## Java Configuration
-This project uses  **JDK-17 Temurin**, Spring Boot version **2.7.18**, Spring Cloud **2021.0.6**
+## Technologies
+
+| Category | Technologies |
+|---|---|
+| Language and build | Java 17 (Temurin), Maven |
+| Application framework | Spring Boot 2.7.18, Spring Framework 5.3.39 |
+| Microservices | Spring Cloud 2021.0.9, Spring Cloud Gateway, Config Server, Netflix Eureka |
+| Authentication | Spring Security, OAuth2, OpenID Connect, JWT |
+| Data and storage | PostgreSQL, MongoDB / GridFS, Redis, MinIO / S3-compatible storage |
+| Messaging and email | RabbitMQ, SMTP |
+| Templates | Thymeleaf |
+| Observability | Spring Boot Actuator, OpenTelemetry |
+| Deployment | Docker Compose, Dokku |
+
+Infrastructure and integrations may vary by profile and deployment.
 
 ---
 
