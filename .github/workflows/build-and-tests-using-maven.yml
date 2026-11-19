@@ -29,7 +29,14 @@ jobs:
       run: ./mvnw verify package
 
     - name: Run Docker Compose with profile all
-      run: docker compose --profile all up -d
+      run: |
+        # CI uses a fresh keystore; no deployment secret is needed.
+        CONFIG_CONFIGSERVER_CRYPTO_PASSWORD="$(openssl rand -hex 32)"
+        export CONFIG_CONFIGSERVER_CRYPTO_PASSWORD
+        if ! docker compose --profile all up -d; then
+          docker compose logs config-key-init
+          exit 1
+        fi
 
     - name: Verify Auth Service is up
       run: |
