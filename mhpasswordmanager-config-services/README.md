@@ -44,6 +44,24 @@ started by selecting a Config Server profile.
 | `SPRING_CLOUD_CONFIG_SERVER_SEARCH_PATHS` | Git repository search paths; default `configs*`. |
 | `SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCHLOCATIONS` | Optional native backend search locations, such as `file:/etc/config-repo/`. |
 
+The equivalent JVM properties are `server.port`, `spring.profiles.active`,
+`eureka.client.service-url.defaultZone`, `eureka.client.enabled`,
+`eureka.instance.prefer-ip-address`, `spring.cloud.config.server.git.uri`,
+`spring.cloud.config.server.git.username`, `spring.cloud.config.server.git.password`,
+`spring.cloud.config.server.git.default-label`,
+`spring.cloud.config.server.git.try-master-branch`,
+`spring.cloud.config.server.git.search-paths` and
+`spring.cloud.config.server.native.search-locations`. Pass each with `-D`
+**before** `-jar`, for example:
+
+```powershell
+java -Dserver.port=8888 -Dspring.profiles.active=native -Deureka.client.enabled=false -jar .\mhpasswordmanager-config-services\target\mhpasswordmanager.configservices-1.0.0-RC-SNAPSHOT.jar
+```
+
+JVM properties override environment variables in Spring Boot. The image
+health check reads the `PORT` environment variable separately. Avoid putting
+credentials in JVM arguments, command history or manifests.
+
 The Git variables above correspond to placeholders in this application's
 configuration; Git settings are not the active backend when `native` is used.
 The Config Server's own Config Client is disabled by default
@@ -131,6 +149,10 @@ The image sets `PORT=8888` for its `EXPOSE` and Docker health check, but the
 application listens on `SERVER_PORT` (default `8888`). If changing the
 container port, set both `PORT` and `SERVER_PORT` to the same value and update
 port mappings. The image enables OpenTelemetry by default.
+
+The image passes `JAVA_OPTS` to Java, so it can contain non-secret JVM flags
+such as `-Dserver.port=8888`. Setting it replaces the image's default JVM
+options; preserve any options you need.
 
 ## Run with Docker Compose
 
@@ -244,21 +266,22 @@ image explicitly sets `OTEL_SDK_DISABLED=false`. Set `OTEL_SDK_DISABLED=true`
 to disable it. Configure a reachable OpenTelemetry Collector or compatible
 backend; `localhost` inside a container refers to that container.
 
-| Variable | Purpose and default |
-|---|---|
-| `OTEL_SDK_DISABLED` | Disable the SDK when `true`; profile default `false`. |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | Collector endpoint; default `http://localhost:4318`. |
-| `OTEL_EXPORTER_OTLP_PROTOCOL` | Export protocol; default `http/protobuf`. |
-| `OTEL_SERVICE_NAME` | Service name; defaults to the application name, or `mhpasswordmanager-config-services` in the image. |
-| `OTEL_SERVICE_NAMESPACE` | Namespace; defaults to the application name. |
-| `OTEL_SERVICE_INSTANCE_ID` | Instance ID; defaults to the hostname or a generated UUID. |
-| `ENV`, `APP_VERSION`, `APPLICATION_DOMAIN`, `APPLICATION_TEAM` | Resource metadata. |
-| `OTEL_EXPORTER_OTLP_HEADERS` | Optional collector headers; protect sensitive values. |
+| Environment variable | JVM property | Purpose and default |
+|---|---|---|
+| `OTEL_SDK_DISABLED` | `otel.sdk.disabled` | Disable the SDK when `true`; profile default `false`. |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `otel.exporter.otlp.endpoint` | Collector endpoint; default `http://localhost:4318`. |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | `otel.exporter.otlp.protocol` | Protocol; default `http/protobuf`. |
+| `OTEL_SERVICE_NAME` | `OTEL_SERVICE_NAME` | Service name; defaults to the Spring application name, or `mhpasswordmanager-config-services` in the image. |
+| `OTEL_SERVICE_NAMESPACE` | `OTEL_SERVICE_NAMESPACE` | Service namespace; defaults to the Spring application name. |
+| `OTEL_SERVICE_INSTANCE_ID` | `OTEL_SERVICE_INSTANCE_ID` | Instance identifier; defaults to hostname or a generated UUID. |
+| `ENV`, `APP_VERSION`, `APPLICATION_DOMAIN`, `APPLICATION_TEAM` | Same uppercase names | Resource metadata. |
+| `OTEL_EXPORTER_OTLP_HEADERS` | `otel.exporter.otlp.headers` | Optional authenticated collector headers; keep sensitive values in a secret store. |
 
 For example, set `OTEL_SDK_DISABLED=false` and
 `OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318` when the collector is
-reachable from the server. Configure collector TLS and authentication as
-required.
+reachable from the server, or pass `-Dotel.sdk.disabled=false` and
+`-Dotel.exporter.otlp.endpoint=http://otel-collector:4318` before `-jar`.
+Configure collector TLS and authentication as required.
 
 ## Encrypting configuration secrets
 
@@ -313,6 +336,16 @@ The configuration prefix is `config.configserver.crypto`.
 | `CONFIG_CONFIGSERVER_CRYPTO_KEY_PASSWORD` | Entry password; defaults to the keystore password. |
 | `CONFIG_CONFIGSERVER_CRYPTO_TYPE` | Java keystore type; defaults to `PKCS12`. |
 | `CONFIG_CONFIGSERVER_CRYPTO_GENERATE` | Allows generation when the `local` profile is active; defaults to `true`. Set `false` to disable it. |
+
+The corresponding JVM properties are `config.configserver.crypto.enabled`,
+`config.configserver.crypto.source`, `config.configserver.crypto.location`,
+`config.configserver.crypto.password`, `config.configserver.crypto.alias`,
+`config.configserver.crypto.key-password`, `config.configserver.crypto.type`
+and `config.configserver.crypto.generate`. PEM mode also uses
+`config.configserver.crypto.certificate` and
+`config.configserver.crypto.private-key`. Prefix with `-D` before `-jar`
+when using JVM properties, but supply passwords through a protected secret
+source rather than command-line arguments.
 
 Point `CONFIG_CONFIGSERVER_CRYPTO_LOCATION` to an existing PKCS#12 (`.p12` or `.pfx`)
 or another Java keystore, setting its type, alias and passwords as needed. The
