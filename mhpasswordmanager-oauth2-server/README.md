@@ -1,4 +1,11 @@
 # MHPasswordManager-OAuth2-AuthorizationServer
+
+The OAuth2 Server provides authentication and authorization using OAuth2 and
+OpenID Connect. It issues JWTs with authorized scopes and exposes signing keys
+for token validation. It can use the User Service or run independently with
+configured in-memory or embedded alternatives; HTTP sessions can be stored in
+Redis when configured.
+
 this is an open-source project by me ([@marcoshssilva](https://github.com/marcoshssilva))
 
 ---

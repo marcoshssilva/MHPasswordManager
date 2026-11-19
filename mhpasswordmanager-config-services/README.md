@@ -1,4 +1,9 @@
 # MHPasswordManager-Config-Services
+
+The Config Server centralizes configuration for the application's services.
+Its optional asymmetric encryption module protects credentials and other
+configuration properties using a dedicated key.
+
 this is an open-source project by me ([@marcoshssilva](https://github.com/marcoshssilva))
 
 ## Profiles
