@@ -75,6 +75,26 @@ services to be routed. Configure S3 for avatar retrieval.
 | `STORAGE_S3_ACCESS_KEY`, `STORAGE_S3_SECRET_KEY` | S3 credentials. Development defaults exist, but must be replaced with environment-specific credentials. |
 | `STORAGE_S3_PATH_STYLE_ACCESS` | Enable path-style S3 access; default `true`. |
 
+Use JVM properties **before** `-jar` as an alternative to environment
+variables. The corresponding properties are `server.port`,
+`management.server.port`, `eureka.client.service-url.defaultZone`,
+`eureka.instance.prefer-ip-address`,
+`spring.security.oauth2.resourceserver.jwt.jwk-set-uri`,
+`storage.s3.endpoint`, `storage.s3.region`, `storage.s3.bucket`,
+`storage.s3.access-key`, `storage.s3.secret-key` and
+`storage.s3.path-style-access`. The redirect and allowed-host settings are
+placeholders: use the exact names `SPRING_CLOUD_GATEWAY_DEFAULT_ROUTE`,
+`GATEWAY_ALLOWED_EUREKA_HOSTS` and `GATEWAY_ALLOWED_CONFIGSERVER_HOSTS` as
+JVM property names. For example:
+
+```powershell
+java -Dserver.port=8080 -Dmanagement.server.port=8081 -jar .\mhpasswordmanager-api-gateway\target\mhpasswordmanager.apigateway-1.0.0-RC-SNAPSHOT.jar
+```
+
+JVM properties override environment variables in Spring Boot. The Docker
+health check still targets port `8081` as documented below. Avoid putting
+credentials in JVM arguments, command history or manifests.
+
 The S3 endpoint, region, bucket and credentials must be valid for avatar
 retrieval. Grant the gateway only the access it needs to read avatar objects;
 the supplied MinIO bootstrap policy restricts reads to `avatar/*`. Use a
@@ -184,6 +204,10 @@ management port is optional and should be restricted in production. Docker
 environment files may contain secrets: protect them and do not commit them.
 The image enables OpenTelemetry by default; see below to configure or disable
 export.
+
+The image passes `JAVA_OPTS` to Java, so it can contain non-secret JVM flags
+such as `-Dserver.port=8080`. Setting it replaces the image's default JVM
+options; preserve any options you need.
 
 ## Run with Docker Compose
 
@@ -325,18 +349,19 @@ or container, not the host. The profile defaults to enabling the SDK, and the
 Docker image explicitly sets `OTEL_SDK_DISABLED=false`. Set
 `OTEL_SDK_DISABLED=true` to disable it, as in the Kubernetes example.
 
-| Variable | Purpose and default |
-|---|---|
-| `OTEL_SDK_DISABLED` | Disable the SDK when `true`; profile default `false`. |
-| `OTEL_EXPORTER_OTLP_ENDPOINT` | Collector endpoint; default `http://localhost:4318`. |
-| `OTEL_EXPORTER_OTLP_PROTOCOL` | Export protocol; default `http/protobuf`. |
-| `OTEL_SERVICE_NAME` | Service name; defaults to the Spring application name, or `mhpasswordmanager-api-gateway` in the supplied image. |
-| `OTEL_SERVICE_NAMESPACE` | Service namespace; defaults to the Spring application name. |
-| `OTEL_SERVICE_INSTANCE_ID` | Instance identifier; defaults to the hostname or a generated UUID. |
-| `ENV`, `APP_VERSION`, `APPLICATION_DOMAIN`, `APPLICATION_TEAM` | Resource metadata for environment, version, domain, and team. |
-| `OTEL_EXPORTER_OTLP_HEADERS` | Optional exporter headers for an authenticated collector; store sensitive values securely. |
+| Environment variable | JVM property | Purpose and default |
+|---|---|---|
+| `OTEL_SDK_DISABLED` | `otel.sdk.disabled` | Disable the SDK when `true`; profile default `false`. |
+| `OTEL_EXPORTER_OTLP_ENDPOINT` | `otel.exporter.otlp.endpoint` | Collector endpoint; default `http://localhost:4318`. |
+| `OTEL_EXPORTER_OTLP_PROTOCOL` | `otel.exporter.otlp.protocol` | Protocol; default `http/protobuf`. |
+| `OTEL_SERVICE_NAME` | `OTEL_SERVICE_NAME` | Service name; defaults to the Spring application name, or `mhpasswordmanager-api-gateway` in the image. |
+| `OTEL_SERVICE_NAMESPACE` | `OTEL_SERVICE_NAMESPACE` | Service namespace; defaults to the Spring application name. |
+| `OTEL_SERVICE_INSTANCE_ID` | `OTEL_SERVICE_INSTANCE_ID` | Instance identifier; defaults to hostname or a generated UUID. |
+| `ENV`, `APP_VERSION`, `APPLICATION_DOMAIN`, `APPLICATION_TEAM` | Same uppercase names | Resource metadata. |
+| `OTEL_EXPORTER_OTLP_HEADERS` | `otel.exporter.otlp.headers` | Optional authenticated collector headers; keep sensitive values in a secret store. |
 
 For example, set `OTEL_SDK_DISABLED=false` and
-`OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318` when that collector
-address is reachable from the gateway. Configure TLS and authentication as
-required by the collector.
+`OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318`, or pass
+`-Dotel.sdk.disabled=false` and
+`-Dotel.exporter.otlp.endpoint=http://otel-collector:4318` before `-jar`.
+Use an address reachable from the process and configure TLS as required.
