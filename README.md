@@ -231,7 +231,7 @@ change the PEM/Kubernetes setup.
 
 # TODO
 
-- [ ] Create imagens, background, logo, policies and terms of usage
+- [ ] Create images, background, logo, policies and terms of usage
 - [ ] Implements hystrix or resilience4j to improve better api calls
 - [ ] Create units tests and E2E (Mockito for unit tests and MockMvc, TestContainers to E2E). If possible performance tests like stress or response time
 - [ ] Upgrade Spring version and spring cloud (project is legacy using SB 2.7)
