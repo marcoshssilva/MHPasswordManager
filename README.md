@@ -202,29 +202,38 @@ The integrations in use may vary by profile and deployment environment.
 
 ## Docker Compose
 
-You can start application following steps:
+Install Git, JDK 17 and Docker with the Compose plugin. Configure `JAVA_HOME`
+to point to your JDK 17 installation. Choose a Config Server keystore
+password with at least six characters.
 
-1. Clone project
-    ```
-    git clone https://github.com/marcoshssilva/MHPasswordManager.git
-    cd MHPasswordManager
-    ```
-2. Build application
-    ```
-    JAVA_HOME="/usr/lib/jvm/java-17-openjdk-amd64"
-    ./mvnw clean install -DskipTests
-    ```
-3. Set a keystore password (at least six characters) for this local Compose
-   deployment. For example, in PowerShell:
-    ```powershell
-    $password = Read-Host "Config Server keystore password" -AsSecureString
-    $env:CONFIG_CONFIGSERVER_CRYPTO_PASSWORD = [System.Net.NetworkCredential]::new("", $password).Password
-    ```
-4. Run docker compose file inside project
-    ```powershell
-    docker compose -f ".\docker-compose.yml" --profile all up -d --build
-    ```
-5. Open in browser **[127.0.0.1:8080/mypass-manager/auth](http://127.0.0.1:8080/mypass-manager/auth)**
+### PowerShell
+
+```powershell
+git clone https://github.com/marcoshssilva/MHPasswordManager.git
+Set-Location MHPasswordManager
+
+.\mvnw.cmd clean install -DskipTests
+
+$password = Read-Host "Config Server keystore password" -AsSecureString
+$env:CONFIG_CONFIGSERVER_CRYPTO_PASSWORD = [System.Net.NetworkCredential]::new("", $password).Password
+docker compose -f .\docker-compose.yml --profile all up -d --build
+```
+
+### Bash
+
+```bash
+git clone https://github.com/marcoshssilva/MHPasswordManager.git
+cd MHPasswordManager
+
+./mvnw clean install -DskipTests
+
+read -rs -p "Config Server keystore password: " CONFIG_CONFIGSERVER_CRYPTO_PASSWORD
+echo
+export CONFIG_CONFIGSERVER_CRYPTO_PASSWORD
+docker compose -f ./docker-compose.yml --profile all up -d --build
+```
+
+After startup, open [127.0.0.1:8080/mypass-manager/auth](http://127.0.0.1:8080/mypass-manager/auth).
 
 Compose initializes a dedicated Config Server keystore once in the
 `config-crypto` volume and continues to use the existing `native` Spring profile.
