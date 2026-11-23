@@ -17,13 +17,13 @@ COPY mhpasswordmanager-config-services/src mhpasswordmanager-config-services/src
 RUN mvn clean package -pl mhpasswordmanager-config-services -DskipTests
 
 # Stage 2: Extract Jar Layers
-FROM eclipse-temurin:17-jre-focal AS extractor
+FROM eclipse-temurin:17-jre AS extractor
 WORKDIR /app
 COPY --from=build /app/mhpasswordmanager-config-services/target/mhpasswordmanager.configservices-*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
 # Stage 3: Runtime
-FROM eclipse-temurin:17-jre-focal AS runtime
+FROM eclipse-temurin:17-jre AS runtime
 WORKDIR /app
 
 RUN addgroup --system spring && adduser --system --ingroup spring spring

@@ -17,13 +17,13 @@ COPY mhpasswordmanager-oauth2-server/src mhpasswordmanager-oauth2-server/src
 RUN mvn clean package -pl mhpasswordmanager-oauth2-server -DskipTests
 
 # Stage 2: Extract Jar Layers
-FROM eclipse-temurin:17-jre-focal AS extractor
+FROM eclipse-temurin:17-jre AS extractor
 WORKDIR /app
 COPY --from=build /app/mhpasswordmanager-oauth2-server/target/mhpasswordmanager.oauth2server-*.jar app.jar
 RUN java -Djarmode=layertools -jar app.jar extract
 
 # Stage 3: Runtime
-FROM eclipse-temurin:17-jre-focal AS runtime
+FROM eclipse-temurin:17-jre AS runtime
 WORKDIR /app
 
 RUN addgroup --system spring && adduser --system --ingroup spring spring
