@@ -1,0 +1,567 @@
+{
+  "info": {
+    "_postman_id": "54c3dec8-7b02-4771-8ddf-ab7a4e3c9117",
+    "name": "Config Server API",
+    "description": "Routes through {{HOST}}/config. The host must be allowed by GATEWAY_ALLOWED_CONFIGSERVER_HOSTS. GET requests require configserver:read or global:fullAccess. Encryption routes require a valid token and depend on the server encryption configuration. Use test inputs and keep credentials out of shared variables.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29043605",
+    "_collection_link": "https://go.postman.co/collection/29043605-54c3dec8-7b02-4771-8ddf-ab7a4e3c9117?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get environment",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}/{{configProfile}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}",
+            "{{configProfile}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get YAML configuration by label",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/{{configLabel}}/{{configApplication}}-{{configProfile}}.yml",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configLabel}}",
+            "{{configApplication}}-{{configProfile}}.yml"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get JSON configuration",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}-{{configProfile}}.json",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}-{{configProfile}}.json"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get JSON configuration by label",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/{{configLabel}}/{{configApplication}}-{{configProfile}}.json",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configLabel}}",
+            "{{configApplication}}-{{configProfile}}.json"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get environment by label",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}/{{configProfile}}/{{configLabel}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}",
+            "{{configProfile}}",
+            "{{configLabel}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get YAML configuration",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}-{{configProfile}}.yml",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}-{{configProfile}}.yml"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Java properties configuration by label",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/{{configLabel}}/{{configApplication}}-{{configProfile}}.properties",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configLabel}}",
+            "{{configApplication}}-{{configProfile}}.properties"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Java properties configuration",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}-{{configProfile}}.properties",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}-{{configProfile}}.properties"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get text resource by label",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "text/plain"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}/{{configProfile}}/{{configLabel}}/{{configResource}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}",
+            "{{configProfile}}",
+            "{{configLabel}}",
+            "{{configResource}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get text resource with default label",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "text/plain"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}/{{configProfile}}/{{configResource}}?useDefaultLabel=true",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}",
+            "{{configProfile}}",
+            "{{configResource}}"
+          ],
+          "query": [
+            {
+              "key": "useDefaultLabel",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get binary resource by label",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/octet-stream"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}/{{configProfile}}/{{configLabel}}/{{configResource}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}",
+            "{{configProfile}}",
+            "{{configLabel}}",
+            "{{configResource}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get binary resource with default label",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/octet-stream"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/config/{{configApplication}}/{{configProfile}}/{{configResource}}?useDefaultLabel=true",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "{{configApplication}}",
+            "{{configProfile}}",
+            "{{configResource}}"
+          ],
+          "query": [
+            {
+              "key": "useDefaultLabel",
+              "value": "true"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get encryption status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/encrypt/status",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "encrypt",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get encryption public key",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/key",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "key"
+          ]
+        },
+        "description": "Available with a compatible asymmetric encryption configuration."
+      },
+      "response": []
+    },
+    {
+      "name": "Decrypt value",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{configCiphertext}}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOST}}/config/decrypt",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "decrypt"
+          ]
+        },
+        "description": "Requires server-side encryption to be configured."
+      },
+      "response": []
+    },
+    {
+      "name": "Encrypt value",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{configPlaintext}}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOST}}/config/encrypt",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "encrypt"
+          ]
+        },
+        "description": "Requires server-side encryption to be configured."
+      },
+      "response": []
+    },
+    {
+      "name": "Encrypt value for application and profile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{configPlaintext}}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOST}}/config/encrypt/{{configApplication}}/{{configProfile}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "encrypt",
+            "{{configApplication}}",
+            "{{configProfile}}"
+          ]
+        },
+        "description": "Requires server-side encryption to be configured."
+      },
+      "response": []
+    },
+    {
+      "name": "Get encryption public key for application and profile",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/config/key/{{configApplication}}/{{configProfile}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "key",
+            "{{configApplication}}",
+            "{{configProfile}}"
+          ]
+        },
+        "description": "Available with a compatible asymmetric encryption configuration."
+      },
+      "response": []
+    },
+    {
+      "name": "Decrypt value for application and profile",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "text/plain"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{configCiphertext}}",
+          "options": {
+            "raw": {
+              "language": "text"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOST}}/config/decrypt/{{configApplication}}/{{configProfile}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "config",
+            "decrypt",
+            "{{configApplication}}",
+            "{{configProfile}}"
+          ]
+        },
+        "description": "Requires server-side encryption to be configured."
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "configserver:read",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{CLIENT_SECRET}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{CLIENT_ID}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": "false",
+        "type": "string"
+      },
+      {
+        "key": "refreshTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oidcdebugger.com/debug",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "JWT-PasswordManager",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "configApplication",
+      "value": "application"
+    },
+    {
+      "key": "configProfile",
+      "value": "default"
+    },
+    {
+      "key": "configLabel",
+      "value": "main"
+    },
+    {
+      "key": "configResource",
+      "value": "logback.xml"
+    },
+    {
+      "key": "configPlaintext",
+      "value": "postman-example"
+    },
+    {
+      "key": "configCiphertext",
+      "value": ""
+    }
+  ]
+}

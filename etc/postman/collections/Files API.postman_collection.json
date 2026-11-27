@@ -1,0 +1,276 @@
+{
+  "info": {
+    "_postman_id": "148a0b78-e381-4e29-b311-b4221b084ec7",
+    "name": "Files API",
+    "description": "Requests for Files API through the MHPasswordManager gateway. Select Local Environment or Dev Environment. Protected endpoints inherit collection OAuth2.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29043605",
+    "_collection_link": "https://go.postman.co/collection/29043605-148a0b78-e381-4e29-b311-b4221b084ec7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get vault file storage info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/files/bucket/:bucketUuid/info",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "files",
+            "bucket",
+            ":bucketUuid",
+            "info"
+          ],
+          "variable": [
+            {
+              "key": "bucketUuid",
+              "value": "aca07e8e-293d-49f9-b70f-47b68e2be21b"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get file metadata",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/files/bucket/:bucketUuid/:keyId/info",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "files",
+            "bucket",
+            ":bucketUuid",
+            ":keyId",
+            "info"
+          ],
+          "variable": [
+            {
+              "key": "bucketUuid",
+              "value": "aca07e8e-293d-49f9-b70f-47b68e2be21b"
+            },
+            {
+              "key": "keyId",
+              "value": "99167a17-171f-4530-b73f-f9a12851d874"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Download encrypted file",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/files/bucket/:bucketUuid/:keyId",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "files",
+            "bucket",
+            ":bucketUuid",
+            ":keyId"
+          ],
+          "variable": [
+            {
+              "key": "bucketUuid",
+              "value": "aca07e8e-293d-49f9-b70f-47b68e2be21b"
+            },
+            {
+              "key": "keyId",
+              "value": "99167a17-171f-4530-b73f-f9a12851d874"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create file",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "value": ""
+            },
+            {
+              "key": "metadata",
+              "type": "text",
+              "value": "{\"source\":\"postman\"}",
+              "disabled": true
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/files/bucket/aca07e8e-293d-49f9-b70f-47b68e2be21b/create-file",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "files",
+            "bucket",
+            "aca07e8e-293d-49f9-b70f-47b68e2be21b",
+            "create-file"
+          ],
+          "variable": [
+            {
+              "key": "bucketUuid",
+              "value": "aca07e8e-293d-49f9-b70f-47b68e2be21b"
+            }
+          ]
+        },
+        "description": "Select a local file. Optional metadata is a JSON object of string values. HTTP 202 includes a Location for the file metadata."
+      },
+      "response": []
+    },
+    {
+      "name": "Replace file",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "file",
+              "type": "file",
+              "value": ""
+            },
+            {
+              "key": "metadata",
+              "type": "text",
+              "value": "{\"source\":\"postman\"}",
+              "disabled": true
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/files/bucket/{{bucketUuid}}/{{key}}/put-file",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "files",
+            "bucket",
+            "{{bucketUuid}}",
+            "{{key}}",
+            "put-file"
+          ]
+        },
+        "description": "Select a local file. The replacement is accepted for asynchronous processing."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete file",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/files/bucket/{{bucketUuid}}/{{key}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "files",
+            "bucket",
+            "{{bucketUuid}}",
+            "{{key}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "openid profile email user:changeImageProfile",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{CLIENT_SECRET}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{CLIENT_ID}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": "false",
+        "type": "string"
+      },
+      {
+        "key": "refreshTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oidcdebugger.com/debug",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "JWT-PasswordManager",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "bucketUuid",
+      "value": ""
+    },
+    {
+      "key": "key",
+      "value": ""
+    }
+  ]
+}

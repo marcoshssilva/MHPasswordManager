@@ -1,0 +1,101 @@
+{
+  "info": {
+    "_postman_id": "d52030b3-1840-40e3-b4b5-24359b5146a7",
+    "name": "API Gateway",
+    "description": "Requests for API Gateway through the MHPasswordManager gateway. Select Local Environment or Dev Environment. Protected endpoints inherit collection OAuth2.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29043605",
+    "_collection_link": "https://go.postman.co/collection/29043605-d52030b3-1840-40e3-b4b5-24359b5146a7?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Download public avatar",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{HOST}}/mypass-manager/avatars/{{filename}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "mypass-manager",
+            "avatars",
+            "{{filename}}"
+          ]
+        },
+        "description": "Provide the existing UUID-based PNG filename, including .png."
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "openid profile email user:changeImageProfile",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{CLIENT_SECRET}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{CLIENT_ID}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": "false",
+        "type": "string"
+      },
+      {
+        "key": "refreshTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oidcdebugger.com/debug",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "JWT-PasswordManager",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "filename",
+      "value": ""
+    }
+  ]
+}

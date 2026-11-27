@@ -1,0 +1,646 @@
+{
+  "info": {
+    "_postman_id": "92468f04-2d67-41b1-93d4-8549a58489d8",
+    "name": "Users API",
+    "description": "Requests for Users API through the MHPasswordManager gateway. Select Local Environment or Dev Environment. Protected endpoints inherit collection OAuth2.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29043605",
+    "_collection_link": "https://go.postman.co/collection/29043605-92468f04-2d67-41b1-93d4-8549a58489d8?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Accounts",
+      "item": [
+        {
+          "name": "Find account by email",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/byEmail?email=demo@example.com",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "byEmail"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "demo@example.com"
+                }
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:searchByEmail') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get account profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/data",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "data"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:get') || hasAnyRole('ADMIN', 'MASTER') || (#username == authentication.principal.subject && hasAuthority('SCOPE_profile'))`."
+          },
+          "response": []
+        },
+        {
+          "name": "Check account existence",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/exists?username={{username}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "exists"
+              ],
+              "query": [
+                {
+                  "key": "username",
+                  "value": "{{username}}"
+                },
+                {
+                  "key": "email",
+                  "value": "demo@example.com",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Supply at least one filter.\n\nAccess rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:get') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Get internal account record",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/user",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "user"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:get') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Change own password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"{{examplePassword}}\",\n  \"newPassword\": \"{{newPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/updatePassword",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "updatePassword"
+              ]
+            },
+            "description": "Access rule: `#username == authentication.principal.subject && hasAuthority('SCOPE_user:updatePassword')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Update account profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/updateData",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "updateData"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:update') || hasAnyRole('ADMIN', 'MASTER') || (#username == authentication.principal.subject && hasAuthority('SCOPE_user:update'))`."
+          },
+          "response": []
+        },
+        {
+          "name": "Set account enabled status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"enabled\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/updateEnabled",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "updateEnabled"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:update') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Create account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\",\n  \"email\": \"demo@example.com\",\n  \"username\": \"demo\",\n  \"password\": \"{{examplePassword}}\",\n  \"roles\": [\n    \"USER\"\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/create",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "create"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:create') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Upload profile image",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/uploadImageFromAccountProfile",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "uploadImageFromAccountProfile"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:changeImageProfile') || hasAnyRole('ADMIN', 'MASTER') || (#username == authentication.principal.subject && hasAuthority('SCOPE_user:changeImageProfile'))`."
+          },
+          "response": []
+        },
+        {
+          "name": "Generate verification code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/verificationCode",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "verificationCode"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:canVerify') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify account with code",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/verify/{{uuidCode}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "verify",
+                "{{uuidCode}}"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:canVerify') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Reset account password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"newPassword\": \"{{newPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/resetPassword",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "resetPassword"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:resetPassword') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Delete account",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/delete",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "delete"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:delete') || hasAnyRole('ADMIN', 'MASTER') || (#username == authentication.principal.subject && hasAuthority('SCOPE_user:delete'))`."
+          },
+          "response": []
+        },
+        {
+          "name": "Save password recovery code",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"code\": \"{{code}}\",\n  \"ipClient\": \"127.0.0.1\",\n  \"userAgentClient\": \"PostmanRuntime\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/recoveryPasswordCode",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "recoveryPasswordCode"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:resetPassword') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Find password recovery code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/recoveryPasswordCode/{{code}}?ipClient=127.0.0.1&userAgentClient=PostmanRuntime",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "recoveryPasswordCode",
+                "{{code}}"
+              ],
+              "query": [
+                {
+                  "key": "ipClient",
+                  "value": "127.0.0.1"
+                },
+                {
+                  "key": "userAgentClient",
+                  "value": "PostmanRuntime"
+                }
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:resetPassword') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        },
+        {
+          "name": "Validate account password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"password\": \"{{examplePassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/{{username}}/validatePassword",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "{{username}}",
+                "validatePassword"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:validatePassword') || hasAnyRole('ADMIN', 'MASTER') || (#username == authentication.principal.subject && hasAuthority('SCOPE_user:validatePassword'))`."
+          },
+          "response": []
+        },
+        {
+          "name": "List accounts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/account/all",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "account",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "0",
+                  "disabled": true
+                },
+                {
+                  "key": "size",
+                  "value": "20",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_users:get') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Roles",
+      "item": [
+        {
+          "name": "List roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/users/role/all",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "users",
+                "role",
+                "all"
+              ]
+            },
+            "description": "Access rule: `hasAnyAuthority('SCOPE_global:fullAccess', 'SCOPE_roles:get') || hasAnyRole('ADMIN', 'MASTER')`."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "openid profile email user:changeImageProfile",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{CLIENT_SECRET}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{CLIENT_ID}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": "false",
+        "type": "string"
+      },
+      {
+        "key": "refreshTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oidcdebugger.com/debug",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "JWT-PasswordManager",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "username",
+      "value": ""
+    },
+    {
+      "key": "uuidCode",
+      "value": ""
+    },
+    {
+      "key": "code",
+      "value": ""
+    },
+    {
+      "key": "examplePassword",
+      "value": ""
+    },
+    {
+      "key": "newPassword",
+      "value": ""
+    }
+  ]
+}

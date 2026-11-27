@@ -1,0 +1,899 @@
+{
+  "info": {
+    "_postman_id": "da4761c7-7845-4f36-a984-768cb14daa54",
+    "name": "OAuth2 & OpenID Connect",
+    "description": "Requests for OAuth2 & OpenID Connect through the MHPasswordManager gateway. Select Local Environment or Dev Environment. Protected endpoints inherit collection OAuth2.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29043605",
+    "_collection_link": "https://go.postman.co/collection/29043605-da4761c7-7845-4f36-a984-768cb14daa54?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Registration & account recovery",
+      "item": [
+        {
+          "name": "Register account",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Demo\",\n  \"lastName\": \"User\",\n  \"email\": \"demo@example.com\",\n  \"username\": \"demo\",\n  \"password\": \"{{examplePassword}}\",\n  \"confirmationPassword\": \"{{examplePassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/account/register",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "account",
+                "register"
+              ]
+            },
+            "description": "Use the XSRF-TOKEN cookie from the authentication site and its matching X-XSRF-TOKEN header. Keep the same browser/client context across recovery steps."
+          },
+          "response": []
+        },
+        {
+          "name": "Verify registration link",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/verify/{{code}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "verify",
+                "{{code}}"
+              ]
+            },
+            "description": "Account verification link from email. Returns HTML."
+          },
+          "response": []
+        },
+        {
+          "name": "Request password reset code",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identification\": \"demo@example.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/account/forgot/step1",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "account",
+                "forgot",
+                "step1"
+              ]
+            },
+            "description": "Use the XSRF-TOKEN cookie from the authentication site and its matching X-XSRF-TOKEN header. Keep the same browser/client context across recovery steps."
+          },
+          "response": []
+        },
+        {
+          "name": "Reset password with recovery code",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "{{csrfToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"{{code}}\",\n  \"password\": \"{{newPassword}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/account/forgot/step2",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "account",
+                "forgot",
+                "step2"
+              ]
+            },
+            "description": "Use the XSRF-TOKEN cookie from the authentication site and its matching X-XSRF-TOKEN header. Keep the same browser/client context across recovery steps."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "OAuth2 & OpenID endpoints",
+      "item": [
+        {
+          "name": "Authorize client",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/authorize?response_type=code&client_id={{CLIENT_ID}}&redirect_uri={{redirectUri}}&scope=openid&state={{oauthState}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "authorize"
+              ],
+              "query": [
+                {
+                  "key": "response_type",
+                  "value": "code"
+                },
+                {
+                  "key": "client_id",
+                  "value": "{{CLIENT_ID}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "{{redirectUri}}"
+                },
+                {
+                  "key": "scope",
+                  "value": "openid"
+                },
+                {
+                  "key": "state",
+                  "value": "{{oauthState}}"
+                },
+                {
+                  "key": "code_challenge",
+                  "value": "{{codeChallenge}}",
+                  "disabled": true
+                },
+                {
+                  "key": "code_challenge_method",
+                  "value": "S256",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Browser session and registered redirect URI required. For regular use, obtain the OAuth2 token from the collection Authorization tab."
+          },
+          "response": []
+        },
+        {
+          "name": "Exchange authorization code",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{CLIENT_ID}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{CLIENT_SECRET}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "type": "text",
+                  "value": "authorization_code"
+                },
+                {
+                  "key": "code",
+                  "type": "text",
+                  "value": "{{authorizationCode}}"
+                },
+                {
+                  "key": "redirect_uri",
+                  "type": "text",
+                  "value": "{{redirectUri}}"
+                },
+                {
+                  "key": "code_verifier",
+                  "type": "text",
+                  "value": "{{codeVerifier}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/token",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh access token",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{CLIENT_ID}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{CLIENT_SECRET}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "type": "text",
+                  "value": "refresh_token"
+                },
+                {
+                  "key": "refresh_token",
+                  "type": "text",
+                  "value": "{{refreshToken}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/token",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "token"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get client credentials token",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{CLIENT_ID}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{CLIENT_SECRET}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "grant_type",
+                  "type": "text",
+                  "value": "client_credentials"
+                },
+                {
+                  "key": "scope",
+                  "type": "text",
+                  "value": "{{oauthScope}}",
+                  "disabled": true
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/token",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "token"
+              ]
+            },
+            "description": "Requires a registered client allowed to use client_credentials."
+          },
+          "response": []
+        },
+        {
+          "name": "Get public signing key set",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/jwks",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "jwks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Discover OpenID configuration",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/.well-known/openid-configuration",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                ".well-known",
+                "openid-configuration"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Discover OAuth2 server metadata",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/.well-known/oauth-authorization-server",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                ".well-known",
+                "oauth-authorization-server"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Introspect token",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{CLIENT_ID}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{CLIENT_SECRET}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "token",
+                  "type": "text",
+                  "value": "{{tokenToIntrospect}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/introspect",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "introspect"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get OpenID user info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/userinfo",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "userinfo"
+              ]
+            },
+            "description": "Use a user access token issued with the openid scope."
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke token",
+          "request": {
+            "auth": {
+              "type": "basic",
+              "basic": [
+                {
+                  "key": "username",
+                  "value": "{{CLIENT_ID}}",
+                  "type": "string"
+                },
+                {
+                  "key": "password",
+                  "value": "{{CLIENT_SECRET}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "token",
+                  "type": "text",
+                  "value": "{{tokenToRevoke}}"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/oauth2/revoke",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "oauth2",
+                "revoke"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get OpenID user info using POST",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/userinfo",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "userinfo"
+              ]
+            },
+            "description": "Use a user access token issued with the openid scope."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Signing keys · Admin session",
+      "item": [
+        {
+          "name": "Get signing key",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/jwk-management/get/{{jwkUuid}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "jwk-management",
+                "get",
+                "{{jwkUuid}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate signing key",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/jwk-management/select/{{jwkUuid}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "jwk-management",
+                "select",
+                "{{jwkUuid}}"
+              ]
+            },
+            "description": "Changes the active signing key."
+          },
+          "response": []
+        },
+        {
+          "name": "List signing keys",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/jwk-management/get/all",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "jwk-management",
+                "get",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete signing key",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/jwk-management/delete/{{jwkUuid}}",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "jwk-management",
+                "delete",
+                "{{jwkUuid}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Generate signing key",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/jwk-management/generate-self-signed",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "jwk-management",
+                "generate-self-signed"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Import RSA signing key pair",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-XSRF-TOKEN",
+                "value": "{{csrfToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "private_key_file",
+                  "type": "file",
+                  "value": ""
+                },
+                {
+                  "key": "public_key_file",
+                  "type": "file",
+                  "value": ""
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{HOST}}/mypass-manager/auth/api/jwk-management/import/rsa",
+              "host": [
+                "{{HOST}}"
+              ],
+              "path": [
+                "mypass-manager",
+                "auth",
+                "api",
+                "jwk-management",
+                "import",
+                "rsa"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "description": "These routes are part of the authorization server application API. They require an authenticated ADMIN browser session. Use the session cookie jar and matching CSRF token for writes. Some responses may contain sensitive key material."
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "openid profile email user:changeImageProfile",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{CLIENT_SECRET}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{CLIENT_ID}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": "false",
+        "type": "string"
+      },
+      {
+        "key": "refreshTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oidcdebugger.com/debug",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "JWT-PasswordManager",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "code",
+      "value": ""
+    },
+    {
+      "key": "jwkUuid",
+      "value": ""
+    },
+    {
+      "key": "csrfToken",
+      "value": ""
+    },
+    {
+      "key": "examplePassword",
+      "value": ""
+    },
+    {
+      "key": "newPassword",
+      "value": ""
+    },
+    {
+      "key": "authorizationCode",
+      "value": ""
+    },
+    {
+      "key": "refreshToken",
+      "value": ""
+    },
+    {
+      "key": "oauthState",
+      "value": ""
+    },
+    {
+      "key": "oauthScope",
+      "value": ""
+    },
+    {
+      "key": "codeChallenge",
+      "value": ""
+    },
+    {
+      "key": "codeVerifier",
+      "value": ""
+    },
+    {
+      "key": "tokenToRevoke",
+      "value": ""
+    },
+    {
+      "key": "tokenToIntrospect",
+      "value": ""
+    },
+    {
+      "key": "redirectUri",
+      "value": "https://oidcdebugger.com/debug"
+    }
+  ]
+}

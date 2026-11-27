@@ -1,0 +1,476 @@
+{
+  "info": {
+    "_postman_id": "ef6042bc-e97b-462f-baf4-7b66b8e01a3c",
+    "name": "Eureka API",
+    "description": "Routes through {{HOST}}/eureka. The host must be allowed by GATEWAY_ALLOWED_EUREKA_HOSTS. Read operations require eureka:read or global:fullAccess. For POST, PUT or DELETE, request eureka:write or global:fullAccess from a client authorized for that scope. Mutation requests are intended for test instances.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "29043605",
+    "_collection_link": "https://go.postman.co/collection/29043605-ef6042bc-e97b-462f-baf4-7b66b8e01a3c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get registry delta",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/delta",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "delta"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List registered applications",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find instance by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/instances/{{eurekaInstanceId}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "instances",
+            "{{eurekaInstanceId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List application instances",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get application instance",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}/{{eurekaInstanceId}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}",
+            "{{eurekaInstanceId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find instances by secure VIP",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/svips/{{eurekaSecureVip}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "svips",
+            "{{eurekaSecureVip}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get registry status",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/status",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "status"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Find instances by VIP",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/vips/{{eurekaVip}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "vips",
+            "{{eurekaVip}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Renew instance lease",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}/{{eurekaInstanceId}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}",
+            "{{eurekaInstanceId}}"
+          ]
+        },
+        "description": "Requires eureka:write or global:fullAccess. Use a test instance."
+      },
+      "response": []
+    },
+    {
+      "name": "Register instance",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"instance\": {\n    \"instanceId\": \"{{eurekaInstanceId}}\",\n    \"hostName\": \"example-service\",\n    \"app\": \"{{eurekaApp}}\",\n    \"ipAddr\": \"127.0.0.1\",\n    \"status\": \"UP\",\n    \"port\": {\n      \"$\": 8080,\n      \"@enabled\": \"true\"\n    },\n    \"securePort\": {\n      \"$\": 443,\n      \"@enabled\": \"false\"\n    },\n    \"vipAddress\": \"{{eurekaVip}}\",\n    \"secureVipAddress\": \"{{eurekaSecureVip}}\",\n    \"dataCenterInfo\": {\n      \"@class\": \"com.netflix.appinfo.InstanceInfo$DefaultDataCenterInfo\",\n      \"name\": \"MyOwn\"\n    },\n    \"metadata\": {\n      \"source\": \"postman\"\n    }\n  }\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}"
+          ]
+        },
+        "description": "Requires eureka:write or global:fullAccess. Use a test instance."
+      },
+      "response": []
+    },
+    {
+      "name": "Deregister instance",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}/{{eurekaInstanceId}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}",
+            "{{eurekaInstanceId}}"
+          ]
+        },
+        "description": "Requires eureka:write or global:fullAccess. Use a test instance."
+      },
+      "response": []
+    },
+    {
+      "name": "Update instance metadata",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}/{{eurekaInstanceId}}/metadata?{{eurekaMetadataKey}}={{eurekaMetadataValue}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}",
+            "{{eurekaInstanceId}}",
+            "metadata"
+          ],
+          "query": [
+            {
+              "key": "{{eurekaMetadataKey}}",
+              "value": "{{eurekaMetadataValue}}"
+            }
+          ]
+        },
+        "description": "Requires eureka:write or global:fullAccess. Use a test instance."
+      },
+      "response": []
+    },
+    {
+      "name": "Set instance status override",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}/{{eurekaInstanceId}}/status?value={{eurekaStatus}}",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}",
+            "{{eurekaInstanceId}}",
+            "status"
+          ],
+          "query": [
+            {
+              "key": "value",
+              "value": "{{eurekaStatus}}"
+            }
+          ]
+        },
+        "description": "Requires eureka:write or global:fullAccess. Use a test instance."
+      },
+      "response": []
+    },
+    {
+      "name": "Remove instance status override",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{HOST}}/eureka/apps/{{eurekaApp}}/{{eurekaInstanceId}}/status",
+          "host": [
+            "{{HOST}}"
+          ],
+          "path": [
+            "eureka",
+            "apps",
+            "{{eurekaApp}}",
+            "{{eurekaInstanceId}}",
+            "status"
+          ]
+        },
+        "description": "Requires eureka:write or global:fullAccess. Use a test instance."
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "eureka:read",
+        "type": "string"
+      },
+      {
+        "key": "clientSecret",
+        "value": "{{CLIENT_SECRET}}",
+        "type": "string"
+      },
+      {
+        "key": "clientId",
+        "value": "{{CLIENT_ID}}",
+        "type": "string"
+      },
+      {
+        "key": "useBrowser",
+        "value": "false",
+        "type": "string"
+      },
+      {
+        "key": "refreshTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/token",
+        "type": "string"
+      },
+      {
+        "key": "authUrl",
+        "value": "{{HOST}}/mypass-manager/auth/oauth2/authorize",
+        "type": "string"
+      },
+      {
+        "key": "redirect_uri",
+        "value": "https://oidcdebugger.com/debug",
+        "type": "string"
+      },
+      {
+        "key": "tokenName",
+        "value": "JWT-PasswordManager",
+        "type": "string"
+      },
+      {
+        "key": "state",
+        "value": "postman",
+        "type": "string"
+      },
+      {
+        "key": "addTokenTo",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "eurekaApp",
+      "value": "EXAMPLE-SERVICE"
+    },
+    {
+      "key": "eurekaInstanceId",
+      "value": "example-service:8080"
+    },
+    {
+      "key": "eurekaVip",
+      "value": "example-service"
+    },
+    {
+      "key": "eurekaSecureVip",
+      "value": "example-service"
+    },
+    {
+      "key": "eurekaStatus",
+      "value": "OUT_OF_SERVICE"
+    },
+    {
+      "key": "eurekaMetadataKey",
+      "value": "example"
+    },
+    {
+      "key": "eurekaMetadataValue",
+      "value": "postman"
+    }
+  ]
+}
