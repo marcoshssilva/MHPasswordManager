@@ -98,7 +98,7 @@ public class BucketController {
         return ResponseEntity.ok(body);
     }
 
-    @GetMapping(value = "/{bucketUuid}/private-key", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{bucketUuid}/export-private-key", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Return the owner's encrypted vault private key as JSON")
     @Transactional(readOnly = true)
     public ResponseEntity<BucketPrivateKeyExport> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)

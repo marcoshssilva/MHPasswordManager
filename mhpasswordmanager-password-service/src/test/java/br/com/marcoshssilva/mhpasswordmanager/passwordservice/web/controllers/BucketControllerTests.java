@@ -106,7 +106,7 @@ class BucketControllerTests {
         when(userBucketService.exportPrivateKey("bucket-1", userAuth))
                 .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExport>().success(export, "SUCCESS"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/private-key"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-private-key"))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
@@ -124,7 +124,7 @@ class BucketControllerTests {
                 .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExport>()
                         .exception(new BucketNotFoundException(), "Bucket not found"));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/private-key"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-private-key"))
                 .andExpect(status().isNotFound())
                 .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
                 .andExpect(jsonPath("$.base64EncodedPrivateKey").doesNotExist());

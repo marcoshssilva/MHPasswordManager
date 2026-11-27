@@ -31,7 +31,7 @@ records and vault information are stored in the SQL database.
 
 ## Export an encrypted private key
 
-Call `GET /mypass-manager/passwords/bucket/{bucketUuid}/private-key` with a bearer
+Call `GET /mypass-manager/passwords/bucket/{bucketUuid}/export-private-key` with a bearer
 JWT. The request takes the vault UUID in the path. The response is available
 only to the vault owner. An unknown vault or one owned by another user returns
 HTTP 404.
