@@ -70,6 +70,24 @@ guesses of the vault secret offline. The existing SHA-256 derivation has no
 salt or work factor, so the file's protection depends on the entropy of the
 original secret.
 
+## Export a public key
+
+Call `GET /mypass-manager/passwords/bucket/{bucketUuid}/export-public-key` with a
+bearer JWT. Only the vault owner can retrieve the key. An unknown vault or one
+owned by another user returns HTTP 404.
+
+The response is `application/json` with `Cache-Control: no-store`.
+
+```json
+{
+  "bucketUuid": "746e40c9-f530-4d4c-be13-4c06c25d17a0",
+  "base64EncodedPublicKey": "<stored public key in standard Base64>"
+}
+```
+
+Standard Base64 decoding yields the DER-encoded X.509 SubjectPublicKeyInfo
+for the vault's RSA public key. The client can import it directly.
+
 ## Related implementation
 
 | Area | Source |

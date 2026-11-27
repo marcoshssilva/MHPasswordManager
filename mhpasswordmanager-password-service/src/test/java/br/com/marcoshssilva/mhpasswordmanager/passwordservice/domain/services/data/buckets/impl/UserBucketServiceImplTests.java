@@ -10,6 +10,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPublicKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
@@ -82,6 +83,36 @@ class UserBucketServiceImplTests {
         when(userBucketRepository.findByIdAndOwnerName("bucket-1", "user1")).thenReturn(Optional.empty());
 
         IResultData<BucketPrivateKeyExportModel> result = userBucketService.exportPrivateKey("bucket-1", userAuth);
+
+        assertThat(result.isOk()).isFalse();
+        assertThat(result.getException()).isInstanceOf(BucketNotFoundException.class);
+        verifyNoMoreInteractions(userBucketRepository);
+        verifyNoInteractions(aesCryptService);
+    }
+
+    @DisplayName("Should export the stored public key without invoking the crypt service")
+    @Test
+    void shouldExportStoredPublicKeyWithoutUsingCryptService() {
+        UserBucket bucket = UserBucket.builder()
+                .id("bucket-1")
+                .ownerName("user1")
+                .encodedPublicKey("AQIDBA==")
+                .build();
+        when(userBucketRepository.findByIdAndOwnerName("bucket-1", "user1")).thenReturn(Optional.of(bucket));
+
+        IResultData<BucketPublicKeyExportModel> result = userBucketService.exportPublicKey("bucket-1", userAuth);
+
+        assertThat(result.isOk()).isTrue();
+        assertThat(result.getData()).isEqualTo(new BucketPublicKeyExportModel("bucket-1", "AQIDBA=="));
+        verifyNoInteractions(aesCryptService);
+    }
+
+    @DisplayName("Should reject public key export when the bucket is unavailable to the owner")
+    @Test
+    void shouldNotExportPublicKeyWhenBucketIsOutsideOwnersLookup() {
+        when(userBucketRepository.findByIdAndOwnerName("bucket-1", "user1")).thenReturn(Optional.empty());
+
+        IResultData<BucketPublicKeyExportModel> result = userBucketService.exportPublicKey("bucket-1", userAuth);
 
         assertThat(result.isOk()).isFalse();
         assertThat(result.getException()).isInstanceOf(BucketNotFoundException.class);

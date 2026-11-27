@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPublicKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.exceptions.ResultDataErrorException;
@@ -13,6 +14,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerCreateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerUpdateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.EncodedPrivateKeyBucketDataResponseBody;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.EncodedPublicKeyBucketDataResponseBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.PasswordBucketControllerBucketDataResponseBody;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -113,6 +115,26 @@ public class BucketController {
                 .bucketUuid(export.getBucketUuid())
                 .base64EncodedPrivateKey(export.getBase64EncodedPrivateKey())
                 .algoritm(export.getAlgoritm())
+                .build();
+
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(body);
+    }
+
+    @GetMapping(value = "/{bucketUuid}/export-public-key", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Return the owner's vault public key as JSON")
+    @Transactional(readOnly = true, rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<EncodedPublicKeyBucketDataResponseBody> exportPublicKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
+            throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
+        UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
+        IResultData<BucketPublicKeyExportModel> result = userBucketService.exportPublicKey(bucketUuid, userAuthorizations);
+        result.throwErrorIfExists();
+
+        BucketPublicKeyExportModel export = result.getData();
+        EncodedPublicKeyBucketDataResponseBody body = EncodedPublicKeyBucketDataResponseBody.builder()
+                .bucketUuid(export.getBucketUuid())
+                .base64EncodedPublicKey(export.getBase64EncodedPublicKey())
                 .build();
 
         return ResponseEntity.ok()
