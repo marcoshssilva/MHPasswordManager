@@ -100,7 +100,7 @@ public class BucketController {
 
     @GetMapping(value = "/{bucketUuid}/export-private-key", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Return the owner's encrypted vault private key as JSON")
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true, rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
     public ResponseEntity<BucketPrivateKeyExportModel> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
             throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
