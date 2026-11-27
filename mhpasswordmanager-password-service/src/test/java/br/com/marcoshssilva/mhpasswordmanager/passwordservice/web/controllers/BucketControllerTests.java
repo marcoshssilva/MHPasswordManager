@@ -4,7 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExport;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.impl.ResultDataFactoryImpl;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
@@ -102,9 +102,9 @@ class BucketControllerTests {
     @Test
     void shouldReturnEncryptedPrivateKeyAsJsonWithoutCaching() throws Exception {
         when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
-        BucketPrivateKeyExport export = new BucketPrivateKeyExport("bucket-1", "AQIDBA==", "AES-256-GCM");
+        BucketPrivateKeyExportModel export = new BucketPrivateKeyExportModel("bucket-1", "AQIDBA==", "AES-256-GCM");
         when(userBucketService.exportPrivateKey("bucket-1", userAuth))
-                .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExport>().success(export, "SUCCESS"));
+                .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExportModel>().success(export, "SUCCESS"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-private-key"))
                 .andExpect(status().isOk())
@@ -121,7 +121,7 @@ class BucketControllerTests {
     void shouldReturnNotFoundForUnavailablePrivateKey() throws Exception {
         when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
         when(userBucketService.exportPrivateKey("bucket-1", userAuth))
-                .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExport>()
+                .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExportModel>()
                         .exception(new BucketNotFoundException(), "Bucket not found"));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-private-key"))

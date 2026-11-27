@@ -3,7 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.UserBucketService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExport;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.exceptions.ResultDataErrorException;
@@ -101,10 +101,10 @@ public class BucketController {
     @GetMapping(value = "/{bucketUuid}/export-private-key", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Return the owner's encrypted vault private key as JSON")
     @Transactional(readOnly = true)
-    public ResponseEntity<BucketPrivateKeyExport> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
+    public ResponseEntity<BucketPrivateKeyExportModel> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
             throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
-        IResultData<BucketPrivateKeyExport> result = userBucketService.exportPrivateKey(bucketUuid, userAuthorizations);
+        IResultData<BucketPrivateKeyExportModel> result = userBucketService.exportPrivateKey(bucketUuid, userAuthorizations);
         result.throwErrorIfExists();
 
         return ResponseEntity.ok()

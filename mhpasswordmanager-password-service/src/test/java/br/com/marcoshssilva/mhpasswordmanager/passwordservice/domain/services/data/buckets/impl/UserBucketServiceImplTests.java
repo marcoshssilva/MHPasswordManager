@@ -9,7 +9,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
-import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExport;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
@@ -69,10 +69,10 @@ class UserBucketServiceImplTests {
                 .build();
         when(userBucketRepository.findByIdAndOwnerName("bucket-1", "user1")).thenReturn(Optional.of(bucket));
 
-        IResultData<BucketPrivateKeyExport> result = userBucketService.exportPrivateKey("bucket-1", userAuth);
+        IResultData<BucketPrivateKeyExportModel> result = userBucketService.exportPrivateKey("bucket-1", userAuth);
 
         assertThat(result.isOk()).isTrue();
-        assertThat(result.getData()).isEqualTo(new BucketPrivateKeyExport("bucket-1", "AQIDBA==", "AES-256-GCM"));
+        assertThat(result.getData()).isEqualTo(new BucketPrivateKeyExportModel("bucket-1", "AQIDBA==", "AES-256-GCM"));
         verifyNoInteractions(aesCryptService);
     }
 
@@ -81,7 +81,7 @@ class UserBucketServiceImplTests {
     void shouldNotExportKeyWhenBucketIsOutsideOwnersLookup() {
         when(userBucketRepository.findByIdAndOwnerName("bucket-1", "user1")).thenReturn(Optional.empty());
 
-        IResultData<BucketPrivateKeyExport> result = userBucketService.exportPrivateKey("bucket-1", userAuth);
+        IResultData<BucketPrivateKeyExportModel> result = userBucketService.exportPrivateKey("bucket-1", userAuth);
 
         assertThat(result.isOk()).isFalse();
         assertThat(result.getException()).isInstanceOf(BucketNotFoundException.class);
