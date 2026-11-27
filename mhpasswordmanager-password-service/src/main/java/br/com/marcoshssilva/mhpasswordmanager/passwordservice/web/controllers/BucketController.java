@@ -12,6 +12,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerCreateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerUpdateBucketRequestBody;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.EncodedPrivateKeyBucketDataResponseBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.PasswordBucketControllerBucketDataResponseBody;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -101,15 +102,22 @@ public class BucketController {
     @GetMapping(value = "/{bucketUuid}/export-private-key", produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "Return the owner's encrypted vault private key as JSON")
     @Transactional(readOnly = true, rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
-    public ResponseEntity<BucketPrivateKeyExportModel> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
+    public ResponseEntity<EncodedPrivateKeyBucketDataResponseBody> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
             throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
         UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
         IResultData<BucketPrivateKeyExportModel> result = userBucketService.exportPrivateKey(bucketUuid, userAuthorizations);
         result.throwErrorIfExists();
 
+        BucketPrivateKeyExportModel export = result.getData();
+        EncodedPrivateKeyBucketDataResponseBody body = EncodedPrivateKeyBucketDataResponseBody.builder()
+                .bucketUuid(export.bucketUuid())
+                .base64EncodedPrivateKey(export.base64EncodedPrivateKey())
+                .algoritm(export.algoritm())
+                .build();
+
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
-                .body(result.getData());
+                .body(body);
     }
 
     @DeleteMapping("/{bucketUuid}")
