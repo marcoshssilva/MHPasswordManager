@@ -10,6 +10,8 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPublicKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultDataFactory;
@@ -35,10 +37,14 @@ import java.util.UUID;
 public class UserBucketServiceImpl implements UserBucketService {
     private static final String BUCKET_NOT_FOUND = "Bucket not found";
     private static final String USER_ACCESS_DENIED = "Denied access to User";
+    private static final String BUCKET_PRIVATE_KEY_EXPORT_ALGORITH = "AES-256-GCM";
 
     public static final IResultDataFactory<Page<BucketDataModel>> factoryPageBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<BucketDataModel> factoryBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Boolean> factoryBoolean = new ResultDataFactoryImpl<>();
+    public static final IResultDataFactory<BucketPrivateKeyExportModel> factoryBucketPrivateKeyExportsDataModel = new ResultDataFactoryImpl<>();
+
+    private static final IResultDataFactory<BucketPublicKeyExportModel> PUBLIC_KEY_EXPORT_RESULTS = new ResultDataFactoryImpl<>();
 
     private final UserBucketRepository userBucketRepository;
     private final CryptService cryptService;
@@ -66,6 +72,28 @@ public class UserBucketServiceImpl implements UserBucketService {
             return factoryBucketDataModel.exception(e, e.getMessage());
         }
 
+    }
+
+    @Override
+    public IResultData<BucketPrivateKeyExportModel> exportPrivateKey(String bucketUuid, UserAuthorizations userAuthorizations) {
+        return userBucketRepository.findByIdAndOwnerName(bucketUuid, userAuthorizations.getUsername())
+                .map(bucket -> factoryBucketPrivateKeyExportsDataModel.success(
+                                new BucketPrivateKeyExportModel(
+                                        bucket.getId(),
+                                        bucket.getEncryptedPrivateKeyWithPassword(),
+                                        BUCKET_PRIVATE_KEY_EXPORT_ALGORITH
+                                ),
+                                "SUCCESS"))
+                .orElseGet(
+                        () -> factoryBucketPrivateKeyExportsDataModel.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
+    }
+
+    @Override
+    public IResultData<BucketPublicKeyExportModel> exportPublicKey(String bucketUuid, UserAuthorizations userAuthorizations) {
+        return userBucketRepository.findByIdAndOwnerName(bucketUuid, userAuthorizations.getUsername())
+                .map(bucket -> PUBLIC_KEY_EXPORT_RESULTS.success(
+                        new BucketPublicKeyExportModel(bucket.getId(), bucket.getEncodedPublicKey()), "SUCCESS"))
+                .orElseGet(() -> PUBLIC_KEY_EXPORT_RESULTS.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
     }
 
     @Override

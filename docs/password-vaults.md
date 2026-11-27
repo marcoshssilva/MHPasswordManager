@@ -29,6 +29,65 @@ creation, it generates an RSA key pair; the private key is protected using
 the vault secret, and the public key encrypts password records. Encrypted
 records and vault information are stored in the SQL database.
 
+## Export an encrypted private key
+
+Call `GET /mypass-manager/passwords/bucket/{bucketUuid}/export-private-key` with a bearer
+JWT. The request takes the vault UUID in the path. The response is available
+only to the vault owner. An unknown vault or one owned by another user returns
+HTTP 404.
+
+A successful response has content type `application/json` and
+`Cache-Control: no-store`. The JSON has three fields:
+
+```json
+{
+  "bucketUuid": "746e40c9-f530-4d4c-be13-4c06c25d17a0",
+  "base64EncodedPrivateKey": "<stored encrypted private key in standard Base64>",
+  "algoritm": "AES-256-GCM"
+}
+```
+
+The client decrypts the export locally using the original vault secret:
+
+1. Decode `base64EncodedPrivateKey` using standard Base64.
+2. Hash the UTF-8 bytes of the vault secret with SHA-256 and use the raw 32-byte
+   digest as the AES key.
+3. Split the decoded payload into the first 12 bytes (IV), the middle bytes
+   (ciphertext), and the last 16 bytes (GCM authentication tag). Decrypt and
+   authenticate with AES-256-GCM, an empty AAD, and a 128-bit tag.
+4. Parse the authenticated plaintext as a DER-encoded PKCS#8 RSA private key.
+
+Older vaults may have stored only ciphertext and tag with an implicit
+all-zero 12-byte IV. The database stores no format version. If authentication
+fails with the current format, a client supporting legacy exports may retry
+using the full decoded payload as ciphertext and tag and the all-zero IV.
+That format used the server JVM's default charset for the vault secret, so
+use that charset if it differed from UTF-8. Accept plaintext only after the
+authentication tag verifies.
+
+The export contains the stored ciphertext. Anyone with the file can test
+guesses of the vault secret offline. The existing SHA-256 derivation has no
+salt or work factor, so the file's protection depends on the entropy of the
+original secret.
+
+## Export a public key
+
+Call `GET /mypass-manager/passwords/bucket/{bucketUuid}/export-public-key` with a
+bearer JWT. Only the vault owner can retrieve the key. An unknown vault or one
+owned by another user returns HTTP 404.
+
+The response is `application/json` with `Cache-Control: no-store`.
+
+```json
+{
+  "bucketUuid": "746e40c9-f530-4d4c-be13-4c06c25d17a0",
+  "base64EncodedPublicKey": "<stored public key in standard Base64>"
+}
+```
+
+Standard Base64 decoding yields the DER-encoded X.509 SubjectPublicKeyInfo
+for the vault's RSA public key. The client can import it directly.
+
 ## Related implementation
 
 | Area | Source |
