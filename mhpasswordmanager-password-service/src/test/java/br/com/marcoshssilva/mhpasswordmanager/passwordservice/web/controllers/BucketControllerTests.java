@@ -5,6 +5,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPublicKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.impl.ResultDataFactoryImpl;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
@@ -128,6 +129,39 @@ class BucketControllerTests {
                 .andExpect(status().isNotFound())
                 .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
                 .andExpect(jsonPath("$.base64EncodedPrivateKey").doesNotExist());
+    }
+
+    @DisplayName("Should return the public key as JSON without caching")
+    @Test
+    void shouldReturnPublicKeyAsJsonWithoutCaching() throws Exception {
+        when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
+        BucketPublicKeyExportModel export = new BucketPublicKeyExportModel("bucket-1", "AQIDBA==");
+        when(userBucketService.exportPublicKey("bucket-1", userAuth))
+                .thenReturn(new ResultDataFactoryImpl<BucketPublicKeyExportModel>().success(export, "SUCCESS"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-public-key"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
+                .andExpect(header().string(HttpHeaders.CACHE_CONTROL, "no-store"))
+                .andExpect(jsonPath("$.bucketUuid").value("bucket-1"))
+                .andExpect(jsonPath("$.base64EncodedPublicKey").value("AQIDBA=="))
+                .andExpect(jsonPath("$.algoritm").doesNotExist())
+                .andExpect(jsonPath("$.base64EncodedPrivateKey").doesNotExist());
+    }
+
+    @DisplayName("Should return 404 when the public key is unavailable")
+    @Test
+    void shouldReturnNotFoundForUnavailablePublicKey() throws Exception {
+        when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
+        when(userBucketService.exportPublicKey("bucket-1", userAuth))
+                .thenReturn(new ResultDataFactoryImpl<BucketPublicKeyExportModel>()
+                        .exception(new BucketNotFoundException(), "Bucket not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-public-key"))
+                .andExpect(status().isNotFound())
+                .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
+                .andExpect(jsonPath("$.base64EncodedPublicKey").doesNotExist());
     }
 
     @DisplayName("Should create bucket and return 200 OK")

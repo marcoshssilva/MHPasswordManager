@@ -11,6 +11,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPublicKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultDataFactory;
@@ -42,6 +43,8 @@ public class UserBucketServiceImpl implements UserBucketService {
     public static final IResultDataFactory<BucketDataModel> factoryBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Boolean> factoryBoolean = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<BucketPrivateKeyExportModel> factoryBucketPrivateKeyExportsDataModel = new ResultDataFactoryImpl<>();
+
+    private static final IResultDataFactory<BucketPublicKeyExportModel> PUBLIC_KEY_EXPORT_RESULTS = new ResultDataFactoryImpl<>();
 
     private final UserBucketRepository userBucketRepository;
     private final CryptService cryptService;
@@ -83,6 +86,14 @@ public class UserBucketServiceImpl implements UserBucketService {
                                 "SUCCESS"))
                 .orElseGet(
                         () -> factoryBucketPrivateKeyExportsDataModel.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
+    }
+
+    @Override
+    public IResultData<BucketPublicKeyExportModel> exportPublicKey(String bucketUuid, UserAuthorizations userAuthorizations) {
+        return userBucketRepository.findByIdAndOwnerName(bucketUuid, userAuthorizations.getUsername())
+                .map(bucket -> PUBLIC_KEY_EXPORT_RESULTS.success(
+                        new BucketPublicKeyExportModel(bucket.getId(), bucket.getEncodedPublicKey()), "SUCCESS"))
+                .orElseGet(() -> PUBLIC_KEY_EXPORT_RESULTS.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
     }
 
     @Override
