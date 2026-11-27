@@ -110,9 +110,9 @@ public class BucketController {
 
         BucketPrivateKeyExportModel export = result.getData();
         EncodedPrivateKeyBucketDataResponseBody body = EncodedPrivateKeyBucketDataResponseBody.builder()
-                .bucketUuid(export.bucketUuid())
-                .base64EncodedPrivateKey(export.base64EncodedPrivateKey())
-                .algoritm(export.algoritm())
+                .bucketUuid(export.getBucketUuid())
+                .base64EncodedPrivateKey(export.getBase64EncodedPrivateKey())
+                .algoritm(export.getAlgoritm())
                 .build();
 
         return ResponseEntity.ok()

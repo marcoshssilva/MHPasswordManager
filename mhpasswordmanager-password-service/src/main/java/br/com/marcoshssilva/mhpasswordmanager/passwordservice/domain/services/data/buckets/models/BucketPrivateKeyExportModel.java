@@ -1,8 +1,14 @@
 package br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models;
 
-public record BucketPrivateKeyExportModel(String bucketUuid, String base64EncodedPrivateKey, String algoritm) {
-    @Override
-    public String toString() {
-        return "BucketPrivateKeyExportModel[bucketUuid=" + bucketUuid + ", algoritm=" + algoritm + "]";
-    }
+@lombok.Getter
+@lombok.AllArgsConstructor
+@lombok.EqualsAndHashCode
+@lombok.ToString
+public final class BucketPrivateKeyExportModel {
+    private final String bucketUuid;
+
+    @lombok.ToString.Exclude
+    private final String base64EncodedPrivateKey;
+
+    private final String algoritm;
 }
