@@ -98,9 +98,9 @@ class BucketControllerTests {
                 .build();
     }
 
-    @DisplayName("Should download the encrypted private key as a JSON attachment without caching")
+    @DisplayName("Should return the encrypted private key as JSON without caching")
     @Test
-    void shouldDownloadEncryptedPrivateKeyAsJsonWithoutCaching() throws Exception {
+    void shouldReturnEncryptedPrivateKeyAsJsonWithoutCaching() throws Exception {
         when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
         BucketPrivateKeyExport export = new BucketPrivateKeyExport("bucket-1", "AQIDBA==", "AES-256-GCM");
         when(userBucketService.exportPrivateKey("bucket-1", userAuth))
@@ -109,7 +109,7 @@ class BucketControllerTests {
         mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/private-key"))
                 .andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"bucket-bucket-1-private-key.json\""))
+                .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
                 .andExpect(header().string(HttpHeaders.CACHE_CONTROL, "no-store"))
                 .andExpect(jsonPath("$.bucketUuid").value("bucket-1"))
                 .andExpect(jsonPath("$.base64EncodedPrivateKey").value("AQIDBA=="))

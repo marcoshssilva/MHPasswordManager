@@ -23,8 +23,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.CacheControl;
-import org.springframework.http.ContentDisposition;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -101,7 +99,7 @@ public class BucketController {
     }
 
     @GetMapping(value = "/{bucketUuid}/private-key", produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "Download the owner's encrypted vault private key as JSON")
+    @Operation(summary = "Return the owner's encrypted vault private key as JSON")
     @Transactional(readOnly = true)
     public ResponseEntity<BucketPrivateKeyExport> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
             throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
@@ -109,12 +107,9 @@ public class BucketController {
         IResultData<BucketPrivateKeyExport> result = userBucketService.exportPrivateKey(bucketUuid, userAuthorizations);
         result.throwErrorIfExists();
 
-        BucketPrivateKeyExport body = result.getData();
         return ResponseEntity.ok()
                 .cacheControl(CacheControl.noStore())
-                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
-                        .filename("bucket-" + body.bucketUuid() + "-private-key.json").build().toString())
-                .body(body);
+                .body(result.getData());
     }
 
     @DeleteMapping("/{bucketUuid}")

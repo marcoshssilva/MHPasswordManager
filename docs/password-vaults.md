@@ -29,16 +29,15 @@ creation, it generates an RSA key pair; the private key is protected using
 the vault secret, and the public key encrypts password records. Encrypted
 records and vault information are stored in the SQL database.
 
-## Download an encrypted private key
+## Export an encrypted private key
 
 Call `GET /mypass-manager/passwords/bucket/{bucketUuid}/private-key` with a bearer
 JWT. The request takes the vault UUID in the path. The response is available
 only to the vault owner. An unknown vault or one owned by another user returns
 HTTP 404.
 
-A successful response has content type `application/json`,
-`Content-Disposition: attachment; filename="bucket-<bucketUuid>-private-key.json"`
-and `Cache-Control: no-store`. The JSON has three fields:
+A successful response has content type `application/json` and
+`Cache-Control: no-store`. The JSON has three fields:
 
 ```json
 {
