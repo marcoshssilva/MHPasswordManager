@@ -36,12 +36,12 @@ import java.util.UUID;
 public class UserBucketServiceImpl implements UserBucketService {
     private static final String BUCKET_NOT_FOUND = "Bucket not found";
     private static final String USER_ACCESS_DENIED = "Denied access to User";
+    private static final String BUCKET_PRIVATE_KEY_EXPORT_ALGORITH = "AES-256-GCM";
 
     public static final IResultDataFactory<Page<BucketDataModel>> factoryPageBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<BucketDataModel> factoryBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Boolean> factoryBoolean = new ResultDataFactoryImpl<>();
-
-    private static final IResultDataFactory<BucketPrivateKeyExportModel> PRIVATE_KEY_EXPORT_RESULTS = new ResultDataFactoryImpl<>();
+    public static final IResultDataFactory<BucketPrivateKeyExportModel> factoryBucketPrivateKeyExportsDataModel = new ResultDataFactoryImpl<>();
 
     private final UserBucketRepository userBucketRepository;
     private final CryptService cryptService;
@@ -74,10 +74,15 @@ public class UserBucketServiceImpl implements UserBucketService {
     @Override
     public IResultData<BucketPrivateKeyExportModel> exportPrivateKey(String bucketUuid, UserAuthorizations userAuthorizations) {
         return userBucketRepository.findByIdAndOwnerName(bucketUuid, userAuthorizations.getUsername())
-                .map(bucket -> PRIVATE_KEY_EXPORT_RESULTS.success(
-                        new BucketPrivateKeyExportModel(bucket.getId(), bucket.getEncryptedPrivateKeyWithPassword(), "AES-256-GCM"),
-                        "SUCCESS"))
-                .orElseGet(() -> PRIVATE_KEY_EXPORT_RESULTS.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
+                .map(bucket -> factoryBucketPrivateKeyExportsDataModel.success(
+                                new BucketPrivateKeyExportModel(
+                                        bucket.getId(),
+                                        bucket.getEncryptedPrivateKeyWithPassword(),
+                                        BUCKET_PRIVATE_KEY_EXPORT_ALGORITH
+                                ),
+                                "SUCCESS"))
+                .orElseGet(
+                        () -> factoryBucketPrivateKeyExportsDataModel.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
     }
 
     @Override
