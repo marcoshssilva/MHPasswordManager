@@ -38,13 +38,16 @@ public class UserBucketServiceImpl implements UserBucketService {
     private static final String BUCKET_NOT_FOUND = "Bucket not found";
     private static final String USER_ACCESS_DENIED = "Denied access to User";
     private static final String BUCKET_PRIVATE_KEY_EXPORT_ALGORITH = "AES-256-GCM";
+    private static final String RESULT_DATA_MESSAGE_SUCCESS = "SUCCESS";
+    private static final String RESULT_DATA_MESSAGE_UPDATED = "UPDATED";
+    private static final String RESULT_DATA_MESSAGE_DELETED = "DELETED";
+    private static final String RESULT_DATA_MESSAGE_CREATED = "CREATED";
 
     public static final IResultDataFactory<Page<BucketDataModel>> factoryPageBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<BucketDataModel> factoryBucketDataModel = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<Boolean> factoryBoolean = new ResultDataFactoryImpl<>();
     public static final IResultDataFactory<BucketPrivateKeyExportModel> factoryBucketPrivateKeyExportsDataModel = new ResultDataFactoryImpl<>();
-
-    private static final IResultDataFactory<BucketPublicKeyExportModel> PUBLIC_KEY_EXPORT_RESULTS = new ResultDataFactoryImpl<>();
+    public static final IResultDataFactory<BucketPublicKeyExportModel> factoryBucketPublicKeyExportsDataModel = new ResultDataFactoryImpl<>();
 
     private final UserBucketRepository userBucketRepository;
     private final CryptService cryptService;
@@ -67,7 +70,7 @@ public class UserBucketServiceImpl implements UserBucketService {
                 return factoryBucketDataModel.exception(new UserRegistrationDeniedAccessException(), USER_ACCESS_DENIED);
             }
 
-            return factoryBucketDataModel.success(BucketDataModel.fromEntity(userBucket.get()), "SUCCESS");
+            return factoryBucketDataModel.success(BucketDataModel.fromEntity(userBucket.get()), RESULT_DATA_MESSAGE_SUCCESS);
         } catch (Exception e) {
             return factoryBucketDataModel.exception(e, e.getMessage());
         }
@@ -83,7 +86,7 @@ public class UserBucketServiceImpl implements UserBucketService {
                                         bucket.getEncryptedPrivateKeyWithPassword(),
                                         BUCKET_PRIVATE_KEY_EXPORT_ALGORITH
                                 ),
-                                "SUCCESS"))
+                                RESULT_DATA_MESSAGE_SUCCESS))
                 .orElseGet(
                         () -> factoryBucketPrivateKeyExportsDataModel.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
     }
@@ -91,16 +94,21 @@ public class UserBucketServiceImpl implements UserBucketService {
     @Override
     public IResultData<BucketPublicKeyExportModel> exportPublicKey(String bucketUuid, UserAuthorizations userAuthorizations) {
         return userBucketRepository.findByIdAndOwnerName(bucketUuid, userAuthorizations.getUsername())
-                .map(bucket -> PUBLIC_KEY_EXPORT_RESULTS.success(
-                        new BucketPublicKeyExportModel(bucket.getId(), bucket.getEncodedPublicKey()), "SUCCESS"))
-                .orElseGet(() -> PUBLIC_KEY_EXPORT_RESULTS.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
+                .map(bucket -> factoryBucketPublicKeyExportsDataModel.success(
+                                new BucketPublicKeyExportModel(
+                                        bucket.getId(),
+                                        bucket.getEncodedPublicKey()
+                                ),
+                                RESULT_DATA_MESSAGE_SUCCESS))
+                .orElseGet(
+                        () -> factoryBucketPublicKeyExportsDataModel.exception(new BucketNotFoundException(), BUCKET_NOT_FOUND));
     }
 
     @Override
     public IResultData<Page<BucketDataModel>> getBucketsByUserAuthorizations(UserAuthorizations userAuthorizations, Pageable pageRequest) {
         try {
             final Page<UserBucket> page = userBucketRepository.findAllByOwnerName(userAuthorizations.getUsername(), pageRequest);
-            return factoryPageBucketDataModel.success(page.map(BucketDataModel::fromEntity), "SUCCESS");
+            return factoryPageBucketDataModel.success(page.map(BucketDataModel::fromEntity), RESULT_DATA_MESSAGE_SUCCESS);
         } catch (Exception e) {
             return factoryPageBucketDataModel.exception(e, "Cannot fetch buckets, because: " + e.getMessage());
         }
@@ -133,7 +141,7 @@ public class UserBucketServiceImpl implements UserBucketService {
 
             final UserBucket saved = userBucketRepository.save(userBucket);
 
-            return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), "CREATED");
+            return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), RESULT_DATA_MESSAGE_CREATED);
         } catch (Exception e) {
             return factoryBucketDataModel.exception(new BucketCannotBeCreatedException(e), "Bucket cannot be create because: " + e.getMessage());
         }
@@ -158,7 +166,7 @@ public class UserBucketServiceImpl implements UserBucketService {
             bucket.setLastUpdate(LocalDateTime.now(Clock.systemUTC()));
 
             final UserBucket saved = userBucketRepository.save(bucket);
-            return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), "UPDATED");
+            return factoryBucketDataModel.success(BucketDataModel.fromEntity(saved), RESULT_DATA_MESSAGE_UPDATED);
         } catch (Exception e) {
             return factoryBucketDataModel.exception(new BucketCannotBeUpdatedException(e), "Bucket cannot be updated because: " + e.getMessage());
         }
@@ -178,7 +186,7 @@ public class UserBucketServiceImpl implements UserBucketService {
                 return factoryBoolean.exception(new UserRegistrationDeniedAccessException(), USER_ACCESS_DENIED);
             }
             userBucketRepository.delete(bucket);
-            return factoryBoolean.success(Boolean.TRUE, "DELETED");
+            return factoryBoolean.success(Boolean.TRUE, RESULT_DATA_MESSAGE_DELETED);
         } catch (Exception e) {
             return factoryBoolean.exception(new BucketCannotBeDeletedException(e), "Bucket cannot be deleted because: " + e.getMessage());
         }
