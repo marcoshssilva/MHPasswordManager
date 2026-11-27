@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.UserBucketService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExport;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.exceptions.ResultDataErrorException;
@@ -13,6 +14,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerUpdateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.PasswordBucketControllerBucketDataResponseBody;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -20,6 +22,10 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.CacheControl;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -92,6 +98,23 @@ public class BucketController {
                 .build();
 
         return ResponseEntity.ok(body);
+    }
+
+    @GetMapping(value = "/{bucketUuid}/private-key", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Download the owner's encrypted vault private key as JSON")
+    @Transactional(readOnly = true)
+    public ResponseEntity<BucketPrivateKeyExport> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
+            throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
+        UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
+        IResultData<BucketPrivateKeyExport> result = userBucketService.exportPrivateKey(bucketUuid, userAuthorizations);
+        result.throwErrorIfExists();
+
+        BucketPrivateKeyExport body = result.getData();
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .header(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment()
+                        .filename("bucket-" + body.bucketUuid() + "-private-key.json").build().toString())
+                .body(body);
     }
 
     @DeleteMapping("/{bucketUuid}")
