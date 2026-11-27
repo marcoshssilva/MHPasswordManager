@@ -4,6 +4,7 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.exceptions.BucketNotFoundException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.impl.ResultDataFactoryImpl;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.UserAuthorizations;
@@ -24,6 +25,7 @@ import org.springframework.core.MethodParameter;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.web.servlet.MockMvc;
@@ -43,6 +45,7 @@ import java.util.Map;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,6 +96,38 @@ class BucketControllerTests {
                         }
                 )
                 .build();
+    }
+
+    @DisplayName("Should return the encrypted private key as JSON without caching")
+    @Test
+    void shouldReturnEncryptedPrivateKeyAsJsonWithoutCaching() throws Exception {
+        when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
+        BucketPrivateKeyExportModel export = new BucketPrivateKeyExportModel("bucket-1", "AQIDBA==", "AES-256-GCM");
+        when(userBucketService.exportPrivateKey("bucket-1", userAuth))
+                .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExportModel>().success(export, "SUCCESS"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-private-key"))
+                .andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
+                .andExpect(header().string(HttpHeaders.CACHE_CONTROL, "no-store"))
+                .andExpect(jsonPath("$.bucketUuid").value("bucket-1"))
+                .andExpect(jsonPath("$.base64EncodedPrivateKey").value("AQIDBA=="))
+                .andExpect(jsonPath("$.algoritm").value("AES-256-GCM"));
+    }
+
+    @DisplayName("Should return 404 when the encrypted private key is unavailable")
+    @Test
+    void shouldReturnNotFoundForUnavailablePrivateKey() throws Exception {
+        when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
+        when(userBucketService.exportPrivateKey("bucket-1", userAuth))
+                .thenReturn(new ResultDataFactoryImpl<BucketPrivateKeyExportModel>()
+                        .exception(new BucketNotFoundException(), "Bucket not found"));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/bucket/bucket-1/export-private-key"))
+                .andExpect(status().isNotFound())
+                .andExpect(header().doesNotExist(HttpHeaders.CONTENT_DISPOSITION))
+                .andExpect(jsonPath("$.base64EncodedPrivateKey").doesNotExist());
     }
 
     @DisplayName("Should create bucket and return 200 OK")

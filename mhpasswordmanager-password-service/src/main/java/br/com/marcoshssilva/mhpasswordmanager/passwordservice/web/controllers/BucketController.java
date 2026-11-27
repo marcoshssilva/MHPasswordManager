@@ -3,6 +3,7 @@ package br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.controllers;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.UserBucketService;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketNewDataModel;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketPrivateKeyExportModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.buckets.models.BucketUpdateDataModel;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.IResultData;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.common.exceptions.ResultDataErrorException;
@@ -11,8 +12,10 @@ import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.da
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.domain.services.data.user.exceptions.UserAuthorizationCannotBeLoadedException;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerCreateBucketRequestBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.requests.PasswordBucketControllerUpdateBucketRequestBody;
+import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.EncodedPrivateKeyBucketDataResponseBody;
 import br.com.marcoshssilva.mhpasswordmanager.passwordservice.web.data.responses.PasswordBucketControllerBucketDataResponseBody;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
@@ -20,6 +23,8 @@ import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -92,6 +97,27 @@ public class BucketController {
                 .build();
 
         return ResponseEntity.ok(body);
+    }
+
+    @GetMapping(value = "/{bucketUuid}/export-private-key", produces = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Return the owner's encrypted vault private key as JSON")
+    @Transactional(readOnly = true, rollbackFor = {ResultDataErrorException.class, UserAuthorizationCannotBeLoadedException.class})
+    public ResponseEntity<EncodedPrivateKeyBucketDataResponseBody> exportPrivateKey(@AuthenticationPrincipal Jwt token, @PathVariable String bucketUuid)
+            throws ResultDataErrorException, UserAuthorizationCannotBeLoadedException {
+        UserAuthorizations userAuthorizations = userRegistrationService.getUserAuthorizations(token);
+        IResultData<BucketPrivateKeyExportModel> result = userBucketService.exportPrivateKey(bucketUuid, userAuthorizations);
+        result.throwErrorIfExists();
+
+        BucketPrivateKeyExportModel export = result.getData();
+        EncodedPrivateKeyBucketDataResponseBody body = EncodedPrivateKeyBucketDataResponseBody.builder()
+                .bucketUuid(export.getBucketUuid())
+                .base64EncodedPrivateKey(export.getBase64EncodedPrivateKey())
+                .algoritm(export.getAlgoritm())
+                .build();
+
+        return ResponseEntity.ok()
+                .cacheControl(CacheControl.noStore())
+                .body(body);
     }
 
     @DeleteMapping("/{bucketUuid}")
