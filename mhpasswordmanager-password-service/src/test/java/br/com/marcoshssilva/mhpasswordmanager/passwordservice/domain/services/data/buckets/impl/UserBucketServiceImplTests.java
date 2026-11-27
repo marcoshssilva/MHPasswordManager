@@ -59,6 +59,7 @@ class UserBucketServiceImplTests {
                 .build();
     }
 
+    @DisplayName("Should export the stored ciphertext without invoking the crypt service")
     @Test
     void shouldExportStoredCiphertextWithoutUsingCryptService() {
         UserBucket bucket = UserBucket.builder()
@@ -75,6 +76,7 @@ class UserBucketServiceImplTests {
         verifyNoInteractions(aesCryptService);
     }
 
+    @DisplayName("Should reject private key export when the bucket is unavailable to the owner")
     @Test
     void shouldNotExportKeyWhenBucketIsOutsideOwnersLookup() {
         when(userBucketRepository.findByIdAndOwnerName("bucket-1", "user1")).thenReturn(Optional.empty());

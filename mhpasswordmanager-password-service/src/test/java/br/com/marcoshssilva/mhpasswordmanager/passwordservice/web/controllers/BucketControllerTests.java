@@ -98,6 +98,7 @@ class BucketControllerTests {
                 .build();
     }
 
+    @DisplayName("Should download the encrypted private key as a JSON attachment without caching")
     @Test
     void shouldDownloadEncryptedPrivateKeyAsJsonWithoutCaching() throws Exception {
         when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
@@ -115,6 +116,7 @@ class BucketControllerTests {
                 .andExpect(jsonPath("$.algoritm").value("AES-256-GCM"));
     }
 
+    @DisplayName("Should return 404 when the encrypted private key is unavailable")
     @Test
     void shouldReturnNotFoundForUnavailablePrivateKey() throws Exception {
         when(userRegistrationService.getUserAuthorizations(mockJwt)).thenReturn(userAuth);
